@@ -13,10 +13,18 @@ namespace BoardItems
         public Collider2D[] colliders;
         List<SpriteRenderer> sprites;
         AudioSource audioSource;
+        bool used;
 
         private void Start()
         {
             rb = GetComponent<Rigidbody2D>();
+
+            if (rb == null)
+                rb = gameObject.AddComponent<Rigidbody2D>();
+
+            rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            used = false;
+
             collider = GetComponent<Collider2D>();
             if (collider)
             {
@@ -83,10 +91,18 @@ namespace BoardItems
         }
         public void StartBeingDrag()
         {
-            rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            used = true;
+            rb = gameObject.GetComponent<Rigidbody2D>();
+
+            if (rb == null)
+                rb = gameObject.AddComponent<Rigidbody2D>();
+
+                rb.constraints = RigidbodyConstraints2D.FreezeAll;
             rb.isKinematic = true;
-            foreach (Collider2D c in colliders)
-                c.enabled = false;
+
+            if(colliders != null)
+                foreach (Collider2D c in colliders)
+                    c.enabled = false;
         }
         public void StopBeingDrag()
         {
@@ -120,6 +136,7 @@ namespace BoardItems
         }
         public bool IsBeingUse()
         {
+            return used;
             if (rb != null && rb.constraints == RigidbodyConstraints2D.FreezeAll)
                 return true;
             return false;

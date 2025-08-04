@@ -174,8 +174,9 @@ namespace BoardItems
         }
         void OnNewItem(ItemInScene item)
         {
+            print("OnNewItem " + item);
             all.Add(item);
-            AddToInventary(item.data);
+            //AddToInventary(item.data);
         }
 
         public void DeleteAll()
@@ -191,9 +192,9 @@ namespace BoardItems
         }
         public void SetItemInScene(ItemInScene item)
         {
-            item.gameObject.layer = 9;
-            foreach (SpriteRenderer sr in item.GetComponentsInChildren<SpriteRenderer>())
-                sr.gameObject.layer = 9; //scene;
+            //item.gameObject.layer = 9;
+            //foreach (SpriteRenderer sr in item.GetComponentsInChildren<SpriteRenderer>())
+            //    sr.gameObject.layer = 9; //scene;
         }
         void OnStopDrag(ItemInScene item, Vector3 pos)
         {
@@ -203,7 +204,7 @@ namespace BoardItems
             item.StopBeingDrag();
             //pos.x += item.collider.bounds.extents.x;
             float posX = Camera.main.WorldToScreenPoint(pos).x;
-            if (posX > Screen.width * 0.6f)
+            if (posX > Screen.width * 0.8f)
             {
                 all.Remove(item);
                 Destroy(item.gameObject);
@@ -221,6 +222,8 @@ namespace BoardItems
             itemSelected = item;
             item.data.position = item.transform.position;
 
+            print("item.IsBeingUse() " + item.IsBeingUse());
+
             if (!item.IsBeingUse())
             {
                 _z -= _z_value;
@@ -235,7 +238,18 @@ namespace BoardItems
             item.StartBeingDrag();
             AnimateItemDragDrop(true);
         }
-        public void Clonate()
+        public ItemInScene AddNewItemFromMenu(ItemInScene newItem)
+        {
+            this.itemSelected = newItem;
+            Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+           
+            ItemInScene itemInScene =  Clonate();
+            itemInScene.data.position = pos;
+            pos.z = 0;
+            itemInScene.transform.position = pos;
+            return itemInScene;
+        }
+        public ItemInScene Clonate()
         {
             //print("_______1");
             ItemData newItem = InstantiateNewItem(itemSelected.data);
@@ -253,18 +267,21 @@ namespace BoardItems
             newItem.transform.position = itemSelected.data.position + new Vector3(1, 0, 0);
             newItem.anim = itemSelected.data.anim;
             newItem.transform.SetParent(container);
-            Rigidbody2D rb = newItem.gameObject.AddComponent<Rigidbody2D>();
-            rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            if (newItem.gameObject.GetComponent<Rigidbody2D>() == null)
+            {
+                Rigidbody2D rb = newItem.gameObject.AddComponent<Rigidbody2D>();
+                rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            }
             itemInScene.SetPos(newItem.transform.position);
             newItem.Init();
             all.Add(itemInScene);
             itemSelected = itemInScene;
-
             if (newItem.anim != AnimationsManager.anim.NONE)
             {
                 AnimationsManager.AnimData animData = Data.Instance.animationsManager.GetAnimByName(itemSelected.data.anim);
                 Events.AnimateItem(animData);
             }
+            return itemInScene;
             //print("______4");
         }
         float back_z;

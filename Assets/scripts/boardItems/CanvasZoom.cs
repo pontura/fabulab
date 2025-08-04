@@ -10,7 +10,7 @@ namespace BoardItems.UI
         public Scrollbar scrollBars;
         bool dragging;
         Items items;
-        GameObject container;
+        [SerializeField] GameObject container;
         public Camera cam;
         float value;
 

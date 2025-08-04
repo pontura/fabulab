@@ -6,6 +6,7 @@ namespace BoardItems.UI
 {
     public class InputManager : MonoBehaviour
     {
+        [SerializeField] Camera cam;
         public ItemDragHandler itemDragHandler;
         public ToolsMenu toolsMenu;
         public states state;
@@ -22,14 +23,7 @@ namespace BoardItems.UI
             CANVAS_DRAGGING
         }
 
-        void Start()
-        {
-            Events.OnStartDrag += OnStartDrag;
-        }
-        void OnDestroy()
-        {
-            Events.OnStartDrag -= OnStartDrag;
-        }
+       
         void OnStartDrag(ItemInScene item, Vector3 originalPosition)
         {
             AudioManager.Instance.sfxManager.PlayTransp("get", -2);
@@ -158,18 +152,18 @@ namespace BoardItems.UI
                     state = states.IDLE;
                     break;
                 case states.IDLE:
-                    Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    Vector3 pos = cam.ScreenToWorldPoint(Input.mousePosition);
                     RaycastHit2D hit = Physics2D.Raycast(pos, Vector3.forward);
                     if (hit.collider == null)
                     {
-                        if (Input.mousePosition.x < Screen.width * 0.6f)
-                        {
-                            if (!IsPointerOverUIObject())
-                            {
-                                Events.OnCanvasDragger(true);
-                                state = states.CANVAS_DRAGGING;
-                            }
-                        }
+                        //if (Input.mousePosition.x < Screen.width * 0.6f)
+                        //{
+                        //    if (!IsPointerOverUIObject())
+                        //    {
+                        //        Events.OnCanvasDragger(true);
+                        //        state = states.CANVAS_DRAGGING;
+                        //    }
+                        //}
                     }
                     else if (hit.transform.gameObject.tag == "DragItem")
                     {
@@ -177,12 +171,25 @@ namespace BoardItems.UI
                             OnCloseTools(states.IDLE);
 
                         ItemInScene itemInScene = hit.transform.gameObject.GetComponent<ItemInScene>();
-                        Vector3 _offset = Camera.main.WorldToScreenPoint(hit.transform.position);
+                        Vector3 _offset = cam.WorldToScreenPoint(hit.transform.position);
+
                         OnStartDrag(itemInScene, _offset);
                         UIManager.Instance.boardUI.items.StartDrag(itemInScene);
                     }
                     break;
             }
+        }
+        public void OnInitDragging(ItemInScene itemInScene)
+        {
+            state = states.IDLE;
+
+            Vector3 _offset = cam.ScreenToWorldPoint(Input.mousePosition);
+            _offset.z = 0;
+            itemInScene.transform.position = _offset;
+            itemInScene.GetComponent<ItemData>().position = _offset;
+
+            OnStartDrag(itemInScene, Input.mousePosition);
+            UIManager.Instance.boardUI.items.StartDrag(itemInScene);
         }
         void OpenTools()
         {

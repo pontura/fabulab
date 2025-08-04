@@ -5,6 +5,8 @@ namespace BoardItems
 {
     public class Inventary : MonoBehaviour
     {
+        [SerializeField] ItemPhotoCreator itemPhotoCreator;
+        [SerializeField] ItemsUI itemsUI;
         Items items;
         public void Reset()
         {
@@ -32,14 +34,21 @@ namespace BoardItems
         public void AddItem(ItemData itemData, Vector2 pos)
         {
             itemData.transform.SetParent(items.container);
-            itemData.gameObject.AddComponent<Rigidbody2D>();
+            //itemData.gameObject.AddComponent<Rigidbody2D>();
             ItemInScene itemInScene = itemData.gameObject.AddComponent<ItemInScene>();
             itemInScene.data = itemData;
             itemData.Init();
 
-            itemInScene.gameObject.layer = 8;
-            foreach (SpriteRenderer sr in itemInScene.GetComponentsInChildren<SpriteRenderer>())
-                sr.gameObject.layer = 8; //scene;
+            //itemInScene.gameObject.layer = 8;
+            //foreach (SpriteRenderer sr in itemInScene.GetComponentsInChildren<SpriteRenderer>())
+            //    sr.gameObject.layer = 8; //scene;
+
+            itemPhotoCreator.Add(itemData, OnSpriteDone);
+        }
+        void OnSpriteDone(ItemData itemData, Sprite s)
+        {
+            itemsUI.Add(itemData, s);
+            itemData.gameObject.SetActive(false);
         }
     }
 
