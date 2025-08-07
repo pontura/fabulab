@@ -196,6 +196,12 @@ namespace BoardItems
             //foreach (SpriteRenderer sr in item.GetComponentsInChildren<SpriteRenderer>())
             //    sr.gameObject.layer = 9; //scene;
         }
+        bool IsOverOnlyOneBodyPart(ItemInScene item)
+        {
+            if(item.data.PartsCount == 1) 
+                return true;
+            return false;
+        }
         void OnStopDrag(ItemInScene item, Vector3 pos)
         {
             SetItemInScene(item);
@@ -204,7 +210,8 @@ namespace BoardItems
             item.StopBeingDrag();
             //pos.x += item.collider.bounds.extents.x;
             float posX = Camera.main.WorldToScreenPoint(pos).x;
-            if (posX > Screen.width * 0.8f)
+            bool isOverBodyPart = IsOverOnlyOneBodyPart(item);
+            if (!isOverBodyPart || posX > Screen.width * 0.8f)
             {
                 all.Remove(item);
                 Destroy(item.gameObject);
@@ -222,7 +229,7 @@ namespace BoardItems
             itemSelected = item;
             item.data.position = item.transform.position;
 
-            print("item.IsBeingUse() " + item.IsBeingUse());
+           // print("item.IsBeingUse() " + item.IsBeingUse());
 
             if (!item.IsBeingUse())
             {

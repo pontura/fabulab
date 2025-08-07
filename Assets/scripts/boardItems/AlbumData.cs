@@ -33,6 +33,7 @@ namespace BoardItems
             [Serializable]
             public class SavedIData
             {
+                public int part;
                 public int id;
                 public Vector3 position;
                 public Vector3 rotation;
@@ -65,14 +66,19 @@ namespace BoardItems
             wd.items = new List<WorkData.SavedIData>();
             foreach (ItemInScene iInScene in UIManager.Instance.boardUI.items.all)
             {
-                WorkData.SavedIData sd = new WorkData.SavedIData();
-                sd.id = iInScene.data.id;
-                sd.position = iInScene.data.position;
-                sd.rotation = iInScene.data.rotation;
-                sd.scale = iInScene.data.scale;
-                sd.anim = iInScene.data.anim;
-                sd.color = iInScene.data.colorName;
-                wd.items.Add(sd);
+                int partID = (int)iInScene.data.part;
+                if (partID > 0)
+                {
+                    WorkData.SavedIData sd = new WorkData.SavedIData();
+                    sd.part = partID;
+                    sd.id = iInScene.data.id;
+                    sd.position = iInScene.data.position;
+                    sd.rotation = iInScene.data.rotation;
+                    sd.scale = iInScene.data.scale;
+                    sd.anim = iInScene.data.anim;
+                    sd.color = iInScene.data.colorName;
+                    wd.items.Add(sd);
+                }
             }
             wd.galleryID = Data.Instance.galeriasData.gallery.id;
             if (wd.id == "")

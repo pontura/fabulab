@@ -41,9 +41,8 @@ namespace BoardItems
             if (item == null)
                 return;
             Vector2 pos = Camera.main.ScreenToWorldPoint(posInput - offset);
-            item.SetPos(pos);
+                item.SetPos(pos);
 
-            print(item.gameObject.name + " pos: " + pos);
         }
         public static bool IsPointerOverUIObject()
         {

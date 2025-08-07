@@ -1,16 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 namespace BoardItems
 {
     public class ItemInScene : MonoBehaviour
     {
-        float initialScale;
         public ItemData data;
         public Rigidbody2D rb;
-        public Collider2D collider;
-        public Collider2D[] colliders;
+        [SerializeField] Collider2D collider;
+        [SerializeField] List<Collider2D> colliders;
         List<SpriteRenderer> sprites;
         AudioSource audioSource;
         bool used;
@@ -25,11 +22,9 @@ namespace BoardItems
             rb.constraints = RigidbodyConstraints2D.FreezeAll;
             used = false;
 
-            collider = GetComponent<Collider2D>();
-            if (collider)
-            {
-                collider.enabled = false;
-            }
+            if(collider == null)
+                collider = GetComponent<Collider2D>();
+
             sprites = new List<SpriteRenderer>();
             audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.playOnAwake = false;
@@ -37,13 +32,15 @@ namespace BoardItems
             AudioClip clip = Resources.Load<AudioClip>("hit");
             audioSource.clip = clip;
             audioSource.volume = 0.1f;
+            colliders = new List<Collider2D>();
             foreach (SpriteRenderer sr in GetComponentsInChildren<SpriteRenderer>())
             {
-                CopyComponent(collider, sr.gameObject);
-                collider.enabled = true;
+                Component c = CopyComponent(collider, sr.gameObject);
+                Collider2D c2d = c.GetComponent<Collider2D>();
+                c2d.enabled = true;
+                colliders.Add(c2d);
                 sprites.Add(sr);
             }
-            colliders = GetComponentsInChildren<Collider2D>();
 
             if (data != null)
                 SetColor(data.colorName);
@@ -103,6 +100,9 @@ namespace BoardItems
             if(colliders != null)
                 foreach (Collider2D c in colliders)
                     c.enabled = false;
+            if(collider == null)
+                collider = GetComponent<Collider2D>();
+            collider.enabled = true;
         }
         public void StopBeingDrag()
         {
@@ -117,6 +117,7 @@ namespace BoardItems
             rb.isKinematic = false;
             foreach (Collider2D c in colliders)
                 c.enabled = true;
+            collider.enabled = true;
         }
         public void SetPos(Vector2 pos)
         {

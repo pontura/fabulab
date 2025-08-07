@@ -102,12 +102,6 @@ namespace BoardItems.UI
             //BgColorBtn.SetActive(!enable);
             colorPickerContainer.SetActive(enable);
         }
-        private void Update() // todo:  Despues sacarlo del Update
-        {
-            Vector3 pos = CanvasMenu.transform.position;
-            pos.x = Screen.width * 0.6f;
-            CanvasMenu.transform.position = pos;
-        }
 
         public void ActivateUIButtons(bool enable)
         {
