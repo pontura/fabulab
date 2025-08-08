@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using BoardItems.Characters;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -173,10 +174,11 @@ namespace BoardItems.UI
             {
                 ItemData newItem = Instantiate(Resources.Load<ItemData>("galerias/" + Data.Instance.galeriasData.gallery.id + "/item_" + itemData.id));
                 // Debug.Log("ID" + itemData.id + ":" + itemData.position);
-
+                newItem.part = (CharacterData.parts)itemData.part;
                 newItem.position = itemData.position;
                 newItem.rotation = itemData.rotation;
                 newItem.scale = itemData.scale;
+                print("scale " + itemData.scale);
                 newItem.colorName = itemData.color;
                 newItem.anim = itemData.anim;
                 //newItem.transform.SetParent(items.container);
@@ -184,11 +186,10 @@ namespace BoardItems.UI
                 newItem.transform.rotation = Quaternion.Euler(newItem.rotation);
                 newItem.transform.localScale = newItem.scale;
                 newItem.transform.SetParent(items.container);
-                newItem.gameObject.AddComponent<Rigidbody2D>().isKinematic = true;
-                newItem.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
                 ItemInScene itemInScene = newItem.gameObject.AddComponent<ItemInScene>();
-                items.SetItemInScene(itemInScene);
+                itemInScene.SetCollider(false);
                 itemInScene.data = newItem;
+                items.SetItemInScene(itemInScene);
                 items.all.Add(itemInScene);
                 items.SetItemSelected(itemInScene);
                 if (newItem.anim != AnimationsManager.anim.NONE)

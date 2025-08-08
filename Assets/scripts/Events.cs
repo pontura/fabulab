@@ -16,6 +16,8 @@ public static class Events
     public static System.Action<string, System.Action> CaptureGif = delegate { };
     public static System.Action<bool> OnCanvasDragger = delegate { };
     public static System.Action<System.Action<bool>> OnParentalGate = delegate { };
+    public static System.Action<int, CharacterAnims.anims> OnCharacterAnim = delegate { };
+    public static System.Action<bool> EditMode = delegate { };
 
 }
    

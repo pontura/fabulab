@@ -3,6 +3,7 @@ using BoardItems.UI;
 using NUnit.Framework.Interfaces;
 using System;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 using static UnityEditor.Progress;
@@ -18,6 +19,7 @@ public class ItemsUI : MonoBehaviour
 
     private void Awake()
     {
+        Events.EditMode += EditMode;
         Events.OnStopDrag += OnStopDrag;
         all = new Dictionary<ItemData, ItemButton>();
         Utils.RemoveAllChildsIn(container);
@@ -26,8 +28,12 @@ public class ItemsUI : MonoBehaviour
     private void OnDestroy()
     {
         Events.OnStopDrag -= OnStopDrag;
+        Events.EditMode -= EditMode;
     }
-
+    void EditMode(bool isOn)
+    {
+        gameObject.SetActive(isOn);
+    }
     private void OnStopDrag(ItemInScene scene, Vector3 vector)
     {
         canvasGroup.alpha = 1;

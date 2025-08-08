@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using BoardItems.Characters;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 namespace BoardItems
@@ -15,18 +16,25 @@ namespace BoardItems
         public Inventary inventary;
         public SpriteRenderer bg;
         public Transform container;
+        [SerializeField] CharacterManager characterManager;
 
         void Start()
         {
+            Events.EditMode += EditMode;
             Events.OnStopDrag += OnStopDrag;
             Events.OnNewItem += OnNewItem;
             Events.InitGallery += InitGallery;
             Events.Colorize += Colorize;
             Events.AnimateItem += AnimateItem;
             Events.ResetItems += ResetItems;
+
+            characterManager.Init();
+            characterManager.SetAnim(CharacterAnims.anims.edit);
+            Events.EditMode(true);
         }
         void OnDestroy()
         {
+            Events.EditMode -= EditMode;
             Events.OnStopDrag -= OnStopDrag;
             Events.OnNewItem -= OnNewItem;
             Events.InitGallery -= InitGallery;
@@ -175,8 +183,8 @@ namespace BoardItems
         void OnNewItem(ItemInScene item)
         {
             print("OnNewItem " + item);
-            all.Add(item);
-            //AddToInventary(item.data);
+        //    all.Add(item);
+        //    //AddToInventary(item.data);
         }
 
         public void DeleteAll()
@@ -192,34 +200,31 @@ namespace BoardItems
         }
         public void SetItemInScene(ItemInScene item)
         {
-            //item.gameObject.layer = 9;
-            //foreach (SpriteRenderer sr in item.GetComponentsInChildren<SpriteRenderer>())
-            //    sr.gameObject.layer = 9; //scene;
+            characterManager.AddItem(item);
         }
-        bool IsOverOnlyOneBodyPart(ItemInScene item)
+        CharacterData.parts IsOverOnlyOneBodyPart(ItemInScene item)
         {
             if(item.data.PartsCount == 1) 
-                return true;
-            return false;
+                return item.data.part;
+            return CharacterData.parts.none;
         }
         void OnStopDrag(ItemInScene item, Vector3 pos)
         {
-            SetItemInScene(item);
             item.data.position = item.transform.position;
             item.data.rotation = item.transform.rotation.eulerAngles;
             item.StopBeingDrag();
             //pos.x += item.collider.bounds.extents.x;
             float posX = Camera.main.WorldToScreenPoint(pos).x;
-            bool isOverBodyPart = IsOverOnlyOneBodyPart(item);
-            if (!isOverBodyPart || posX > Screen.width * 0.8f)
+            CharacterData.parts isOverPart = IsOverOnlyOneBodyPart(item);
+            if (isOverPart == CharacterData.parts.none || posX > Screen.width * 0.8f)
             {
-                all.Remove(item);
-                Destroy(item.gameObject);
+                Delete(item);
                 if (all.Count == 0)
                     Events.ActivateUIButtons(false);
             }
             else
             {
+                SetItemInScene(item);
                 AnimateItemDragDrop(false);
                 Events.ActivateUIButtons(true);
             }
@@ -265,6 +270,8 @@ namespace BoardItems
             newItem.id = itemSelected.data.id;
             newItem.position = newItem.transform.position;
             newItem.rotation = itemSelected.data.rotation;
+
+            print("scale " + itemSelected.data.scale);
             newItem.scale = itemSelected.data.scale;
             newItem.anim = itemSelected.data.anim;
             itemInScene.data = newItem;
@@ -314,6 +321,7 @@ namespace BoardItems
             itemSelected.transform.localEulerAngles = Vector3.zero;
             itemSelected.data.ResetScale();
             itemSelected.transform.localScale = itemSelected.data.scale;
+            print("scale " + itemSelected.data.scale);
         }
         public void RotateSnaped()
         {
@@ -325,8 +333,13 @@ namespace BoardItems
         }
         public void Delete(ItemInScene item)
         {
-            if (item != null)
-                StartCoroutine(RemoveFromCanvas(2, item));
+            print("delete " + item);
+            //if (item != null)
+            //{
+            //    StartCoroutine(RemoveFromCanvas(2, item));
+                all.Remove(item);
+                Destroy(item.gameObject);
+            //}
         }
         IEnumerator RemoveFromCanvas(float delay, ItemInScene item)
         {
@@ -351,6 +364,13 @@ namespace BoardItems
         public void Scale(float _x)
         {
             itemSelected.ScaleSetValue(_x);
+            print("scale " + _x);
+        }
+        void EditMode(bool isEditMode)
+        {
+            print("EditMode " + isEditMode);
+            foreach (ItemInScene item in all)
+                item.SetCollider(isEditMode);
         }
 
     }

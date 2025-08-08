@@ -44,8 +44,13 @@ namespace BoardItems
 
             if (data != null)
                 SetColor(data.colorName);
-
-
+        }
+        public void SetCollider(bool isOn)
+        {
+            if (collider == null)
+                collider = GetComponent<Collider2D>();
+            if(collider != null)
+                collider.enabled = isOn;
         }
         Component CopyComponent(Component original, GameObject destination)
         {
@@ -69,6 +74,7 @@ namespace BoardItems
 
         public void ScaleSetValue(float v)
         {
+            print("ScaleSetValue " + v + transform.gameObject.name);
             float nenewValue = Mathf.Min(transform.localScale.x + (v / 100), Data.Instance.settings.maxScale);
             if (nenewValue < -1 * Data.Instance.settings.maxScale)
                 nenewValue = -1 * Data.Instance.settings.maxScale;
@@ -100,9 +106,7 @@ namespace BoardItems
             if(colliders != null)
                 foreach (Collider2D c in colliders)
                     c.enabled = false;
-            if(collider == null)
-                collider = GetComponent<Collider2D>();
-            collider.enabled = true;
+            SetCollider(true);
         }
         public void StopBeingDrag()
         {
@@ -117,7 +121,7 @@ namespace BoardItems
             rb.isKinematic = false;
             foreach (Collider2D c in colliders)
                 c.enabled = true;
-            collider.enabled = true;
+            SetCollider(true);
         }
         public void SetPos(Vector2 pos)
         {

@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.IO;
 using BoardItems.UI;
+using BoardItems.Characters;
 
 namespace BoardItems
 {
@@ -124,7 +125,8 @@ namespace BoardItems
                     wd.items[i].position.y + itemFieldSeparator + wd.items[i].position.z + itemFieldSeparator + wd.items[i].rotation.z +
                     itemFieldSeparator + wd.items[i].scale.x +
                     itemFieldSeparator + Enum.GetName(typeof(PalettesManager.colorNames), wd.items[i].color) +
-                    itemFieldSeparator + Enum.GetName(typeof(AnimationsManager.anim), wd.items[i].anim);
+                    itemFieldSeparator + Enum.GetName(typeof(AnimationsManager.anim), wd.items[i].anim) +
+                    itemFieldSeparator + wd.items[i].part;
                 if (i < wd.items.Count - 1)
                     workData += itemSeparator;
             }
@@ -150,6 +152,7 @@ namespace BoardItems
                 WorkData wd = new WorkData();
                 wd.id = workIDs[i];
                 string[] wData = PlayerPrefs.GetString("Work_" + workIDs[i]).Split(fieldSeparator[0]);
+                print("total art: " + wData.Length);
                 if (wData[0] != "")
                 {
                     Debug.Log("galleryID: " + wData[0]);
@@ -174,7 +177,7 @@ namespace BoardItems
                         sd.scale = new Vector3(float.Parse(iData[5]), float.Parse(iData[5]), 0f);
                         sd.color = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), iData[6]);
                         sd.anim = (AnimationsManager.anim)Enum.Parse(typeof(AnimationsManager.anim), iData[7]);
-
+                        sd.part = int.Parse(iData[8]);
                         // iD.color = Color.white;
                         items.Add(sd);
                     }
