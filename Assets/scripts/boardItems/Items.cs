@@ -191,8 +191,13 @@ namespace BoardItems
         {
             StopAllCoroutines();
             Events.ActivateUIButtons(false);
-            foreach (ItemInScene itemInScene in all)
+            int i = all.Count;
+            while(i>0)
+            {
+                ItemInScene itemInScene = all[i-1];
                 Delete(itemInScene);
+                i--;
+            }
         }
         public void Delete()
         {
