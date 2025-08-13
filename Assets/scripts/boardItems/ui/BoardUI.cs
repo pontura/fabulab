@@ -181,17 +181,15 @@ namespace BoardItems.UI
                 print("scale " + itemData.scale);
                 newItem.colorName = itemData.color;
                 newItem.anim = itemData.anim;
-                //newItem.transform.SetParent(items.container);
-                newItem.transform.position = newItem.position;
-                newItem.transform.rotation = Quaternion.Euler(newItem.rotation);
-                newItem.transform.localScale = newItem.scale;
-                newItem.transform.SetParent(items.container);
+             
                 ItemInScene itemInScene = newItem.gameObject.AddComponent<ItemInScene>();
                 itemInScene.SetCollider(false);
                 itemInScene.data = newItem;
-                items.SetItemInScene(itemInScene);
                 items.all.Add(itemInScene);
-                items.SetItemSelected(itemInScene);
+                items.SetItemInScene(itemInScene);
+                newItem.transform.position = newItem.position;
+                newItem.transform.rotation = Quaternion.Euler(newItem.rotation);
+                newItem.transform.localScale = newItem.scale;
                 if (newItem.anim != AnimationsManager.anim.NONE)
                 {
                     AnimationsManager.AnimData animData = Data.Instance.animationsManager.GetAnimByName(newItem.anim);
