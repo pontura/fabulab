@@ -7,6 +7,7 @@ namespace BoardItems
     {
         Collider2D col2D;
         public CharacterData.parts part;
+        [SerializeField] BodyPart mirror;
 
         void Start()
         {
