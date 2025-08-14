@@ -16,6 +16,7 @@ namespace BoardItems
         }
         public void Init(Items items, GameObject galleryAsset)
         {
+            itemsUI.Restart();
             this.items = items;
             GameObject gallery = Instantiate(galleryAsset);
             gallery.transform.SetParent(items.container);

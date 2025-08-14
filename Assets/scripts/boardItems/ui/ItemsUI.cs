@@ -1,12 +1,7 @@
 using BoardItems;
 using BoardItems.UI;
-using NUnit.Framework.Interfaces;
-using System;
 using System.Collections.Generic;
-using UnityEditorInternal;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class ItemsUI : MonoBehaviour
 {
@@ -21,6 +16,10 @@ public class ItemsUI : MonoBehaviour
     {
         Events.EditMode += EditMode;
         Events.OnStopDrag += OnStopDrag;
+        Restart();
+    }
+    public void Restart()
+    {
         all = new Dictionary<ItemData, ItemButton>();
         Utils.RemoveAllChildsIn(container);
         canvasGroup = GetComponent<CanvasGroup>();
@@ -38,7 +37,6 @@ public class ItemsUI : MonoBehaviour
     {
         canvasGroup.alpha = 1;
     }
-
     public void Add(ItemData itemData, Sprite s)
     {
         ItemButton i = Instantiate(itemButton, container);

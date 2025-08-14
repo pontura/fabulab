@@ -152,6 +152,7 @@ namespace BoardItems.UI
 
         public void LoadWork(string id)
         {
+            items.DeleteAll();
             AlbumData.WorkData wd = Data.Instance.albumData.SetCurrentID(id);
             UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID);
             OpenWork(wd);
