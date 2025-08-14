@@ -69,7 +69,8 @@ namespace BoardItems
         }
         public void Clonate()
         {
-            UIManager.Instance.boardUI.items.Clonate();
+            Vector3 pos = UIManager.Instance.boardUI.items.GetItemSelected().data.position;
+            UIManager.Instance.boardUI.items.Clonate(pos + new Vector3(1,0,0));
             inputManager.OnCloseTools(InputManager.states.IDLE);
         }
         public void MoveBack()

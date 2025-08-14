@@ -188,9 +188,11 @@ namespace BoardItems.UI
                 itemInScene.data = newItem;
                 items.all.Add(itemInScene);
                 items.SetItemInScene(itemInScene);
-                newItem.transform.position = newItem.position;
-                newItem.transform.rotation = Quaternion.Euler(newItem.rotation);
+
+                newItem.transform.localPosition = newItem.position;
+                newItem.transform.localEulerAngles = newItem.rotation;
                 newItem.transform.localScale = newItem.scale;
+
                 if (newItem.anim != AnimationsManager.anim.NONE)
                 {
                     AnimationsManager.AnimData animData = Data.Instance.animationsManager.GetAnimByName(newItem.anim);

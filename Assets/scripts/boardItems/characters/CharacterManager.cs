@@ -30,7 +30,6 @@ namespace BoardItems.Characters
         }
         public void AddItem(ItemInScene item)
         {
-            print("AddItem " + item.data.part);
             BodyPart bp = GetBodyPart(item.data.part);
 
             if(item.data.part != CharacterData.parts.none)

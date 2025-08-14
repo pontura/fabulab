@@ -34,5 +34,9 @@ namespace BoardItems
                     iis.data.SetCharacterPart(CharacterData.parts.none);
             }
         }
+        public BodyPart GetMirror()
+        {
+            return mirror;
+        }
     }
 }

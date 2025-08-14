@@ -40,8 +40,8 @@ namespace BoardItems.UI
                 if (item != null && item.IsBeingUse())
                 {
                     item.transform.SetParent(items.container.transform);
-                    item.data.scale = item.transform.localScale;
-                    item.data.position = item.transform.position;
+                    item.data.scale = item.transform.lossyScale;
+                    item.data.position = item.transform.localPosition;
                 }
             }
             Destroy(container);

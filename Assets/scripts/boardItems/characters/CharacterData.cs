@@ -11,7 +11,9 @@ namespace BoardItems.Characters
             HEAD = 1,
             BODY = 2,
             HAND = 3,
-            FOOT = 4
+            FOOT = 4,
+            FOOT_LEFT = 5,
+            HAND_LEFT = 6
         }
     }
 }

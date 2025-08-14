@@ -215,8 +215,7 @@ namespace BoardItems
         }
         void OnStopDrag(ItemInScene item, Vector3 pos)
         {
-            item.data.position = item.transform.position;
-            item.data.rotation = item.transform.rotation.eulerAngles;
+            
             item.StopBeingDrag();
             //pos.x += item.collider.bounds.extents.x;
             float posX = Camera.main.WorldToScreenPoint(pos).x;
@@ -230,9 +229,33 @@ namespace BoardItems
             else
             {
                 SetItemInScene(item);
+
+                item.data.position = item.transform.localPosition;
+                item.data.rotation = item.transform.localEulerAngles;
+                item.data.scale = item.transform.localScale;
+
                 AnimateItemDragDrop(false);
+                if (item.data.part == CharacterData.parts.FOOT)
+                    CheckMirror(item);
                 Events.ActivateUIButtons(true);
             }
+        }
+        void CheckMirror(ItemInScene item)
+        {
+            Vector3 pos = item.data.position;
+            ItemInScene newItemInScene = Clonate(pos);
+
+            newItemInScene.data.part = CharacterData.parts.FOOT_LEFT;
+            SetItemInScene(newItemInScene);
+            newItemInScene.transform.localPosition = item.transform.localPosition;
+            newItemInScene.transform.localEulerAngles = item.transform.localEulerAngles;
+            newItemInScene.transform.localScale = item.transform.localScale;
+
+            newItemInScene.data.position = item.transform.localPosition;
+            newItemInScene.data.rotation = item.transform.localEulerAngles;
+            newItemInScene.data.scale = item.transform.localScale;
+
+            //  newItemInScene.StopBeingDrag();
         }
         public void StartDrag(ItemInScene item)
         {
@@ -260,20 +283,19 @@ namespace BoardItems
             this.itemSelected = newItem;
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
            
-            ItemInScene itemInScene =  Clonate();
-            itemInScene.data.position = pos;
-            pos.z = 0;
-            itemInScene.transform.position = pos;
+            ItemInScene itemInScene =  Clonate(pos);
             return itemInScene;
         }
-        public ItemInScene Clonate()
+        public ItemInScene Clonate(Vector3 pos)
         {
-            //print("_______1");
+            print("Clonate " + pos);
+            itemSelected.data.position = pos;
             ItemData newItem = InstantiateNewItem(itemSelected.data);
             ItemInScene itemInScene = newItem.gameObject.AddComponent<ItemInScene>();
             newItem.colorName = itemSelected.data.colorName;
             newItem.id = itemSelected.data.id;
-            newItem.position = newItem.transform.position;
+            pos.z = 0;
+            newItem.position = pos;
             newItem.rotation = itemSelected.data.rotation;
 
             print("scale " + itemSelected.data.scale);
@@ -281,9 +303,11 @@ namespace BoardItems
             newItem.anim = itemSelected.data.anim;
             itemInScene.data = newItem;
 
+            itemInScene.transform.position = pos;
+
             newItem.transform.localScale = itemSelected.data.scale;
             newItem.transform.rotation = itemSelected.transform.rotation;
-            newItem.transform.position = itemSelected.data.position + new Vector3(1, 0, 0);
+            newItem.transform.localPosition = itemSelected.data.position + new Vector3(1, 0, 0);
             newItem.anim = itemSelected.data.anim;
             newItem.transform.SetParent(container);
             if (newItem.gameObject.GetComponent<Rigidbody2D>() == null)
@@ -318,7 +342,7 @@ namespace BoardItems
                 back_z += _z_value;
                 itemSelected.data.position.z = back_z;
             }
-            itemSelected.transform.position = itemSelected.data.position;
+            itemSelected.transform.localPosition = itemSelected.data.position;
         }
         public void ResetItemTransform()
         {
