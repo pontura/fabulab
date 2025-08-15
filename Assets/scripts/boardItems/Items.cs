@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 namespace BoardItems
 {
     public class Items : MonoBehaviour
@@ -60,11 +61,20 @@ namespace BoardItems
         }
         void AnimateItem(AnimationsManager.AnimData anim)
         {
+            DoAnimate(anim, itemSelected);
+            if(IsInMirrorPart(itemSelected))
+            {
+                ItemInScene mirror = itemSelected.GetMirror();
+                DoAnimate(anim, mirror);
+            }
+        }
+        void DoAnimate(AnimationsManager.AnimData anim, ItemInScene item)
+        { 
             ResetAllAnims();
-            itemSelected.data.anim = anim.animName;
-            Animation animComponent = itemSelected.GetComponent<Animation>();
+            item.data.anim = anim.animName;
+            Animation animComponent = item.GetComponent<Animation>();
             if (animComponent == null)
-                animComponent = itemSelected.gameObject.AddComponent<Animation>();
+                animComponent = item.gameObject.AddComponent<Animation>();
 
             bool hasAnimSfx = false;
             if (anim.animName != AnimationsManager.anim.NONE)
@@ -72,7 +82,7 @@ namespace BoardItems
                 int sfxCount = 0;
                 foreach (ItemInScene iis in all)
                 {
-                    if (iis != itemSelected)
+                    if (iis != item)
                     {
                         AnimSfx asfx = iis.GetComponent<AnimSfx>();
                         if (asfx != null)
@@ -96,12 +106,12 @@ namespace BoardItems
                 }
             }
 
-            AnimSfx aSfx = itemSelected.GetComponent<AnimSfx>();
+            AnimSfx aSfx = item.GetComponent<AnimSfx>();
             if (aSfx == null)
             {
                 if (anim.animName != AnimationsManager.anim.NONE)
                 {
-                    aSfx = itemSelected.gameObject.AddComponent<AnimSfx>();
+                    aSfx = item.gameObject.AddComponent<AnimSfx>();
                     aSfx.animName = hasAnimSfx ? AnimationsManager.anim.NONE : anim.animName;
                 }
             }
@@ -149,6 +159,8 @@ namespace BoardItems
         void Colorize(PalettesManager.colorNames name)
         {
             itemSelected.SetColor(name);
+            ItemInScene mirror = itemSelected.GetMirror();
+            if (mirror != null) mirror.SetColor(name);
         }
         public ItemInScene GetItemSelected()
         {
@@ -205,7 +217,7 @@ namespace BoardItems
         }
         public void SetItemInScene(ItemInScene item)
         {
-            characterManager.AddItem(item);
+            characterManager.AttachItem(item);
         }
         CharacterData.parts IsOverOnlyOneBodyPart(ItemInScene item)
         {
@@ -235,27 +247,56 @@ namespace BoardItems
                 item.data.scale = item.transform.localScale;
 
                 AnimateItemDragDrop(false);
-                if (item.data.part == CharacterData.parts.FOOT)
-                    CheckMirror(item);
+                FinishEditingItem(item);
                 Events.ActivateUIButtons(true);
             }
         }
+        void FinishEditingItem(ItemInScene item)
+        {
+            if (IsInMirrorPart(item))
+                CheckMirror(item);
+        }
+        bool IsInMirrorPart(ItemInScene item)
+        {
+            return item.data.part == CharacterData.parts.FOOT
+                || item.data.part == CharacterData.parts.FOOT_LEFT
+                || item.data.part == CharacterData.parts.HAND
+                || item.data.part == CharacterData.parts.HAND_LEFT;
+        }
         void CheckMirror(ItemInScene item)
         {
+            ItemInScene mirror = item.GetMirror();
+            if (mirror != null)
+                EditMirror(item, mirror);
+            else
+                AddMirror(item);
+        }
+        void EditMirror(ItemInScene item, ItemInScene mirror)
+        {
+            switch(item.data.part)
+            {
+                case CharacterData.parts.FOOT:  mirror.data.part = CharacterData.parts.FOOT_LEFT; break;
+                case CharacterData.parts.FOOT_LEFT: mirror.data.part = CharacterData.parts.FOOT; break;
+                case CharacterData.parts.HAND: mirror.data.part = CharacterData.parts.HAND_LEFT; break;
+                case CharacterData.parts.HAND_LEFT: mirror.data.part = CharacterData.parts.HAND; break;
+            }
+            SetItemInScene(mirror);
+
+            mirror.transform.localPosition = item.transform.localPosition;
+            mirror.transform.localEulerAngles = item.transform.localEulerAngles;
+            mirror.transform.localScale = item.transform.localScale;
+
+            mirror.data.position = item.transform.localPosition;
+            mirror.data.rotation = item.transform.localEulerAngles;
+            mirror.data.scale = item.transform.localScale;
+        }
+        void AddMirror(ItemInScene item)
+        { 
             Vector3 pos = item.data.position;
             ItemInScene newItemInScene = Clonate(pos);
-
-            newItemInScene.data.part = CharacterData.parts.FOOT_LEFT;
-            SetItemInScene(newItemInScene);
-            newItemInScene.transform.localPosition = item.transform.localPosition;
-            newItemInScene.transform.localEulerAngles = item.transform.localEulerAngles;
-            newItemInScene.transform.localScale = item.transform.localScale;
-
-            newItemInScene.data.position = item.transform.localPosition;
-            newItemInScene.data.rotation = item.transform.localEulerAngles;
-            newItemInScene.data.scale = item.transform.localScale;
-
-            //  newItemInScene.StopBeingDrag();
+            item.SetMirror(newItemInScene);
+            newItemInScene.SetMirror(item);
+            EditMirror(item, newItemInScene);
         }
         public void StartDrag(ItemInScene item)
         {
@@ -343,6 +384,7 @@ namespace BoardItems
                 itemSelected.data.position.z = back_z;
             }
             itemSelected.transform.localPosition = itemSelected.data.position;
+            FinishEditingItem(itemSelected);
         }
         public void ResetItemTransform()
         {
@@ -351,6 +393,7 @@ namespace BoardItems
             itemSelected.data.ResetScale();
             itemSelected.transform.localScale = itemSelected.data.scale;
             print("scale " + itemSelected.data.scale);
+            FinishEditingItem(itemSelected);
         }
         public void RotateSnaped()
         {
@@ -359,41 +402,46 @@ namespace BoardItems
             z = Data.Instance.settings.snapAngle * (int)(z / Data.Instance.settings.snapAngle);
             itemSelected.data.rotation = new Vector3(0f, 0f, z);
             itemSelected.transform.localEulerAngles = itemSelected.data.rotation;
+            FinishEditingItem(itemSelected);
         }
         public void Delete(ItemInScene item)
         {
             print("delete " + item);
-            //if (item != null)
-            //{
-            //    StartCoroutine(RemoveFromCanvas(2, item));
-                all.Remove(item);
-                Destroy(item.gameObject);
-            //}
-        }
-        IEnumerator RemoveFromCanvas(float delay, ItemInScene item)
-        {
-            yield return new WaitForEndOfFrame();
-            if (item != null)
-                item.StartFalling();
-            all.Remove(item);
-            yield return new WaitForSeconds(delay);
-            if (item != null && item != itemSelected)
-                Destroy(item.gameObject);
-            if (all.Count == 0)
+            ItemInScene mirror = item.GetMirror();
+            if (mirror != null)
             {
-                Events.ActivateUIButtons(false);
+                all.Remove(mirror);
+                Destroy(mirror.gameObject);
             }
-
+            all.Remove(item);
+            Destroy(item.gameObject);
         }
+        //IEnumerator RemoveFromCanvas(float delay, ItemInScene item)
+        //{
+        //    yield return new WaitForEndOfFrame();
+        //    if (item != null)
+        //        item.StartFalling();
+        //    all.Remove(item);
+        //    yield return new WaitForSeconds(delay);
+        //    if (item != null && item != itemSelected)
+        //        Destroy(item.gameObject);
+        //    if (all.Count == 0)
+        //    {
+        //        Events.ActivateUIButtons(false);
+        //    }
+
+        //}
 
         public void Rotate(float _x)
         {
             itemSelected.RotateSetValue(_x);
+            FinishEditingItem(itemSelected);
         }
         public void Scale(float _x)
         {
             itemSelected.ScaleSetValue(_x);
             print("scale " + _x);
+            FinishEditingItem(itemSelected);
         }
         void EditMode(bool isEditMode)
         {

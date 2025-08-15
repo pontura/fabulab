@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 namespace BoardItems
 {
     public class ItemInScene : MonoBehaviour
     {
+        [SerializeField] ItemInScene mirror;
         public ItemData data;
         public Rigidbody2D rb;
         [SerializeField] Collider2D collider;
@@ -160,9 +162,12 @@ namespace BoardItems
                     AudioManager.Instance.VoiceCount(audioSource.clip.length);
                 }
             }
-
-            //Debug.Log(gameObject.name+" Play Sound2");
-
         }
+        public ItemInScene GetMirror() {  return mirror;  }
+        public void SetMirror(ItemInScene mirrored)
+        {
+            mirror = mirrored;
+        }
+       
     }
 }

@@ -189,9 +189,7 @@ namespace BoardItems.UI
                 items.all.Add(itemInScene);
                 items.SetItemInScene(itemInScene);
 
-                newItem.transform.localPosition = newItem.position;
-                newItem.transform.localEulerAngles = newItem.rotation;
-                newItem.transform.localScale = newItem.scale;
+                newItem.SetTransformByData();
 
                 if (newItem.anim != AnimationsManager.anim.NONE)
                 {

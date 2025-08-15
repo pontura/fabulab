@@ -1,4 +1,9 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.TextCore.Text;
+using static UnityEditor.Progress;
 
 namespace BoardItems.Characters
 {
@@ -7,6 +12,7 @@ namespace BoardItems.Characters
         public int characterID = 0;
         CharacterAnims anims;
         [SerializeField] BodyPart[] bodyParts;
+
         private void Awake()
         {
             Events.OnCharacterAnim += OnCharacterAnim;
@@ -28,13 +34,11 @@ namespace BoardItems.Characters
         {
             anims.Play(anim);
         }
-        public void AddItem(ItemInScene item)
+        public void AttachItem(ItemInScene item)
         {
             BodyPart bp = GetBodyPart(item.data.part);
-
-            if(item.data.part != CharacterData.parts.none)
-                item.transform.SetParent(bp.transform);
-        }
+            item.transform.SetParent(bp.transform);
+        }       
         BodyPart GetBodyPart(CharacterData.parts part)
         {
             foreach (BodyPart p in bodyParts)

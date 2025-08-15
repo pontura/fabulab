@@ -44,6 +44,12 @@ namespace BoardItems
                 partsCount++;
             this.part = part;
         }
+        public void SetTransformByData()
+        {
+            transform.localPosition = position;
+            transform.localEulerAngles = rotation;
+            transform.localScale = scale;
+        }
     }
 
 }
