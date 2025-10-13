@@ -329,7 +329,6 @@ namespace BoardItems
         }
         public ItemInScene Clonate(Vector3 pos)
         {
-            print("Clonate " + pos);
             itemSelected.data.position = pos;
             ItemData newItem = InstantiateNewItem(itemSelected.data);
             ItemInScene itemInScene = newItem.gameObject.AddComponent<ItemInScene>();
@@ -339,7 +338,6 @@ namespace BoardItems
             newItem.position = pos;
             newItem.rotation = itemSelected.data.rotation;
 
-            print("scale " + itemSelected.data.scale);
             newItem.scale = itemSelected.data.scale;
             newItem.anim = itemSelected.data.anim;
             itemInScene.data = newItem;

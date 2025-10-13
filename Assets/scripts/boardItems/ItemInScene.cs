@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using BoardItems.Characters;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 namespace BoardItems
@@ -94,8 +96,11 @@ namespace BoardItems
             transform.localScale = data.scale;
             AudioManager.Instance.sfxManager.SetPitch(Data.Instance.settings.maxScale - Mathf.Abs(nenewValue));
         }
+        float timer;
         public void StartBeingDrag()
         {
+            timer = Time.time;
+            print("StartBeingDrag");
             used = true;
             rb = gameObject.GetComponent<Rigidbody2D>();
 
@@ -148,10 +153,34 @@ namespace BoardItems
                 return true;
             return false;
         }
-
+        [SerializeField] BodyPart bp;
+        void OnTriggerEnter2D(Collider2D collision)
+        {
+            print("coll OnTriggerEnter2D: " + collision.gameObject.name);
+            BodyPart bpEnter = collision.gameObject.GetComponent<BodyPart>();
+            if (bp == null)
+            {
+                bp = bpEnter;
+                data.SetCharacterPart(bpEnter.part);
+            }
+        }
+        void OnTriggerExit2D(Collider2D collision)
+        {
+            print("coll OnTriggerExit2D: " + (timer + 0.1f) + "     Timer " + Time.time);
+            if (timer+0.1f > Time.time) return;
+            print("coll OnTriggerExit2D: " + collision.gameObject.name);
+            BodyPart bpExit = collision.GetComponent<BodyPart>();
+            if (bpExit != null && bp == bpExit)
+            {
+                bp = null;
+                data.OutOfBody();
+                if (data.part == bpExit.part)
+                    data.SetCharacterPart(CharacterData.parts.none);
+            }
+        }
         void OnCollisionEnter2D(Collision2D collision)
         {
-
+            print("coll: " + collision.gameObject.name);
             if (collision.relativeVelocity.magnitude > 2)
             {
                 if (!audioSource.isPlaying && AudioManager.Instance.IsVoiceRoom())
