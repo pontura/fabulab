@@ -241,7 +241,7 @@ namespace BoardItems
             else
             {
                 SetItemInScene(item);
-
+                item.data.part = isOverPart;
                 item.data.position = item.transform.localPosition;
                 item.data.rotation = item.transform.localEulerAngles;
                 item.data.scale = item.transform.localScale;
@@ -255,9 +255,20 @@ namespace BoardItems
         {
             if (IsInMirrorPart(item))
                 CheckMirror(item);
+            else
+            {
+                ItemInScene mirror = item.GetMirror();
+                if (mirror != null)
+                {
+                    item.SetMirror(null);
+                    mirror.SetMirror(null);
+                    Delete(mirror);
+                }
+            }
         }
         bool IsInMirrorPart(ItemInScene item)
         {
+            print(" IsInMirrorPart " + item.data.part);
             return item.data.part == CharacterData.parts.FOOT
                 || item.data.part == CharacterData.parts.FOOT_LEFT
                 || item.data.part == CharacterData.parts.HAND
@@ -289,6 +300,7 @@ namespace BoardItems
             mirror.data.position = item.transform.localPosition;
             mirror.data.rotation = item.transform.localEulerAngles;
             mirror.data.scale = item.transform.localScale;
+
         }
         void AddMirror(ItemInScene item)
         { 

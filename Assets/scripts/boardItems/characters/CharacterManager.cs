@@ -38,6 +38,7 @@ namespace BoardItems.Characters
         {
             BodyPart bp = GetBodyPart(item.data.part);
             item.transform.SetParent(bp.transform);
+            item.data.part = bp.part;
         }       
         BodyPart GetBodyPart(CharacterData.parts part)
         {

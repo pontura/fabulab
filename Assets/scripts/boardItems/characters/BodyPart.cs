@@ -7,15 +7,26 @@ namespace BoardItems
     {
         Collider2D col2D;
         public CharacterData.parts part;
-        [SerializeField] BodyPart mirror;
+        [SerializeField] GameObject selectedBodySignal;
 
         void Start()
         {
+            Events.OnNewBodyPartSelected += OnNewBodyPartSelected;
+            col2D = GetComponentInChildren<Collider2D>();
+            SetSelection(false);
+        }
+        void OnDestroy()
+        {
+            Events.OnNewBodyPartSelected -= OnNewBodyPartSelected;
             col2D = GetComponentInChildren<Collider2D>();
         }
-        public BodyPart GetMirror()
+        void OnNewBodyPartSelected(BodyPart bp)
         {
-            return mirror;
+            SetSelection(bp == this);
+        }
+        public void SetSelection(bool isOn)
+        {
+            selectedBodySignal.gameObject.SetActive(isOn);
         }
     }
 }

@@ -3,6 +3,7 @@ using BoardItems;
 
 public static class Events
 {
+    public static System.Action<BodyPart> OnNewBodyPartSelected = delegate { };
     public static System.Action<ItemInScene, Vector3> OnStartDrag = delegate { };
     public static System.Action<ItemInScene, Vector3> OnStopDrag = delegate { };
     public static System.Action<ItemInScene> ItemBackToMenu = delegate { };

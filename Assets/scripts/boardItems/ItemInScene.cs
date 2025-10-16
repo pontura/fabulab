@@ -120,6 +120,7 @@ namespace BoardItems
             rb.isKinematic = false;
             foreach (Collider2D c in colliders)
                 c.enabled = true;
+            Events.OnNewBodyPartSelected(null);
         }
         public void StartFalling()
         {
@@ -156,31 +157,44 @@ namespace BoardItems
         [SerializeField] BodyPart bp;
         void OnTriggerEnter2D(Collider2D collision)
         {
-            print("coll OnTriggerEnter2D: " + collision.gameObject.name);
+           // print("coll OnTriggerEnter2D: " + collision.gameObject.name);
             BodyPart bpEnter = collision.gameObject.GetComponent<BodyPart>();
+            
             if (bp == null)
             {
-                bp = bpEnter;
                 data.SetCharacterPart(bpEnter.part);
+                Events.OnNewBodyPartSelected(bpEnter);
             }
+            if(bpEnter != null)
+                bp = bpEnter;
         }
         void OnTriggerExit2D(Collider2D collision)
         {
-            print("coll OnTriggerExit2D: " + (timer + 0.1f) + "     Timer " + Time.time);
-            if (timer+0.1f > Time.time) return;
-            print("coll OnTriggerExit2D: " + collision.gameObject.name);
+           // print("coll OnTriggerExit2D: " + (timer + 0.1f) + "     Timer " + Time.time);
+            if (timer+0.01f > Time.time) return;
+           // print("coll OnTriggerExit2D: " + collision.gameObject.name);
             BodyPart bpExit = collision.GetComponent<BodyPart>();
             if (bpExit != null && bp == bpExit)
             {
                 bp = null;
                 data.OutOfBody();
                 if (data.part == bpExit.part)
+                {
                     data.SetCharacterPart(CharacterData.parts.none);
+                    Events.OnNewBodyPartSelected(null);
+                }
+            }
+            else if (bp != null && bpExit != null)
+            {
+                data.OutOfBody();
+              //  print("OnTriggerExit2D and set last bp: " + bp.part);
+                data.SetCharacterPart(bp.part);
+                Events.OnNewBodyPartSelected(bp);
             }
         }
         void OnCollisionEnter2D(Collision2D collision)
         {
-            print("coll: " + collision.gameObject.name);
+           // print("coll: " + collision.gameObject.name);
             if (collision.relativeVelocity.magnitude > 2)
             {
                 if (!audioSource.isPlaying && AudioManager.Instance.IsVoiceRoom())
