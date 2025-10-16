@@ -12,7 +12,9 @@ public class CharacterAnims : MonoBehaviour
         idle,
         edit,
         walk_right,
-        waveHand
+        waveHand,
+        dance_1,
+        dance_2
     }
     public void Play(anims animName)
     {
