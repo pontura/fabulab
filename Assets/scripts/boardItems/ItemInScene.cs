@@ -114,6 +114,9 @@ namespace BoardItems
                 foreach (Collider2D c in colliders)
                     c.enabled = false;
             SetCollider(true);
+
+            if(bp != null)
+                Events.OnNewBodyPartSelected(bp);
         }
         public void StopBeingDrag()
         {
