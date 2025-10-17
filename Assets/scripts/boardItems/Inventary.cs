@@ -6,7 +6,7 @@ namespace BoardItems
     public class Inventary : MonoBehaviour
     {
         [SerializeField] ItemPhotoCreator itemPhotoCreator;
-        [SerializeField] ItemsUI itemsUI;
+        [SerializeField] UI.ItemsUI itemsUI;
         Items items;
         public void Reset()
         {
