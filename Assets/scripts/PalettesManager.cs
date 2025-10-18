@@ -81,7 +81,12 @@ public class PalettesManager : MonoBehaviour
 		NATURALISTA,
 		ACUATICA,
 		PUMPUM,
-		CANDY
+		CANDY,
+		BASICA_2,
+		NATURALISTA_2,
+		ACUATICA_2,
+		PUMPUM_2,
+		CANDY_2
     }
     [Serializable]
     public class PaletteData
