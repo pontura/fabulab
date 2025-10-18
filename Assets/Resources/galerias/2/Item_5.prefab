@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6661034168000313655}
   - component: {fileID: 2092084317422538294}
   - component: {fileID: 8209182071292882573}
-  - component: {fileID: 7052957732468221185}
+  - component: {fileID: 6309662422854973917}
   m_Layer: 0
   m_Name: Item_5
   m_TagString: DragItem
@@ -76,8 +76,8 @@ Animation:
   m_AnimatePhysics: 0
   m_UpdateMode: 0
   m_CullingType: 0
---- !u!61 &7052957732468221185
-BoxCollider2D:
+--- !u!60 &6309662422854973917
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -114,14 +114,56 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 8.55, y: 2.06}
+    oldSize: {x: 5.12, y: 5.12}
     newSize: {x: 8.55, y: 2.06}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.54, y: 1.04}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: 2.07, y: 2.56}
+      - {x: 1.9699999, y: 2.55}
+      - {x: 1.8199999, y: 2.53}
+      - {x: 1.63, y: 2.5}
+      - {x: 1.48, y: 2.47}
+      - {x: 0.97999996, y: 2.35}
+      - {x: 0.85999995, y: 2.3}
+      - {x: 0.56, y: 2.18}
+      - {x: 0.38, y: 2.1}
+      - {x: 0.14999999, y: 1.99}
+      - {x: -0.03, y: 1.89}
+      - {x: -0.21, y: 1.78}
+      - {x: -0.39, y: 1.66}
+      - {x: -0.53999996, y: 1.55}
+      - {x: -0.71999997, y: 1.4}
+      - {x: -0.87, y: 1.27}
+      - {x: -1.02, y: 1.13}
+      - {x: -1.13, y: 1.02}
+      - {x: -1.27, y: 0.87}
+      - {x: -1.3399999, y: 0.78999996}
+      - {x: -1.4399999, y: 0.68}
+      - {x: -1.6899999, y: 0.35999998}
+      - {x: -1.93, y: -0.04}
+      - {x: -1.99, y: -0.14999999}
+      - {x: -2.1, y: -0.38}
+      - {x: -2.1499999, y: -0.48999998}
+      - {x: -2.2, y: -0.61}
+      - {x: -2.26, y: -0.76}
+      - {x: -2.3, y: -0.87}
+      - {x: -2.32, y: -0.93}
+      - {x: -2.3899999, y: -1.16}
+      - {x: -2.4199998, y: -1.27}
+      - {x: -2.45, y: -1.39}
+      - {x: -2.47, y: -1.48}
+      - {x: -2.5, y: -1.63}
+      - {x: -2.52, y: -1.75}
+      - {x: -2.56, y: -2.06}
+      - {x: -2.56, y: -2.56}
+      - {x: -2.54, y: -2.56}
+      - {x: 2.56, y: 2.54}
+      - {x: 2.56, y: 2.56}
+  m_UseDelaunayMesh: 0
 --- !u!1 &6703547937581266736
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,7 +272,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 6194b14cd0a601f42a78841c61084681, type: 3}
+  m_Sprite: {fileID: 21300000, guid: de2adab19ae21b141b1d003894ac19c6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
