@@ -7,17 +7,26 @@ namespace Common.UI
     {
        // [SerializeField] TabButton tabButton;
         [SerializeField] List<TabButton> all;
-
+        System.Action<int> OnActive;
         void Start()
         {
+            int id = 0;
             foreach (TabButton tabButton in all)
-                tabButton.Init(this);
+            {
+                tabButton.Init(this, id);
+                id++;
+            }
+        }
+        public void Init(System.Action<int> OnActive)
+        {
+            this.OnActive = OnActive;
         }
         public void Clicked(TabButton tabButton)
         {
             ResetAll();
             tabButton.SetActive();
             print("clicked " + tabButton);
+            OnActive(tabButton.id);
         }
         void ResetAll()
         {

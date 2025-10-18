@@ -1,4 +1,3 @@
-using BoardItems.UI;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,9 +14,12 @@ namespace BoardItems.UI
 
         private void Awake()
         {
-            Events.EditMode += EditMode;
             Events.OnStopDrag += OnStopDrag;
-            Restart();
+        }
+        public void SetOn(bool isOn)
+        {
+            gameObject.SetActive(isOn);
+            //if (isOn) Restart();
         }
         public void Restart()
         {
@@ -28,12 +30,8 @@ namespace BoardItems.UI
         private void OnDestroy()
         {
             Events.OnStopDrag -= OnStopDrag;
-            Events.EditMode -= EditMode;
         }
-        void EditMode(bool isOn)
-        {
-            gameObject.SetActive(isOn);
-        }
+       
         private void OnStopDrag(ItemInScene scene, Vector3 vector)
         {
             canvasGroup.alpha = 1;
