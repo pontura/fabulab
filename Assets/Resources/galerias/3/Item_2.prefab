@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 40974e647d0f31d419678ad2c042de62, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c955d9b2660b28e4faaaeda974b31a17, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 6661034168000313655}
   - component: {fileID: 2092084317422538294}
   - component: {fileID: 8209182071292882573}
-  - component: {fileID: 689795964041198729}
+  - component: {fileID: 279568164491732713}
   m_Layer: 0
   m_Name: Item_2
   m_TagString: DragItem
@@ -163,8 +163,8 @@ Animation:
   m_AnimatePhysics: 0
   m_UpdateMode: 0
   m_CullingType: 0
---- !u!60 &689795964041198729
-PolygonCollider2D:
+--- !u!61 &279568164491732713
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -207,14 +207,8 @@ PolygonCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 0, y: 2.65}
-      - {x: -2.78, y: 0.52}
-      - {x: -1.73, y: -2.61}
-      - {x: 1.73, y: -2.61}
-      - {x: 2.78, y: 0.52}
-  m_UseDelaunayMesh: 0
+  m_Size: {x: 0.52, y: 10.15}
+  m_EdgeRadius: 0
 --- !u!1 &6703547937581266736
 GameObject:
   m_ObjectHideFlags: 0
