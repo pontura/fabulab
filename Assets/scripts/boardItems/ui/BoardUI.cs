@@ -43,7 +43,7 @@ namespace BoardItems.UI
             UIManager.Instance.gallerySelectorUI.ShowGallerySelector(true);
         }
 
-        void InitGallery(GaleriasData.GalleryData gallery)
+        void InitGallery(GaleriasData.GalleryData gallery, bool editMode)
         {
             BackBtn.SetActive(false);
             Color color = Data.Instance.palettesManager.GetColor(gallery.colorUI);
@@ -154,26 +154,14 @@ namespace BoardItems.UI
         {
             items.DeleteAll();
             AlbumData.WorkData wd = Data.Instance.albumData.SetCurrentID(id);
-            UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID);
+            UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID, true);
             OpenWork(wd);
         }
-        //public void LoadPakapakaWork(int id)
-        //{
-        //    AlbumData.WorkData wataToClonate = Data.Instance.albumData.pakapakaAlbum[id];
-        //    print("LoadPakapakaWork " + id);
-        //    AlbumData.WorkData wData = new AlbumData.WorkData();
-        //    wData.bgColorName = wataToClonate.bgColorName;
-        //    wData.galleryID = wataToClonate.galleryID;
-        //    wData.id = System.DateTime.Now.ToString("yyyyMMddHHmmss");
-        //    wData.items = wataToClonate.items;
-        //    Data.Instance.albumData.album.Add(wData);
-        //    LoadWork(wData.id);
-        //}
         [SerializeField] RenderTexture rt;
         public void GenerateThumb(AlbumData.WorkData wd, RawImage targetRawImage, System.Action OnReady)
         {
             items.DeleteAll();
-            UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID);
+            UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID, false);
             foreach (AlbumData.WorkData.SavedIData itemData in wd.items)
             {
                 ItemData newItem = Instantiate(Resources.Load<ItemData>("galerias/" + Data.Instance.galeriasData.gallery.id + "/item_" + itemData.id));

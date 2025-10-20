@@ -8,7 +8,7 @@ public static class Events
     public static System.Action<ItemInScene, Vector3> OnStopDrag = delegate { };
     public static System.Action<ItemInScene> ItemBackToMenu = delegate { };
     public static System.Action<ItemInScene> OnNewItem = delegate { };
-    public static System.Action<GaleriasData.GalleryData> InitGallery = delegate { };
+    public static System.Action<GaleriasData.GalleryData, bool> InitGallery = delegate { };
     public static System.Action ResetItems = delegate { };
     public static System.Action<PalettesManager.colorNames> Colorize = delegate { };
     public static System.Action<AnimationsManager.AnimData> AnimateItem = delegate { };

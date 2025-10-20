@@ -171,14 +171,14 @@ namespace BoardItems
         {
             itemSelected = iInScene;
         }
-        void InitGallery(GaleriasData.GalleryData gallery)
+        void InitGallery(GaleriasData.GalleryData gallery, bool editMode)
         {
             all.Clear();
             Events.ActivateUIButtons(false);
             StopAllCoroutines();
             Utils.RemoveAllChildsIn(container);
             bg.color = Data.Instance.palettesManager.GetColor(gallery.colorUI);
-            inventary.Init(this, gallery.gallery);
+            inventary.Init(this, gallery.gallery, editMode);
         }
         public void AddToInventary(ItemData itemData)
         {

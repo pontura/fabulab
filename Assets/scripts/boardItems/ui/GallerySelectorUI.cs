@@ -17,12 +17,12 @@ namespace BoardItems.UI
                 AudioManager.Instance.musicManager.Play("gallery");
         }
 
-        public void SelectGallery(int id)
+        public void SelectGallery(int id, bool editMode)
         {
             //AudioManager.Instance.uiSfxManager.PlayNextScaleUISfx("click");
             AudioManager.Instance.uiSfxManager.Play("click");
             Data.Instance.galeriasData.SetGallery(id);
-            Events.InitGallery(Data.Instance.galeriasData.gallery);
+            Events.InitGallery(Data.Instance.galeriasData.gallery, editMode);
             //RectTransform vp = inventarioScroll.viewport;
             //Destroy(vp.transform.GetChild(0).gameObject);
             //GameObject gal = GameObject.Instantiate(Data.Instance.galeriasData.galleries[id], vp.transform);

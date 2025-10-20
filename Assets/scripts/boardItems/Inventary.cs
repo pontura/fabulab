@@ -14,14 +14,15 @@ namespace BoardItems
             if (items != null)
                 Utils.RemoveAllChildsIn(items.container);
         }
-        public void Init(Items items, GameObject galleryAsset)
+        public void Init(Items items, GameObject galleryAsset, bool editMode = false)
         {
             itemsUI.Restart();
             this.items = items;
             GameObject gallery = Instantiate(galleryAsset);
             gallery.transform.SetParent(items.container);
             gallery.transform.localPosition = Vector3.zero;
-            StartCoroutine(AddItems(gallery));
+            if(editMode)
+                StartCoroutine(AddItems(gallery));
         }
         IEnumerator AddItems(GameObject gallery)
         {
