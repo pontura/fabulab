@@ -1,9 +1,4 @@
-using NUnit.Framework;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.TextCore.Text;
-using static UnityEditor.Progress;
 
 namespace BoardItems.Characters
 {

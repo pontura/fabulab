@@ -27,7 +27,7 @@ namespace BoardItems
         {
             foreach (ItemData itemData in gallery.GetComponentsInChildren<ItemData>())
             {
-                yield return new WaitForSeconds(0.05f);
+                yield return new WaitForEndOfFrame();
                 AddItem(itemData, itemData.transform.position);
             }
             Destroy(gallery.gameObject);

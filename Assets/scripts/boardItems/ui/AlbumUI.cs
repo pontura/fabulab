@@ -9,7 +9,7 @@ namespace BoardItems.UI
         public GameObject album;
         public GameObject workBtn_prefab;
         public Transform worksContainer;
-        public GameObject[] hardcodedObject;
+    //    public GameObject[] hardcodedObject;
 
         public void ShowAlbum(bool enable)
         {
@@ -23,11 +23,10 @@ namespace BoardItems.UI
                 UIManager.Instance.mainMenuUI.ShowMainMenu(true);
             }
         }
-
+        int artID = 0;
         void Init()
         {
-            foreach (GameObject go in hardcodedObject)
-                go.transform.SetParent(transform);
+            artID = 0;
 
             foreach (Transform child in worksContainer)
             {
@@ -35,38 +34,39 @@ namespace BoardItems.UI
                     Destroy(child.gameObject);
             }
 
-            for (int i = 0; i < Data.Instance.albumData.album.Count; i++)
+            LoadNext();
+        }
+        
+        void LoadNext()
+        {
+            print("LoadNext " + artID);
+            if (artID >= Data.Instance.albumData.album.Count) return;
+            AlbumData.WorkData wd = Data.Instance.albumData.album[artID];
+            artID++;
+            if (wd.thumb != null)
             {
-                AlbumData.WorkData wd = Data.Instance.albumData.album[i];
-                if (wd.thumb != null)
+                if (Data.Instance.galeriasData.ExistGallery(wd.galleryID))
                 {
-                    if (Data.Instance.galeriasData.ExistGallery(wd.galleryID))
-                    {
-                        GameObject go = Instantiate(workBtn_prefab, worksContainer);
-                        Sprite sprite = Sprite.Create(wd.thumb, new Rect(0, 0, wd.thumb.width, wd.thumb.height), Vector2.zero);
-                        Image[] imgs = go.GetComponentsInChildren<Image>();
-                        imgs[0].color = Data.Instance.palettesManager.GetColor(Data.Instance.galeriasData.GetGalleryColorUI(wd.galleryID));
-                        imgs[1].sprite = sprite;
-                        go.GetComponent<Button>().onClick.AddListener(() => OpenWork(wd.id, sprite, imgs[0].color, wd.pkpkShared));
-                    }
+                    GameObject go = Instantiate(workBtn_prefab, worksContainer);
+                    print("go " + go);
+                    RawImage rm = go.GetComponentInChildren<RawImage>();
+                    UIManager.Instance.boardUI.GenerateThumb(wd, rm, LoadNext);
+                    go.GetComponent<Button>().onClick.AddListener(() => OpenWork(wd.id));
                 }
             }
-            foreach (GameObject go in hardcodedObject)
-                go.transform.SetParent(worksContainer);
-
-            AudioManager.Instance.uiSfxManager.PlayTransp("forward", 2);
         }
         public void DuplicateWork(int PakaPakaObjectID)
         {
-            UIManager.Instance.boardUI.LoadPakapakaWork(PakaPakaObjectID);
+          //  UIManager.Instance.boardUI.LoadPakapakaWork(PakaPakaObjectID);
             album.SetActive(false);
         }
 
-        public void OpenWork(string id, Sprite sprite, Color colorUI, bool pkpkShared)
+        public void OpenWork(string id)
         {
             //AudioManager.Instance.uiSfxManager.PlayNextScaleUISfx("click");
-            AudioManager.Instance.uiSfxManager.PlayTransp("click", 2);
-            UIManager.Instance.workDetailUI.ShowWorkDetail(id, sprite, colorUI, pkpkShared, false);
+            // AudioManager.Instance.uiSfxManager.PlayTransp("click", 2);
+            // UIManager.Instance.workDetailUI.ShowWorkDetail(id, sprite, colorUI, pkpkShared, false);
+            UIManager.Instance.boardUI.LoadWork(id);
             album.SetActive(false);
         }
 

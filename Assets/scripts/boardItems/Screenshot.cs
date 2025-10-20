@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Linq;
 using BoardItems.UI;
 
@@ -15,7 +13,6 @@ namespace BoardItems
         private Texture2D texture;
         private System.Action<Texture2D> CopyTexture;
 
-        // Start is called before the first frame update
         void Start()
         {
             if (cameraToScreen == null)

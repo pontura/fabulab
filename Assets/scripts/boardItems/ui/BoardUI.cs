@@ -149,7 +149,7 @@ namespace BoardItems.UI
             items.NextStepAnims(0, captureGifFramerate);
             Events.CaptureGif(id, callback);
         }
-
+      
         public void LoadWork(string id)
         {
             items.DeleteAll();
@@ -157,18 +157,85 @@ namespace BoardItems.UI
             UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID);
             OpenWork(wd);
         }
-        public void LoadPakapakaWork(int id)
+        //public void LoadPakapakaWork(int id)
+        //{
+        //    AlbumData.WorkData wataToClonate = Data.Instance.albumData.pakapakaAlbum[id];
+        //    print("LoadPakapakaWork " + id);
+        //    AlbumData.WorkData wData = new AlbumData.WorkData();
+        //    wData.bgColorName = wataToClonate.bgColorName;
+        //    wData.galleryID = wataToClonate.galleryID;
+        //    wData.id = System.DateTime.Now.ToString("yyyyMMddHHmmss");
+        //    wData.items = wataToClonate.items;
+        //    Data.Instance.albumData.album.Add(wData);
+        //    LoadWork(wData.id);
+        //}
+        [SerializeField] RenderTexture rt;
+        public void GenerateThumb(AlbumData.WorkData wd, RawImage targetRawImage, System.Action OnReady)
         {
-            AlbumData.WorkData wataToClonate = Data.Instance.albumData.pakapakaAlbum[id];
-            print("LoadPakapakaWork " + id);
-            AlbumData.WorkData wData = new AlbumData.WorkData();
-            wData.bgColorName = wataToClonate.bgColorName;
-            wData.galleryID = wataToClonate.galleryID;
-            wData.id = System.DateTime.Now.ToString("yyyyMMddHHmmss");
-            wData.items = wataToClonate.items;
-            Data.Instance.albumData.album.Add(wData);
-            LoadWork(wData.id);
+            items.DeleteAll();
+            UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID);
+            foreach (AlbumData.WorkData.SavedIData itemData in wd.items)
+            {
+                ItemData newItem = Instantiate(Resources.Load<ItemData>("galerias/" + Data.Instance.galeriasData.gallery.id + "/item_" + itemData.id));
+                // Debug.Log("ID" + itemData.id + ":" + itemData.position);
+                newItem.part = (CharacterData.parts)itemData.part;
+                newItem.position = itemData.position;
+                newItem.rotation = itemData.rotation;
+                newItem.scale = itemData.scale;
+                newItem.colorName = itemData.color;
+                newItem.anim = itemData.anim;
+
+                ItemInScene itemInScene = newItem.gameObject.AddComponent<ItemInScene>();
+                itemInScene.SetCollider(false);
+                itemInScene.data = newItem;
+                items.all.Add(itemInScene);
+                items.SetItemInScene(itemInScene);
+
+                newItem.SetTransformByData();
+            }
+            StartCoroutine(GenerateThumbForRawImage(wd, targetRawImage, OnReady));
         }
+
+        public Vector2Int thumbSize = new Vector2Int(128, 128);
+
+
+        public IEnumerator GenerateThumbForRawImage(AlbumData.WorkData wd, RawImage targetRawImage, System.Action OnReady)
+        {
+            // 1️⃣ Crear RenderTexture temporal
+            RenderTexture rt = new RenderTexture(thumbSize.x, thumbSize.y, 24, RenderTextureFormat.ARGB32);
+            rt.Create();
+
+            cam.targetTexture = rt;
+
+            yield return new WaitForEndOfFrame();
+
+            // 2️⃣ Capturar frame en un Texture2D independiente
+            Texture2D tex = new Texture2D(thumbSize.x, thumbSize.y, TextureFormat.RGBA32, false);
+            RenderTexture.active = rt;
+            tex.ReadPixels(new Rect(0, 0, thumbSize.x, thumbSize.y), 0, 0);
+            tex.Apply(); // ✅ Ahora tex es una imagen independiente en memoria
+
+            // 3️⃣ Asignamos la textura al RawImage
+            targetRawImage.texture = tex;
+
+            // 4️⃣ DESCONECTAR la cámara del RenderTexture
+            cam.targetTexture = null;
+            RenderTexture.active = null;
+
+            // 5️⃣ Liberar SOLO el RenderTexture (¡NO destruir el Texture2D!)
+            rt.Release();
+            Destroy(rt); 
+            yield return new WaitForEndOfFrame();
+            OnReady();
+        }
+
+
+
+
+
+
+
+
         void OpenWork(AlbumData.WorkData wd)
         {
             foreach (AlbumData.WorkData.SavedIData itemData in wd.items)
@@ -179,7 +246,6 @@ namespace BoardItems.UI
                 newItem.position = itemData.position;
                 newItem.rotation = itemData.rotation;
                 newItem.scale = itemData.scale;
-                print("scale " + itemData.scale);
                 newItem.colorName = itemData.color;
                 newItem.anim = itemData.anim;
              
