@@ -16,6 +16,7 @@ namespace BoardItems
         }
         public void Init(Items items, GameObject galleryAsset, bool editMode = false)
         {
+            print("Inventary Init editMode:" + editMode);
             itemsUI.Restart();
             this.items = items;
             GameObject gallery = Instantiate(galleryAsset);

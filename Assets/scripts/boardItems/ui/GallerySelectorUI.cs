@@ -16,7 +16,14 @@ namespace BoardItems.UI
             if (enable)
                 AudioManager.Instance.musicManager.Play("gallery");
         }
+        public void SelectGalleryClicked(int id)
+        {
+            AudioManager.Instance.uiSfxManager.Play("click");
+            Data.Instance.galeriasData.SetGallery(id);
+            Events.InitGallery(Data.Instance.galeriasData.gallery, true);
 
+            gallerySelector.SetActive(false);
+        }
         public void SelectGallery(int id, bool editMode)
         {
             //AudioManager.Instance.uiSfxManager.PlayNextScaleUISfx("click");
