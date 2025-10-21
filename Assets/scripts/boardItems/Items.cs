@@ -46,6 +46,13 @@ namespace BoardItems
         void ResetItems()
         {
             StopAllCoroutines();
+            int i = all.Count;
+            while (i > 0)
+            {
+                ItemInScene itemInScene = all[i - 1];
+                Delete(itemInScene);
+                i--;
+            }
             all.Clear();
             inventary.Reset();
         }
