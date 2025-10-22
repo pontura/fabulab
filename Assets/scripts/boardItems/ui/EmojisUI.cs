@@ -3,12 +3,13 @@ using UnityEngine;
 using UnityEngine.UI;
 namespace BoardItems.UI
 {
-    public class ActionsUI : MonoBehaviour
+    public class EmojisUI : MonoBehaviour
     {
-        bool initialized;
+        [SerializeField] int characterEditorID = 0;
         [SerializeField] Button button;
         [SerializeField] Transform container;
 
+        bool initialized;
         public void SetOn(bool isOn)
         {
             gameObject.SetActive(isOn);
@@ -19,24 +20,22 @@ namespace BoardItems.UI
         {
             Utils.RemoveAllChildsIn(container);
             initialized = true;
+            print("initialized");
             int id = 0;
-            foreach (string name in Enum.GetNames(typeof(CharacterAnims.anims)))
+            foreach (string name in Enum.GetNames(typeof(CharacterExpressions.expressions)))
             {
                 int buttonID = id;
                 Button b = Instantiate(button, container);
-                b.GetComponentInChildren<TMPro.TMP_Text>().text = name;
+                b.GetComponentInChildren<TMPro.TMP_Text>().text = name; 
                 b.onClick.AddListener(() => Clicked(buttonID));
                 id++;
             }
         }
-
-        int characterEditorID = 0;
         void Clicked(int id)
         {
             print(id);
-            CharacterAnims.anims anim = (CharacterAnims.anims)id;
-            Events.EditMode(anim == CharacterAnims.anims.edit);
-            Events.OnCharacterAnim(characterEditorID, anim);
+            CharacterExpressions.expressions e = (CharacterExpressions.expressions)id;
+            Events.OnCharacterExpression(characterEditorID, e);
         }
     }
 }

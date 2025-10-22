@@ -1,8 +1,7 @@
 ﻿using BoardItems.Characters;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
+
 namespace BoardItems
 {
     public class Items : MonoBehaviour

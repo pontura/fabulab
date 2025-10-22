@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static AnimationsManager;
 
 namespace BoardItems.UI
 {
@@ -19,7 +20,8 @@ namespace BoardItems.UI
         public void SetOn(bool isOn)
         {
             gameObject.SetActive(isOn);
-            //if (isOn) Restart();
+            CharacterAnims.anims anim = CharacterAnims.anims.edit;
+            Events.OnCharacterAnim(0, anim);
         }
         public void Restart()
         {
