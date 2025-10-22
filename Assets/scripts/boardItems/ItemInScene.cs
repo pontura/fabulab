@@ -158,41 +158,55 @@ namespace BoardItems
             return false;
         }
         [SerializeField] BodyPart bp;
+        [SerializeField] BodyPart bpEnter;
         void OnTriggerEnter2D(Collider2D collision)
         {
-           // print("coll OnTriggerEnter2D: " + collision.gameObject.name);
-            BodyPart bpEnter = collision.gameObject.GetComponent<BodyPart>();
+            print("coll OnTriggerEnter2D: " + collision.gameObject.name);
+            bpEnter = collision.gameObject.GetComponent<BodyPart>();
             
             if (bp == null)
             {
                 data.SetCharacterPart(bpEnter.part);
                 Events.OnNewBodyPartSelected(bpEnter);
-            }
-            if(bpEnter != null)
                 bp = bpEnter;
+            }
+            //if(bp == null && bpEnter != null)
+            //    bp = bpEnter;
         }
         void OnTriggerExit2D(Collider2D collision)
         {
            // print("coll OnTriggerExit2D: " + (timer + 0.1f) + "     Timer " + Time.time);
             if (timer+0.01f > Time.time) return;
-           // print("coll OnTriggerExit2D: " + collision.gameObject.name);
+            print("coll OnTriggerExit2D: " + collision.gameObject.name);
             BodyPart bpExit = collision.GetComponent<BodyPart>();
-            if (bpExit != null && bp == bpExit)
+            if (bpExit != null)
             {
-                bp = null;
-                data.OutOfBody();
-                if (data.part == bpExit.part)
-                {
-                    data.SetCharacterPart(CharacterData.parts.none);
-                    Events.OnNewBodyPartSelected(null);
+                if(bp == bpExit)
+                {    
+                    data.OutOfBody();
+                    if (bp == bpEnter)
+                    {
+
+                        data.SetCharacterPart(CharacterData.parts.none);
+                        Events.OnNewBodyPartSelected(null);
+                        bp = null;
+                        bpEnter = null;
+                    }
+                    else
+                    {
+                        bp = bpEnter;
+                        data.SetCharacterPart(bp.part);
+                        Events.OnNewBodyPartSelected(bp);
+                    }
                 }
-            }
-            else if (bp != null && bpExit != null)
-            {
-                data.OutOfBody();
-              //  print("OnTriggerExit2D and set last bp: " + bp.part);
-                data.SetCharacterPart(bp.part);
-                Events.OnNewBodyPartSelected(bp);
+                else if (bpEnter != null)
+                {
+                    bpEnter = bp;
+                    data.OutOfBody();
+                    print("OnTriggerExit2D and set last bp: " + bp.part);
+                    data.SetCharacterPart(bp.part);
+                    Events.OnNewBodyPartSelected(bp);
+                }
             }
         }
         void OnCollisionEnter2D(Collision2D collision)
