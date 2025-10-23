@@ -49,7 +49,8 @@ namespace BoardItems
             while (i > 0)
             {
                 ItemInScene itemInScene = all[i - 1];
-                Delete(itemInScene);
+                bool wasMirrorer = Delete(itemInScene);
+                if (wasMirrorer) i--;
                 i--;
             }
             all.Clear();
@@ -420,7 +421,7 @@ namespace BoardItems
             itemSelected.transform.localEulerAngles = itemSelected.data.rotation;
             FinishEditingItem(itemSelected);
         }
-        public void Delete(ItemInScene item)
+        public bool Delete(ItemInScene item)
         {
             print("delete " + item);
             ItemInScene mirror = item.GetMirror();
@@ -431,6 +432,7 @@ namespace BoardItems
             }
             all.Remove(item);
             Destroy(item.gameObject);
+            return mirror != null;
         }
         //IEnumerator RemoveFromCanvas(float delay, ItemInScene item)
         //{
