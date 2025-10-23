@@ -25,7 +25,6 @@ namespace Common.UI
         {
             ResetAll();
             tabButton.SetActive();
-            print("clicked " + tabButton);
             OnActive(tabButton.id);
         }
         void ResetAll()

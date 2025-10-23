@@ -30,6 +30,7 @@ namespace BoardItems.Characters
 
         void OnCharacterAnim(int characterID, CharacterAnims.anims anim)
         {
+            print("OnCharacterAnim " + anim);
             if (characterID != characterID) return;
             SetAnim(anim);
         }

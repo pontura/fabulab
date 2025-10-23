@@ -20,8 +20,11 @@ namespace BoardItems.UI
         public void SetOn(bool isOn)
         {
             gameObject.SetActive(isOn);
-            CharacterAnims.anims anim = CharacterAnims.anims.edit;
-            Events.OnCharacterAnim(0, anim);
+            if (isOn)
+            {
+                CharacterAnims.anims anim = CharacterAnims.anims.edit;
+                Events.OnCharacterAnim(0, anim);
+            }
         }
         public void Restart()
         {

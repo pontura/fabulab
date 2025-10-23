@@ -16,7 +16,6 @@ namespace Common.UI
         }
         public void Clicked()
         {
-            print("clicked");
             if (tabController != null)
                 tabController.Clicked(this);
         }
