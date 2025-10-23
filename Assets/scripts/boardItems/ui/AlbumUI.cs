@@ -72,7 +72,8 @@ namespace BoardItems.UI
 
         public void New()
         {
-            UIManager.Instance.mainMenuUI.New();
+            Data.Instance.albumData.ResetCurrentID();
+            UIManager.Instance.gallerySelectorUI.ShowGallerySelector(true);
             album.SetActive(false);
         }
     }

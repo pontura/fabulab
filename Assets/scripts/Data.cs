@@ -4,7 +4,6 @@ using UnityEngine.SceneManagement;
 
 public class Data : MonoBehaviour
 {
-    const string PREFAB_PATH = "Data";
     static Data mInstance = null;
     public bool DEBUG;
     public string lastScene;
@@ -16,24 +15,8 @@ public class Data : MonoBehaviour
     public AnimationsManager animationsManager;
     public Settings settings;
 
-    public static Data Instance
-    {
-        get
-        {
-            if (mInstance == null)
-            {
-                mInstance = FindObjectOfType<Data>();
+    public static Data Instance {  get  {  return mInstance;  }  }
 
-                if (mInstance == null)
-                {
-                    GameObject go = Instantiate(Resources.Load<GameObject>(PREFAB_PATH)) as GameObject;
-                    mInstance = go.GetComponent<Data>();
-                    go.transform.localPosition = new Vector3(0, 0, 0);
-                }
-            }
-            return mInstance;
-        }
-    }
     public void LoadLevel(string aLevelName, bool showMap)
     {
         this.newScene = aLevelName;
