@@ -122,10 +122,10 @@ namespace BoardItems.UI
                     {
                         state = states.IDLE;
                         itemDragHandler.StopDragging(Input.mousePosition);
-                        if (Input.mousePosition.x < Screen.width * 0.6f && Vector3.Distance(clickPosition, Input.mousePosition) < 4 && !IsPointerOverUIObject())
+                        if (Vector3.Distance(clickPosition, Input.mousePosition) < 4 && !IsPointerOverUIObject())
                             OpenTools();
-                        else
-                            AudioManager.Instance.sfxManager.PlayTransp("drop", -2);
+                       // else
+                        //    AudioManager.Instance.sfxManager.PlayTransp("drop", -2);
                     }
                     else
                         itemDragHandler.UpdateDrag(Input.mousePosition);

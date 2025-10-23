@@ -161,7 +161,6 @@ namespace BoardItems
         [SerializeField] BodyPart bpEnter;
         void OnTriggerEnter2D(Collider2D collision)
         {
-            print("coll OnTriggerEnter2D: " + collision.gameObject.name);
             bpEnter = collision.gameObject.GetComponent<BodyPart>();
             
             if (bp == null)
@@ -177,7 +176,6 @@ namespace BoardItems
         {
            // print("coll OnTriggerExit2D: " + (timer + 0.1f) + "     Timer " + Time.time);
             if (timer+0.01f > Time.time) return;
-            print("coll OnTriggerExit2D: " + collision.gameObject.name);
             BodyPart bpExit = collision.GetComponent<BodyPart>();
             if (bpExit != null)
             {

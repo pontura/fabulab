@@ -26,7 +26,7 @@ namespace BoardItems
         }
         public void Init(ItemData itemData, Vector3 pos, InputManager inputManager)
         {
-
+            print("Init tools");
             this.itemData = itemData;
             this.inputManager = inputManager;
             gameObject.SetActive(true);
