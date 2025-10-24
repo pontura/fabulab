@@ -7,7 +7,6 @@ namespace BoardItems
 {
     public class GaleriasData : MonoBehaviour
     {
-        public GalleryData gallery;
 
         [Serializable]
         public class GalleryData
@@ -31,9 +30,9 @@ namespace BoardItems
             return all.Find(x => x.id == id) != null;
         }
 
-        public void SetGallery(int id)
+        public GalleryData GetGallery(int id)
         {
-            gallery = all.Find(x => x.id == id);
+            return all.Find(x => x.id == id);
         }
         public ItemData GetItem(int galleryID, int itemID)
         {

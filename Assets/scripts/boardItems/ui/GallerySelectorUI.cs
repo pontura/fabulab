@@ -19,8 +19,8 @@ namespace BoardItems.UI
         public void SelectGalleryClicked(int id)
         {
             AudioManager.Instance.uiSfxManager.Play("click");
-            Data.Instance.galeriasData.SetGallery(id);
-            Events.InitGallery(Data.Instance.galeriasData.gallery, true);
+            GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(id);
+            Events.InitGallery(gd, true);
 
             gallerySelector.SetActive(false);
         }
@@ -28,8 +28,8 @@ namespace BoardItems.UI
         {
             //AudioManager.Instance.uiSfxManager.PlayNextScaleUISfx("click");
             AudioManager.Instance.uiSfxManager.Play("click");
-            Data.Instance.galeriasData.SetGallery(id);
-            Events.InitGallery(Data.Instance.galeriasData.gallery, editMode);
+            GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(id);
+            Events.InitGallery(gd, editMode);
             //RectTransform vp = inventarioScroll.viewport;
             //Destroy(vp.transform.GetChild(0).gameObject);
             //GameObject gal = GameObject.Instantiate(Data.Instance.galeriasData.galleries[id], vp.transform);

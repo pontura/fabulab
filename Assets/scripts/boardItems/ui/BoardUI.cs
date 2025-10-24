@@ -89,7 +89,13 @@ namespace BoardItems.UI
                 AudioManager.Instance.uiSfxManager.Play("pop", 0.5f);
                 foreach (Transform child in colorPickerContent)
                     Destroy(child.gameObject);
-                PalettesManager.colorNames[] names = Data.Instance.galeriasData.gallery.colors;
+
+                int galleryID =1;
+
+                if (items.GetItemSelected() != null)
+                    galleryID = items.GetItemSelected().data.galleryID;
+
+                PalettesManager.colorNames[] names = Data.Instance.galeriasData.GetGallery(galleryID).colors;
                 foreach (PalettesManager.colorNames n in names)
                 {
                     GameObject go = Instantiate(colorPicketBtnPrefab, colorPickerContent);

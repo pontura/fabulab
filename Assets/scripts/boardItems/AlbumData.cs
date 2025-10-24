@@ -81,7 +81,7 @@ namespace BoardItems
                     sd.scale = iInScene.data.scale;
                     sd.anim = iInScene.data.anim;
                     sd.color = iInScene.data.colorName;
-                    sd.galleryID = Data.Instance.galeriasData.gallery.id;
+                    sd.galleryID = iInScene.data.galleryID;
                     wd.items.Add(sd);
                 }
                 bool mirrorDeleted = UIManager.Instance.boardUI.items.Delete(iInScene);
@@ -98,8 +98,7 @@ namespace BoardItems
         void OpenWorkDetail(WorkData wd)
         {
             Sprite sprite = Sprite.Create(wd.thumb, new Rect(0, 0, wd.thumb.width, wd.thumb.height), Vector2.zero);
-            Color c = Data.Instance.palettesManager.GetColor(Data.Instance.galeriasData.gallery.colorUI);
-            UIManager.Instance.workDetailUI.ShowWorkDetail(wd.id, sprite, c, wd.pkpkShared, true);
+            UIManager.Instance.workDetailUI.ShowWorkDetail(wd.id, sprite, wd.pkpkShared, true);
             Events.ResetItems();
         }
 

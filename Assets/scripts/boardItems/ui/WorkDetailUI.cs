@@ -17,13 +17,11 @@ namespace BoardItems.UI
         public Animation pkpkAnim;
         string id;
 
-        public void ShowWorkDetail(string _id, Sprite sprite, Color colorUI, bool pkpkShared, bool isNew)
+        public void ShowWorkDetail(string _id, Sprite sprite, bool pkpkShared, bool isNew)
         {
             AudioManager.Instance.musicManager.Play("work");
             id = _id;
             workImage.sprite = sprite;
-            foreach (Image i in borders)
-                i.color = colorUI;
             confirmation.SetActive(false);
             WorkDetail.SetActive(true);
             savedSignal.SetActive(isNew);
