@@ -13,11 +13,11 @@ namespace BoardItems
             StopAllCoroutines();
             if (items != null)
                 Utils.RemoveAllChildsIn(items.container);
+            itemsUI.Reset();
         }
         public void Init(Items items, int galleryID, GameObject galleryAsset, bool editMode, System.Action OnAllLoaded)
         {
             print("Inventary Init editMode:" + editMode);
-            itemsUI.Restart();
             this.items = items;
             GameObject gallery = Instantiate(galleryAsset);
             gallery.transform.SetParent(items.container);

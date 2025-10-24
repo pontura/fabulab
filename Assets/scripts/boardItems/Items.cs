@@ -182,6 +182,7 @@ namespace BoardItems
         }
         void InitGallery(GaleriasData.GalleryData gallery, bool editMode, System.Action OnAllLoaded)
         {
+            print("InitGallery " + gallery.id);
             //all.Clear();
             Events.ActivateUIButtons(false);
             StopAllCoroutines();

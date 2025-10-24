@@ -26,7 +26,7 @@ namespace BoardItems.UI
                 Events.OnCharacterAnim(0, anim);
             }
         }
-        public void Restart()
+        public void Reset()
         {
             all = new Dictionary<ItemData, ItemButton>();
             Utils.RemoveAllChildsIn(container);
@@ -45,6 +45,7 @@ namespace BoardItems.UI
         {
             ItemButton i = Instantiate(itemButton, container);
             i.Init(this, itemData, s);
+            if (all == null) Reset();
             all.Add(itemData, i);
         }
         public void OnClicked(ItemButton b)
