@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEditorInternal;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace BoardItems.UI
@@ -18,26 +20,42 @@ namespace BoardItems.UI
         }
         public void SelectGalleryClicked(int id)
         {
-            AudioManager.Instance.uiSfxManager.Play("click");
-            GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(id);
-            Events.InitGallery(gd, true);
-
+            if (id == 0)
+            {
+                List<int> allGalleries = new List<int>();
+                allGalleries.Add(1);
+                allGalleries.Add(2);
+                SelectGallery(allGalleries);
+            }
+            else
+            {
+                GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(id);
+                Events.InitGallery(gd, true, null);
+            }
             gallerySelector.SetActive(false);
+            AudioManager.Instance.uiSfxManager.Play("click");
         }
-        public void SelectGallery(int id, bool editMode)
+        List<int> allGalleriesToAdd;
+        int galleryNum = 0;
+        public void SelectGallery(List<int> allGalleriesToAdd)
         {
-            //AudioManager.Instance.uiSfxManager.PlayNextScaleUISfx("click");
-            AudioManager.Instance.uiSfxManager.Play("click");
-            GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(id);
-            Events.InitGallery(gd, editMode);
-            //RectTransform vp = inventarioScroll.viewport;
-            //Destroy(vp.transform.GetChild(0).gameObject);
-            //GameObject gal = GameObject.Instantiate(Data.Instance.galeriasData.galleries[id], vp.transform);
-            //gal.transform.localScale = Vector3.one;
-            //gal.transform.localPosition = new Vector3(0f, 255f, 0f);
-            //inventarioScroll.content = gal.transform as RectTransform;
-
+            this.allGalleriesToAdd = allGalleriesToAdd;
+            galleryNum = 0;
+            LoadNextGallery();
             gallerySelector.SetActive(false);
+            AudioManager.Instance.uiSfxManager.Play("click");
+        }
+        void LoadNextGallery()
+        {
+            if (galleryNum >= allGalleriesToAdd.Count)
+            {
+                Events.GalleryDone();
+            } else
+            {
+                GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(allGalleriesToAdd[galleryNum]);
+                Events.InitGallery(gd, true, LoadNextGallery);
+                galleryNum++;
+            }
         }
 
         public void BackToMainMenu()

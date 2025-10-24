@@ -63,7 +63,8 @@ namespace BoardItems
 
 
             wd.thumb = tex;
-            wd.bgColorName = Data.Instance.palettesManager.GetColorName(UIManager.Instance.boardUI.cam.backgroundColor);
+            // wd.bgColorName = Data.Instance.palettesManager.GetColorName(UIManager.Instance.boardUI.cam.backgroundColor);
+            wd.bgColorName = PalettesManager.colorNames.BLANCO;//To-DO
             wd.items = new List<WorkData.SavedIData>();
             int i = UIManager.Instance.boardUI.items.all.Count;
             while(i>0)

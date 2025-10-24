@@ -1,9 +1,8 @@
 ﻿using BoardItems.Characters;
-using NUnit.Framework.Interfaces;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 namespace BoardItems.UI
 {
@@ -27,13 +26,13 @@ namespace BoardItems.UI
 
         private void Start()
         {
-            Events.InitGallery += InitGallery;
+            Events.GalleryDone += GalleryDone;
             Events.ActivateUIButtons += ActivateUIButtons;
         }
 
         private void OnDestroy()
         {
-            Events.InitGallery -= InitGallery;
+            Events.GalleryDone -= GalleryDone;
             Events.ActivateUIButtons -= ActivateUIButtons;
         }
 
@@ -45,10 +44,10 @@ namespace BoardItems.UI
             UIManager.Instance.gallerySelectorUI.ShowGallerySelector(true);
         }
 
-        void InitGallery(GaleriasData.GalleryData gallery, bool editMode)
+        void GalleryDone()
         {
             BackBtn.SetActive(false);
-            Color color = Data.Instance.palettesManager.GetColor(gallery.colorUI);
+            Color color = Color.black;//Data.Instance.palettesManager.GetColor(gallery.colorUI);
             BackBtn.GetComponent<Image>().color = color;
             DoneBtn.GetComponent<Image>().color = color;
             ResetBtn.GetComponent<Image>().color = color;
@@ -57,7 +56,7 @@ namespace BoardItems.UI
             foreach (Image image in allColorizableSprites)
                 image.color = color;
 
-            color = Data.Instance.palettesManager.GetColor(gallery.colors[0]);
+            color = Color.white;// Data.Instance.palettesManager.GetColor(gallery.colors[0]);
             SetBgColor(color);
             AudioManager.Instance.musicManager.Play("board");
             Invoke("Delayed", 0.5f);
@@ -164,7 +163,13 @@ namespace BoardItems.UI
             AlbumData.WorkData wd = Data.Instance.albumData.SetCurrentID(id);
            // UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID, true);
            //TO-DO:
-            UIManager.Instance.gallerySelectorUI.SelectGallery(wd.items[0].galleryID, true);
+            List<int> galleries = new List<int>();
+            foreach(AlbumData.WorkData.SavedIData item in wd.items)
+            {
+                if (!galleries.Contains(item.galleryID))
+                    galleries.Add(item.galleryID);
+            }
+            UIManager.Instance.gallerySelectorUI.SelectGallery(galleries);
             OpenWork(wd);
         }
         [SerializeField] RenderTexture rt;

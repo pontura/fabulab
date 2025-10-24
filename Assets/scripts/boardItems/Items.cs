@@ -56,6 +56,7 @@ namespace BoardItems
             }
             all.Clear();
             inventary.Reset();
+            Utils.RemoveAllChildsIn(container);
         }
         public void ResetAllAnims()
         {
@@ -179,14 +180,13 @@ namespace BoardItems
         {
             itemSelected = iInScene;
         }
-        void InitGallery(GaleriasData.GalleryData gallery, bool editMode)
+        void InitGallery(GaleriasData.GalleryData gallery, bool editMode, System.Action OnAllLoaded)
         {
-            all.Clear();
+            //all.Clear();
             Events.ActivateUIButtons(false);
             StopAllCoroutines();
-            Utils.RemoveAllChildsIn(container);
             bg.color = Data.Instance.palettesManager.GetColor(gallery.colorUI);
-            inventary.Init(this, gallery.id, gallery.gallery, editMode);
+            inventary.Init(this, gallery.id, gallery.gallery, editMode, OnAllLoaded);
         }
         public void AddToInventary(ItemData itemData)
         {
