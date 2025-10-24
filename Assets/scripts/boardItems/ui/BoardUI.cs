@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 namespace BoardItems.UI
 {
@@ -177,9 +178,9 @@ namespace BoardItems.UI
                 itemInScene.SetCollider(false);
                 itemInScene.data = newItem;
                 items.all.Add(itemInScene);
-                items.SetItemInScene(itemInScene);
-
-                newItem.SetTransformByData();
+                items.SetItemInScene(itemInScene, newItem.part);
+                itemInScene.data.SetTransformByData();
+                items.FinishEditingItem(itemInScene);
             }
             StartCoroutine(GenerateThumbForRawImage(wd, targetRawImage, OnReady));
         }
@@ -241,9 +242,12 @@ namespace BoardItems.UI
                 itemInScene.SetCollider(false);
                 itemInScene.data = newItem;
                 items.all.Add(itemInScene);
-                items.SetItemInScene(itemInScene);
+                items.SetItemInScene(itemInScene, newItem.part);
+                itemInScene.data.SetTransformByData();
 
-                newItem.SetTransformByData();
+
+                items.FinishEditingItem(itemInScene);
+
 
                 if (newItem.anim != AnimationsManager.anim.NONE)
                 {

@@ -65,8 +65,11 @@ namespace BoardItems
             wd.thumb = tex;
             wd.bgColorName = Data.Instance.palettesManager.GetColorName(UIManager.Instance.boardUI.cam.backgroundColor);
             wd.items = new List<WorkData.SavedIData>();
-            foreach (ItemInScene iInScene in UIManager.Instance.boardUI.items.all)
+            int i = UIManager.Instance.boardUI.items.all.Count;
+            while(i>0)
             {
+                ItemInScene iInScene = UIManager.Instance.boardUI.items.all[i-1];
+
                 int partID = (int)iInScene.data.part;
                 if (partID > 0)
                 {
@@ -80,6 +83,10 @@ namespace BoardItems
                     sd.color = iInScene.data.colorName;
                     wd.items.Add(sd);
                 }
+                bool mirrorDeleted = UIManager.Instance.boardUI.items.Delete(iInScene);
+                if(mirrorDeleted)
+                    i--;
+                i--;
             }
             wd.galleryID = Data.Instance.galeriasData.gallery.id;
             if (wd.id == "")

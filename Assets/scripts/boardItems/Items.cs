@@ -1,5 +1,6 @@
 ﻿using BoardItems.Characters;
 using System.Collections.Generic;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 
 namespace BoardItems
@@ -214,7 +215,8 @@ namespace BoardItems
             while(i>0)
             {
                 ItemInScene itemInScene = all[i-1];
-                Delete(itemInScene);
+                bool mirrorDeleted = Delete(itemInScene);
+                if (mirrorDeleted) i--;
                 i--;
             }
         }
@@ -222,9 +224,10 @@ namespace BoardItems
         {
             Delete(itemSelected);
         }
-        public void SetItemInScene(ItemInScene item)
+        public void SetItemInScene(ItemInScene item, CharacterData.parts part)
         {
             characterManager.AttachItem(item);
+            itemSelected = item;
         }
         CharacterData.parts IsOverOnlyOneBodyPart(ItemInScene item)
         {
@@ -247,18 +250,21 @@ namespace BoardItems
             }
             else
             {
-                SetItemInScene(item);
+                SetItemInScene(item, isOverPart);
                 item.data.part = isOverPart;
                 item.data.position = item.transform.localPosition;
                 item.data.rotation = item.transform.localEulerAngles;
                 item.data.scale = item.transform.localScale;
+
+                item.data.SetTransformByData();
 
                 AnimateItemDragDrop(false);
                 FinishEditingItem(item);
                 Events.ActivateUIButtons(true);
             }
         }
-        void FinishEditingItem(ItemInScene item)
+
+        public void FinishEditingItem(ItemInScene item)
         {
             if (IsInMirrorPart(item))
                 CheckMirror(item);
@@ -298,7 +304,7 @@ namespace BoardItems
                 case CharacterData.parts.HAND: mirror.data.part = CharacterData.parts.HAND_LEFT; break;
                 case CharacterData.parts.HAND_LEFT: mirror.data.part = CharacterData.parts.HAND; break;
             }
-            SetItemInScene(mirror);
+            SetItemInScene(mirror, mirror.data.part);
 
             mirror.transform.localPosition = item.transform.localPosition;
             mirror.transform.localEulerAngles = item.transform.localEulerAngles;
