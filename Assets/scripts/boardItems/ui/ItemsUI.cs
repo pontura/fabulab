@@ -16,6 +16,7 @@ namespace BoardItems.UI
         private void Awake()
         {
             Events.OnStopDrag += OnStopDrag;
+            Reset();
         }
         public void SetOn(bool isOn)
         {
@@ -45,7 +46,7 @@ namespace BoardItems.UI
         {
             ItemButton i = Instantiate(itemButton, container);
             i.Init(this, itemData, s);
-            if (all == null) Reset();
+            if(all == null) Reset();
             all.Add(itemData, i);
         }
         public void OnClicked(ItemButton b)
