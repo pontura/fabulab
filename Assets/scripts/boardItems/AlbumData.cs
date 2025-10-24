@@ -24,7 +24,6 @@ namespace BoardItems
         public class WorkData
         {
             public bool isPakaPakaArt;
-            public int galleryID;
             public string id;
             public Texture2D thumb;
             public PalettesManager.colorNames bgColorName;
@@ -34,6 +33,7 @@ namespace BoardItems
             [Serializable]
             public class SavedIData
             {
+                public int galleryID;
                 public int part;
                 public int id;
                 public Vector3 position;
@@ -81,6 +81,7 @@ namespace BoardItems
                     sd.scale = iInScene.data.scale;
                     sd.anim = iInScene.data.anim;
                     sd.color = iInScene.data.colorName;
+                    sd.galleryID = Data.Instance.galeriasData.gallery.id;
                     wd.items.Add(sd);
                 }
                 bool mirrorDeleted = UIManager.Instance.boardUI.items.Delete(iInScene);
@@ -88,7 +89,6 @@ namespace BoardItems
                     i--;
                 i--;
             }
-            wd.galleryID = Data.Instance.galeriasData.gallery.id;
             if (wd.id == "")
                 album.Add(wd);
             PersistThumbLocal(wd);
@@ -125,10 +125,10 @@ namespace BoardItems
         void PersistWorkDataLocal(string id, WorkData wd)
         {
             string workData = "";
-            workData += wd.galleryID + fieldSeparator + Enum.GetName(typeof(PalettesManager.colorNames), wd.bgColorName) + fieldSeparator;
+            workData += Enum.GetName(typeof(PalettesManager.colorNames), wd.bgColorName) + fieldSeparator;
             for (int i = 0; i < wd.items.Count; i++)
             {
-                workData += wd.items[i].id + itemFieldSeparator + wd.items[i].position.x + itemFieldSeparator +
+                    workData += wd.items[i].galleryID + itemFieldSeparator + wd.items[i].id + itemFieldSeparator + wd.items[i].position.x + itemFieldSeparator +
                     wd.items[i].position.y + itemFieldSeparator + wd.items[i].position.z + itemFieldSeparator + wd.items[i].rotation.z +
                     itemFieldSeparator + wd.items[i].scale.x +
                     itemFieldSeparator + Enum.GetName(typeof(PalettesManager.colorNames), wd.items[i].color) +
@@ -162,29 +162,34 @@ namespace BoardItems
                 print("total art: " + wData.Length);
                 if (wData[0] != "")
                 {
-                    Debug.Log("galleryID: " + wData[0]);
-                    wd.galleryID = int.Parse(wData[0]);
-                    //Debug.Log("bgColorIndex: " + wData[0]);
-                    wd.bgColorName = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[1]);
+                    Debug.Log("bgColorIndex: " + wData[0]);
+                    wd.bgColorName = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[0]);
 
                     List<WorkData.SavedIData> items = new List<WorkData.SavedIData>();
-                    string[] itemsData = wData[2].Split(itemSeparator[0]);
+                    string[] itemsData = wData[1].Split(itemSeparator[0]);
                     // Debug.Log("ItemCount: " + itemsData.Length);
                     for (int j = 0; j < itemsData.Length; j++)
                     {
                         string[] iData = itemsData[j].Split(itemFieldSeparator[0]);
 
+                        int num = 0;
+                        foreach (string s in iData)
+                        {
+                            Debug.Log(num + "___ " + s);
+                            num++;
+                        }
                         //ItemData iD = Data.Instance.galeriasData.GetItem(wd.galleryID,int.Parse(iData[0]));
                         //if (iD.sprite == null)
                         //    Debug.Log(iD.id + ": spriteNull");
                         WorkData.SavedIData sd = new WorkData.SavedIData();
-                        sd.id = int.Parse(iData[0]);
-                        sd.position = new Vector3(float.Parse(iData[1]), float.Parse(iData[2]), float.Parse(iData[3]));
-                        sd.rotation = new Vector3(0f, 0f, float.Parse(iData[4]));
-                        sd.scale = new Vector3(float.Parse(iData[5]), float.Parse(iData[5]), 0f);
-                        sd.color = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), iData[6]);
-                        sd.anim = (AnimationsManager.anim)Enum.Parse(typeof(AnimationsManager.anim), iData[7]);
-                        sd.part = int.Parse(iData[8]);
+                        sd.galleryID = int.Parse(iData[0]);
+                        sd.id = int.Parse(iData[1]);
+                        sd.position = new Vector3(float.Parse(iData[2]), float.Parse(iData[3]), float.Parse(iData[4]));
+                        sd.rotation = new Vector3(0f, 0f, float.Parse(iData[5]));
+                        sd.scale = new Vector3(float.Parse(iData[6]), float.Parse(iData[6]), 0f);
+                        sd.color = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), iData[7]);
+                        sd.anim = (AnimationsManager.anim)Enum.Parse(typeof(AnimationsManager.anim), iData[8]);
+                        sd.part = int.Parse(iData[9]);
                         // iD.color = Color.white;
                         items.Add(sd);
                     }

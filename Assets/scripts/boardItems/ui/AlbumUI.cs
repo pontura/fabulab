@@ -45,14 +45,14 @@ namespace BoardItems.UI
             artID++;
             if (wd.thumb != null)
             {
-                if (Data.Instance.galeriasData.ExistGallery(wd.galleryID))
-                {
+                //if (Data.Instance.galeriasData.ExistGallery(wd.galleryID))
+                //{
                     GameObject go = Instantiate(workBtn_prefab, worksContainer);
                     print("go " + go);
                     RawImage rm = go.GetComponentInChildren<RawImage>();
                     UIManager.Instance.boardUI.GenerateThumb(wd, rm, LoadNext);
                     go.GetComponent<Button>().onClick.AddListener(() => OpenWork(wd.id));
-                }
+                //}
             }
         }
         public void DuplicateWork(int PakaPakaObjectID)

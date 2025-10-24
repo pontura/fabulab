@@ -14,7 +14,7 @@ namespace BoardItems
             if (items != null)
                 Utils.RemoveAllChildsIn(items.container);
         }
-        public void Init(Items items, GameObject galleryAsset, bool editMode = false)
+        public void Init(Items items, int galleryID, GameObject galleryAsset, bool editMode = false)
         {
             print("Inventary Init editMode:" + editMode);
             itemsUI.Restart();
@@ -23,13 +23,14 @@ namespace BoardItems
             gallery.transform.SetParent(items.container);
             gallery.transform.localPosition = Vector3.zero;
             if(editMode)
-                StartCoroutine(AddItems(gallery));
+                StartCoroutine(AddItems(galleryID, gallery));
         }
-        IEnumerator AddItems(GameObject gallery)
+        IEnumerator AddItems(int galleryID, GameObject gallery)
         {
             foreach (ItemData itemData in gallery.GetComponentsInChildren<ItemData>())
             {
                 yield return new WaitForEndOfFrame();
+                itemData.galleryID = galleryID;
                 AddItem(itemData, itemData.transform.position);
             }
             Destroy(gallery.gameObject);

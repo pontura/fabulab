@@ -1,4 +1,5 @@
 ﻿using BoardItems.Characters;
+using NUnit.Framework.Interfaces;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -145,7 +146,7 @@ namespace BoardItems.UI
         {
             yield return new WaitForSeconds(1);
             AlbumData.WorkData wd = Data.Instance.albumData.SetCurrentID(id);
-            Data.Instance.galeriasData.SetGallery(wd.galleryID);
+           // Data.Instance.galeriasData.SetGallery(wd.galleryID);
             OpenWork(wd);
             items.NextStepAnims(0, captureGifFramerate);
             Events.CaptureGif(id, callback);
@@ -155,32 +156,19 @@ namespace BoardItems.UI
         {
             items.DeleteAll();
             AlbumData.WorkData wd = Data.Instance.albumData.SetCurrentID(id);
-            UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID, true);
+           // UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID, true);
+           //TO-DO:
+            UIManager.Instance.gallerySelectorUI.SelectGallery(wd.items[0].galleryID, true);
             OpenWork(wd);
         }
         [SerializeField] RenderTexture rt;
         public void GenerateThumb(AlbumData.WorkData wd, RawImage targetRawImage, System.Action OnReady)
         {
             items.DeleteAll();
-            UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID, false);
+            //UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID, false);
             foreach (AlbumData.WorkData.SavedIData itemData in wd.items)
             {
-                ItemData newItem = Instantiate(Resources.Load<ItemData>("galerias/" + Data.Instance.galeriasData.gallery.id + "/item_" + itemData.id));
-                // Debug.Log("ID" + itemData.id + ":" + itemData.position);
-                newItem.part = (CharacterData.parts)itemData.part;
-                newItem.position = itemData.position;
-                newItem.rotation = itemData.rotation;
-                newItem.scale = itemData.scale;
-                newItem.colorName = itemData.color;
-                newItem.anim = itemData.anim;
-
-                ItemInScene itemInScene = newItem.gameObject.AddComponent<ItemInScene>();
-                itemInScene.SetCollider(false);
-                itemInScene.data = newItem;
-                items.all.Add(itemInScene);
-                items.SetItemInScene(itemInScene, newItem.part);
-                itemInScene.data.SetTransformByData();
-                items.FinishEditingItem(itemInScene);
+                ItemData newItem = CreateItem(itemData);
             }
             StartCoroutine(GenerateThumbForRawImage(wd, targetRawImage, OnReady));
         }
@@ -221,7 +209,29 @@ namespace BoardItems.UI
 
 
 
+        ItemData CreateItem(AlbumData.WorkData.SavedIData itemData)
+        {
+            ItemData newItem = Instantiate(Resources.Load<ItemData>("galerias/" + itemData.galleryID + "/item_" + itemData.id));
+            // Debug.Log("ID" + itemData.id + ":" + itemData.position);
+            newItem.galleryID = itemData.galleryID;
+            newItem.part = (CharacterData.parts)itemData.part;
+            newItem.position = itemData.position;
+            newItem.rotation = itemData.rotation;
+            newItem.scale = itemData.scale;
+            newItem.colorName = itemData.color;
+            newItem.anim = itemData.anim;
 
+            ItemInScene itemInScene = newItem.gameObject.AddComponent<ItemInScene>();
+            itemInScene.SetCollider(false);
+            itemInScene.data = newItem;
+            items.all.Add(itemInScene);
+            items.SetItemInScene(itemInScene, newItem.part);
+            itemInScene.data.SetTransformByData();
+
+
+            items.FinishEditingItem(itemInScene);
+            return newItem;
+        }
 
 
 
@@ -229,25 +239,7 @@ namespace BoardItems.UI
         {
             foreach (AlbumData.WorkData.SavedIData itemData in wd.items)
             {
-                ItemData newItem = Instantiate(Resources.Load<ItemData>("galerias/" + Data.Instance.galeriasData.gallery.id + "/item_" + itemData.id));
-                // Debug.Log("ID" + itemData.id + ":" + itemData.position);
-                newItem.part = (CharacterData.parts)itemData.part;
-                newItem.position = itemData.position;
-                newItem.rotation = itemData.rotation;
-                newItem.scale = itemData.scale;
-                newItem.colorName = itemData.color;
-                newItem.anim = itemData.anim;
-             
-                ItemInScene itemInScene = newItem.gameObject.AddComponent<ItemInScene>();
-                itemInScene.SetCollider(false);
-                itemInScene.data = newItem;
-                items.all.Add(itemInScene);
-                items.SetItemInScene(itemInScene, newItem.part);
-                itemInScene.data.SetTransformByData();
-
-
-                items.FinishEditingItem(itemInScene);
-
+                ItemData newItem = CreateItem(itemData);
 
                 if (newItem.anim != AnimationsManager.anim.NONE)
                 {

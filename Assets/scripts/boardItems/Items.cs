@@ -186,18 +186,19 @@ namespace BoardItems
             StopAllCoroutines();
             Utils.RemoveAllChildsIn(container);
             bg.color = Data.Instance.palettesManager.GetColor(gallery.colorUI);
-            inventary.Init(this, gallery.gallery, editMode);
+            inventary.Init(this, gallery.id, gallery.gallery, editMode);
         }
         public void AddToInventary(ItemData itemData)
         {
-            ItemData newItem = InstantiateNewItem(itemData);
+            ItemData newItem = InstantiateNewItem(itemData.galleryID, itemData);
             newItem.transform.localScale = itemData.scale;
             newItem.transform.position = container.transform.position;
             inventary.AddItem(newItem, new Vector3(10, 10, 0));
         }
-        ItemData InstantiateNewItem(ItemData itemData)
+        ItemData InstantiateNewItem(int galleryID, ItemData itemData)
         {
-            string itemName = "galerias/" + Data.Instance.galeriasData.gallery.id + "/item_" + itemData.id;
+            string itemName = "galerias/" + galleryID + "/item_" + itemData.id;
+            print("InstantiateNewItem " + itemName);
             return Instantiate(Resources.Load<ItemData>(itemName));
         }
         void OnNewItem(ItemInScene item)
@@ -355,8 +356,9 @@ namespace BoardItems
         public ItemInScene Clonate(Vector3 pos)
         {
             itemSelected.data.position = pos;
-            ItemData newItem = InstantiateNewItem(itemSelected.data);
+            ItemData newItem = InstantiateNewItem(itemSelected.data.galleryID, itemSelected.data);
             ItemInScene itemInScene = newItem.gameObject.AddComponent<ItemInScene>();
+            newItem.galleryID = itemSelected.data.galleryID;
             newItem.colorName = itemSelected.data.colorName;
             newItem.id = itemSelected.data.id;
             pos.z = 0;
