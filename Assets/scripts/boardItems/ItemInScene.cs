@@ -138,6 +138,10 @@ namespace BoardItems
         {
             transform.position = new Vector3(pos.x, pos.y, transform.position.z);
         }
+        public void SetPosByData()
+        {
+            transform.localPosition = data.position;
+        }
         public void SetColor(PalettesManager.colorNames name)
         {
             data.colorName = name;

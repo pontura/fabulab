@@ -263,6 +263,9 @@ namespace BoardItems
                 AnimateItemDragDrop(false);
                 FinishEditingItem(item);
                 Events.ActivateUIButtons(true);
+
+                BodyPart bp = characterManager.GetBodyPart(isOverPart);
+                bp.SetArrengedItems();
             }
         }
 
@@ -350,7 +353,7 @@ namespace BoardItems
         {
             this.itemSelected = newItem;
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-           
+            pos.z = -0.1f;
             ItemInScene itemInScene =  Clonate(pos);
             return itemInScene;
         }
@@ -362,7 +365,6 @@ namespace BoardItems
             newItem.galleryID = itemSelected.data.galleryID;
             newItem.colorName = itemSelected.data.colorName;
             newItem.id = itemSelected.data.id;
-            pos.z = 0;
             newItem.position = pos;
             newItem.rotation = itemSelected.data.rotation;
 
@@ -373,10 +375,10 @@ namespace BoardItems
             itemInScene.transform.position = pos;
 
             newItem.transform.localScale = itemSelected.data.scale;
-            newItem.transform.rotation = itemSelected.transform.rotation;
-            newItem.transform.localPosition = itemSelected.data.position + new Vector3(1, 0, 0);
-            newItem.anim = itemSelected.data.anim;
             newItem.transform.SetParent(container);
+            newItem.transform.rotation = itemSelected.transform.rotation;
+            newItem.transform.position = itemSelected.data.position + new Vector3(0.2f, 0, 0);
+            newItem.anim = itemSelected.data.anim;
             if (newItem.gameObject.GetComponent<Rigidbody2D>() == null)
             {
                 Rigidbody2D rb = newItem.gameObject.AddComponent<Rigidbody2D>();
@@ -397,19 +399,22 @@ namespace BoardItems
         float back_z;
         public void MoveBack()
         {
-            if (itemSelected.data.position.z > -_z_value)
-            {
-                //front:
-                _z -= _z_value;
-                itemSelected.data.position.z = _z;
-            }
-            else
-            {
-                //back:
-                back_z += _z_value;
-                itemSelected.data.position.z = back_z;
-            }
-            itemSelected.transform.localPosition = itemSelected.data.position;
+            CharacterData.parts p = itemSelected.data.part;
+            BodyPart bp = characterManager.GetBodyPart(p);
+            bp.SendToTop(itemSelected);
+            //if (itemSelected.data.position.z > -_z_value)
+            //{
+            //    //front:
+            //    _z -= _z_value;
+            //    itemSelected.data.position.z = _z;
+            //}
+            //else
+            //{
+            //    //back:
+            //    back_z += _z_value;
+            //    itemSelected.data.position.z = back_z;
+            //}
+           // itemSelected.transform.localPosition = itemSelected.data.position;
             FinishEditingItem(itemSelected);
         }
         public void ResetItemTransform()
