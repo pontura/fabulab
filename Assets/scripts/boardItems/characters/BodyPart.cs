@@ -1,5 +1,6 @@
 using BoardItems.Characters;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 namespace BoardItems
 {
@@ -8,6 +9,7 @@ namespace BoardItems
         Collider2D col2D;
         public CharacterData.parts part;
         [SerializeField] GameObject selectedBodySignal;
+        [SerializeField] BodyPart mirror;
         float z_displacement = 0.001f;
 
         void Start()
@@ -29,20 +31,35 @@ namespace BoardItems
         {
             selectedBodySignal.gameObject.SetActive(isOn);
         }
+        public void SendToBack(ItemInScene item)
+        {
+            Arrage(true, item, transform);
+            if(mirror != null)
+                mirror.Arrage(true, item.GetMirror(), mirror.transform);
+        }
         public void SendToTop(ItemInScene item)
         {
-            item.transform.SetParent(transform.parent);
+            Arrage(false, item, transform);
+            if (mirror != null)
+                mirror.Arrage(false, item.GetMirror(), mirror.transform);
+        }
+        public void Arrage(bool back, ItemInScene item, Transform t)
+        {
+            item.transform.SetParent(t.parent);
             ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
-            foreach (ItemInScene i in all)
+            if (back)
             {
-                i.transform.SetParent(transform.parent);
+                foreach (ItemInScene i in all) i.transform.SetParent(t.parent);
+                item.transform.SetParent(t);
+                foreach (ItemInScene i in all) i.transform.SetParent(t);
             }
-            foreach (ItemInScene i in all)
+            else
             {
-                i.transform.SetParent(transform);
+                foreach (ItemInScene i in all) i.transform.SetParent(t.parent);
+                foreach (ItemInScene i in all) i.transform.SetParent(t);
+                item.transform.SetParent(t);
             }
-            item.transform.SetParent(transform);
-            SetArrengedItems();
+                SetArrengedItems();
         }
         public void SetArrengedItems()
         {

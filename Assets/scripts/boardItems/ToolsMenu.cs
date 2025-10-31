@@ -78,7 +78,11 @@ namespace BoardItems
             UIManager.Instance.boardUI.items.MoveBack();
             inputManager.OnCloseTools(InputManager.states.IDLE);
         }
-
+        public void MoveUp()
+        {
+            UIManager.Instance.boardUI.items.MoveUp();
+            inputManager.OnCloseTools(InputManager.states.IDLE);
+        }
         public void ResetBtn()
         {
             UIManager.Instance.boardUI.items.RotateSnaped();

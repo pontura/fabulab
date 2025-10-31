@@ -401,20 +401,14 @@ namespace BoardItems
         {
             CharacterData.parts p = itemSelected.data.part;
             BodyPart bp = characterManager.GetBodyPart(p);
+            bp.SendToBack(itemSelected);
+            FinishEditingItem(itemSelected);
+        }
+        public void MoveUp()
+        {
+            CharacterData.parts p = itemSelected.data.part;
+            BodyPart bp = characterManager.GetBodyPart(p);
             bp.SendToTop(itemSelected);
-            //if (itemSelected.data.position.z > -_z_value)
-            //{
-            //    //front:
-            //    _z -= _z_value;
-            //    itemSelected.data.position.z = _z;
-            //}
-            //else
-            //{
-            //    //back:
-            //    back_z += _z_value;
-            //    itemSelected.data.position.z = back_z;
-            //}
-           // itemSelected.transform.localPosition = itemSelected.data.position;
             FinishEditingItem(itemSelected);
         }
         public void ResetItemTransform()
