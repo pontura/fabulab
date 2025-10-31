@@ -9,6 +9,8 @@ public class Data : MonoBehaviour
     public string lastScene;
     public string newScene;
     private float time_ViewingMap = 7.5f;
+    public UserData userData;
+    public AdminData adminData;
     public PalettesManager palettesManager;
     public GaleriasData galeriasData;
     public AlbumData albumData;
