@@ -1,4 +1,5 @@
 using BoardItems.Characters;
+using Unity.Profiling;
 using UnityEngine;
 using static UnityEditor.Progress;
 
@@ -73,6 +74,19 @@ namespace BoardItems
                 i.data.position = pos;
                 i.SetPosByData();
             }
+        }
+        public float GetLastZ()
+        {
+            float z = 0;
+            ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
+            foreach (ItemInScene i in all)
+            {
+                if (i.transform.position.z < z)
+                    z = i.transform.position.z;
+            }
+            if(z==0)
+                return 0;
+            return z - z_displacement;
         }
     }
 }

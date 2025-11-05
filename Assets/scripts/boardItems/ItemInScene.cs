@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 namespace BoardItems
 {
     public class ItemInScene : MonoBehaviour
@@ -172,6 +173,7 @@ namespace BoardItems
                 data.SetCharacterPart(bpEnter.part);
                 Events.OnNewBodyPartSelected(bpEnter);
                 bp = bpEnter;
+                ArrengeZPos(bp);
             }
             //if(bp == null && bpEnter != null)
             //    bp = bpEnter;
@@ -230,6 +232,15 @@ namespace BoardItems
         {
             mirror = mirrored;
         }
-       
+        void ArrengeZPos(BodyPart bp)
+        {
+            if (rb.bodyType != RigidbodyType2D.Kinematic) return;
+            float z = bp.GetLastZ();
+            if (z == 0) return; //no objects in bodypart;
+            print("Arrenge Z" + z);
+            Vector3 pos = transform.position;
+            pos.z = z;
+            transform.position = pos;
+        }
     }
 }
