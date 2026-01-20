@@ -1,7 +1,5 @@
 using BoardItems.Characters;
-using Unity.Profiling;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 namespace BoardItems
 {

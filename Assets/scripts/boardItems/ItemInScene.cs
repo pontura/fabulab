@@ -1,9 +1,6 @@
 ﻿using BoardItems.Characters;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 namespace BoardItems
 {
     public class ItemInScene : MonoBehaviour
