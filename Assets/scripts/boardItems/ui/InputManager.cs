@@ -33,8 +33,10 @@ namespace BoardItems.UI
         float lastMouseX;
         void Update()
         {
-#if UNITY_ANDROID || UNITY_IOS
-        UpdateTouch();   
+#if UNITY_EDITOR
+            UpdateMouseInput();
+#elif UNITY_ANDROID || UNITY_IOS
+            UpdateTouch();   
 #else
             UpdateMouseInput();
 #endif
