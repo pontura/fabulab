@@ -16,9 +16,10 @@ namespace BoardItems
         private void Start()
         {
             gameObject.SetActive(false);
+#if UNITY_EDITOR
 
-#if UNITY_ANDROID || UNITY_IOS
-        noWebGLPanel.SetActive(false);
+#elif UNITY_ANDROID || UNITY_IOS
+            noWebGLPanel.SetActive(false);
         commonButtons.transform.localPosition = Vector3.zero;
         bg.GetComponent<RectTransform>().sizeDelta = new Vector2(350, 506);
 #endif
