@@ -1,10 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
-using System.IO;
+﻿using BoardItems.Characters;
 using BoardItems.UI;
-using BoardItems.Characters;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+using Yaguar.Auth;
+using Yaguar.StoryMaker.DB;
+using Yaguar.StoryMaker.Editor;
 
 namespace BoardItems
 {
@@ -14,11 +17,15 @@ namespace BoardItems
         public List<WorkData> pakapakaAlbum;
         public List<WorkData> album;
 
+        public List<WorkMetaData> userWorksMetaData;
+
         string fieldSeparator = ":";
         string itemSeparator = "&";
         string itemFieldSeparator = "#";
 
         string currentID;
+
+        WorkData currentWork;
 
         [Serializable]
         public class WorkData
@@ -44,36 +51,63 @@ namespace BoardItems
             }
         }
 
-        private void Start()
+        [Serializable]
+        public class WorkMetaData
         {
-            // PlayerPrefs.DeleteAll();
-            StartCoroutine(LoadWorks());
+            public string id;
+            public Texture2D thumb;
+            public string userID;
         }
 
-        public void SaveWork(Texture2D tex)
+        [Serializable]
+        public class ServerWorkMetaData {
+            public string thumb;
+            public string userID;
+        }
+
+        private void Start()
         {
+            FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
+            // PlayerPrefs.|leteAll();
+            //StartCoroutine(LoadWorks());
+        }
+
+        private void OnDestroy() {
+            FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
+        }
+
+        void OnTokenUpdated() {
+            if (Data.Instance.userData.IsLogged()) {
+                CancelInvoke();
+                LoadUserFilmMetadataFromServer();
+            } else
+                Invoke("OnTokenUpdated", 1);
+        }
+        public void LoadUserFilmMetadataFromServer() {
+            if (Data.Instance.userData.IsLogged()) {
+                userWorksMetaData = new List<WorkMetaData>();
+                FirebaseStoryMakerDBManager.Instance.LoadUserWorkMetadataFromServer(OnUserLoadWorkDataFromServer);
+            }
+        }
+
+        public void SaveWork(Texture2D tex) {
             WorkData wd;
-            if (currentID == "" || currentID == null)
-            {
+            if (currentID == "" || currentID == null) {
                 wd = new WorkData();
                 wd.id = "";
-            }
-            else
+            } else
                 wd = GetWork(currentID);
-
-
+                       
             wd.thumb = tex;
             // wd.bgColorName = Data.Instance.palettesManager.GetColorName(UIManager.Instance.boardUI.cam.backgroundColor);
             wd.bgColorName = PalettesManager.colorNames.BLANCO;//To-DO
             wd.items = new List<WorkData.SavedIData>();
             int i = UIManager.Instance.boardUI.items.all.Count;
-            while(i>0)
-            {
-                ItemInScene iInScene = UIManager.Instance.boardUI.items.all[i-1];
+            while (i > 0) {
+                ItemInScene iInScene = UIManager.Instance.boardUI.items.all[i - 1];
 
                 int partID = (int)iInScene.data.part;
-                if (partID > 0)
-                {
+                if (partID > 0) {
                     WorkData.SavedIData sd = new WorkData.SavedIData();
                     sd.part = partID;
                     sd.id = iInScene.data.id;
@@ -86,14 +120,48 @@ namespace BoardItems
                     wd.items.Add(sd);
                 }
                 bool mirrorDeleted = UIManager.Instance.boardUI.items.Delete(iInScene);
-                if(mirrorDeleted)
+                if (mirrorDeleted)
                     i--;
                 i--;
             }
-            if (wd.id == "")
+            currentWork = wd;
+            if (wd.id == "") {
                 album.Add(wd);
-            PersistThumbLocal(wd);
+                FirebaseStoryMakerDBManager.Instance.SaveWorkToServer(EncodeWorkData(wd), OnWorkSavedToServer);
+            } else
+                FirebaseStoryMakerDBManager.Instance.UpdateWorkToServer(wd.id, EncodeWorkData(wd), OnWorkSavedToServer);
+
+            //PersistThumbLocal(wd);
             SetPkpkShared(wd, false);
+        }
+        string EncodeWorkData(WorkData wd)
+        {
+                string workData = "";
+                workData += Enum.GetName(typeof(PalettesManager.colorNames), wd.bgColorName) + fieldSeparator;
+                for (int i = 0; i < wd.items.Count; i++) {
+                    workData += wd.items[i].galleryID + itemFieldSeparator + wd.items[i].id + itemFieldSeparator + wd.items[i].position.x + itemFieldSeparator +
+                    wd.items[i].position.y + itemFieldSeparator + wd.items[i].position.z + itemFieldSeparator + wd.items[i].rotation.z +
+                    itemFieldSeparator + wd.items[i].scale.x +
+                    itemFieldSeparator + Enum.GetName(typeof(PalettesManager.colorNames), wd.items[i].color) +
+                    itemFieldSeparator + Enum.GetName(typeof(AnimationsManager.anim), wd.items[i].anim) +
+                    itemFieldSeparator + wd.items[i].part;
+                    if (i < wd.items.Count - 1)
+                        workData += itemSeparator;
+                }
+            Debug.Log("#workData: "+workData);
+            return workData;
+        }
+
+        void OnWorkSavedToServer(bool succes, string id) {
+            currentWork.id = id;
+            currentID = id;
+
+            ServerWorkMetaData swmd = new ServerWorkMetaData();
+            swmd.thumb = System.Convert.ToBase64String(currentWork.thumb.EncodeToJPG());
+            swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
+            FirebaseStoryMakerDBManager.Instance.SaveWorkMetadataToServer(currentID, swmd);
+
+            OpenWorkDetail(currentWork);
         }
 
         void OpenWorkDetail(WorkData wd)
@@ -151,6 +219,67 @@ namespace BoardItems
             PlayerPrefs.SetString("WorksIds", workIDs);
         }
 
+        public void OnUserLoadWorkDataFromServer(Dictionary<string, ServerWorkMetaData> sfds) {
+            foreach (KeyValuePair<string, ServerWorkMetaData> e in sfds) {
+                if (userWorksMetaData.Find(x => x.id == e.Key) == null) {
+                    WorkMetaData fd = new WorkMetaData();
+                    fd.id = e.Key;
+                    fd.userID = e.Value.userID;
+                    fd.thumb = new Texture2D(1, 1);
+                    fd.thumb.LoadImage(System.Convert.FromBase64String(e.Value.thumb));
+                    userWorksMetaData.Add(fd);
+                }
+            }
+            FirebaseStoryMakerDBManager.Instance.LoadUserWorksFromServer(LoadWorksFromServer);
+        }
+
+        void LoadWorksFromServer(Dictionary<string,string> data) {
+            foreach (KeyValuePair<string, string> e in data) {
+                Debug.Log("#LoadWorksFromServer "+e.Key+": "+e.Value);
+                WorkData wd = new WorkData();
+                wd.id = e.Key;
+                string[] wData = e.Value.Split(fieldSeparator[0]);
+                print("total art: " + wData.Length);
+                if (wData[0] != "") {
+                    Debug.Log("bgColorIndex: " + wData[0]);
+                    wd.bgColorName = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[0]);
+
+                    List<WorkData.SavedIData> items = new List<WorkData.SavedIData>();
+                    string[] itemsData = wData[1].Split(itemSeparator[0]);
+                    // Debug.Log("ItemCount: " + itemsData.Length);
+                    for (int j = 0; j < itemsData.Length; j++) {
+                        string[] iData = itemsData[j].Split(itemFieldSeparator[0]);
+
+                        int num = 0;
+                        foreach (string s in iData) {
+                            Debug.Log(num + "___ " + s);
+                            num++;
+                        }
+                        //ItemData iD = Data.Instance.galeriasData.GetItem(wd.galleryID,int.Parse(iData[0]));
+                        //if (iD.sprite == null)
+                        //    Debug.Log(iD.id + ": spriteNull");
+                        WorkData.SavedIData sd = new WorkData.SavedIData();
+                        Debug.Log("# " + iData[0]);
+                        sd.galleryID = int.Parse(iData[0]);
+                        sd.id = int.Parse(iData[1]);
+                        sd.position = new Vector3(float.Parse(iData[2]), float.Parse(iData[3]), float.Parse(iData[4]));
+                        sd.rotation = new Vector3(0f, 0f, float.Parse(iData[5]));
+                        sd.scale = new Vector3(float.Parse(iData[6]), float.Parse(iData[6]), 0f);
+                        sd.color = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), iData[7]);
+                        sd.anim = (AnimationsManager.anim)Enum.Parse(typeof(AnimationsManager.anim), iData[8]);
+                        sd.part = int.Parse(iData[9]);
+                        // iD.color = Color.white;
+                        items.Add(sd);
+                    }
+                    wd.items = items;
+                    
+                    wd.thumb = userWorksMetaData.Find(x=>x.id==wd.id).thumb;
+                    //wd.pkpkShared = PlayerPrefs.GetInt("PkpkShared_" + e.Key) == 1;
+                    album.Add(wd);
+                }
+            }            
+        }
+
         IEnumerator LoadWorks()
         {
             string[] workIDs = PlayerPrefs.GetString("WorksIds").Split(fieldSeparator[0]);
@@ -182,6 +311,7 @@ namespace BoardItems
                         //if (iD.sprite == null)
                         //    Debug.Log(iD.id + ": spriteNull");
                         WorkData.SavedIData sd = new WorkData.SavedIData();
+                        Debug.Log("# " + iData[0]);
                         sd.galleryID = int.Parse(iData[0]);
                         sd.id = int.Parse(iData[1]);
                         sd.position = new Vector3(float.Parse(iData[2]), float.Parse(iData[3]), float.Parse(iData[4]));
@@ -207,6 +337,10 @@ namespace BoardItems
 
             yield return null;
         }
+
+        /*WorkData ParseWork() {
+
+        }*/
 
         public WorkData GetWork(string id)
         {
