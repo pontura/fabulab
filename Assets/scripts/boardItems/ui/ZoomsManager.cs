@@ -3,33 +3,26 @@ namespace BoardItems.UI
 {
     public class ZoomsManager : MonoBehaviour
     {
-        [SerializeField] TMPro.TMP_Text field;
         [SerializeField] Animator animator;
         public zoomTypes zoomType;
         int idZoom = 0;
         public enum zoomTypes
         {
-            BODY,
             HEAD,
-            HAND,
             BELLY,
+            HAND,
             FEET
         }
-        void Start()
+        private void Awake()
         {
-            SetZoom();
+            Events.Zoom += Zoom;
         }
-        public void OnClicked()
+        private void OnDestroy()
         {
-            idZoom++;
-            if (idZoom > 4)
-                idZoom = 0;
-            SetZoom();
+            Events.Zoom -= Zoom;
         }
-        void SetZoom()
+        public void Zoom(int idZoom)
         {
-            field.text = ((zoomTypes)idZoom).ToString();    
-            Events.Zoom(zoomType);
             animator.SetInteger("zoom", idZoom);
         }
     }

@@ -17,7 +17,7 @@ namespace BoardItems.UI
         public Animation pkpkAnim;
         string id;
 
-        public void ShowWorkDetail(string _id, Sprite sprite, bool pkpkShared, bool isNew)
+        public void ShowWorkDetail(string _id, Sprite sprite, bool isNew)
         {
             AudioManager.Instance.musicManager.Play("work");
             id = _id;
@@ -25,7 +25,7 @@ namespace BoardItems.UI
             confirmation.SetActive(false);
             WorkDetail.SetActive(true);
             savedSignal.SetActive(isNew);
-            SetSendedSign(id, pkpkShared);
+         //   SetSendedSign(id, pkpkShared);
             //sendedSign.SetActive(pkpkShared);
            // sendingSign.SetActive(Data.Instance.shareManager.sendingMail);
             Events.OnLoading(false);

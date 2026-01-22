@@ -24,7 +24,7 @@ namespace BoardItems
                     AlbumData.WorkData.SavedIData s = SetItemData(itemData);
                     wData.items.Add(s);
                 }
-                Data.Instance.albumData.pakapakaAlbum.Add(wData);
+            //    Data.Instance.albumData.pakapakaAlbum.Add(wData);
                 id++;
             }
         }

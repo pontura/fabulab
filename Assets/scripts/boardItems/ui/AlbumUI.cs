@@ -40,8 +40,8 @@ namespace BoardItems.UI
         void LoadNext()
         {
             print("LoadNext " + artID);
-            if (artID >= Data.Instance.albumData.album.Count) return;
-            AlbumData.WorkData wd = Data.Instance.albumData.album[artID];
+            if (artID >= Data.Instance.albumData.characters.Count) return;
+            AlbumData.WorkData wd = Data.Instance.albumData.characters[artID];
             artID++;
             if (wd.thumb != null)
             {

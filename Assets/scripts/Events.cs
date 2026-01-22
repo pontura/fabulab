@@ -22,7 +22,7 @@ public static class Events
     public static System.Action<int, CharacterAnims.anims> OnCharacterAnim = delegate { };
     public static System.Action<int, CharacterExpressions.expressions> OnCharacterExpression = delegate { };
     public static System.Action<bool> EditMode = delegate { };
-    public static System.Action<ZoomsManager.zoomTypes> Zoom = delegate { };
+    public static System.Action<int> Zoom = delegate { };
 
 }
    

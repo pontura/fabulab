@@ -17,9 +17,10 @@ namespace Common.UI
                 id++;
             }
         }
-        public void Init(System.Action<int> OnActive)
+        public void Init(System.Action<int> OnActive, int initialID = 0)
         {
             this.OnActive = OnActive;
+            Clicked(all[initialID]);
         }
         public void Clicked(TabButton tabButton)
         {

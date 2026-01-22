@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static AnimationsManager;
 
 namespace BoardItems.UI
 {
-    public class ItemsUI : MonoBehaviour
+    public class DragAndDropUI : MonoBehaviour
     {
         [SerializeField] Transform container;
         [SerializeField] ItemButton itemButton;

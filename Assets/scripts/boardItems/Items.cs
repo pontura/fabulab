@@ -18,6 +18,10 @@ namespace BoardItems
         public Transform container;
         [SerializeField] CharacterManager characterManager;
 
+        private void Awake()
+        {
+            characterManager.Init();
+        }
         void Start()
         {
             Events.EditMode += EditMode;
@@ -28,7 +32,6 @@ namespace BoardItems
             Events.AnimateItem += AnimateItem;
             Events.ResetItems += ResetItems;
 
-            characterManager.Init();
             characterManager.SetAnim(CharacterAnims.anims.edit);
             Events.EditMode(true);
         }
@@ -218,6 +221,22 @@ namespace BoardItems
                 ItemInScene itemInScene = all[i-1];
                 bool mirrorDeleted = Delete(itemInScene);
                 if (mirrorDeleted) i--;
+                i--;
+            }
+        }
+        public void DeleteInPart(int partID)
+        {
+            StopAllCoroutines();
+            Events.ActivateUIButtons(false);
+            int i = all.Count;
+            while (i > 0)
+            {
+                ItemInScene itemInScene = all[i - 1];
+                if (itemInScene.data.part == (CharacterData.parts)partID)
+                {
+                    bool mirrorDeleted = Delete(itemInScene);
+                    if (mirrorDeleted) i--;
+                }
                 i--;
             }
         }

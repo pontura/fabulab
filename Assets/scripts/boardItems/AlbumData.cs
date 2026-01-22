@@ -1,5 +1,6 @@
 ﻿using BoardItems.Characters;
 using BoardItems.UI;
+using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,14 +9,20 @@ using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
 using Yaguar.StoryMaker.Editor;
+using static BoardItems.Characters.CharacterData;
 
 namespace BoardItems
 {
     public class AlbumData : MonoBehaviour
     {
         public Vector2Int thumbSize;
-        public List<WorkData> pakapakaAlbum;
-        public List<WorkData> album;
+       // public List<WorkData> pakapakaAlbum;
+        public List<WorkData> characters;
+
+        public List<WorkData> heads;
+        public List<WorkData> bellies;
+        public List<WorkData> hands;
+        public List<WorkData> feet;
 
         public List<WorkMetaData> userWorksMetaData;
 
@@ -35,7 +42,11 @@ namespace BoardItems
             public Texture2D thumb;
             public PalettesManager.colorNames bgColorName;
             public List<SavedIData> items;
-            public bool pkpkShared;
+
+            public Sprite GetSprite()
+            {
+                return Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), Vector2.zero);
+            }
 
             [Serializable]
             public class SavedIData
@@ -103,10 +114,14 @@ namespace BoardItems
             wd.bgColorName = PalettesManager.colorNames.BLANCO;//To-DO
             wd.items = new List<WorkData.SavedIData>();
             int i = UIManager.Instance.boardUI.items.all.Count;
+            int totalParts = 0;
+            int partID = 0;
             while (i > 0) {
                 ItemInScene iInScene = UIManager.Instance.boardUI.items.all[i - 1];
-
-                int partID = (int)iInScene.data.part;
+                int newPartID = (int)iInScene.data.part;
+                if (partID != newPartID)
+                    totalParts++;
+                partID = newPartID;
                 if (partID > 0) {
                     WorkData.SavedIData sd = new WorkData.SavedIData();
                     sd.part = partID;
@@ -126,13 +141,16 @@ namespace BoardItems
             }
             currentWork = wd;
             if (wd.id == "") {
-                album.Add(wd);
+                if (totalParts > 1) // is a complete character;
+                    characters.Add(wd);
+                else // is a part preset;
+                    AddPart(partID, wd);
                 FirebaseStoryMakerDBManager.Instance.SaveWorkToServer(EncodeWorkData(wd), OnWorkSavedToServer);
             } else
                 FirebaseStoryMakerDBManager.Instance.UpdateWorkToServer(wd.id, EncodeWorkData(wd), OnWorkSavedToServer);
 
             //PersistThumbLocal(wd);
-            SetPkpkShared(wd, false);
+           // SetPkpkShared(wd, false);
         }
         string EncodeWorkData(WorkData wd)
         {
@@ -167,7 +185,7 @@ namespace BoardItems
         void OpenWorkDetail(WorkData wd)
         {
             Sprite sprite = Sprite.Create(wd.thumb, new Rect(0, 0, wd.thumb.width, wd.thumb.height), Vector2.zero);
-            UIManager.Instance.workDetailUI.ShowWorkDetail(wd.id, sprite, wd.pkpkShared, true);
+            UIManager.Instance.workDetailUI.ShowWorkDetail(wd.id, sprite,true);
             Events.ResetItems();
         }
 
@@ -213,7 +231,15 @@ namespace BoardItems
         void PersistWorksIds()
         {
             string workIDs = "";
-            foreach (WorkData wd in album)
+            foreach (WorkData wd in characters)
+                workIDs += wd.id + fieldSeparator;
+            foreach (WorkData wd in heads)
+                workIDs += wd.id + fieldSeparator;
+            foreach (WorkData wd in bellies)
+                workIDs += wd.id + fieldSeparator;
+            foreach (WorkData wd in hands)
+                workIDs += wd.id + fieldSeparator;
+            foreach (WorkData wd in feet)
                 workIDs += wd.id + fieldSeparator;
 
             PlayerPrefs.SetString("WorksIds", workIDs);
@@ -247,6 +273,10 @@ namespace BoardItems
                     List<WorkData.SavedIData> items = new List<WorkData.SavedIData>();
                     string[] itemsData = wData[1].Split(itemSeparator[0]);
                     // Debug.Log("ItemCount: " + itemsData.Length);
+
+                    int totalParts = 0;
+                    int partID = 0;
+
                     for (int j = 0; j < itemsData.Length; j++) {
                         string[] iData = itemsData[j].Split(itemFieldSeparator[0]);
 
@@ -267,15 +297,21 @@ namespace BoardItems
                         sd.scale = new Vector3(float.Parse(iData[6]), float.Parse(iData[6]), 0f);
                         sd.color = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), iData[7]);
                         sd.anim = (AnimationsManager.anim)Enum.Parse(typeof(AnimationsManager.anim), iData[8]);
-                        sd.part = int.Parse(iData[9]);
+                        int newPartID = int.Parse(iData[9]);
+                        if (newPartID != partID)
+                            totalParts++;
+                        partID = newPartID;
+                        sd.part = partID;
                         // iD.color = Color.white;
                         items.Add(sd);
                     }
                     wd.items = items;
                     
                     wd.thumb = userWorksMetaData.Find(x=>x.id==wd.id).thumb;
-                    //wd.pkpkShared = PlayerPrefs.GetInt("PkpkShared_" + e.Key) == 1;
-                    album.Add(wd);
+                    if (totalParts > 1) //is full character:
+                        characters.Add(wd);
+                    else //is preset part:
+                        AddPart(partID, wd);
                 }
             }            
         }
@@ -330,8 +366,8 @@ namespace BoardItems
                         Directory.CreateDirectory(folder);
                     string filename = Path.Combine(folder, "thumb_" + workIDs[i] + ".png");
                     wd.thumb = TextureUtils.LoadLocal(filename);
-                    wd.pkpkShared = PlayerPrefs.GetInt("PkpkShared_" + workIDs[i]) == 1;
-                    album.Add(wd);
+                 //   wd.pkpkShared = PlayerPrefs.GetInt("PkpkShared_" + workIDs[i]) == 1;
+                    characters.Add(wd);
                 }
             }
 
@@ -344,14 +380,14 @@ namespace BoardItems
 
         public WorkData GetWork(string id)
         {
-            return album.Find(x => x.id == id);
+            return characters.Find(x => x.id == id);
         }
 
         public WorkData SetCurrentID(string id)
         {
             currentID = id;
             //  Debug.Log(currentID);
-            return album.Find(x => x.id == id);
+            return characters.Find(x => x.id == id);
         }
 
         public void ResetCurrentID()
@@ -361,34 +397,34 @@ namespace BoardItems
 
         public void DeleteWork(string id)
         {
-            WorkData wd = album.Find(x => x.id == id);
-            album.Remove(wd);
+            WorkData wd = characters.Find(x => x.id == id);
+            characters.Remove(wd);
             PlayerPrefs.DeleteKey("Work_" + id);
-            PlayerPrefs.DeleteKey("PkpkShared_" + id);
+          //  PlayerPrefs.DeleteKey("PkpkShared_" + id);
             PersistWorksIds();
         }
 
-        public void SetPkpkShared(string id, bool enable)
-        {
-            WorkData wd = album.Find(x => x.id == id);
-            SetPkpkShared(wd, enable);
-        }
+        //public void SetPkpkShared(string id, bool enable)
+        //{
+        //    WorkData wd = characters.Find(x => x.id == id);
+        //    SetPkpkShared(wd, enable);
+        //}
 
-        public void SetPkpkShared(WorkData wd, bool enable)
-        {
-            wd.pkpkShared = enable;
-            PlayerPrefs.SetInt("PkpkShared_" + wd.id, enable ? 1 : 0);
-            UIManager.Instance.workDetailUI.SetSendedSign(wd.id, enable);
-        }
+        //public void SetPkpkShared(WorkData wd, bool enable)
+        //{
+        //  //  wd.pkpkShared = enable;
+        //  //  PlayerPrefs.SetInt("PkpkShared_" + wd.id, enable ? 1 : 0);
+        //    UIManager.Instance.workDetailUI.SetSendedSign(wd.id, enable);
+        //}
 
-        public bool IsPkpkShared(string id)
-        {
-            return album.Find(x => x.id == id).pkpkShared;
-        }
+        //public bool IsPkpkShared(string id)
+        //{
+        //    return characters.Find(x => x.id == id).pkpkShared;
+        //}
 
         public bool HasAnims(string id)
         {
-            WorkData wd = album.Find(x => x.id == id);
+            WorkData wd = characters.Find(x => x.id == id);
             bool hasAnims = false;
             foreach (WorkData.SavedIData item in wd.items)
             {
@@ -399,6 +435,40 @@ namespace BoardItems
                 }
             }
             return hasAnims;
+        }
+
+
+        void AddPart(int partID, WorkData wd)
+        {
+            switch (partID)
+            {
+                case 1: //head
+                    heads.Add(wd);
+                    break;
+                case 2: //belly
+                    bellies.Add(wd);
+                    break;
+                case 3: //head
+                    hands.Add(wd);
+                    break;
+                case 4: //head
+                    feet.Add(wd);
+                    break;
+            }
+        }
+        public List<WorkData> GetPreset(int partID)
+        {
+            switch (partID)
+            {
+                case 1: //head
+                    return heads;
+                case 2: //belly
+                    return bellies;
+                case 3: //head
+                    return hands;
+                default: //head
+                    return feet;
+            }
         }
 
     }

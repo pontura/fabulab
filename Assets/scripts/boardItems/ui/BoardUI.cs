@@ -172,6 +172,18 @@ namespace BoardItems.UI
             UIManager.Instance.gallerySelectorUI.SelectGallery(galleries);
             OpenWork(wd);
         }
+        public void LoadPreset(AlbumData.WorkData wd)
+        {
+            items.DeleteInPart(wd.items[0].part);
+            List<int> galleries = new List<int>();
+            foreach (AlbumData.WorkData.SavedIData item in wd.items)
+            {
+                if (!galleries.Contains(item.galleryID))
+                    galleries.Add(item.galleryID);
+            }
+            UIManager.Instance.gallerySelectorUI.SelectGallery(galleries);
+            OpenWork(wd);
+        }
         [SerializeField] RenderTexture rt;
         public void GenerateThumb(AlbumData.WorkData wd, RawImage targetRawImage, System.Action OnReady)
         {
@@ -257,10 +269,7 @@ namespace BoardItems.UI
                     AnimationsManager.AnimData animData = Data.Instance.animationsManager.GetAnimByName(newItem.anim);
                     Events.AnimateItem(animData);
                 }
-                //itemData.Init();
-                //Events.OnNewItem(iData);
             }
-            //Events.ActivateUIButtons(true);
             cam.backgroundColor = Data.Instance.palettesManager.GetColor(wd.bgColorName);
         }
 

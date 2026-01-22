@@ -6,18 +6,17 @@ namespace BoardItems
     public class Inventary : MonoBehaviour
     {
         [SerializeField] ItemPhotoCreator itemPhotoCreator;
-        [SerializeField] UI.ItemsUI itemsUI;
+        [SerializeField] UI.DragAndDropUI dragAndDropUI;
         Items items;
         public void Reset()
         {
             StopAllCoroutines();
             if (items != null)
                 Utils.RemoveAllChildsIn(items.container);
-            itemsUI.Reset();
+            dragAndDropUI.Reset();
         }
         public void Init(Items items, int galleryID, GameObject galleryAsset, bool editMode, System.Action OnAllLoaded)
         {
-            print("Inventary Init editMode:" + editMode);
             this.items = items;
             GameObject gallery = Instantiate(galleryAsset);
             gallery.transform.SetParent(items.container);
@@ -54,7 +53,7 @@ namespace BoardItems
         }
         void OnSpriteDone(ItemData itemData, Sprite s)
         {
-            itemsUI.Add(itemData, s);
+            dragAndDropUI.Add(itemData, s);
             itemData.gameObject.SetActive(false);
         }
     }

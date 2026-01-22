@@ -7,19 +7,18 @@ namespace BoardItems.UI
     public class ItemButton : MonoBehaviour
     {
         [SerializeField] Image image;
-        ItemsUI items;
+        DragAndDropUI dragAndDropUI;
         public ItemData itemData;
 
-        public void Init(ItemsUI items, ItemData itemData, Sprite sprite)
+        public void Init(DragAndDropUI dragAndDropUI, ItemData itemData, Sprite sprite)
         {
-            this.items = items;
+            this.dragAndDropUI = dragAndDropUI;
             this.itemData = itemData;
             image.sprite = sprite;
         }
         public void OnClick()
         {
-            print("asd");
-            items.OnClicked(this);
+            dragAndDropUI.OnClicked(this);
         }
     }
 
