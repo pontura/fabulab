@@ -15,7 +15,7 @@ public class PresetsPreviewUI : MonoBehaviour
     }
     void Delayed()
     {
-        TogglePreview();
+        SetTogglePreview();
     }
     public void TogglePreview()
     {
