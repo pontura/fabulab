@@ -1,6 +1,4 @@
-﻿using BoardItems.Characters;
-using BoardItems.UI;
-using NUnit.Framework;
+﻿using BoardItems.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,21 +6,21 @@ using System.IO;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
-using Yaguar.StoryMaker.Editor;
-using static BoardItems.Characters.CharacterData;
 
 namespace BoardItems
 {
     public class AlbumData : MonoBehaviour
     {
         public Vector2Int thumbSize;
-       // public List<CharacterData> pakapakaAlbum;
+        // public List<CharacterData> pakapakaAlbum;
         public List<CharacterData> characters;
 
         public List<CharacterData> heads;
         public List<CharacterData> bellies;
         public List<CharacterData> hands;
         public List<CharacterData> feet;
+        public List<CharacterData> hairs;
+        public List<CharacterData> faces;
 
         public List<CharacterMetaData> charactersMetaData;
 
@@ -71,7 +69,8 @@ namespace BoardItems
         }
 
         [Serializable]
-        public class ServerCharacterMetaData {
+        public class ServerCharacterMetaData
+        {
             public string thumb;
             public string userID;
         }
@@ -83,32 +82,41 @@ namespace BoardItems
             //StartCoroutine(LoadWorks());
         }
 
-        private void OnDestroy() {
+        private void OnDestroy()
+        {
             FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
         }
 
-        void OnTokenUpdated() {
-            if (Data.Instance.userData.IsLogged()) {
+        void OnTokenUpdated()
+        {
+            if (Data.Instance.userData.IsLogged())
+            {
                 CancelInvoke();
                 LoadUserFilmMetadataFromServer();
-            } else
+            }
+            else
                 Invoke("OnTokenUpdated", 1);
         }
-        public void LoadUserFilmMetadataFromServer() {
-            if (Data.Instance.userData.IsLogged()) {
+        public void LoadUserFilmMetadataFromServer()
+        {
+            if (Data.Instance.userData.IsLogged())
+            {
                 charactersMetaData = new List<CharacterMetaData>();
                 FirebaseStoryMakerDBManager.Instance.LoadUserCharacterMetadataFromServer(OnUserLoadCharacterDataFromServer);
             }
         }
 
-        public void SaveCharacter(Texture2D tex) {
+        public void SaveCharacter(Texture2D tex)
+        {
             CharacterData wd;
-            if (currentID == "" || currentID == null) {
+            if (currentID == "" || currentID == null)
+            {
                 wd = new CharacterData();
                 wd.id = "";
-            } else
+            }
+            else
                 wd = GetCharacter(currentID);
-                       
+
             wd.thumb = tex;
             // wd.bgColorName = Data.Instance.palettesManager.GetColorName(UIManager.Instance.boardUI.cam.backgroundColor);
             wd.bgColorName = PalettesManager.colorNames.BLANCO;//To-DO
@@ -116,13 +124,15 @@ namespace BoardItems
             int i = UIManager.Instance.boardUI.items.all.Count;
             int totalParts = 0;
             int partID = 0;
-            while (i > 0) {
+            while (i > 0)
+            {
                 ItemInScene iInScene = UIManager.Instance.boardUI.items.all[i - 1];
                 int newPartID = (int)iInScene.data.part;
                 if (partID != newPartID)
                     totalParts++;
                 partID = newPartID;
-                if (partID > 0) {
+                if (partID > 0)
+                {
                     CharacterData.SavedIData sd = new CharacterData.SavedIData();
                     sd.part = partID;
                     sd.id = iInScene.data.id;
@@ -139,38 +149,43 @@ namespace BoardItems
                     i--;
                 i--;
             }
+            print("SAVE data: totalparts" + totalParts + " lastPArtID: "+ partID);
             currentCharacter = wd;
-            if (wd.id == "") {
+            if (wd.id == "")
+            {
                 if (totalParts > 1) // is a complete character;
                     characters.Add(wd);
                 else // is a part preset;
                     AddPart(partID, wd);
                 FirebaseStoryMakerDBManager.Instance.SaveCharacterToServer(EncodeCharacterData(wd), OnCharacterSavedToServer);
-            } else
+            }
+            else
                 FirebaseStoryMakerDBManager.Instance.UpdateCharacterToServer(wd.id, EncodeCharacterData(wd), OnCharacterSavedToServer);
 
-            //PersistThumbLocal(wd);
-           // SetPkpkShared(wd, false);
+            PersistThumbLocal(wd);
+            // SetPkpkShared(wd, false);
         }
         string EncodeCharacterData(CharacterData wd)
         {
-                string workData = "";
-                workData += Enum.GetName(typeof(PalettesManager.colorNames), wd.bgColorName) + fieldSeparator;
-                for (int i = 0; i < wd.items.Count; i++) {
-                    workData += wd.items[i].galleryID + itemFieldSeparator + wd.items[i].id + itemFieldSeparator + wd.items[i].position.x + itemFieldSeparator +
-                    wd.items[i].position.y + itemFieldSeparator + wd.items[i].position.z + itemFieldSeparator + wd.items[i].rotation.z +
-                    itemFieldSeparator + wd.items[i].scale.x +
-                    itemFieldSeparator + Enum.GetName(typeof(PalettesManager.colorNames), wd.items[i].color) +
-                    itemFieldSeparator + Enum.GetName(typeof(AnimationsManager.anim), wd.items[i].anim) +
-                    itemFieldSeparator + wd.items[i].part;
-                    if (i < wd.items.Count - 1)
-                        workData += itemSeparator;
-                }
-            Debug.Log("#workData: "+workData);
+            string workData = "";
+            workData += Enum.GetName(typeof(PalettesManager.colorNames), wd.bgColorName) + fieldSeparator;
+            for (int i = 0; i < wd.items.Count; i++)
+            {
+                workData += wd.items[i].galleryID + itemFieldSeparator + wd.items[i].id + itemFieldSeparator + wd.items[i].position.x + itemFieldSeparator +
+                wd.items[i].position.y + itemFieldSeparator + wd.items[i].position.z + itemFieldSeparator + wd.items[i].rotation.z +
+                itemFieldSeparator + wd.items[i].scale.x +
+                itemFieldSeparator + Enum.GetName(typeof(PalettesManager.colorNames), wd.items[i].color) +
+                itemFieldSeparator + Enum.GetName(typeof(AnimationsManager.anim), wd.items[i].anim) +
+                itemFieldSeparator + wd.items[i].part;
+                if (i < wd.items.Count - 1)
+                    workData += itemSeparator;
+            }
+            Debug.Log("#workData: " + workData);
             return workData;
         }
 
-        void OnCharacterSavedToServer(bool succes, string id) {
+        void OnCharacterSavedToServer(bool succes, string id)
+        {
             currentCharacter.id = id;
             currentID = id;
 
@@ -185,7 +200,7 @@ namespace BoardItems
         void OpenCharacterDetail(CharacterData wd)
         {
             Sprite sprite = Sprite.Create(wd.thumb, new Rect(0, 0, wd.thumb.width, wd.thumb.height), Vector2.zero);
-            UIManager.Instance.workDetailUI.ShowWorkDetail(wd.id, sprite,true);
+            UIManager.Instance.workDetailUI.ShowWorkDetail(wd.id, sprite, true);
             Events.ResetItems();
         }
 
@@ -214,12 +229,12 @@ namespace BoardItems
             workData += Enum.GetName(typeof(PalettesManager.colorNames), wd.bgColorName) + fieldSeparator;
             for (int i = 0; i < wd.items.Count; i++)
             {
-                    workData += wd.items[i].galleryID + itemFieldSeparator + wd.items[i].id + itemFieldSeparator + wd.items[i].position.x + itemFieldSeparator +
-                    wd.items[i].position.y + itemFieldSeparator + wd.items[i].position.z + itemFieldSeparator + wd.items[i].rotation.z +
-                    itemFieldSeparator + wd.items[i].scale.x +
-                    itemFieldSeparator + Enum.GetName(typeof(PalettesManager.colorNames), wd.items[i].color) +
-                    itemFieldSeparator + Enum.GetName(typeof(AnimationsManager.anim), wd.items[i].anim) +
-                    itemFieldSeparator + wd.items[i].part;
+                workData += wd.items[i].galleryID + itemFieldSeparator + wd.items[i].id + itemFieldSeparator + wd.items[i].position.x + itemFieldSeparator +
+                wd.items[i].position.y + itemFieldSeparator + wd.items[i].position.z + itemFieldSeparator + wd.items[i].rotation.z +
+                itemFieldSeparator + wd.items[i].scale.x +
+                itemFieldSeparator + Enum.GetName(typeof(PalettesManager.colorNames), wd.items[i].color) +
+                itemFieldSeparator + Enum.GetName(typeof(AnimationsManager.anim), wd.items[i].anim) +
+                itemFieldSeparator + wd.items[i].part;
                 if (i < wd.items.Count - 1)
                     workData += itemSeparator;
             }
@@ -241,13 +256,20 @@ namespace BoardItems
                 workIDs += wd.id + fieldSeparator;
             foreach (CharacterData wd in feet)
                 workIDs += wd.id + fieldSeparator;
+            foreach (CharacterData wd in hairs)
+                workIDs += wd.id + fieldSeparator;
+            foreach (CharacterData wd in faces)
+                workIDs += wd.id + fieldSeparator;
 
             PlayerPrefs.SetString("WorksIds", workIDs);
         }
 
-        public void OnUserLoadCharacterDataFromServer(Dictionary<string, ServerCharacterMetaData> sfds) {
-            foreach (KeyValuePair<string, ServerCharacterMetaData> e in sfds) {
-                if (charactersMetaData.Find(x => x.id == e.Key) == null) {
+        public void OnUserLoadCharacterDataFromServer(Dictionary<string, ServerCharacterMetaData> sfds)
+        {
+            foreach (KeyValuePair<string, ServerCharacterMetaData> e in sfds)
+            {
+                if (charactersMetaData.Find(x => x.id == e.Key) == null)
+                {
                     CharacterMetaData fd = new CharacterMetaData();
                     fd.id = e.Key;
                     fd.userID = e.Value.userID;
@@ -259,14 +281,17 @@ namespace BoardItems
             FirebaseStoryMakerDBManager.Instance.LoadUserCharactersFromServer(LoadCharactersFromServer);
         }
 
-        void LoadCharactersFromServer(Dictionary<string,string> data) {
-            foreach (KeyValuePair<string, string> e in data) {
-                Debug.Log("#LoadCharactersFromServer " + e.Key+": "+e.Value);
+        void LoadCharactersFromServer(Dictionary<string, string> data)
+        {
+            foreach (KeyValuePair<string, string> e in data)
+            {
+                Debug.Log("#LoadCharactersFromServer " + e.Key + ": " + e.Value);
                 CharacterData wd = new CharacterData();
                 wd.id = e.Key;
                 string[] wData = e.Value.Split(fieldSeparator[0]);
                 print("total art: " + wData.Length);
-                if (wData[0] != "") {
+                if (wData[0] != "")
+                {
                     Debug.Log("bgColorIndex: " + wData[0]);
                     wd.bgColorName = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[0]);
 
@@ -277,11 +302,13 @@ namespace BoardItems
                     int totalParts = 0;
                     int partID = 0;
 
-                    for (int j = 0; j < itemsData.Length; j++) {
+                    for (int j = 0; j < itemsData.Length; j++)
+                    {
                         string[] iData = itemsData[j].Split(itemFieldSeparator[0]);
 
                         int num = 0;
-                        foreach (string s in iData) {
+                        foreach (string s in iData)
+                        {
                             Debug.Log(num + "___ " + s);
                             num++;
                         }
@@ -306,14 +333,14 @@ namespace BoardItems
                         items.Add(sd);
                     }
                     wd.items = items;
-                    
-                    wd.thumb = charactersMetaData.Find(x=>x.id==wd.id).thumb;
+
+                    wd.thumb = charactersMetaData.Find(x => x.id == wd.id).thumb;
                     if (totalParts > 1) //is full character:
                         characters.Add(wd);
                     else //is preset part:
                         AddPart(partID, wd);
                 }
-            }            
+            }
         }
 
         IEnumerator LoadWorks()
@@ -404,7 +431,7 @@ namespace BoardItems
             CharacterData wd = characters.Find(x => x.id == id);
             characters.Remove(wd);
             PlayerPrefs.DeleteKey("Work_" + id);
-          //  PlayerPrefs.DeleteKey("PkpkShared_" + id);
+            //  PlayerPrefs.DeleteKey("PkpkShared_" + id);
             PersistWorksIds();
         }
 
@@ -458,6 +485,12 @@ namespace BoardItems
                 case 4: //head
                     feet.Add(wd);
                     break;
+                case 7: //hairs
+                    hairs.Add(wd);
+                    break;
+                case 8: //faces
+                    faces.Add(wd);
+                    break;
             }
         }
         public List<CharacterData> GetPreset(int partID)
@@ -470,9 +503,14 @@ namespace BoardItems
                     return bellies;
                 case 3: //head
                     return hands;
-                default: //head
+                case 4: //head
                     return feet;
+                case 7: //hairs
+                    return hairs;
+                case 8: //faces
+                    return faces;
             }
+            return null;
         }
 
     }
