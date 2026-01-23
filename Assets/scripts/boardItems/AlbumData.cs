@@ -149,7 +149,7 @@ namespace BoardItems
             } else
                 FirebaseStoryMakerDBManager.Instance.UpdateCharacterToServer(wd.id, EncodeCharacterData(wd), OnCharacterSavedToServer);
 
-            PersistThumbLocal(wd);
+            //PersistThumbLocal(wd);
            // SetPkpkShared(wd, false);
         }
         string EncodeCharacterData(CharacterData wd)
