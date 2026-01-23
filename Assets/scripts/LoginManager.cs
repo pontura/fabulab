@@ -39,6 +39,9 @@ public class LoginManager : MonoBehaviour
     }
 
     void OnLogin(bool succes) {
+
+        print("OnLogin " + succes);
+
         if (succes) {
             error.text = "Conectado...";
             Invoke(nameof(OnLogged), 3);
@@ -68,6 +71,7 @@ public class LoginManager : MonoBehaviour
     }
 
     public void OnLogged() {
+        print("logged");
         gameObject.SetActive(false);
     }
     
