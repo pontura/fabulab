@@ -88,6 +88,7 @@ namespace Yaguar.Auth
                 {
                     Debug.Log("Signed in " + _user.UserId);
                     OnTokenUpdated?.Invoke();
+                    OnLogin?.Invoke(true);
                 }
             }
             else if (_auth.CurrentUser == null || _auth.CurrentUser.IsValid())
@@ -254,9 +255,9 @@ namespace Yaguar.Auth
                 Firebase.Auth.AuthResult result = task.Result;
                 Debug.LogFormat("User signed in successfully: {0} ({1})",
                     result.User.DisplayName, result.User.UserId);
-
-                firebaseDBManager.GetComponent<IFirebaseDBManager>().LoadUserData(result.User.UserId, OnFirebaseAuthenticated);
                 OnLogin?.Invoke(true);
+                firebaseDBManager.GetComponent<IFirebaseDBManager>().LoadUserData(result.User.UserId, OnFirebaseAuthenticated);
+                
             }, taskScheduler);
             Debug.Log("Server: LoginUserByEmail");
         }
