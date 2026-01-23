@@ -8,8 +8,8 @@ namespace BoardItems.UI
     {
         [SerializeField] Image image;
         PresetsSelector manager;
-        public WorkData workData;
-        public void Init(PresetsSelector manager, WorkData workData)
+        public CharacterData workData;
+        public void Init(PresetsSelector manager, CharacterData workData)
         {
             this.workData = workData;
             this.manager = manager;

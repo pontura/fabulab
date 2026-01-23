@@ -27,9 +27,9 @@ namespace BoardItems.UI
                     CharacterAnims.anims anim = CharacterAnims.anims.edit;
                     Events.OnCharacterAnim(0, anim);
 
-                    List<WorkData> all = Data.Instance.albumData.GetPreset(partID);
+                    List<CharacterData> all = Data.Instance.albumData.GetPreset(partID);
                     artID++;
-                    foreach (WorkData wd in all)
+                    foreach (CharacterData wd in all)
                     {
                         if (wd.thumb != null)
                         {

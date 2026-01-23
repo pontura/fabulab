@@ -144,13 +144,13 @@ namespace BoardItems.UI
 
         public void OnTakeShotDone(Texture2D tex)
         {
-            Data.Instance.albumData.SaveWork(tex);
+            Data.Instance.albumData.SaveCharacter(tex);
         }
 
         public IEnumerator CreateGif(string id, System.Action callback)
         {
             yield return new WaitForSeconds(1);
-            AlbumData.WorkData wd = Data.Instance.albumData.SetCurrentID(id);
+            AlbumData.CharacterData wd = Data.Instance.albumData.SetCurrentID(id);
            // Data.Instance.galeriasData.SetGallery(wd.galleryID);
             OpenWork(wd);
             items.NextStepAnims(0, captureGifFramerate);
@@ -160,11 +160,11 @@ namespace BoardItems.UI
         public void LoadWork(string id)
         {
             items.DeleteAll();
-            AlbumData.WorkData wd = Data.Instance.albumData.SetCurrentID(id);
+            AlbumData.CharacterData wd = Data.Instance.albumData.SetCurrentID(id);
            // UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID, true);
            //TO-DO:
             List<int> galleries = new List<int>();
-            foreach(AlbumData.WorkData.SavedIData item in wd.items)
+            foreach(AlbumData.CharacterData.SavedIData item in wd.items)
             {
                 if (!galleries.Contains(item.galleryID))
                     galleries.Add(item.galleryID);
@@ -172,11 +172,11 @@ namespace BoardItems.UI
             UIManager.Instance.gallerySelectorUI.SelectGallery(galleries);
             OpenWork(wd);
         }
-        public void LoadPreset(AlbumData.WorkData wd)
+        public void LoadPreset(AlbumData.CharacterData wd)
         {
             items.DeleteInPart(wd.items[0].part);
             List<int> galleries = new List<int>();
-            foreach (AlbumData.WorkData.SavedIData item in wd.items)
+            foreach (AlbumData.CharacterData.SavedIData item in wd.items)
             {
                 if (!galleries.Contains(item.galleryID))
                     galleries.Add(item.galleryID);
@@ -185,11 +185,11 @@ namespace BoardItems.UI
             OpenWork(wd);
         }
         [SerializeField] RenderTexture rt;
-        public void GenerateThumb(AlbumData.WorkData wd, RawImage targetRawImage, System.Action OnReady)
+        public void GenerateThumb(AlbumData.CharacterData wd, RawImage targetRawImage, System.Action OnReady)
         {
             items.DeleteAll();
             //UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID, false);
-            foreach (AlbumData.WorkData.SavedIData itemData in wd.items)
+            foreach (AlbumData.CharacterData.SavedIData itemData in wd.items)
             {
                 ItemData newItem = CreateItem(itemData);
             }
@@ -199,7 +199,7 @@ namespace BoardItems.UI
         public Vector2Int thumbSize = new Vector2Int(128, 128);
 
 
-        public IEnumerator GenerateThumbForRawImage(AlbumData.WorkData wd, RawImage targetRawImage, System.Action OnReady)
+        public IEnumerator GenerateThumbForRawImage(AlbumData.CharacterData wd, RawImage targetRawImage, System.Action OnReady)
         {
             // 1️⃣ Crear RenderTexture temporal
             RenderTexture rt = new RenderTexture(thumbSize.x, thumbSize.y, 24, RenderTextureFormat.ARGB32);
@@ -232,7 +232,7 @@ namespace BoardItems.UI
 
 
 
-        ItemData CreateItem(AlbumData.WorkData.SavedIData itemData)
+        ItemData CreateItem(AlbumData.CharacterData.SavedIData itemData)
         {
             ItemData newItem = Instantiate(Resources.Load<ItemData>("galerias/" + itemData.galleryID + "/item_" + itemData.id));
             // Debug.Log("ID" + itemData.id + ":" + itemData.position);
@@ -258,9 +258,9 @@ namespace BoardItems.UI
 
 
 
-        void OpenWork(AlbumData.WorkData wd)
+        void OpenWork(AlbumData.CharacterData wd)
         {
-            foreach (AlbumData.WorkData.SavedIData itemData in wd.items)
+            foreach (AlbumData.CharacterData.SavedIData itemData in wd.items)
             {
                 ItemData newItem = CreateItem(itemData);
 

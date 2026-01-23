@@ -41,7 +41,7 @@ namespace BoardItems.UI
         {
             print("LoadNext " + artID);
             if (artID >= Data.Instance.albumData.characters.Count) return;
-            AlbumData.WorkData wd = Data.Instance.albumData.characters[artID];
+            AlbumData.CharacterData wd = Data.Instance.albumData.characters[artID];
             artID++;
             if (wd.thumb != null)
             {

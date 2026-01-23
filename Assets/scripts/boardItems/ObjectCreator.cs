@@ -15,22 +15,22 @@ namespace BoardItems
             int id = 1;
             foreach (GameObject go in go_to_create)
             {
-                AlbumData.WorkData wData = new AlbumData.WorkData();
-                wData.items = new List<AlbumData.WorkData.SavedIData>();
+                AlbumData.CharacterData wData = new AlbumData.CharacterData();
+                wData.items = new List<AlbumData.CharacterData.SavedIData>();
                 wData.id = id.ToString();
                 wData.isPakaPakaArt = true;
                 foreach (ItemData itemData in go.GetComponentsInChildren<ItemData>())
                 {
-                    AlbumData.WorkData.SavedIData s = SetItemData(itemData);
+                    AlbumData.CharacterData.SavedIData s = SetItemData(itemData);
                     wData.items.Add(s);
                 }
             //    Data.Instance.albumData.pakapakaAlbum.Add(wData);
                 id++;
             }
         }
-        AlbumData.WorkData.SavedIData SetItemData(ItemData itemData)
+        AlbumData.CharacterData.SavedIData SetItemData(ItemData itemData)
         {
-            AlbumData.WorkData.SavedIData d = new AlbumData.WorkData.SavedIData();
+            AlbumData.CharacterData.SavedIData d = new AlbumData.CharacterData.SavedIData();
             d.position = itemData.gameObject.transform.position;
             d.rotation = itemData.gameObject.transform.localEulerAngles;
             d.scale = itemData.gameObject.transform.localScale;

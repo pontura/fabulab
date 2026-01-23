@@ -97,7 +97,7 @@ namespace BoardItems.UI
         {
             if (enable)
             {
-                Data.Instance.albumData.DeleteWork(id);
+                Data.Instance.albumData.DeleteCharacter(id);
                 Back();
                 confirmation.SetActive(false);
             }

@@ -55,64 +55,64 @@ namespace Yaguar.StoryMaker.DB
             return FirebaseStoryMakerDBManager.Instance;
         }
 
-        public void UpdateWorkToServer(string workId, string workData, System.Action<bool, string> callback) {
+        public void UpdateCharacterToServer(string characterId, string characterData, System.Action<bool, string> callback) {
             var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("works/" + _uid + "/" + workId);
-            string s = JsonConvert.SerializeObject(workData);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("characters/" + _uid + "/" + characterId);
+            string s = JsonConvert.SerializeObject(characterData);
             reference.SetRawJsonValueAsync(s).ContinueWith(task => {
                 if (task.IsFaulted || task.IsCanceled) {
-                    Debug.Log("#UpdateWorkToServer FAIL");
+                    Debug.Log("#UpdateCharacterToServer FAIL");
                     Debug.Log(task.Exception);
                 } else {
-                    callback(true, workId);
+                    callback(true, characterId);
                 }
             }, taskScheduler);
-            Debug.Log("Server: UpdateWorkToServer");
-            //print("UpdateWorkToServer url : " + url);
+            Debug.Log("Server: UpdateCharacterToServer");
+            //print("UpdateCharacterToServer url : " + url);
         }
 
-        public void SaveWorkToServer(string workData, System.Action<bool, string> callback) {
+        public void SaveCharacterToServer(string characterData, System.Action<bool, string> callback) {
             var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("works/" + _uid);
-            string s = JsonConvert.SerializeObject(workData);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("characters/" + _uid);
+            string s = JsonConvert.SerializeObject(characterData);
             string key = reference.Push().Key;
             reference.Child(key).SetRawJsonValueAsync(s).ContinueWith(task => {
                 if (task.IsFaulted || task.IsCanceled) {
-                    Debug.Log("#SaveWorkToServer FAIL");
+                    Debug.Log("#SaveCharacterToServer FAIL");
                     Debug.Log(task.Exception);
                 } else {
                     callback(true, key);
                     Debug.Log("Response: " + key);
                 }
             }, taskScheduler);
-            Debug.Log("Server: SaveWorkToServer");
-            //print("SaveWorkToServer url : " + url);
+            Debug.Log("Server: SaveCharacterToServer");
+            //print("SaveCharacterToServer url : " + url);
         }
 
-        public void DeleteWork(string workId, System.Action<string> callback) {
+        public void DeleteCharacter(string characterId, System.Action<string> callback) {
             var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("works/" + _uid + "/" + workId);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("characters/" + _uid + "/" + characterId);
             reference.RemoveValueAsync().ContinueWith(task => {
                 if (task.IsFaulted || task.IsCanceled) {
-                    Debug.Log("#DeleteWork FAIL");
+                    Debug.Log("#DeleteCharacter FAIL");
                     Debug.Log(task.Exception);
                 } else {
-                    //DeleteWorkMetadataFromServer(workId);
-                    callback(workId);
+                    //DeleteCharacterMetadataFromServer(characterId);
+                    callback(characterId);
                 }
             }, taskScheduler);
-            Debug.Log("Server: DeleteWork");
+            Debug.Log("Server: DeleteCharacter");
             //Debug.Log(url);
         }
 
-        public void LoadUserWorksFromServer(System.Action<Dictionary<string, string>> callback) {
+        public void LoadUserCharactersFromServer(System.Action<Dictionary<string, string>> callback) {
             var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();           
 
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("works/" + _uid);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("characters/" + _uid);
             reference.GetValueAsync().ContinueWith(task => {
                 if (task.IsFaulted || task.IsCanceled) {
-                    Debug.Log("#LoadUserWorksFromServer FAIL");
+                    Debug.Log("#LoadUserCharactersFromServer FAIL");
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
                     //SceneDataLyna[] sds = JsonConvert.DeserializeObject<SceneDataLyna[]>(task.Result.GetRawJsonValue());
@@ -122,11 +122,11 @@ namespace Yaguar.StoryMaker.DB
                     callback(d);
                 }
             }, taskScheduler);
-            Debug.Log("Server: LoadUserWorksFromServer");
-            //print("LoadWorkFromServer url : " + url);
+            Debug.Log("Server: LoadUserCharactersFromServer");
+            //print("LoadCharacterFromServer url : " + url);
         }
 
-        public void LoadWorkFromServer(string workId, System.Action<bool, string> callback, string userId=null)
+        public void LoadCharacterFromServer(string characterId, System.Action<bool, string> callback, string userId=null)
         {
             var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
@@ -136,11 +136,11 @@ namespace Yaguar.StoryMaker.DB
                 uid = userId;
             }
 
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("works/" + uid + "/" + workId);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("characters/" + uid + "/" + characterId);
             reference.GetValueAsync().ContinueWith(task => {
                 if (task.IsFaulted || task.IsCanceled)
                 {
-                    Debug.Log("#LoadWorkFromServer FAIL");
+                    Debug.Log("#LoadCharacterFromServer FAIL");
                     callback(false, null);
                     Debug.Log(task.Exception);
                 }
@@ -152,44 +152,44 @@ namespace Yaguar.StoryMaker.DB
                     callback(true, data);
                 }
             }, taskScheduler);            
-            Debug.Log("Server: LoadWorkFromServer");
-            //print("LoadWorkFromServer url : " + url);
+            Debug.Log("Server: LoadCharacterFromServer");
+            //print("LoadCharacterFromServer url : " + url);
         }
 
 
-        public void SaveWorkMetadataToServer(string workId, AlbumData.ServerWorkMetaData swmd)
+        public void SaveCharacterMetadataToServer(string characterId, AlbumData.ServerCharacterMetaData swmd)
         {
-            Debug.Log("#SaveWorkMetadataToServer");
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("works/mdata/" + workId);
+            Debug.Log("#SaveCharacterMetadataToServer");
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("characters/mdata/" + characterId);
             string s = JsonConvert.SerializeObject(swmd);
             reference.SetRawJsonValueAsync(s);
-            Debug.Log("Server: SaveWorkMetadataToServer");           
+            Debug.Log("Server: SaveCharacterMetadataToServer");           
         }
 
-        public void LoadUserWorkMetadataFromServer(System.Action<Dictionary<string, AlbumData.ServerWorkMetaData>> callback)
+        public void LoadUserCharacterMetadataFromServer(System.Action<Dictionary<string, AlbumData.ServerCharacterMetaData>> callback)
         {
             var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("works/mdata");
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("characters/mdata");
             reference.OrderByChild("userID").EqualTo(_uid).GetValueAsync().ContinueWith(task => {
                 if (task.IsFaulted || task.IsCanceled)
                 {
-                    Debug.Log("#LoadUserWorkMetadataFromServer FAIL");                    
+                    Debug.Log("#LoadUserCharacterMetadataFromServer FAIL");                    
                     Debug.Log(task.Exception);
                 }
                 else if (task.IsCompleted)
                 {
-                    Dictionary<string, AlbumData.ServerWorkMetaData> d = JsonConvert.DeserializeObject<Dictionary<string, AlbumData.ServerWorkMetaData>>(task.Result.GetRawJsonValue());
+                    Dictionary<string, AlbumData.ServerCharacterMetaData> d = JsonConvert.DeserializeObject<Dictionary<string, AlbumData.ServerCharacterMetaData>>(task.Result.GetRawJsonValue());
                     callback(d);
                     // Do something with snapshot...
                 }
             }, taskScheduler);
             
-            Debug.Log("Server: LoadUserWorkMetadataFromServer");
+            Debug.Log("Server: LoadUserCharacterMetadataFromServer");
             //Debug.Log(url);
         }
 
         /*
-        public void DeleteWorkMetadataFromServer(string themeId, string filmId)
+        public void DeleteCharacterMetadataFromServer(string themeId, string filmId)
         {
             //Debug.Log("ACA");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("stories/mdata/" + themeId + "/" + filmId);
@@ -197,11 +197,11 @@ namespace Yaguar.StoryMaker.DB
             {
                 if (task.IsFaulted || task.IsCanceled)
                 {
-                    Debug.Log("#DeleteWorkMetadataFromServer FAIL");
+                    Debug.Log("#DeleteCharacterMetadataFromServer FAIL");
                     Debug.Log(task.Exception);
                 }
             });
-            Debug.Log("Server: DeleteWorkMetadataFromServer");
+            Debug.Log("Server: DeleteCharacterMetadataFromServer");
             //Debug.Log(url);
         }        */
 
