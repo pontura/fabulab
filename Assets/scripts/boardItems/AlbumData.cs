@@ -80,7 +80,7 @@ namespace BoardItems
         {
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
             // PlayerPrefs.|leteAll();
-            //StartCoroutine(LoadWorks());
+            StartCoroutine(LoadWorks());
         }
 
         private void OnDestroy() {
@@ -149,7 +149,7 @@ namespace BoardItems
             } else
                 FirebaseStoryMakerDBManager.Instance.UpdateWorkToServer(wd.id, EncodeWorkData(wd), OnWorkSavedToServer);
 
-            //PersistThumbLocal(wd);
+            PersistThumbLocal(wd);
            // SetPkpkShared(wd, false);
         }
         string EncodeWorkData(WorkData wd)
@@ -325,14 +325,16 @@ namespace BoardItems
                 wd.id = workIDs[i];
                 string[] wData = PlayerPrefs.GetString("Work_" + workIDs[i]).Split(fieldSeparator[0]);
                 print("total art: " + wData.Length);
+
                 if (wData[0] != "")
                 {
-                    Debug.Log("bgColorIndex: " + wData[0]);
                     wd.bgColorName = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[0]);
 
                     List<WorkData.SavedIData> items = new List<WorkData.SavedIData>();
                     string[] itemsData = wData[1].Split(itemSeparator[0]);
-                    // Debug.Log("ItemCount: " + itemsData.Length);
+
+                    int totalParts = 0;
+                    int partID = 0;
                     for (int j = 0; j < itemsData.Length; j++)
                     {
                         string[] iData = itemsData[j].Split(itemFieldSeparator[0]);
@@ -343,11 +345,7 @@ namespace BoardItems
                             Debug.Log(num + "___ " + s);
                             num++;
                         }
-                        //ItemData iD = Data.Instance.galeriasData.GetItem(wd.galleryID,int.Parse(iData[0]));
-                        //if (iD.sprite == null)
-                        //    Debug.Log(iD.id + ": spriteNull");
                         WorkData.SavedIData sd = new WorkData.SavedIData();
-                        Debug.Log("# " + iData[0]);
                         sd.galleryID = int.Parse(iData[0]);
                         sd.id = int.Parse(iData[1]);
                         sd.position = new Vector3(float.Parse(iData[2]), float.Parse(iData[3]), float.Parse(iData[4]));
@@ -355,8 +353,12 @@ namespace BoardItems
                         sd.scale = new Vector3(float.Parse(iData[6]), float.Parse(iData[6]), 0f);
                         sd.color = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), iData[7]);
                         sd.anim = (AnimationsManager.anim)Enum.Parse(typeof(AnimationsManager.anim), iData[8]);
-                        sd.part = int.Parse(iData[9]);
-                        // iD.color = Color.white;
+                        int newPartID = int.Parse(iData[9]);
+                        if (newPartID != partID)
+                            totalParts++;
+                        partID = newPartID;
+                        sd.part = partID;
+                        print("new partID " + partID + " totalParts " + totalParts);
                         items.Add(sd);
                     }
                     wd.items = items;
@@ -366,11 +368,13 @@ namespace BoardItems
                         Directory.CreateDirectory(folder);
                     string filename = Path.Combine(folder, "thumb_" + workIDs[i] + ".png");
                     wd.thumb = TextureUtils.LoadLocal(filename);
-                 //   wd.pkpkShared = PlayerPrefs.GetInt("PkpkShared_" + workIDs[i]) == 1;
-                    characters.Add(wd);
+                    print("partID " + partID + " totalParts " + totalParts);
+                    if (totalParts > 1) //is full character:
+                        characters.Add(wd);
+                    else //is preset part:
+                        AddPart(partID, wd);
                 }
             }
-
             yield return null;
         }
 
