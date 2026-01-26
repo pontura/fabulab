@@ -88,7 +88,6 @@ namespace Yaguar.Auth
                 {
                     Debug.Log("Signed in " + _user.UserId);
                     OnTokenUpdated?.Invoke();
-                    OnLogin?.Invoke(true);
                 }
             }
             else if (_auth.CurrentUser == null || _auth.CurrentUser.IsValid())

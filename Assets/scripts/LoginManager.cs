@@ -16,6 +16,7 @@ public class LoginManager : MonoBehaviour
     void Start() {
 
         FirebaseAuthManager.Instance.OnLogin += OnLogin;
+        FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
         FirebaseAuthManager.Instance.OnSignUp += OnSignUp;
         FirebaseAuthManager.Instance.OnResetPassword += OnResetPassword;
 
@@ -36,6 +37,7 @@ public class LoginManager : MonoBehaviour
         FirebaseAuthManager.Instance.OnLogin -= OnLogin;
         FirebaseAuthManager.Instance.OnSignUp -= OnSignUp;
         FirebaseAuthManager.Instance.OnResetPassword -= OnResetPassword;
+        FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
     }
 
     void OnLogin(bool succes) {
@@ -63,6 +65,10 @@ public class LoginManager : MonoBehaviour
             error.text = "La dirección de correo electrónico es incorrecta";
     }
 
+    void OnTokenUpdated() {
+        Invoke(nameof(OnLogged), 3);
+    }
+
     void ResetRegisterFields() {
         usernameField.text = "";
         emailField.text = "";
@@ -71,6 +77,7 @@ public class LoginManager : MonoBehaviour
     }
 
     public void OnLogged() {
+        CancelInvoke("OnLogged");
         print("logged");
         gameObject.SetActive(false);
     }
