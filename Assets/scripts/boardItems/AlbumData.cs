@@ -9,8 +9,7 @@ using Yaguar.StoryMaker.DB;
 
 namespace BoardItems
 {
-    public class AlbumData : MonoBehaviour
-    {
+    public class AlbumData : MonoBehaviour {
         public Vector2Int thumbSize;
         // public List<CharacterData> pakapakaAlbum;
         public List<CharacterData> characters;
@@ -33,22 +32,19 @@ namespace BoardItems
         CharacterData currentCharacter;
 
         [Serializable]
-        public class CharacterData
-        {
+        public class CharacterData {
             public bool isPakaPakaArt;
             public string id;
             public Texture2D thumb;
             public PalettesManager.colorNames bgColorName;
             public List<SavedIData> items;
 
-            public Sprite GetSprite()
-            {
+            public Sprite GetSprite() {
                 return Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), Vector2.zero);
             }
 
             [Serializable]
-            public class SavedIData
-            {
+            public class SavedIData {
                 public int galleryID;
                 public int part;
                 public int id;
@@ -61,49 +57,66 @@ namespace BoardItems
         }
 
         [Serializable]
-        public class CharacterMetaData
-        {
+        public class CharacterMetaData {
             public string id;
             public Texture2D thumb;
             public string userID;
         }
 
         [Serializable]
-        public class ServerCharacterMetaData
-        {
+        public class ServerCharacterMetaData {
             public string thumb;
             public string userID;
         }
 
-        private void Start()
-        {
+        public enum PartIds {
+            none = 0,
+            head = 1,
+            belly = 2,
+            hands = 3,
+            feet = 4,
+            hair = 7,
+            face = 8
+        }
+
+        private void Start() {
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
             // PlayerPrefs.DeleteAll();
             //StartCoroutine(LoadWorks());
         }
 
-        private void OnDestroy()
-        {
+        private void OnDestroy() {
             FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
         }
 
-        void OnTokenUpdated()
-        {
-            if (Data.Instance.userData.IsLogged())
-            {
+        void OnTokenUpdated() {
+            if (Data.Instance.userData.IsLogged()) {
                 CancelInvoke();
-                LoadUserFilmMetadataFromServer();
-            }
-            else
+                LoadUserCharacterMetadataFromServer();
+                LoadPresetsFromServer();
+            } else
                 Invoke("OnTokenUpdated", 1);
         }
-        public void LoadUserFilmMetadataFromServer()
-        {
-            if (Data.Instance.userData.IsLogged())
-            {
+        public void LoadUserCharacterMetadataFromServer() {
+            if (Data.Instance.userData.IsLogged()) {
                 charactersMetaData = new List<CharacterMetaData>();
                 FirebaseStoryMakerDBManager.Instance.LoadUserCharacterMetadataFromServer(OnUserLoadCharacterDataFromServer);
             }
+        }
+
+        int loadedParts = 0;
+        public void LoadPresetsFromServer() {
+            if (loadedParts + 1 >= Enum.GetValues(typeof(PartIds)).Length)
+                return;
+            loadedParts++;
+            FirebaseStoryMakerDBManager.Instance.LoadPresetsFromServer(((PartIds)loadedParts).ToString(), OnLoadPresetsFromServer);
+        }
+        
+        void OnLoadPresetsFromServer(Dictionary<string,string> data) {
+            if (data != null) {
+                LoadCharactersFromServer(data);
+            }
+            LoadPresetsFromServer();
         }
 
         public void SaveCharacter(Texture2D tex)
@@ -151,16 +164,21 @@ namespace BoardItems
             }
             print("SAVE data: totalparts" + totalParts + " lastPArtID: "+ partID);
             currentCharacter = wd;
-            if (wd.id == "")
-            {
-                if (totalParts > 1) // is a complete character;
+            if (wd.id == "") {
+                if (totalParts > 1) { // is a complete character;
                     characters.Add(wd);
-                else // is a part preset;
+                    FirebaseStoryMakerDBManager.Instance.SaveCharacterToServer(EncodeCharacterData(wd), OnCharacterSavedToServer);
+                } else if (Data.Instance.userData.isAdmin) { // is a part preset;
                     AddPart(partID, wd);
-                FirebaseStoryMakerDBManager.Instance.SaveCharacterToServer(EncodeCharacterData(wd), OnCharacterSavedToServer);
+                    FirebaseStoryMakerDBManager.Instance.SavePresetToServer(EncodeCharacterData(wd), ((PartIds)partID).ToString(), OnPresetSavedToServer);
+                }
+            } else {
+                if (totalParts > 1) { // is a complete character;
+                    FirebaseStoryMakerDBManager.Instance.UpdateCharacterToServer(wd.id, EncodeCharacterData(wd), OnCharacterSavedToServer);
+                } else if (Data.Instance.userData.isAdmin) { // is a part preset;
+                    FirebaseStoryMakerDBManager.Instance.UpdatePresetToServer(wd.id, EncodeCharacterData(wd), ((PartIds)partID).ToString(), OnPresetSavedToServer);
+                }
             }
-            else
-                FirebaseStoryMakerDBManager.Instance.UpdateCharacterToServer(wd.id, EncodeCharacterData(wd), OnCharacterSavedToServer);
 
             PersistThumbLocal(wd);
             // SetPkpkShared(wd, false);
@@ -193,6 +211,18 @@ namespace BoardItems
             swmd.thumb = System.Convert.ToBase64String(currentCharacter.thumb.EncodeToJPG());
             swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
             FirebaseStoryMakerDBManager.Instance.SaveCharacterMetadataToServer(currentID, swmd);
+
+            OpenCharacterDetail(currentCharacter);
+        }
+
+        void OnPresetSavedToServer(bool succes, string id, string partId) {
+            currentCharacter.id = id;
+            currentID = id;
+
+            /*ServerCharacterMetaData swmd = new ServerCharacterMetaData();
+            swmd.thumb = System.Convert.ToBase64String(currentCharacter.thumb.EncodeToJPG());
+            swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
+            FirebaseStoryMakerDBManager.Instance.SavePresetMetadataToServer(currentID, partId, swmd);*/
 
             OpenCharacterDetail(currentCharacter);
         }
@@ -333,8 +363,7 @@ namespace BoardItems
                         items.Add(sd);
                     }
                     wd.items = items;
-
-                    wd.thumb = charactersMetaData.Find(x => x.id == wd.id).thumb;
+                    wd.thumb = charactersMetaData.Find(x => x.id == wd.id)?.thumb;
                     if (totalParts > 1) //is full character:
                         characters.Add(wd);
                     else //is preset part:
@@ -497,17 +526,17 @@ namespace BoardItems
         {
             switch (partID)
             {
-                case 1: //head
+                case (int)PartIds.head: //head
                     return heads;
-                case 2: //belly
+                case (int)PartIds.belly: //belly
                     return bellies;
-                case 3: //head
+                case (int)PartIds.hands: //head
                     return hands;
-                case 4: //head
+                case (int)PartIds.feet: //head
                     return feet;
-                case 7: //hairs
+                case (int)PartIds.hair: //hairs
                     return hairs;
-                case 8: //faces
+                case (int)PartIds.face: //faces
                     return faces;
             }
             return null;

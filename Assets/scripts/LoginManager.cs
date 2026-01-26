@@ -29,7 +29,7 @@ public class LoginManager : MonoBehaviour
 
         if (!isNew) {
             error.text = "Bienvenide " + Data.Instance.userData.userDataInDatabase.username;
-            Invoke(nameof(OnLogged), 3);
+            Invoke(nameof(OnLogged), Time.deltaTime * 3);
         }
     }
 
@@ -46,14 +46,14 @@ public class LoginManager : MonoBehaviour
 
         if (succes) {
             error.text = "Conectado...";
-            Invoke(nameof(OnLogged), 3);
+            Invoke(nameof(OnLogged), Time.deltaTime*3);
         } else
             error.text = "La dirección de correo electrónico o la contraseña son incorrectas";
     }
     void OnSignUp(bool succes) {
         if (succes) {
             error.text = "Usuario registrado correctamente";
-            Invoke(nameof(OnLogged), 3);
+            Invoke(nameof(OnLogged), 1);
         } else
             error.text = "Ocurrió un error al registrar el usuario, intentalo nuevamente más tarde";
     }
@@ -66,7 +66,7 @@ public class LoginManager : MonoBehaviour
     }
 
     void OnTokenUpdated() {
-        Invoke(nameof(OnLogged), 3);
+        Invoke(nameof(OnLogged), Time.deltaTime * 3);
     }
 
     void ResetRegisterFields() {
