@@ -30,6 +30,7 @@ namespace BoardItems
         string currentID;
 
         CharacterData currentCharacter;
+        Dictionary<string, ServerPartMetaData> serverPartsMetaData;
 
         [Serializable]
         public class CharacterData {
@@ -69,6 +70,13 @@ namespace BoardItems
             public string userID;
         }
 
+        [Serializable]
+        public class ServerPartMetaData
+        {
+            public string thumb;
+            public string partID;
+        }
+
         public enum PartIds {
             none = 0,
             head = 1,
@@ -93,21 +101,32 @@ namespace BoardItems
             if (Data.Instance.userData.IsLogged()) {
                 CancelInvoke();
                 LoadUserCharacterMetadataFromServer();
-                LoadPresetsFromServer();
+                LoadPartMetadataFromServer();
             } else
                 Invoke("OnTokenUpdated", 1);
         }
-        public void LoadUserCharacterMetadataFromServer() {
+        void LoadUserCharacterMetadataFromServer() {
             if (Data.Instance.userData.IsLogged()) {
                 charactersMetaData = new List<CharacterMetaData>();
                 FirebaseStoryMakerDBManager.Instance.LoadUserCharacterMetadataFromServer(OnUserLoadCharacterDataFromServer);
             }
         }
 
+        void LoadPartMetadataFromServer() {
+            if (Data.Instance.userData.IsLogged()) {
+                FirebaseStoryMakerDBManager.Instance.LoadPresetMetadataFromServer(OnLoadPresetMetadataFromServer);
+            }
+        }
+
+        public void OnLoadPresetMetadataFromServer(Dictionary<string, ServerPartMetaData> spmd) {
+            serverPartsMetaData = spmd;
+            LoadPresetsFromServer();
+        }
+
         int loadedParts = 0;
-        public void LoadPresetsFromServer() {
-            if (loadedParts + 1 >= Enum.GetValues(typeof(PartIds)).Length)
-                return;
+        void LoadPresetsFromServer() {
+            if (loadedParts + 1 >= Enum.GetValues(typeof(PartIds)).Length) 
+                return;            
             loadedParts++;
             FirebaseStoryMakerDBManager.Instance.LoadPresetsFromServer(((PartIds)loadedParts).ToString(), OnLoadPresetsFromServer);
         }
@@ -219,10 +238,10 @@ namespace BoardItems
             currentCharacter.id = id;
             currentID = id;
 
-            /*ServerCharacterMetaData swmd = new ServerCharacterMetaData();
+            ServerPartMetaData swmd = new ServerPartMetaData();
             swmd.thumb = System.Convert.ToBase64String(currentCharacter.thumb.EncodeToJPG());
-            swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
-            FirebaseStoryMakerDBManager.Instance.SavePresetMetadataToServer(currentID, partId, swmd);*/
+            swmd.partID = partId;
+            FirebaseStoryMakerDBManager.Instance.SavePresetMetadataToServer(currentID, swmd);
 
             OpenCharacterDetail(currentCharacter);
         }
@@ -292,7 +311,7 @@ namespace BoardItems
                 workIDs += wd.id + fieldSeparator;
 
             PlayerPrefs.SetString("WorksIds", workIDs);
-        }
+        }        
 
         public void OnUserLoadCharacterDataFromServer(Dictionary<string, ServerCharacterMetaData> sfds)
         {
@@ -320,8 +339,7 @@ namespace BoardItems
                 wd.id = e.Key;
                 string[] wData = e.Value.Split(fieldSeparator[0]);
                 print("total art: " + wData.Length);
-                if (wData[0] != "")
-                {
+                if (wData[0] != "") {
                     Debug.Log("bgColorIndex: " + wData[0]);
                     wd.bgColorName = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[0]);
 
@@ -332,13 +350,11 @@ namespace BoardItems
                     int totalParts = 0;
                     int partID = 0;
 
-                    for (int j = 0; j < itemsData.Length; j++)
-                    {
+                    for (int j = 0; j < itemsData.Length; j++) {
                         string[] iData = itemsData[j].Split(itemFieldSeparator[0]);
 
                         int num = 0;
-                        foreach (string s in iData)
-                        {
+                        foreach (string s in iData) {
                             Debug.Log(num + "___ " + s);
                             num++;
                         }
@@ -363,11 +379,15 @@ namespace BoardItems
                         items.Add(sd);
                     }
                     wd.items = items;
-                    wd.thumb = charactersMetaData.Find(x => x.id == wd.id)?.thumb;
-                    if (totalParts > 1) //is full character:
+
+                    if (totalParts > 1) {  //is full character:
+                        wd.thumb = charactersMetaData.Find(x => x.id == wd.id)?.thumb;
                         characters.Add(wd);
-                    else //is preset part:
+                    } else {  //is preset part:
+                        wd.thumb = new Texture2D(1, 1);
+                        wd.thumb.LoadImage(System.Convert.FromBase64String(serverPartsMetaData[wd.id].thumb));
                         AddPart(partID, wd);
+                    }
                 }
             }
         }

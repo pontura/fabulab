@@ -7,9 +7,6 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.DB;
-using Yaguar.StoryMaker.Editor;
-using static BoardItems.AlbumData;
-using static BoardItems.Characters.CharacterData;
 
 namespace Yaguar.StoryMaker.DB
 {
@@ -35,6 +32,9 @@ namespace Yaguar.StoryMaker.DB
             mInstance = this;
             DontDestroyOnLoad(this.gameObject);            
             _uid = PlayerPrefs.GetString("uid", "");
+
+            //var db = FirebaseDatabase.DefaultInstance;
+            //db.SetPersistenceEnabled(true);
         }
         void Start()
         {
@@ -257,7 +257,7 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log("#DeletePreset FAIL");
                     Debug.Log(task.Exception);
                 } else {
-                    //DeleteCharacterMetadataFromServer(characterId);
+                    DeletePresetMetadataFromServer(presetId);
                     callback((string)presetId);
                 }
             }), taskScheduler);
@@ -265,48 +265,50 @@ namespace Yaguar.StoryMaker.DB
             //Debug.Log(url);
         }
 
-        public void SavePresetMetadataToServer(string presetId, string partId, AlbumData.ServerCharacterMetaData swmd) {
+        public void SavePresetMetadataToServer(string presetId, AlbumData.ServerPartMetaData swmd) {
             Debug.Log("#SavePresetMetadataToServer");
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/" + partId + "/mdata/" + presetId);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/mdata/" + presetId);
             string s = JsonConvert.SerializeObject(swmd);
             reference.SetRawJsonValueAsync(s);
             Debug.Log("Server: SavePresetMetadataToServer");
         }
 
-        public void LoadPresetMetadataFromServer(string partId, System.Action<Dictionary<string, AlbumData.ServerCharacterMetaData>> callback) {
+        public void LoadPresetMetadataFromServer(System.Action<Dictionary<string, AlbumData.ServerPartMetaData>> callback) {
             var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/" + partId + "/mdata");
-            reference.OrderByChild("userID").EqualTo(_uid).GetValueAsync().ContinueWith(task => {
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/mdata");
+            reference.GetValueAsync().ContinueWith(task => {
                 if (task.IsFaulted || task.IsCanceled) {
-                    Debug.Log("#LoadUserCharacterMetadataFromServer FAIL");
+                    Debug.Log("#LoadPresetMetadataFromServer FAIL");
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
-                    Dictionary<string, AlbumData.ServerCharacterMetaData> d = JsonConvert.DeserializeObject<Dictionary<string, AlbumData.ServerCharacterMetaData>>(task.Result.GetRawJsonValue());
+                    string result = task.Result.GetRawJsonValue();
+                    //Debug.Log(result);
+                    Dictionary<string, AlbumData.ServerPartMetaData> d = JsonConvert.DeserializeObject<Dictionary<string, AlbumData.ServerPartMetaData>>(result);
                     callback(d);
                     // Do something with snapshot...
                 }
             }, taskScheduler);
 
-            Debug.Log("Server: LoadUserCharacterMetadataFromServer");
+            Debug.Log("Server: LoadPresetMetadataFromServer");
             //Debug.Log(url);
         }
 
-        /*
-        public void DeleteCharacterMetadataFromServer(string themeId, string filmId)
+        
+        public void DeletePresetMetadataFromServer(string presetId)
         {
             //Debug.Log("ACA");
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("stories/mdata/" + themeId + "/" + filmId);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/mdata/" + presetId);
             reference.RemoveValueAsync().ContinueWith(task =>
             {
                 if (task.IsFaulted || task.IsCanceled)
                 {
-                    Debug.Log("#DeleteCharacterMetadataFromServer FAIL");
+                    Debug.Log("#DeletePresetMetadataFromServer FAIL");
                     Debug.Log(task.Exception);
                 }
             });
-            Debug.Log("Server: DeleteCharacterMetadataFromServer");
+            Debug.Log("Server: DeletePresetMetadataFromServer");
             //Debug.Log(url);
-        }        */
+        }        
 
         /*
         public void SaveFilmToServer(List<SceneData> sd, System.Action<bool, string> callback)
