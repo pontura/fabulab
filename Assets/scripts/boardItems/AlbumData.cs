@@ -27,7 +27,7 @@ namespace BoardItems
         string itemSeparator = "&";
         string itemFieldSeparator = "#";
 
-        string currentID;
+        [SerializeField] string currentID;
 
         CharacterData currentCharacter;
         Dictionary<string, ServerPartMetaData> serverPartsMetaData;
@@ -126,9 +126,12 @@ namespace BoardItems
         int loadedParts = 0;
         void LoadPresetsFromServer() {
             if (loadedParts + 1 >= BoardItems.Characters.CharacterData.GetServerPartsLength()) 
-                return;            
+                return;
             loadedParts++;
-            FirebaseStoryMakerDBManager.Instance.LoadPresetsFromServer(BoardItems.Characters.CharacterData.GetServerPartsId(loadedParts), OnLoadPresetsFromServer);
+            string partName = BoardItems.Characters.CharacterData.GetServerUniquePartsId(loadedParts);
+            if (partName == null)
+                LoadPresetsFromServer();
+            FirebaseStoryMakerDBManager.Instance.LoadPresetsFromServer(BoardItems.Characters.CharacterData.GetServerUniquePartsId(loadedParts), OnLoadPresetsFromServer);
         }
         
         void OnLoadPresetsFromServer(Dictionary<string,string> data) {
@@ -188,6 +191,7 @@ namespace BoardItems
                     characters.Add(wd);
                     FirebaseStoryMakerDBManager.Instance.SaveCharacterToServer(EncodeCharacterData(wd), OnCharacterSavedToServer);
                 } else if (Data.Instance.userData.isAdmin) { // is a part preset;
+                    Debug.Log("#ACA");
                     AddPart(partID, wd);
                     FirebaseStoryMakerDBManager.Instance.SavePresetToServer(EncodeCharacterData(wd), BoardItems.Characters.CharacterData.GetServerPartsId(partID), OnPresetSavedToServer);
                 }

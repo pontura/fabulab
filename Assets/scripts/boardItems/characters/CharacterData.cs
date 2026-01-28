@@ -30,5 +30,11 @@ namespace BoardItems.Characters
                 partId = 4;
             return ((parts)partId).ToString();
         }
+
+        public static string GetServerUniquePartsId(int partId) {
+            if (partId == 6 || partId == 5)
+                return null;
+            return ((parts)partId).ToString();
+        }
     }
 }
