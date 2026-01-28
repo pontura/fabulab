@@ -77,7 +77,7 @@ namespace BoardItems
             public string partID;
         }
 
-        public enum PartIds {
+        /*public enum PartIds {
             none = 0,
             head = 1,
             belly = 2,
@@ -85,7 +85,7 @@ namespace BoardItems
             feet = 4,
             hair = 7,
             face = 8
-        }
+        }*/
 
         private void Start() {
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
@@ -125,10 +125,10 @@ namespace BoardItems
 
         int loadedParts = 0;
         void LoadPresetsFromServer() {
-            if (loadedParts + 1 >= Enum.GetValues(typeof(PartIds)).Length) 
+            if (loadedParts + 1 >= BoardItems.Characters.CharacterData.GetServerPartsLength()) 
                 return;            
             loadedParts++;
-            FirebaseStoryMakerDBManager.Instance.LoadPresetsFromServer(((PartIds)loadedParts).ToString(), OnLoadPresetsFromServer);
+            FirebaseStoryMakerDBManager.Instance.LoadPresetsFromServer(BoardItems.Characters.CharacterData.GetServerPartsId(loadedParts), OnLoadPresetsFromServer);
         }
         
         void OnLoadPresetsFromServer(Dictionary<string,string> data) {
@@ -189,13 +189,13 @@ namespace BoardItems
                     FirebaseStoryMakerDBManager.Instance.SaveCharacterToServer(EncodeCharacterData(wd), OnCharacterSavedToServer);
                 } else if (Data.Instance.userData.isAdmin) { // is a part preset;
                     AddPart(partID, wd);
-                    FirebaseStoryMakerDBManager.Instance.SavePresetToServer(EncodeCharacterData(wd), ((PartIds)partID).ToString(), OnPresetSavedToServer);
+                    FirebaseStoryMakerDBManager.Instance.SavePresetToServer(EncodeCharacterData(wd), BoardItems.Characters.CharacterData.GetServerPartsId(partID), OnPresetSavedToServer);
                 }
             } else {
                 if (totalParts > 1) { // is a complete character;
                     FirebaseStoryMakerDBManager.Instance.UpdateCharacterToServer(wd.id, EncodeCharacterData(wd), OnCharacterSavedToServer);
                 } else if (Data.Instance.userData.isAdmin) { // is a part preset;
-                    FirebaseStoryMakerDBManager.Instance.UpdatePresetToServer(wd.id, EncodeCharacterData(wd), ((PartIds)partID).ToString(), OnPresetSavedToServer);
+                    FirebaseStoryMakerDBManager.Instance.UpdatePresetToServer(wd.id, EncodeCharacterData(wd), BoardItems.Characters.CharacterData.GetServerPartsId(partID), OnPresetSavedToServer);
                 }
             }
 
@@ -522,22 +522,28 @@ namespace BoardItems
         {
             switch (partID)
             {
-                case 1: //head
+                case (int)BoardItems.Characters.CharacterData.parts.HEAD: //head
                     heads.Add(wd);
                     break;
-                case 2: //belly
+                case (int)BoardItems.Characters.CharacterData.parts.BODY: //belly
                     bellies.Add(wd);
                     break;
-                case 3: //head
+                case (int)BoardItems.Characters.CharacterData.parts.HAND: //hand
                     hands.Add(wd);
                     break;
-                case 4: //head
+                case (int)BoardItems.Characters.CharacterData.parts.HAND_LEFT: //hand
+                    hands.Add(wd);
+                    break;
+                case (int)BoardItems.Characters.CharacterData.parts.FOOT: //foot
                     feet.Add(wd);
                     break;
-                case 7: //hairs
+                case (int)BoardItems.Characters.CharacterData.parts.FOOT_LEFT: //foot
+                    feet.Add(wd);
+                    break;
+                case (int)BoardItems.Characters.CharacterData.parts.HAIR: //hairs
                     hairs.Add(wd);
                     break;
-                case 8: //faces
+                case (int)BoardItems.Characters.CharacterData.parts.FACE: //faces
                     faces.Add(wd);
                     break;
             }
@@ -546,17 +552,21 @@ namespace BoardItems
         {
             switch (partID)
             {
-                case (int)PartIds.head: //head
+                case (int)BoardItems.Characters.CharacterData.parts.HEAD: //head
                     return heads;
-                case (int)PartIds.belly: //belly
+                case (int)BoardItems.Characters.CharacterData.parts.BODY: //belly
                     return bellies;
-                case (int)PartIds.hands: //head
+                case (int)BoardItems.Characters.CharacterData.parts.HAND: //hand
                     return hands;
-                case (int)PartIds.feet: //head
+                case (int)BoardItems.Characters.CharacterData.parts.HAND_LEFT: //hand
+                    return hands;
+                case (int)BoardItems.Characters.CharacterData.parts.FOOT: //foot
                     return feet;
-                case (int)PartIds.hair: //hairs
+                case (int)BoardItems.Characters.CharacterData.parts.FOOT_LEFT: //foot
+                    return feet;
+                case (int)BoardItems.Characters.CharacterData.parts.HAIR: //hairs
                     return hairs;
-                case (int)PartIds.face: //faces
+                case (int)BoardItems.Characters.CharacterData.parts.FACE: //faces
                     return faces;
             }
             return null;

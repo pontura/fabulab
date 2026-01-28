@@ -1,4 +1,5 @@
 using System;
+using static BoardItems.Characters.CharacterData;
 
 namespace BoardItems.Characters
 {
@@ -16,6 +17,18 @@ namespace BoardItems.Characters
             HAND_LEFT = 6,
             HAIR = 7,
             FACE = 8
+        }
+
+        public static int GetServerPartsLength() {
+            return Enum.GetValues(typeof(parts)).Length - 2;
+        }       
+
+        public static string GetServerPartsId(int partId) {
+            if (partId == 6)
+                partId = 3;
+            if (partId == 5)
+                partId = 4;
+            return ((parts)partId).ToString();
         }
     }
 }
