@@ -84,7 +84,7 @@ public class UserData : MonoBehaviour
     void OnTokenUpdated() {
         //ResetUserData();
         if (IsLogged()) {
-            
+            CheckAdmin();
         }
     }
 
