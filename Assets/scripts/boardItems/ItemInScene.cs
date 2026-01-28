@@ -1,4 +1,5 @@
 ﻿using BoardItems.Characters;
+using BoardItems.UI;
 using System.Collections.Generic;
 using UnityEngine;
 namespace BoardItems
@@ -159,12 +160,21 @@ namespace BoardItems
                 return true;
             return false;
         }
+        bool IsActivePart(BodyPart bodyPart)
+        {
+            if (bodyPart.part == UIManager.Instance.zoomManager.part)
+                return true;
+            return false;
+        }
         [SerializeField] BodyPart bp;
-        [SerializeField] BodyPart bpEnter;
+       // [SerializeField] BodyPart bpEnter;
         void OnTriggerEnter2D(Collider2D collision)
         {
-            bpEnter = collision.gameObject.GetComponent<BodyPart>();
-            
+            BodyPart bpEnter = collision.gameObject.GetComponent<BodyPart>();
+            if (!IsActivePart(bpEnter))
+            {
+                return;
+            }
             if (bp == null)
             {
                 data.SetCharacterPart(bpEnter.part);
@@ -180,50 +190,55 @@ namespace BoardItems
            // print("coll OnTriggerExit2D: " + (timer + 0.1f) + "     Timer " + Time.time);
             if (timer+0.01f > Time.time) return;
             BodyPart bpExit = collision.GetComponent<BodyPart>();
+
+            if (!IsActivePart(bpExit))
+            {
+                bpExit = null; return;
+            }
             if (bpExit != null)
             {
                 if(bp == bpExit)
                 {    
                     data.OutOfBody();
-                    if (bp == bpEnter)
-                    {
+                    //if (bp == bpEnter)
+                    //{
 
                         data.SetCharacterPart(CharacterData.parts.none);
                         Events.OnNewBodyPartSelected(null);
                         bp = null;
-                        bpEnter = null;
-                    }
-                    else
-                    {
-                        bp = bpEnter;
-                        data.SetCharacterPart(bp.part);
-                        Events.OnNewBodyPartSelected(bp);
-                    }
+                       // bpEnter = null;
+                    //}
+                    //else
+                    //{
+                    //    bp = bpEnter;
+                    //    data.SetCharacterPart(bp.part);
+                    //    Events.OnNewBodyPartSelected(bp);
+                    //}
                 }
-                else if (bpEnter != null)
-                {
-                    bpEnter = bp;
-                    data.OutOfBody();
-                    print("OnTriggerExit2D and set last bp: " + bp.part);
-                    data.SetCharacterPart(bp.part);
-                    Events.OnNewBodyPartSelected(bp);
-                }
+                //else if (bpEnter != null)
+                //{
+                //    bpEnter = bp;
+                //    data.OutOfBody();
+                //    print("OnTriggerExit2D and set last bp: " + bp.part);
+                //    data.SetCharacterPart(bp.part);
+                //    Events.OnNewBodyPartSelected(bp);
+                //}
             }
         }
-        void OnCollisionEnter2D(Collision2D collision)
-        {
-           // print("coll: " + collision.gameObject.name);
-            if (collision.relativeVelocity.magnitude > 2)
-            {
-                if (!audioSource.isPlaying && AudioManager.Instance.IsVoiceRoom())
-                {
-                    audioSource.volume = collision.relativeVelocity.magnitude * 0.25f * (0.15f + Random.Range(-0.05f, 0.05f));
-                    audioSource.pitch = 0.75f + Random.Range(-0.25f, 0.25f);
-                    audioSource.Play();
-                    AudioManager.Instance.VoiceCount(audioSource.clip.length);
-                }
-            }
-        }
+        //void OnCollisionEnter2D(Collision2D collision)
+        //{
+        //   // print("coll: " + collision.gameObject.name);
+        //    if (collision.relativeVelocity.magnitude > 2)
+        //    {
+        //        if (!audioSource.isPlaying && AudioManager.Instance.IsVoiceRoom())
+        //        {
+        //            audioSource.volume = collision.relativeVelocity.magnitude * 0.25f * (0.15f + Random.Range(-0.05f, 0.05f));
+        //            audioSource.pitch = 0.75f + Random.Range(-0.25f, 0.25f);
+        //            audioSource.Play();
+        //            AudioManager.Instance.VoiceCount(audioSource.clip.length);
+        //        }
+        //    }
+        //}
         public ItemInScene GetMirror() {  return mirror;  }
         public void SetMirror(ItemInScene mirrored)
         {
