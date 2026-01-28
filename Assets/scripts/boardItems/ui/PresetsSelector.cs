@@ -26,7 +26,7 @@ namespace BoardItems.UI
                     Utils.RemoveAllChildsIn(container);
                     CharacterAnims.anims anim = CharacterAnims.anims.edit;
                     Events.OnCharacterAnim(0, anim);
-
+                    print("set on " + partID);
                     List<CharacterData> all = Data.Instance.albumData.GetPreset(partID);
                     artID++;
                     foreach (CharacterData wd in all)

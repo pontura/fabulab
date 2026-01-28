@@ -39,6 +39,7 @@ namespace BoardItems.UI
             isPreset = true;
             lastPartID = id;
             dragAndDropUI.gameObject.SetActive(false);
+            if (id > 3) id += 2; // porque las manos y los pies ocupan 2 ids:
             presetsSelector.SetOn(true, id+1);
         }
         public void DragAndDrop()

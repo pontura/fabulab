@@ -534,6 +534,12 @@ namespace BoardItems
                 case 4: //head
                     feet.Add(wd);
                     break;
+                case 5: //head
+                    feet.Add(wd);
+                    break;
+                case 6: //head
+                    hands.Add(wd);
+                    break;
                 case 7: //hairs
                     hairs.Add(wd);
                     break;
