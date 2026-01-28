@@ -5260,10 +5260,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: DATA
       objectReference: {fileID: 0}
-    - target: {fileID: 1000013221123710, guid: 77f85cf8e38d2bf4bb7b2240570f3369, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4000012892830758, guid: 77f85cf8e38d2bf4bb7b2240570f3369, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5304,18 +5300,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114000013950545636, guid: 77f85cf8e38d2bf4bb7b2240570f3369, type: 3}
-      propertyPath: albumData
-      value: 
-      objectReference: {fileID: 1370799867}
-    m_RemovedComponents:
-    - {fileID: 6003703209619566981, guid: 77f85cf8e38d2bf4bb7b2240570f3369, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1000013221123710, guid: 77f85cf8e38d2bf4bb7b2240570f3369, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1370799867}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77f85cf8e38d2bf4bb7b2240570f3369, type: 3}
 --- !u!1 &397919570
 GameObject:
@@ -17601,32 +17589,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1363052945}
   m_CullTransparentMesh: 0
---- !u!1 &1370799857 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1000013221123710, guid: 77f85cf8e38d2bf4bb7b2240570f3369, type: 3}
-  m_PrefabInstance: {fileID: 396832300}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1370799867
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1370799857}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7c45a775482a8a4caf2a5fd5a781893, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BoardItems.AlbumData
-  thumbSize: {x: 1024, y: 1024}
-  characters: []
-  heads: []
-  bellies: []
-  hands: []
-  feet: []
-  hairs: []
-  faces: []
-  charactersMetaData: []
 --- !u!1 &1412925267
 GameObject:
   m_ObjectHideFlags: 0
@@ -23925,7 +23887,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardItems.UI.ZoomsManager
   animator: {fileID: 519420034}
-  zoomType: 0
+  part: 0
 --- !u!1 &1792319878
 GameObject:
   m_ObjectHideFlags: 0
