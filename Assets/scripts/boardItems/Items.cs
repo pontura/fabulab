@@ -304,7 +304,7 @@ namespace BoardItems
         }
         bool IsInMirrorPart(ItemInScene item)
         {
-            print(" IsInMirrorPart " + item.data.part);
+            //print(" IsInMirrorPart " + item.data.part);
             return item.data.part == CharacterData.parts.FOOT
                 || item.data.part == CharacterData.parts.FOOT_LEFT
                 || item.data.part == CharacterData.parts.HAND
