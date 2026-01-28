@@ -1,3 +1,4 @@
+using BoardItems.Characters;
 using Common.UI;
 using UnityEngine;
 
@@ -35,11 +36,15 @@ namespace BoardItems.UI
         }
         void OnTabClicked(int id)
         {
-            Events.Zoom(id+1);
             isPreset = true;
+            id += 1;
             lastPartID = id;
             dragAndDropUI.gameObject.SetActive(false);
-            presetsSelector.SetOn(true, id+1);
+
+            if (id > 4) id += 2; // porque las manos y los pies ocupan 2 ids:
+            CharacterData.parts part = (CharacterData.parts)id;
+            Events.Zoom(part);
+            presetsSelector.SetOn(true, id);
         }
         public void DragAndDrop()
         {

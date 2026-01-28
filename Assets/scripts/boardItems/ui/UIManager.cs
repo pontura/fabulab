@@ -10,6 +10,7 @@ namespace BoardItems.UI
         public GallerySelectorUI gallerySelectorUI;
         public AlbumUI albumUI;
         public WorkDetailUI workDetailUI;
+        public ZoomsManager zoomManager;
 
         public static UIManager Instance
         {
@@ -20,6 +21,7 @@ namespace BoardItems.UI
         }
         void Awake()
         {
+            zoomManager = GetComponent<ZoomsManager>();
             if (!mInstance)
                 mInstance = this;
         }

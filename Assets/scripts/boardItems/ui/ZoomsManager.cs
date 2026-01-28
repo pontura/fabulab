@@ -1,18 +1,11 @@
+using BoardItems.Characters;
 using UnityEngine;
 namespace BoardItems.UI
 {
     public class ZoomsManager : MonoBehaviour
     {
         [SerializeField] Animator animator;
-        public zoomTypes zoomType;
-        int idZoom = 0;
-        public enum zoomTypes
-        {
-            HEAD,
-            BELLY,
-            HAND,
-            FEET
-        }
+        public CharacterData.parts part;
         private void Awake()
         {
             Events.Zoom += Zoom;
@@ -21,9 +14,10 @@ namespace BoardItems.UI
         {
             Events.Zoom -= Zoom;
         }
-        public void Zoom(int idZoom)
+        public void Zoom(CharacterData.parts part)
         {
-            animator.SetInteger("zoom", idZoom);
+            this.part = part;
+            animator.SetInteger("zoom", (int)part);
         }
     }
 }
