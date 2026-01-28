@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -173,6 +174,9 @@ namespace BoardItems.UI
                             OnCloseTools(states.IDLE);
 
                         ItemInScene itemInScene = hit.transform.gameObject.GetComponent<ItemInScene>();
+
+                        if (itemInScene.IsBeingUse() && itemInScene.data.part != UIManager.Instance.zoomManager.part) return;
+
                         Vector3 _offset = cam.WorldToScreenPoint(hit.transform.position);
 
                         OnStartDrag(itemInScene, _offset);

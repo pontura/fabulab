@@ -13,7 +13,7 @@ namespace BoardItems
         [SerializeField] List<Collider2D> colliders;
         List<SpriteRenderer> sprites;
         AudioSource audioSource;
-        bool used;
+        [SerializeField] bool used;
 
         private void Start()
         {
@@ -119,6 +119,7 @@ namespace BoardItems
         }
         public void StopBeingDrag()
         {
+            used = true;
             rb.isKinematic = false;
             foreach (Collider2D c in colliders)
                 c.enabled = true;
@@ -160,7 +161,7 @@ namespace BoardItems
                 return true;
             return false;
         }
-        bool IsActivePart(BodyPart bodyPart)
+        public bool IsInActiveBodyPart(BodyPart bodyPart)
         {
             if (bodyPart.part == UIManager.Instance.zoomManager.part)
                 return true;
@@ -171,7 +172,7 @@ namespace BoardItems
         void OnTriggerEnter2D(Collider2D collision)
         {
             BodyPart bpEnter = collision.gameObject.GetComponent<BodyPart>();
-            if (!IsActivePart(bpEnter))
+            if (!IsInActiveBodyPart(bpEnter))
             {
                 return;
             }
@@ -191,7 +192,7 @@ namespace BoardItems
             if (timer+0.01f > Time.time) return;
             BodyPart bpExit = collision.GetComponent<BodyPart>();
 
-            if (!IsActivePart(bpExit))
+            if (!IsInActiveBodyPart(bpExit))
             {
                 bpExit = null; return;
             }
