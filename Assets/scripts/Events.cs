@@ -25,5 +25,7 @@ public static class Events
     public static System.Action<bool> EditMode = delegate { };
     public static System.Action<CharacterData.parts> Zoom = delegate { };
 
+    public static System.Action<string> OnPresetLoaded = delegate { };
+    public static System.Action OnNewCharacter = delegate { };
 }
    

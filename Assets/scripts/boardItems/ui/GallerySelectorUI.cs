@@ -28,6 +28,7 @@ namespace BoardItems.UI
             }
             else
             {
+                Events.OnNewCharacter();
                 GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(id);
                 Events.InitGallery(gd, true, null);
             }

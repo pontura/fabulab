@@ -46,6 +46,7 @@ namespace BoardItems.UI
             }
             public void OnClicked(PresetButton pb)
             {
+                Events.OnPresetLoaded(pb.workData.id);
                 UIManager.Instance.boardUI.LoadPreset(pb.workData);
             }
         }

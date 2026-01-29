@@ -20,7 +20,7 @@ namespace BoardItems.Characters
         }
 
         public static int GetServerPartsLength() {
-            return Enum.GetValues(typeof(parts)).Length - 2;
+            return Enum.GetValues(typeof(parts)).Length;
         }       
 
         public static string GetServerPartsId(int partId) {
