@@ -6,7 +6,6 @@ using System.IO;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
-using static BoardItems.AlbumData;
 
 namespace BoardItems
 {
@@ -94,6 +93,9 @@ namespace BoardItems
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
             Events.OnPresetLoaded += OnPresetLoaded;
             Events.OnNewCharacter += OnNewCharacter;
+            /*if(charactersMetaData.Count<1)
+                LoadUserCharacterMetadataFromServer();*/
+
             // PlayerPrefs.DeleteAll();
             //StartCoroutine(LoadWorks());
         }
@@ -105,6 +107,7 @@ namespace BoardItems
         }
 
         void OnTokenUpdated() {
+            Debug.Log("#OnTokenUpdated");
             if (Data.Instance.userData.IsLogged()) {
                 CancelInvoke();
                 LoadUserCharacterMetadataFromServer();                
@@ -112,16 +115,19 @@ namespace BoardItems
                 Invoke("OnTokenUpdated", 1);
         }
         void LoadUserCharacterMetadataFromServer() {
-            if (Data.Instance.userData.IsLogged()) {
+            Debug.Log("#LoadUserCharacterMetadataFromServer");
+            //if (Data.Instance.userData.IsLogged()) {
+                Debug.Log("#is Logged");
                 charactersMetaData = new List<CharacterMetaData>();
                 FirebaseStoryMakerDBManager.Instance.LoadUserCharacterMetadataFromServer(OnUserLoadCharacterDataFromServer);
-            }
+            //}
         }
 
         void LoadPartMetadataFromServer() {
-            if (Data.Instance.userData.IsLogged()) {
-                FirebaseStoryMakerDBManager.Instance.LoadPresetMetadataFromServer(OnLoadPresetMetadataFromServer);
-            }
+            Debug.Log("#LoadPartMetadataFromServer");
+            //if (Data.Instance.userData.IsLogged()) {
+                FirebaseStoryMakerDBManager.Instance.LoadBodypartPresetMetadataFromServer(OnLoadPresetMetadataFromServer);
+            //}
         }
 
         public void OnLoadPresetMetadataFromServer(Dictionary<string, ServerPartMetaData> spmd) {
@@ -141,11 +147,12 @@ namespace BoardItems
                 LoadPresetsFromServer();
                 return;
             }
-            FirebaseStoryMakerDBManager.Instance.LoadPresetsFromServer(BoardItems.Characters.CharacterData.GetServerUniquePartsId(loadedParts), OnLoadPresetsFromServer);
+            FirebaseStoryMakerDBManager.Instance.LoadBodypartPresetsFromServer(loadedParts, OnLoadPresetsFromServer);
         }
         
-        void OnLoadPresetsFromServer(Dictionary<string,string> data) {
+        void OnLoadPresetsFromServer(int partId, Dictionary<string,string> data) {
             if (data != null) {
+                GetPreset(partId).Clear();
                 LoadCharactersFromServer(data);
             }
             LoadPresetsFromServer();
@@ -207,9 +214,9 @@ namespace BoardItems
             } else if (Data.Instance.userData.isAdmin) { // is a part preset;
                 if (loadedPresetId == "") {
                     AddPart(partID, wd);
-                    FirebaseStoryMakerDBManager.Instance.SavePresetToServer(EncodeCharacterData(wd), BoardItems.Characters.CharacterData.GetServerPartsId(partID), OnPresetSavedToServer);                    
+                    FirebaseStoryMakerDBManager.Instance.SaveBodypartPresetToServer(EncodeCharacterData(wd), BoardItems.Characters.CharacterData.GetServerPartsId(partID), OnPresetSavedToServer);                    
                 } else {
-                    FirebaseStoryMakerDBManager.Instance.UpdatePresetToServer(loadedPresetId, EncodeCharacterData(wd), BoardItems.Characters.CharacterData.GetServerPartsId(partID), OnPresetSavedToServer);
+                    FirebaseStoryMakerDBManager.Instance.UpdateBodypartPresetToServer(loadedPresetId, EncodeCharacterData(wd), BoardItems.Characters.CharacterData.GetServerPartsId(partID), OnPresetSavedToServer);
                 }
             }            
 
@@ -257,7 +264,7 @@ namespace BoardItems
             ServerPartMetaData swmd = new ServerPartMetaData();
             swmd.thumb = System.Convert.ToBase64String(currentCharacter.thumb.EncodeToPNG());
             swmd.partID = partId;
-            FirebaseStoryMakerDBManager.Instance.SavePresetMetadataToServer(id, swmd);
+            FirebaseStoryMakerDBManager.Instance.SaveBodypartPresetMetadataToServer(id, swmd);
 
             OpenCharacterDetail(currentCharacter);
         }
@@ -344,6 +351,7 @@ namespace BoardItems
                 }
             }*/
             charactersMetaData = sfds;
+            characters = new();
             FirebaseStoryMakerDBManager.Instance.LoadUserCharactersFromServer(LoadCharactersFromServer);
         }
 
@@ -382,6 +390,7 @@ namespace BoardItems
                         Debug.Log("# " + iData[0]);
                         sd.galleryID = int.Parse(iData[0]);
                         sd.id = int.Parse(iData[1]);
+                        Debug.Log("# " + iData[1]);
                         sd.position = new Vector3(float.Parse(iData[2]), float.Parse(iData[3]), float.Parse(iData[4]));
                         sd.rotation = new Vector3(0f, 0f, float.Parse(iData[5]));
                         sd.scale = new Vector3(float.Parse(iData[6]), float.Parse(iData[6]), 0f);
