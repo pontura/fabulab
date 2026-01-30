@@ -1,6 +1,5 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
-using static AnimationsManager;
 
 namespace BoardItems.Characters
 {
@@ -10,16 +9,39 @@ namespace BoardItems.Characters
         CharacterAnims anims;
         CharacterExpressions expressions;
         [SerializeField] BodyPart[] bodyParts;
+        [SerializeField] SpriteRenderer[] arms;
+        [SerializeField] SpriteRenderer[] legs;
 
         private void Awake()
         {
             Events.OnCharacterAnim += OnCharacterAnim;
             Events.OnCharacterExpression += OnCharacterExpression;
+            Events.ColorizeArms += ColorizeArms;
+            Events.ColorizeLegs += ColorizeLegs;
         }
         private void OnDestroy()
         {
             Events.OnCharacterAnim -= OnCharacterAnim;
             Events.OnCharacterExpression -= OnCharacterExpression;
+            Events.ColorizeArms -= ColorizeArms;
+            Events.ColorizeLegs -= ColorizeLegs;
+        }
+
+        private void ColorizeArms(PalettesManager.colorNames colorName)
+        {
+            foreach (SpriteRenderer sr in arms)
+            {
+                List<Color> allColors = Data.Instance.palettesManager.GetColorsByName(colorName);
+                sr.color = allColors[0];
+            }
+        }
+        private void ColorizeLegs(PalettesManager.colorNames colorName)
+        {
+            foreach (SpriteRenderer sr in legs)
+            {
+                List<Color> allColors = Data.Instance.palettesManager.GetColorsByName(colorName);
+                sr.color = allColors[0];
+            }
         }
 
         private void OnCharacterExpression(int characterID, CharacterExpressions.expressions exp)

@@ -36,15 +36,25 @@ namespace BoardItems.UI
         }
         void OnTabClicked(int id)
         {
+            print(id);
             isPreset = true;
             id += 1;
             lastPartID = id;
             dragAndDropUI.gameObject.SetActive(false);
 
             if (id > 4) id += 2; // porque las manos y los pies ocupan 2 ids:
-            CharacterData.parts part = (CharacterData.parts)id;
-            Events.Zoom(part);
-            presetsSelector.SetOn(true, id);
+            if(id == 9) // arms and legs
+            {
+                Events.Zoom(0);
+                presetsSelector.SetOn(true, 9);
+            }
+            else
+            {
+                CharacterData.parts part = (CharacterData.parts)id;
+                Events.Zoom(part);
+                presetsSelector.SetOn(true, id);
+            }
+                
         }
         public void DragAndDrop()
         {

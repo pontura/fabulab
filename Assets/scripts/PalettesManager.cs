@@ -7,6 +7,14 @@ public class PalettesManager : MonoBehaviour
 {
     public List<ColorsData> colors;
     public List<PaletteData> palettes;
+
+
+    public Sprite arm;
+    public Sprite leg;
+
+    public colorNames[] arms; 
+    public colorNames[] legs;
+
     [Serializable]
     public class ColorsData
     {
