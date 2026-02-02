@@ -12,7 +12,7 @@ namespace BoardItems.UI
         [SerializeField] TMPro.TMP_Text toggleField;
         bool isPreset;
         int lastPartID;
-
+       
         public void SetOff()
         {
             gameObject.SetActive(false);

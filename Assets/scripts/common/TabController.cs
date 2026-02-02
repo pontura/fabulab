@@ -7,6 +7,11 @@ namespace Common.UI
     {
        // [SerializeField] TabButton tabButton;
         [SerializeField] List<TabButton> all;
+        [SerializeField] Sprite[] tab_images;
+        public List<TabButton> All
+        {
+            get { return all; }
+        }
         System.Action<int> OnActive;
         void Start()
         {
@@ -14,6 +19,8 @@ namespace Common.UI
             foreach (TabButton tabButton in all)
             {
                 tabButton.Init(this, id);
+                if(tab_images.Length>id)
+                    tabButton.SetThumb(tab_images[id]);
                 id++;
             }
         }

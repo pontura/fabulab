@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Common.UI
 {
@@ -6,6 +7,7 @@ namespace Common.UI
     {
         TabController tabController;
         [SerializeField] Animator anim;
+        [SerializeField] Image image;
         public int id;
 
         public void Init(TabController tabController, int id)
@@ -13,6 +15,10 @@ namespace Common.UI
             this.id = id;
             this.tabController = tabController;
             Reset();
+        }
+        public void SetThumb(Sprite s)
+        {
+            image.sprite = s;
         }
         public void Clicked()
         {
