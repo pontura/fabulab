@@ -9,30 +9,29 @@ namespace BoardItems
         [SerializeField] private ToolsSubMenu subMenu;
         ItemData itemData;
         InputManager inputManager;
-        public GameObject noWebGLPanel;
-        public GameObject commonButtons;
+        public GameObject[] webGL;
+        public GameObject arrow;
         public Image bg;
+        Vector3 pos;
 
         private void Start()
         {
-            gameObject.SetActive(false);
 #if UNITY_EDITOR
 
 #elif UNITY_ANDROID || UNITY_IOS
-            noWebGLPanel.SetActive(false);
-        commonButtons.transform.localPosition = Vector3.zero;
-        bg.GetComponent<RectTransform>().sizeDelta = new Vector2(350, 506);
+            foreach(GameObject go in webGL)
+                go.SetActive(false);
 #endif
 
         }
         public void Init(ItemData itemData, Vector3 pos, InputManager inputManager)
         {
+            this.pos = pos;
             print("Init tools");
             this.itemData = itemData;
             this.inputManager = inputManager;
             gameObject.SetActive(true);
-            transform.position = pos;
-            GetComponent<ToolMenuesAdaptative>().Init();
+            arrow.transform.position = pos;
         }
         public void Close()
         {
@@ -60,17 +59,16 @@ namespace BoardItems
         }
         public void Color()
         {
-            subMenu.Init(itemData, transform.position, ToolsSubMenu.types.COLORS);
+            subMenu.Init(itemData, pos, ToolsSubMenu.types.COLORS);
             gameObject.SetActive(false);
         }
         public void Actions()
         {
-            subMenu.Init(itemData, transform.position, ToolsSubMenu.types.ACTIONS);
+            subMenu.Init(itemData, pos, ToolsSubMenu.types.ACTIONS);
             gameObject.SetActive(false);
         }
         public void Clonate()
         {
-            Vector3 pos = UIManager.Instance.boardUI.items.GetItemSelected().data.position;
             UIManager.Instance.boardUI.items.Clonate(pos + new Vector3(1,0,0));
             inputManager.OnCloseTools(InputManager.states.IDLE);
         }

@@ -9,6 +9,7 @@ namespace BoardItems
         [SerializeField] private Transform container;
         [SerializeField] private SubMenuButton subMenuButton;
         [SerializeField] private Sprite colorImage;
+        public GameObject arrow;
         public ItemData itemData;
         public types type;
         public InputManager inputManager;
@@ -21,7 +22,6 @@ namespace BoardItems
         }
         private void Start()
         {
-            gameObject.SetActive(false);
         }
         public void Init(ItemData itemData, Vector3 pos, types type)
         {
@@ -31,8 +31,7 @@ namespace BoardItems
             this.type = type;
             id = 0;
             gameObject.SetActive(true);
-            transform.position = pos;
-            GetComponent<ToolMenuesAdaptative>().Init();
+            arrow.transform.position = pos;
             switch (type)
             {
                 case types.COLORS:
@@ -58,7 +57,6 @@ namespace BoardItems
         {
             SubMenuButton newSubMenuButton = Instantiate(subMenuButton);
             newSubMenuButton.transform.SetParent(container);
-            newSubMenuButton.transform.localScale = Vector3.one;
             newSubMenuButton.Init(id, sprite, OnClick, colors);
             id++;
         }
@@ -66,7 +64,6 @@ namespace BoardItems
         {
             SubMenuButton newSubMenuButton = Instantiate(subMenuButton);
             newSubMenuButton.transform.SetParent(container);
-            newSubMenuButton.transform.localScale = Vector3.one;
             newSubMenuButton.Init(id, sprite, OnClick);
             id++;
         }

@@ -17,9 +17,6 @@ namespace BoardItems.UI
         public Camera cam;
         public GameObject BackBtn;
         public GameObject DoneBtn;
-        public GameObject ResetBtn;
-        public GameObject CanvasMenu;
-        public Image[] allColorizableSprites;
         public Screenshot screenshot;
 
         int captureGifFramerate = 40;
@@ -46,18 +43,14 @@ namespace BoardItems.UI
 
         void GalleryDone()
         {
-            BackBtn.SetActive(false);
-            Color color = Color.black;//Data.Instance.palettesManager.GetColor(gallery.colorUI);
-            BackBtn.GetComponent<Image>().color = color;
-            DoneBtn.GetComponent<Image>().color = color;
-            ResetBtn.GetComponent<Image>().color = color;
-            cam.backgroundColor = color;
+         
+            //cam.backgroundColor = color;
 
-            foreach (Image image in allColorizableSprites)
-                image.color = color;
+            //foreach (Image image in allColorizableSprites)
+            //    image.color = color;
 
-            color = Color.white;// Data.Instance.palettesManager.GetColor(gallery.colors[0]);
-            SetBgColor(color);
+            //color = Color.white;// Data.Instance.palettesManager.GetColor(gallery.colors[0]);
+            //SetBgColor(color);
             AudioManager.Instance.musicManager.Play("board");
             Invoke("Delayed", 0.5f);
         }
@@ -114,12 +107,10 @@ namespace BoardItems.UI
         public void ActivateUIButtons(bool enable)
         {
             ActivateTilde(enable);
-            ResetBtn.SetActive(enable);
         }
 
         public void ActivateTilde(bool enable)
         {
-            BackBtn.SetActive(!enable);
             DoneBtn.SetActive(enable);
             zoomBar.SetActive(enable);
         }
