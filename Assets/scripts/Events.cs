@@ -1,6 +1,8 @@
 ﻿using BoardItems;
 using BoardItems.Characters;
 using BoardItems.UI;
+using UI;
+using UI.MainApp;
 using UnityEngine;
 
 public static class Events
@@ -31,5 +33,7 @@ public static class Events
 
     public static System.Action<string> OnPresetLoaded = delegate { };
     public static System.Action OnNewCharacter = delegate { };
+
+    public static System.Action<UIManager.screenType> ShowScreen = delegate { };
 }
    

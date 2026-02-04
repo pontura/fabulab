@@ -1,7 +1,8 @@
 ﻿using BoardItems.Characters;
-using BoardItems.UI;
 using System.Collections.Generic;
+using UI;
 using UnityEngine;
+
 namespace BoardItems
 {
     public class ItemInScene : MonoBehaviour

@@ -4,8 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Threading;
 using System.Linq;
-using BoardItems.UI;
-using BoardItems;
+using UI;
 
 namespace uGIF
 {

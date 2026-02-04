@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UI;
 using UnityEngine;
 
 namespace BoardItems
@@ -6,7 +7,7 @@ namespace BoardItems
     public class Inventary : MonoBehaviour
     {
         [SerializeField] ItemPhotoCreator itemPhotoCreator;
-        [SerializeField] UI.DragAndDropUI dragAndDropUI;
+        [SerializeField] DragAndDropUI dragAndDropUI;
         Items items;
         public void Reset()
         {
