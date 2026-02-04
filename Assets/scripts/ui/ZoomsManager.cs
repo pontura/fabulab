@@ -7,8 +7,7 @@ namespace UI
     {
         [SerializeField] Animator animator;
         public CharacterData.parts part;
-
-        CharacterData.parts lastZoom;
+        public CharacterData.parts lastZoom;
 
         private void Awake()
         {

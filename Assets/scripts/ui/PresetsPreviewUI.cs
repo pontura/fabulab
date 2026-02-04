@@ -67,6 +67,7 @@ namespace UI
         }
         public void SavePart()
         {
+            Events.EmptyCharacterItemsButExlude(UIManager.Instance.zoomManager.lastZoom);
             UIManager.Instance.zoomManager.ZoomToLastPart();
             savePanel.SetActive(false);
             Invoke("SavePartDelayed", 1);

@@ -210,15 +210,30 @@ namespace BoardItems
         //    all.Add(item);
         //    //AddToInventary(item.data);
         }
-
+        public void DeleteAll(CharacterData.parts exludePart)
+        {
+            StopAllCoroutines();
+            Events.ActivateUIButtons(false);
+            int i = all.Count;
+            while (i > 0)
+            {
+                ItemInScene itemInScene = all[i - 1];
+                if (exludePart == null || itemInScene.data.part != exludePart)
+                {
+                    bool mirrorDeleted = Delete(itemInScene);
+                    if (mirrorDeleted) i--;
+                }
+                i--;
+            }
+        }
         public void DeleteAll()
         {
             StopAllCoroutines();
             Events.ActivateUIButtons(false);
             int i = all.Count;
-            while(i>0)
+            while (i > 0)
             {
-                ItemInScene itemInScene = all[i-1];
+                ItemInScene itemInScene = all[i - 1];
                 bool mirrorDeleted = Delete(itemInScene);
                 if (mirrorDeleted) i--;
                 i--;

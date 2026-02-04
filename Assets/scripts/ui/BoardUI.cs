@@ -24,16 +24,22 @@ namespace UI
         {
             Events.GalleryDone += GalleryDone;
             Events.EmptyCharacterItems += EmptyCharacterItems;
+            Events.EmptyCharacterItemsButExlude += EmptyCharacterItemsButExlude;
         }
 
         private void OnDestroy()
         {
             Events.GalleryDone -= GalleryDone;
             Events.EmptyCharacterItems -= EmptyCharacterItems;
+            Events.EmptyCharacterItemsButExlude -= EmptyCharacterItemsButExlude;
         }
         void EmptyCharacterItems()
         {
             items.DeleteAll();
+        }
+        void EmptyCharacterItemsButExlude(CharacterData.parts part) 
+        {
+            items.DeleteAll(part);
         }
         void GalleryDone()
         {
