@@ -69,7 +69,14 @@ namespace BoardItems
         }
         public void Clonate()
         {
-            UIManager.Instance.boardUI.items.Clonate(pos + new Vector3(1,0,0));
+            ItemInScene itemToClonate = UIManager.Instance.boardUI.items.GetItemSelected();
+            Vector3 itemPos = itemToClonate.data.position;
+            ItemInScene newItem =  UIManager.Instance.boardUI.items.Clonate(itemPos);
+            newItem.data = itemToClonate.data;
+            newItem.transform.SetParent(itemToClonate.transform.parent);
+            newItem.transform.position = itemToClonate.transform.position + new Vector3(0.2f,0,0);
+            newItem.transform.rotation = itemToClonate.transform.rotation;
+            newItem.transform.localScale = itemToClonate.transform.localScale;
             inputManager.OnCloseTools(InputManager.states.IDLE);
         }
         public void MoveBack()

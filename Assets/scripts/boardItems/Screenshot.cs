@@ -1,84 +1,90 @@
 ﻿using UnityEngine;
-using System.Linq;
-using BoardItems.UI;
+using BoardItems.Characters;
+using System.Collections;
 
 namespace BoardItems
 {
     public class Screenshot : MonoBehaviour
     {
-        public Vector2Int thumbRes;
-        public Camera cameraToScreen;
-        private bool takeShot = false;
-        private bool copyTex = false;
-        private Texture2D texture;
-        private System.Action<Texture2D> CopyTexture;
+        public Canvas canvas;
+        public Camera targetCamera;
+        public Renderer targetRenderer;
+        [SerializeField] Animator animator;
 
-        void Start()
+        private void Awake()
         {
-            if (cameraToScreen == null)
-                cameraToScreen = GetComponent<Camera>();
+            Events.Zoom += Zoom;
+        }
+        private void OnDestroy()
+        {
+            Events.Zoom -= Zoom;
+        }
+        public void Zoom(CharacterData.parts part)
+        {
+            animator.SetInteger("zoom", (int)part);
         }
 
-        public void TakeShot(System.Action<Texture2D> copytex)
+        IEnumerator CaptureRoutine(System.Action<Texture2D> OnDone)
         {
-            takeShot = true;
-            // Debug.Log("TAKE SHOT");
-            CopyTexture = copytex;
-        }
+            canvas.gameObject.SetActive(false);
+            yield return new WaitForEndOfFrame();
 
-        public void TakeShot(Vector2Int size, System.Action<Texture2D> copytex)
-        {
-            thumbRes = size;
-            takeShot = true;
-            // Debug.Log("TAKE SHOT");
-            CopyTexture = copytex;
-        }
+            Bounds bounds = targetRenderer.bounds;
 
-        void LateUpdate()
-        {
+            // Obtener los 8 puntos del bounding box
+            Vector3[] points = new Vector3[8];
 
-            if (copyTex)
+            Vector3 center = bounds.center;
+            Vector3 extents = bounds.extents;
+
+            points[0] = center + new Vector3(-extents.x, -extents.y, -extents.z);
+            points[1] = center + new Vector3(-extents.x, -extents.y, extents.z);
+            points[2] = center + new Vector3(-extents.x, extents.y, -extents.z);
+            points[3] = center + new Vector3(-extents.x, extents.y, extents.z);
+            points[4] = center + new Vector3(extents.x, -extents.y, -extents.z);
+            points[5] = center + new Vector3(extents.x, -extents.y, extents.z);
+            points[6] = center + new Vector3(extents.x, extents.y, -extents.z);
+            points[7] = center + new Vector3(extents.x, extents.y, extents.z);
+
+            Vector2 min = new Vector2(float.MaxValue, float.MaxValue);
+            Vector2 max = new Vector2(float.MinValue, float.MinValue);
+
+            foreach (var p in points)
             {
-                Events.OnLoading(true);
-                CopyTexture(texture);
-                copyTex = false;
+                Vector3 screenPoint = targetCamera.WorldToScreenPoint(p);
+
+                min = Vector2.Min(min, screenPoint);
+                max = Vector2.Max(max, screenPoint);
             }
 
-            if (takeShot)
-            {
-                Debug.Log(Screen.width + " x " + Screen.height);
-                float res = 1f * Screen.height / Screen.width;
-                RenderTexture rt = new RenderTexture(thumbRes.x, (int)(thumbRes.x * res), 32);
-                texture = new Texture2D((int)(thumbRes.x * 0.6f), (int)(thumbRes.x * 0.6f), TextureFormat.RGB24, false);
-                if (Screen.width * 0.6f < Screen.height)
-                {
-                    res = 1f * Screen.width / Screen.height;
-                    rt = new RenderTexture((int)(thumbRes.x * res), thumbRes.y, 32);
-                    texture = new Texture2D(thumbRes.y, thumbRes.y, TextureFormat.RGB24, false);
-                }
+            Rect rect = new Rect(
+                min.x,
+                min.y,
+                max.x - min.x,
+                max.y - min.y
+            );
 
-                cameraToScreen.targetTexture = rt;
+            Texture2D texture = new Texture2D((int)rect.width, (int)rect.height, TextureFormat.RGB24, false);
+            texture.ReadPixels(rect, 0, 0);
+            texture.Apply();
 
-                Color[] pixels = Enumerable.Repeat(UIManager.Instance.boardUI.cam.backgroundColor, thumbRes.x * thumbRes.y).ToArray();
-                texture.SetPixels(pixels);
+            // Guardar archivo
+            byte[] bytes = texture.EncodeToPNG();
+            System.IO.File.WriteAllBytes(Application.dataPath + "/screenshot.png", bytes);
 
-                cameraToScreen.Render();
-                RenderTexture.active = rt;
-                if (Screen.width * 0.6f >= Screen.height)
-                    texture.ReadPixels(new Rect(0, 0, rt.width * 0.6f, rt.height), 0, (int)(((rt.width * 0.6f) - rt.height) * 0.5f));
-                else
-                    texture.ReadPixels(new Rect(0, 0, rt.width * 0.6f, rt.height), (int)((rt.height - (rt.width * 0.6f)) * 0.5f), 0);
+            Debug.Log("Screenshot guardado en: " + Application.dataPath + "/screenshot.png");
+            OnDone(texture);
 
-                texture.Apply();
-
-                cameraToScreen.targetTexture = null;
-                RenderTexture.active = null; // JC: added to avoid errors
-                Destroy(rt);
-
-                takeShot = false;
-                copyTex = true;
-            }
+            canvas.gameObject.SetActive(true);
         }
+
+        public void TakeShot(Vector2Int size, System.Action<Texture2D> OnDone)
+        {
+            Debug.Log("TAKE Screenshot");
+            StartCoroutine(CaptureRoutine(OnDone));
+        }
+
+
     }
 
 }
