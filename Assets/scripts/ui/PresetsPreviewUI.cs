@@ -83,9 +83,11 @@ namespace UI
         }
         public void Replace()
         {
+            savePanel.SetActive(false);
         }
         public void Cancel()
         {
+            savePanel.SetActive(false);
         }
 
     }

@@ -218,7 +218,14 @@ namespace BoardItems
             while (i > 0)
             {
                 ItemInScene itemInScene = all[i - 1];
-                if (exludePart == null || itemInScene.data.part != exludePart)
+                CharacterData.parts thisPart = itemInScene.data.part;
+
+                if(thisPart == CharacterData.parts.HAND_LEFT)
+                    thisPart = CharacterData.parts.HAND;
+                if (thisPart == CharacterData.parts.FOOT_LEFT)
+                    thisPart = CharacterData.parts.FOOT;
+
+                if (thisPart != exludePart)
                 {
                     bool mirrorDeleted = Delete(itemInScene);
                     if (mirrorDeleted) i--;
