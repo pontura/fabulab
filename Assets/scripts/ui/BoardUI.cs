@@ -16,8 +16,6 @@ namespace UI
         public Transform colorPickerContent;
         public GameObject colorPicketBtnPrefab;
         public Camera cam;
-        public GameObject BackBtn;
-        public GameObject DoneBtn;
         public Screenshot screenshot;
 
         int captureGifFramerate = 40;
@@ -25,39 +23,21 @@ namespace UI
         private void Start()
         {
             Events.GalleryDone += GalleryDone;
-            Events.ActivateUIButtons += ActivateUIButtons;
+            Events.EmptyCharacterItems += EmptyCharacterItems;
         }
 
         private void OnDestroy()
         {
             Events.GalleryDone -= GalleryDone;
-            Events.ActivateUIButtons -= ActivateUIButtons;
+            Events.EmptyCharacterItems -= EmptyCharacterItems;
         }
-
-        public void BackToGallerySelector()
+        void EmptyCharacterItems()
         {
-            //AudioManager.Instance.uiSfxManager.PlayUISfx("back");
-            //AudioManager.Instance.uiSfxManager.PlayPrevScaleUISfx("click");
-            AudioManager.Instance.uiSfxManager.PlayTransp("click", -3);
-            UIManager.Instance.Home();
+            items.DeleteAll();
         }
-
         void GalleryDone()
         {
-         
-            //cam.backgroundColor = color;
-
-            //foreach (Image image in allColorizableSprites)
-            //    image.color = color;
-
-            //color = Color.white;// Data.Instance.palettesManager.GetColor(gallery.colors[0]);
-            //SetBgColor(color);
             AudioManager.Instance.musicManager.Play("board");
-            Invoke("Delayed", 0.5f);
-        }
-        void Delayed()
-        {
-            BackBtn.SetActive(true);
         }
         public void ResetButton()
         {
@@ -105,22 +85,17 @@ namespace UI
             colorPickerContainer.SetActive(enable);
         }
 
-        public void ActivateUIButtons(bool enable)
-        {
-            ActivateTilde(enable);
-        }
 
-        public void ActivateTilde(bool enable)
-        {
-            DoneBtn.SetActive(enable);
-            zoomBar.SetActive(enable);
-        }
+        //public void ActivateTilde(bool enable)
+        //{
+        //    DoneBtn.SetActive(enable);
+        //    zoomBar.SetActive(enable);
+        //}
 
         public void ClickBgColorBtn(Color c)
         {
             AudioManager.Instance.uiSfxManager.PlayNextScale("click");
             SetBgColor(c);
-            ActivateTilde(true);
         }
 
         public void SetBgColor(Color color)

@@ -41,7 +41,6 @@ namespace UI.MainApp
                 GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(id);
                 UIManager.Instance.InitGallery(gd, true, null);
             }
-            AudioManager.Instance.uiSfxManager.Play("click");
         }
         List<int> allGalleriesToAdd;
         int galleryNum = 0;

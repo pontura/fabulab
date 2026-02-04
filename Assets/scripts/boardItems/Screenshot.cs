@@ -68,11 +68,12 @@ namespace BoardItems
             texture.ReadPixels(rect, 0, 0);
             texture.Apply();
 
-            // Guardar archivo
-            byte[] bytes = texture.EncodeToPNG();
-            System.IO.File.WriteAllBytes(Application.dataPath + "/screenshot.png", bytes);
+            // Guardar archivo local
+           // byte[] bytes = texture.EncodeToPNG();
+           // System.IO.File.WriteAllBytes(Application.dataPath + "/screenshot.png", bytes);
+           // Debug.Log("Screenshot guardado en: " + Application.dataPath + "/screenshot.png");
 
-            Debug.Log("Screenshot guardado en: " + Application.dataPath + "/screenshot.png");
+
             OnDone(texture);
 
             canvas.gameObject.SetActive(true);

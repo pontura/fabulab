@@ -7,6 +7,9 @@ namespace UI
     {
         [SerializeField] Animator animator;
         public CharacterData.parts part;
+
+        CharacterData.parts lastZoom;
+
         private void Awake()
         {
             Events.Zoom += Zoom;
@@ -15,9 +18,14 @@ namespace UI
         {
             Events.Zoom -= Zoom;
         }
-        public void Zoom(CharacterData.parts part)
+        public void ZoomToLastPart()
         {
-            this.part = part;
+            Events.Zoom(lastZoom);
+        }
+        public void Zoom(CharacterData.parts _part)
+        {
+            this.lastZoom = part;
+            this.part = _part;
             animator.SetInteger("zoom", (int)part);
         }
     }

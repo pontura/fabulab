@@ -271,9 +271,10 @@ namespace BoardItems
 
         void OpenCharacterDetail(CharacterData wd)
         {
-            Sprite sprite = Sprite.Create(wd.thumb, new Rect(0, 0, wd.thumb.width, wd.thumb.height), Vector2.zero);
-            UIManager.Instance.workDetailUI.ShowWorkDetail(wd.id, sprite, true);
-            Events.ResetItems();
+            UIManager.Instance.ShowWorkDetail(wd);
+            //Sprite sprite = Sprite.Create(wd.thumb, new Rect(0, 0, wd.thumb.width, wd.thumb.height), Vector2.zero);
+            //UIManager.Instance.workDetailUI.ShowWorkDetail(wd.id, sprite, true);
+            //Events.ResetItems();
         }
 
         void PersistThumbLocal(CharacterData wd)

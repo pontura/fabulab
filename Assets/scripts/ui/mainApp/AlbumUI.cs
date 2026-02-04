@@ -69,12 +69,8 @@ namespace UI.MainApp
 
         public void New()
         {
-            print("NEW");
-            Data.Instance.albumData.ResetCurrentID();
-            UIManager.Instance.ShowGallerySelector();
-            //
-            //UIManager.Instance.gallerySelectorUI.ShowGallerySelector(true);
-            //album.SetActive(false);
+            print("New Character");
+            UIManager.Instance.NewCharacter();
         }
     }
 

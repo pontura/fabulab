@@ -2,12 +2,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI
+namespace UI.MainApp
 {
-    public class WorkDetailUI : MonoBehaviour
+    public class WorkDetailUI : MainScreen
     {
         public GameObject savedSignal;
-        public GameObject WorkDetail;
         public Image workImage;
         public List<Image> borders;
         public GameObject confirmation;
@@ -17,13 +16,25 @@ namespace UI
         public Animation pkpkAnim;
         string id;
 
+        protected override void ShowScreen(UIManager.screenType type)
+        {
+            switch (type)
+            {
+                case UIManager.screenType.WorkDetail:
+                    Show(true);
+                    break;
+                default:
+                    Show(false);
+                    break;
+            }
+        }
+
         public void ShowWorkDetail(string _id, Sprite sprite, bool isNew)
         {
             AudioManager.Instance.musicManager.Play("work");
             id = _id;
             workImage.sprite = sprite;
             confirmation.SetActive(false);
-            WorkDetail.SetActive(true);
             savedSignal.SetActive(isNew);
          //   SetSendedSign(id, pkpkShared);
             //sendedSign.SetActive(pkpkShared);
@@ -33,8 +44,7 @@ namespace UI
 
         public void Back()
         {
-            //UIManager.Instance.albumUI.ShowAlbum(true);
-            WorkDetail.SetActive(false);
+            UIManager.Instance.Home();
         }
 
         public void EnviarPkPk()
@@ -71,7 +81,6 @@ namespace UI
         {
             Debug.Log("Open Work Nr:" + id);
             UIManager.Instance.boardUI.LoadWork(id);
-            WorkDetail.SetActive(false);
         }
 
         public void Delete()
