@@ -25,12 +25,7 @@ namespace UI
             Events.EditMode(true);
             Events.OnCharacterAnim(characterEditorID, anim);
             SetToggle();
-
-            Invoke("Delayed", 0.1f);
-        }
-        void Delayed()
-        {
-            tabs.Init(OnTabClicked);
+            tabs.Init(OnTabClicked, 0);
         }
         void OnTabClicked(int id)
         {
@@ -65,8 +60,9 @@ namespace UI
         {
             isPreset = !isPreset;
             SetToggle();
+
             if (isPreset)
-                OnTabClicked(lastPartID);
+                OnTabClicked(lastPartID-1);
             else
                 DragAndDrop();
         }
