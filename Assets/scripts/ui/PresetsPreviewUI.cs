@@ -1,5 +1,6 @@
 using BoardItems;
 using BoardItems.UI;
+using Google.MiniJSON;
 using System;
 using UnityEngine;
 
@@ -67,6 +68,8 @@ namespace UI.MainApp
         }
         public void Done()
         {
+            CharacterAnims.anims anim = CharacterAnims.anims.edit;
+            Events.OnCharacterAnim(0, anim);
             savePanel.SetActive(true);
             //UIManager.Instance.boardUI.SaveWork();
             UIManager.Instance.boardUI.toolsMenu.SetOff();
@@ -96,6 +99,7 @@ namespace UI.MainApp
         }
         public void Cancel()
         {
+            DoneBtn.SetActive(true);
             savePanel.SetActive(false);
         }
 
