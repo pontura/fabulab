@@ -9,7 +9,7 @@ namespace UI
         [SerializeField] PresetsSelector presetsSelector;
         [SerializeField] DragAndDropUI dragAndDropUI;
         [SerializeField] TabController tabs;
-        [SerializeField] TMPro.TMP_Text toggleField;
+        [SerializeField] GameObject[] togglesGO;
         bool isPreset;
         int lastPartID;
        
@@ -24,8 +24,8 @@ namespace UI
             CharacterAnims.anims anim = CharacterAnims.anims.edit;
             Events.EditMode(true);
             Events.OnCharacterAnim(characterEditorID, anim);
-            SetToggle();
             tabs.Init(OnTabClicked, 0);
+            SetToggle();
         }
         void OnTabClicked(int id)
         {
@@ -68,7 +68,13 @@ namespace UI
         }
         void SetToggle()
         {
-            toggleField.text = isPreset ? "Drag & Drop" : "Presets";           
+            togglesGO[0].SetActive(false);
+            togglesGO[1].SetActive(false);
+
+            if (isPreset)
+                togglesGO[0].SetActive(true);
+            else
+                togglesGO[1].SetActive(true);    
         }
         
     }
