@@ -46,6 +46,7 @@ namespace UI.MainApp
         int galleryNum = 0;
         public void SelectGallery(List<int> allGalleriesToAdd)
         {
+            //Events.ResetItems();
             this.allGalleriesToAdd = allGalleriesToAdd;
             galleryNum = 0;
             LoadNextGallery();

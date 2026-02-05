@@ -91,6 +91,7 @@ namespace BoardItems
 
         private void Start() {
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
+            Events.OnPresetReset += OnPresetReset;
             Events.OnPresetLoaded += OnPresetLoaded;
             Events.OnNewCharacter += OnNewCharacter;
             /*if(charactersMetaData.Count<1)
@@ -100,8 +101,11 @@ namespace BoardItems
             //StartCoroutine(LoadWorks());
         }
 
+       
+
         private void OnDestroy() {
             FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
+            Events.OnPresetReset -= OnPresetReset;
             Events.OnPresetLoaded -= OnPresetLoaded;
             Events.OnNewCharacter -= OnNewCharacter;
         }
@@ -600,7 +604,6 @@ namespace BoardItems
             }
             return null;
         }
-
         void OnPresetLoaded(string presetId) {
             Debug.Log("# OnPresetLoaded");
             loadedPresetId = presetId;
@@ -608,6 +611,11 @@ namespace BoardItems
 
         void OnNewCharacter() {
             Debug.Log("# OnNewCharacter");
+            loadedPresetId = "";
+        }
+        private void OnPresetReset()
+        {
+            Debug.Log("# On Preset Reseted");
             loadedPresetId = "";
         }
     }

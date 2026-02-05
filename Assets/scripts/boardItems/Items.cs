@@ -284,7 +284,7 @@ namespace BoardItems
             //pos.x += item.collider.bounds.extents.x;
             float posX = Camera.main.WorldToScreenPoint(pos).x;
             CharacterData.parts isOverPart = IsOverOnlyOneBodyPart(item);
-            if (isOverPart == CharacterData.parts.none || posX > Screen.width * 0.8f)
+            if (isOverPart == CharacterData.parts.none)
             {
                 Delete(item);
                 if (all.Count == 0)

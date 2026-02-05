@@ -1,4 +1,6 @@
 ﻿using BoardItems;
+using BoardItems.Characters;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -13,6 +15,7 @@ namespace UI
         public states state;
         Vector3 clickPosition;
         public Items items;
+        CharacterData.parts partActive;
 
         public enum states
         {
@@ -23,8 +26,19 @@ namespace UI
             SCALING,
             CANVAS_DRAGGING
         }
+        private void Start()
+        {
+            Events.Zoom += OnZoom;
+        }
+        private void OnDestroy()
+        {
+            Events.Zoom -= OnZoom;
+        }
+        private void OnZoom(CharacterData.parts part)
+        {
+            this.partActive = part;
+        }
 
-       
         void OnStartDrag(ItemInScene item, Vector3 originalPosition)
         {
             AudioManager.Instance.sfxManager.PlayTransp("get", -2);
@@ -32,8 +46,10 @@ namespace UI
             itemDragHandler.OnStartDrag(item, originalPosition);
         }
         float lastMouseX;
-        void Update()
+        void LateUpdate()
         {
+            if(partActive == CharacterData.parts.none)
+                return;
 #if UNITY_EDITOR
             UpdateMouseInput();
 #elif UNITY_ANDROID || UNITY_IOS
@@ -49,6 +65,7 @@ namespace UI
 
         void UpdateTouch()
         {
+
             if (Input.touchCount > 0)
             {
                 switch (state)
@@ -89,7 +106,7 @@ namespace UI
                         {
                             state = states.IDLE;
                             itemDragHandler.StopDragging(centerPos);
-                            if (Input.touches[0].position.x < Screen.width * 0.6f && Vector3.Distance(clickPosition, centerPos) < 4 && !IsPointerOverUIObject())
+                            if (Vector3.Distance(clickPosition, centerPos) < 4 && !IsPointerOverUIObject())
                                 OpenTools();
                             else
                                 AudioManager.Instance.sfxManager.PlayTransp("drop", -2);

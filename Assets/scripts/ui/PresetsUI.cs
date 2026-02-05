@@ -36,6 +36,7 @@ namespace UI
         }
         void OnTabClicked(int id)
         {
+            Events.OnPresetReset(); // Resetea si hay un preset abierto
             print(id);
             isPreset = true;
             id += 1;

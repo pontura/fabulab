@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +19,7 @@ namespace BoardItems.Characters
             Events.OnCharacterExpression += OnCharacterExpression;
             Events.ColorizeArms += ColorizeArms;
             Events.ColorizeLegs += ColorizeLegs;
+            Events.Zoom += Zoom;
         }
         private void OnDestroy()
         {
@@ -25,6 +27,15 @@ namespace BoardItems.Characters
             Events.OnCharacterExpression -= OnCharacterExpression;
             Events.ColorizeArms -= ColorizeArms;
             Events.ColorizeLegs -= ColorizeLegs;
+            Events.Zoom -= Zoom;
+        }
+
+        private void Zoom(CharacterData.parts part)
+        {
+            foreach (BodyPart p in bodyParts)
+            {
+                p.GetComponent<Collider2D>().enabled = (p.part == part);
+            }
         }
 
         private void ColorizeArms(PalettesManager.colorNames colorName)
