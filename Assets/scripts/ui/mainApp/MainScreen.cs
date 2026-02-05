@@ -15,8 +15,10 @@ namespace UI.MainApp
         private void OnDestroy()
         {
             Events.ShowScreen -= ShowScreen;
+            OnDestroyed();
         }
 
+        public  virtual void OnDestroyed() { }
         protected virtual void ShowScreen(UIManager.screenType type) { }
 
         public void Show(bool isOn)

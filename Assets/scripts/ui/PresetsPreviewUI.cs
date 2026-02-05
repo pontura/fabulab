@@ -3,9 +3,9 @@ using BoardItems.UI;
 using System;
 using UnityEngine;
 
-namespace UI
+namespace UI.MainApp
 {
-    public class PresetsPreviewUI : MonoBehaviour
+    public class PresetsPreviewUI : MainScreen
     {
         bool isPreview;
         [SerializeField] GameObject savePanel;
@@ -14,21 +14,30 @@ namespace UI
         [SerializeField] PreviewUI previewUI;
         public GameObject DoneBtn;
 
+        protected override void ShowScreen(UIManager.screenType type)
+        {
+            switch (type)
+            {
+                case UIManager.screenType.Creation:
+                    Show(true);
+                    savePanel.SetActive(false);
+                    OnActivateUIButtons(false);
+                    Invoke("Delayed", 0.1f);
+                    break;
+                default:
+                    Show(false);
+                    break;
+            }
+        }
+
         private void Start()
         {
             Events.ActivateUIButtons += OnActivateUIButtons;
         }
-        private void OnDestroy()
+        public override void OnDestroyed() 
         {
             Events.ActivateUIButtons -= OnActivateUIButtons;
-        }       
-
-        void OnEnable()
-        {
-            savePanel.SetActive(false);
-            OnActivateUIButtons(false);
-            Invoke("Delayed", 0.1f);
-        }
+        }   
         void Delayed()
         {
             SetTogglePreview();
