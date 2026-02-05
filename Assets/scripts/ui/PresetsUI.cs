@@ -25,9 +25,7 @@ namespace UI
             Events.EditMode(true);
             Events.OnCharacterAnim(characterEditorID, anim);
             SetToggle();
-        }
-        void OnEnable()
-        {
+
             Invoke("Delayed", 0.1f);
         }
         void Delayed()
@@ -37,7 +35,7 @@ namespace UI
         void OnTabClicked(int id)
         {
             Events.OnPresetReset(); // Resetea si hay un preset abierto
-            print(id);
+            print(" preset clicked:" + id);
             isPreset = true;
             id += 1;
             lastPartID = id;
