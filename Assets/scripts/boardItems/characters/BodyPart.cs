@@ -42,7 +42,7 @@ namespace BoardItems
             if (mirror != null)
                 mirror.Arrage(false, item.GetMirror(), mirror.transform);
         }
-        public void Arrage(bool back, ItemInScene item, Transform t)
+        void Arrage(bool back, ItemInScene item, Transform t)
         {
             item.transform.SetParent(t.parent);
             ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
@@ -62,6 +62,7 @@ namespace BoardItems
         }
         public void SetArrengedItems()
         {
+            print("SetArrengedItems");
             ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
             float _z = 0;
             foreach (ItemInScene i in all)

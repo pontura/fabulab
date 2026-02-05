@@ -1,5 +1,6 @@
 ﻿using BoardItems;
 using UI.MainApp;
+using UI.MainApp.Home;
 using UnityEngine;
 using static BoardItems.AlbumData;
 
@@ -8,8 +9,6 @@ namespace UI
     public class UIManager : MonoBehaviour
     {
         static UIManager mInstance = null;
-        public HomePage home;
-        public Header header;
         public CreatePanel create;
         public BoardUI boardUI;
         public GallerySelectorUI gallerySelectorUI;
@@ -23,7 +22,8 @@ namespace UI
             Albums,
             Galleries,
             Creation,
-            WorkDetail
+            WorkDetail,
+            UserScreen
         }
 
         public static UIManager Instance
