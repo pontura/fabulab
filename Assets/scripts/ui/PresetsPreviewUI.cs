@@ -68,6 +68,8 @@ namespace UI.MainApp
         }
         public void Done()
         {
+            CharacterAnims.anims anim = CharacterAnims.anims.edit;
+            Events.OnCharacterAnim(0, anim);
             savePanel.SetActive(true);
             //UIManager.Instance.boardUI.SaveWork();
             UIManager.Instance.boardUI.toolsMenu.SetOff();
