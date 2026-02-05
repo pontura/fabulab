@@ -6,19 +6,26 @@ namespace UI.MainApp
     public class MainScreen : MonoBehaviour
     {
         [SerializeField] GameObject panel;
-
+        UIManager.screenType lastType = UIManager.screenType.WorkDetail;
 
         private void Awake()
         {
-            Events.ShowScreen += ShowScreen;
+            Events.ShowScreen += OnShowScreen;
         }
         private void OnDestroy()
         {
-            Events.ShowScreen -= ShowScreen;
+            Events.ShowScreen -= OnShowScreen;
             OnDestroyed();
         }
 
         public  virtual void OnDestroyed() { }
+
+        void OnShowScreen(UIManager.screenType type) {
+            if (type == lastType) return;
+            lastType = type;
+            print("Show screen " + type);
+            ShowScreen(type);
+        }
         protected virtual void ShowScreen(UIManager.screenType type) { }
 
         public void Show(bool isOn)

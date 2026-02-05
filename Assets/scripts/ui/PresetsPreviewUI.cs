@@ -1,5 +1,6 @@
 using BoardItems;
 using BoardItems.UI;
+using Google.MiniJSON;
 using System;
 using UnityEngine;
 
@@ -96,6 +97,7 @@ namespace UI.MainApp
         }
         public void Cancel()
         {
+            DoneBtn.SetActive(true);
             savePanel.SetActive(false);
         }
 
