@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using UI;
 using UnityEngine;
 
@@ -22,11 +23,14 @@ namespace BoardItems
             GameObject gallery = Instantiate(galleryAsset);
             gallery.transform.SetParent(items.container);
             gallery.transform.localPosition = Vector3.zero;
-            if(editMode)
+            print("AddItems editMode" + editMode);
+            if (editMode)
                 StartCoroutine(AddItems(galleryID, gallery, OnAllLoaded));
         }
         IEnumerator AddItems(int galleryID, GameObject gallery, System.Action OnAllLoaded)
         {
+            print("AddItems " + galleryID);
+            print("AddItems " + galleryID + " count: " + gallery.GetComponentsInChildren<ItemData>().Length);
             foreach (ItemData itemData in gallery.GetComponentsInChildren<ItemData>())
             {
                 yield return new WaitForEndOfFrame();
@@ -50,10 +54,12 @@ namespace BoardItems
             //foreach (SpriteRenderer sr in itemInScene.GetComponentsInChildren<SpriteRenderer>())
             //    sr.gameObject.layer = 8; //scene;
 
+            print("AddItem create sprite");
             itemPhotoCreator.Add(itemData, OnSpriteDone);
         }
         void OnSpriteDone(ItemData itemData, Sprite s)
         {
+            print("ADd item  create sprite done");
             dragAndDropUI.Add(itemData, s);
             itemData.gameObject.SetActive(false);
         }

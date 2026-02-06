@@ -16,7 +16,6 @@ namespace UI
         private void Awake()
         {
             Events.OnStopDrag += OnStopDrag;
-            Reset();
         }
         public void SetOn(bool isOn)
         {
@@ -29,6 +28,7 @@ namespace UI
         }
         public void Reset()
         {
+            print("__________ResetResetResetReset");
             all = new Dictionary<ItemData, ItemButton>();
             Utils.RemoveAllChildsIn(container);
             canvasGroup = GetComponent<CanvasGroup>();
@@ -44,6 +44,7 @@ namespace UI
         }
         public void Add(ItemData itemData, Sprite s)
         {
+            print("__________Add");
             ItemButton i = Instantiate(itemButton, container);
             i.Init(this, itemData, s);
             if(all == null) Reset();

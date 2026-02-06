@@ -34,6 +34,7 @@ namespace BoardItems.Characters
         {
             foreach (BodyPart p in bodyParts)
             {
+                p.SetSelection(p.part == part);
                 p.GetComponent<Collider2D>().enabled = (p.part == part);
             }
         }
