@@ -2,14 +2,23 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI
+namespace UI.MainApp.Home.User
 {
-    public class AlbumUI : MonoBehaviour
+    public class UserCharactersScreen : MonoBehaviour
     {
         public GameObject workBtn_prefab;
         public Transform worksContainer;
 
         int artID = 0;
+        public void Show(bool isOn)
+        {
+            gameObject.SetActive(isOn);
+            if(isOn)
+            {
+                Init();
+            }
+        }
+
         public void Init()
         {
             artID = 0;

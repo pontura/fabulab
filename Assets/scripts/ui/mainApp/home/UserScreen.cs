@@ -1,9 +1,7 @@
 using Common.UI;
-using NUnit.Framework;
 using System.Collections.Generic;
 using UI.MainApp.Home.User;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace UI.MainApp.Home
 {
@@ -12,7 +10,7 @@ namespace UI.MainApp.Home
         [SerializeField] TabController tabs;
         [SerializeField] UserDataScreen userDataScreen;
         [SerializeField] GameObject stories;
-        [SerializeField] AlbumUI album;
+        [SerializeField] UserCharactersScreen charactersScreen;
         [SerializeField] GameObject objects;
 
         public void Show(bool isOn)
@@ -24,16 +22,18 @@ namespace UI.MainApp.Home
                 int charactersQty = Data.Instance.albumData.characters.Count;
                 List<string> tabNames = new List<string>() { "Settings", "Stories", "Characters (" + charactersQty + ")", "Objects" };
                 tabs.SetTabNames(tabNames);
-                album.Init();
+                charactersScreen.Init();
             }
         }
         void OnTabClicked(int id)
         {
             print("OnTabClicked " + id);
-            stories.SetActive(false);
-            album.gameObject.SetActive(false);
-            objects.SetActive(false);
+
             userDataScreen.Show(false);
+            charactersScreen.Show(false);
+
+            stories.SetActive(false);
+            objects.SetActive(false);
 
             switch (id)
             {
@@ -44,7 +44,7 @@ namespace UI.MainApp.Home
                     stories.SetActive(true);
                     break;
                 case 2:
-                    album.gameObject.SetActive(true);
+                    charactersScreen.Show(true);
                     break;
                 case 3:
                     objects.SetActive(true);

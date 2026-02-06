@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UI
+namespace UI.MainApp.Home
 {
     public class HomeScreen : MonoBehaviour
     {
