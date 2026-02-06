@@ -24,6 +24,15 @@ namespace Common.UI
                 id++;
             }
         }
+        public void SetTabNames(List<string> names)
+        {
+            int id = 0;
+            foreach (TabButton tabButton in all)
+            {
+                tabButton.SetName(names[id]);
+                id++;
+            }
+        }
         public void Init(System.Action<int> OnActive, int initialID = 0)
         {
             this.OnActive = OnActive;

@@ -23,6 +23,15 @@ namespace Yaguar.Auth
             public string uid;
         }
 
+        public FirebaseUser User()
+        {
+            return _user;
+        }
+        public FirebaseAuth Auth()
+        {
+            return _auth;
+        }
+
         int verifyTokenCount;
         int verifyTokenMaxCount = 5;
 

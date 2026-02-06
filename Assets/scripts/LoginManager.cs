@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,7 @@ public class LoginManager : MonoBehaviour
         FirebaseAuthManager.Instance.OnLogin += OnLogin;
         FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
         FirebaseAuthManager.Instance.OnSignUp += OnSignUp;
+        FirebaseAuthManager.Instance.OnSignedOut += OnSignedOut;
         FirebaseAuthManager.Instance.OnResetPassword += OnResetPassword;
 
         Invoke(nameof(CheckLogged), Time.deltaTime * 3);
@@ -36,8 +38,14 @@ public class LoginManager : MonoBehaviour
     private void OnDestroy() {
         FirebaseAuthManager.Instance.OnLogin -= OnLogin;
         FirebaseAuthManager.Instance.OnSignUp -= OnSignUp;
+        FirebaseAuthManager.Instance.OnSignedOut -= OnSignedOut;
         FirebaseAuthManager.Instance.OnResetPassword -= OnResetPassword;
         FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
+    }
+
+    private void OnSignedOut()
+    {
+        gameObject.SetActive(true);
     }
 
     void OnLogin(bool succes) {

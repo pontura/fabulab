@@ -23,7 +23,6 @@ namespace UI.MainApp
         void OnShowScreen(UIManager.screenType type) {
             if (type == lastType) return;
             lastType = type;
-            print("Show screen " + type);
             ShowScreen(type);
         }
         protected virtual void ShowScreen(UIManager.screenType type) { }

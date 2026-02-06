@@ -6,6 +6,7 @@ namespace Common.UI
     public class TabButton : MonoBehaviour
     {
         TabController tabController;
+        [SerializeField] TMPro.TMP_Text field;
         [SerializeField] Animator anim;
         [SerializeField] Image image;
         public int id;
@@ -19,6 +20,10 @@ namespace Common.UI
         public void SetThumb(Sprite s)
         {
             image.sprite = s;
+        }
+        public void SetName(string name)
+        {
+            field.text = name;
         }
         public void Clicked()
         {
