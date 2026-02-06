@@ -207,7 +207,15 @@ namespace UI
 
         ItemData CreateItem(AlbumData.CharacterData.SavedIData itemData)
         {
-            ItemData newItem = Instantiate(Resources.Load<ItemData>("galerias/" + itemData.galleryID + "/item_" + itemData.id));
+            ItemData originalGO = Data.Instance.galeriasData.GetItem(itemData.galleryID, itemData.id);
+            print("____________" + originalGO.name);
+            ItemData newItem = Instantiate(
+                originalGO,
+                originalGO.transform.position,
+                Quaternion.identity
+            );
+            //return newGO;
+            //ItemData newItem = Instantiate(Resources.Load<ItemData>("galerias/" + itemData.galleryID + "/item_" + itemData.id));
             // Debug.Log("ID" + itemData.id + ":" + itemData.position);
             newItem.galleryID = itemData.galleryID;
             newItem.part = (CharacterData.parts)itemData.part;

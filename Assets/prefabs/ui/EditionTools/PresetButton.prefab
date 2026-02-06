@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -4, y: -4}
+  m_AnchoredPosition: {x: -1.2072983, y: 0.000038146973}
+  m_SizeDelta: {x: 20.086, y: 17.154}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3520304378106995192
 CanvasRenderer:
@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 8379562017572380381}
   - component: {fileID: 1341082706657191121}
   - component: {fileID: 302694842618663200}
+  - component: {fileID: 2285588958478514706}
   m_Layer: 5
   m_Name: PresetButton
   m_TagString: Untagged
@@ -224,9 +225,30 @@ MonoBehaviour:
   image: {fileID: 1997906331213669669}
   workData:
     isPakaPakaArt: 0
-    id: 
+    id: -OknBhyFW_0AT58IHNQX
     thumb: {fileID: 0}
-    bgColorName: 0
-    items: []
+    bgColorName: 9
+    items:
+    - galleryID: 1
+      part: 1
+      id: 5
+      position: {x: 0.07351033, y: -0.07513969, z: -0.001}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: -1.466521, y: -1.466521, z: 0}
+      anim: 0
+      color: 5
   color: 0
   partToColorizeID: 0
+--- !u!114 &2285588958478514706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1800488204069528803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Mask
+  m_ShowMaskGraphic: 1

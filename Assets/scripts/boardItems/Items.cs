@@ -193,6 +193,7 @@ namespace BoardItems
         }
         public void AddToInventary(ItemData itemData)
         {
+            print("____________AddToInventary " + itemData);
             ItemData newItem = InstantiateNewItem(itemData.galleryID, itemData);
             newItem.transform.localScale = itemData.scale;
             newItem.transform.position = container.transform.position;
@@ -200,9 +201,20 @@ namespace BoardItems
         }
         ItemData InstantiateNewItem(int galleryID, ItemData itemData)
         {
-            string itemName = "galerias/" + galleryID + "/item_" + itemData.id;
-            print("InstantiateNewItem " + itemName);
-            return Instantiate(Resources.Load<ItemData>(itemName));
+            ItemData originalGO = Data.Instance.galeriasData.GetItem(galleryID, itemData.id);
+            print("____________" + originalGO.name);
+            ItemData newGO = Instantiate(
+                originalGO,
+                originalGO.transform.position,
+                Quaternion.identity
+            );
+            return newGO;
+;
+
+            
+            //string itemName = "galerias/" + galleryID + "/item_" + itemData.id;
+            //print("InstantiateNewItem " + itemName);
+            //return Instantiate(Resources.Load<ItemData>(itemName));
         }
         void OnNewItem(ItemInScene item)
         {
