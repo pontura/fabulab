@@ -31,7 +31,7 @@ public static class Events
     public static System.Action<int, CharacterAnims.anims> OnCharacterAnim = delegate { };
     public static System.Action<int, CharacterExpressions.expressions> OnCharacterExpression = delegate { };
     public static System.Action<bool> EditMode = delegate { };
-    public static System.Action<CharacterData.parts> Zoom = delegate { };
+    public static System.Action<CharacterData.parts, bool> Zoom = delegate { };
 
     public static System.Action OnPresetReset = delegate { }; // si hay un preset abierto lo resetea:
     public static System.Action<string> OnPresetLoaded = delegate { };

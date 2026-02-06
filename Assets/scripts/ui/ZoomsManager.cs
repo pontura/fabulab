@@ -19,9 +19,9 @@ namespace UI
         }
         public void ZoomToLastPart()
         {
-            Events.Zoom(lastZoom);
+            Events.Zoom(lastZoom, true);
         }
-        public void Zoom(CharacterData.parts _part)
+        public void Zoom(CharacterData.parts _part, bool saving = false)
         {
             this.lastZoom = part;
             this.part = _part;

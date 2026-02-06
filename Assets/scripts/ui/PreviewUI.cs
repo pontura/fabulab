@@ -16,7 +16,7 @@ namespace UI
         }
         public void Init()
         {
-            Events.Zoom(0);
+            Events.Zoom(0, false);
             gameObject.SetActive(true);
             tabs.Init(OnTabClicked);
         }

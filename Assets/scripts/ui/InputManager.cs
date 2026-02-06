@@ -34,7 +34,7 @@ namespace UI
         {
             Events.Zoom -= OnZoom;
         }
-        private void OnZoom(CharacterData.parts part)
+        private void OnZoom(CharacterData.parts part, bool saving = false)
         {
             this.partActive = part;
         }

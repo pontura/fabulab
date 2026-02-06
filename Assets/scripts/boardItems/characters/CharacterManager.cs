@@ -30,12 +30,16 @@ namespace BoardItems.Characters
             Events.Zoom -= Zoom;
         }
 
-        private void Zoom(CharacterData.parts part)
+        private void Zoom(CharacterData.parts part, bool saving = false)
         {
             foreach (BodyPart p in bodyParts)
             {
-                p.SetSelection(p.part == part);
-                p.GetComponent<Collider2D>().enabled = (p.part == part);
+                bool showBorders = p.part == part;
+                if (saving)
+                    showBorders = false;
+
+                p.SetSelection(showBorders);
+                p.GetComponent<Collider2D>().enabled = (showBorders);
             }
         }
 

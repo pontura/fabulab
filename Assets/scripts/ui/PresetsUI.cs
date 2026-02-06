@@ -42,13 +42,13 @@ namespace UI
             if(id == 9) // arms and legs
             {
                 presetsDragAndDropToggleGO.SetActive(false);
-                Events.Zoom(0);
+                Events.Zoom(0, false);
                 presetsSelector.SetOn(true, 9);
             }
             else
             {
                 CharacterData.parts part = (CharacterData.parts)id;
-                Events.Zoom(part);
+                Events.Zoom(part, false);
                 presetsSelector.SetOn(true, id);
             }
                 
