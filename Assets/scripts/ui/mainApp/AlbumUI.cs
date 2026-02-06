@@ -2,31 +2,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.MainApp
+namespace UI
 {
-    public class AlbumUI : MainScreen
+    public class AlbumUI : MonoBehaviour
     {
         public GameObject workBtn_prefab;
         public Transform worksContainer;
 
-        protected override void ShowScreen(UIManager.screenType type)
-        {
-            switch (type)
-            {
-                case UIManager.screenType.Albums:
-                    Show(true);
-                    break;
-                default:
-                    Show(false);
-                    break;
-            }
-        }
-
-        public override void OnInit() { 
-            Init();
-        }
         int artID = 0;
-        void Init()
+        public void Init()
         {
             artID = 0;
 

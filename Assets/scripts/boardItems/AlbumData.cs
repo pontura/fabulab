@@ -383,11 +383,11 @@ namespace BoardItems
                     for (int j = 0; j < itemsData.Length; j++) {
                         string[] iData = itemsData[j].Split(itemFieldSeparator[0]);
 
-                        int num = 0;
-                        foreach (string s in iData) {
-                            Debug.Log(num + "___ " + s);
-                            num++;
-                        }
+                        //int num = 0;
+                        //foreach (string s in iData) {
+                        //    Debug.Log(num + "___ " + s);
+                        //    num++;
+                        //}
                         //ItemData iD = Data.Instance.galeriasData.GetItem(wd.galleryID,int.Parse(iData[0]));
                         //if (iD.sprite == null)
                         //    Debug.Log(iD.id + ": spriteNull");

@@ -20,11 +20,7 @@ namespace UI
             else
                 pakapakaLogo.SetActive(false);
         }
-        public void ClickedPakaPaka()
-        {
-            if (isPakapaka)
-                UIManager.Instance.albumUI.DuplicateWork(PakaPakaObjectID);
-        }
+        
     }
 
 }

@@ -16,6 +16,13 @@ namespace UI.MainApp.Home
             {
                 case UIManager.screenType.Home:
                     Show(true);
+                    home.Show(true);
+                    user.Show(false);
+                    break;
+                case UIManager.screenType.UserScreen:
+                    Show(true);
+                    home.Show(false);
+                    user.Show(true);
                     break;
                 default:
                     Show(false);

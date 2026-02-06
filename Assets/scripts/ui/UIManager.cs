@@ -12,7 +12,6 @@ namespace UI
         public CreatePanel create;
         public BoardUI boardUI;
         public GallerySelectorUI gallerySelectorUI;
-        public AlbumUI albumUI;
         public WorkDetailUI workDetailUI;
         public ZoomsManager zoomManager;
         public enum screenType
@@ -57,7 +56,7 @@ namespace UI
         }
         public void CreateSelected(int id)
         {
-            Albums();
+            NewCharacter();//Albums();
         }
         public void Albums()
         {
