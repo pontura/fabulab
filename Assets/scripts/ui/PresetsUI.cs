@@ -10,6 +10,7 @@ namespace UI
         [SerializeField] DragAndDropUI dragAndDropUI;
         [SerializeField] TabController tabs;
         [SerializeField] GameObject[] togglesGO;
+        [SerializeField] GameObject presetsDragAndDropToggleGO;
         bool isPreset;
         int lastPartID;
        
@@ -31,14 +32,16 @@ namespace UI
         {
             Events.OnPresetReset(); // Resetea si hay un preset abierto
             print(" preset clicked:" + id);
-            isPreset = true;
+            isPreset = true; 
+            SetToggle();
             id += 1;
             lastPartID = id;
             dragAndDropUI.gameObject.SetActive(false);
-
+            presetsDragAndDropToggleGO.SetActive(true);
             if (id > 4) id += 2; // porque las manos y los pies ocupan 2 ids:
             if(id == 9) // arms and legs
             {
+                presetsDragAndDropToggleGO.SetActive(false);
                 Events.Zoom(0);
                 presetsSelector.SetOn(true, 9);
             }
