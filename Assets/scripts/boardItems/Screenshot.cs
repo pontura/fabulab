@@ -51,18 +51,29 @@ namespace BoardItems
 
             foreach (var p in points)
             {
-                Vector3 screenPoint = targetCamera.WorldToScreenPoint(p);
+                Vector3 sp = targetCamera.WorldToScreenPoint(p);
+                if (sp.z < 0) continue;
 
-                min = Vector2.Min(min, screenPoint);
-                max = Vector2.Max(max, screenPoint);
+                min = Vector2.Min(min, sp);
+                max = Vector2.Max(max, sp);
             }
 
-            Rect rect = new Rect(
-                min.x,
-                min.y,
-                max.x - min.x,
-                max.y - min.y
-            );
+            float xMin = Mathf.Clamp(min.x, 0, Screen.width);
+            float yMin = Mathf.Clamp(min.y, 0, Screen.height);
+            float xMax = Mathf.Clamp(max.x, 0, Screen.width);
+            float yMax = Mathf.Clamp(max.y, 0, Screen.height);
+
+            float width = xMax - xMin;
+            float height = yMax - yMin;
+
+            if (width <= 0 || height <= 0)
+            {
+                OnDone(null);
+                canvas.gameObject.SetActive(true);
+                yield break;
+            }
+
+            Rect rect = new Rect(xMin, yMin, width, height);
 
             Texture2D texture = new Texture2D((int)rect.width, (int)rect.height, TextureFormat.RGB24, false);
             texture.ReadPixels(rect, 0, 0);
