@@ -164,7 +164,7 @@ namespace UI
             //UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID, false);
             foreach (AlbumData.CharacterData.SavedIData itemData in wd.items)
             {
-                ItemData newItem = CreateItem(itemData);
+                ItemData newItem = CreateItem(itemData, false);
             }
             StartCoroutine(GenerateThumbForRawImage(wd, targetRawImage, OnReady));
         }
@@ -205,7 +205,7 @@ namespace UI
 
 
 
-        ItemData CreateItem(AlbumData.CharacterData.SavedIData itemData)
+        ItemData CreateItem(AlbumData.CharacterData.SavedIData itemData, bool isInScene)
         {
             ItemData originalGO = Data.Instance.galeriasData.GetItem(itemData.galleryID, itemData.id);
             print("____________" + originalGO.name);
@@ -244,7 +244,7 @@ namespace UI
             print("open work");
             foreach (AlbumData.CharacterData.SavedIData itemData in wd.items)
             {
-                ItemData newItem = CreateItem(itemData);
+                ItemData newItem = CreateItem(itemData, true);
 
                 print("open work newItem part: " + newItem.part);
 

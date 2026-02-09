@@ -14,7 +14,6 @@ namespace BoardItems
         [SerializeField] List<Collider2D> colliders;
         List<SpriteRenderer> sprites;
         AudioSource audioSource;
-        [SerializeField] bool used;
 
         private void Start()
         {
@@ -24,7 +23,6 @@ namespace BoardItems
                 rb = gameObject.AddComponent<Rigidbody2D>();
 
             rb.constraints = RigidbodyConstraints2D.FreezeAll;
-            used = false;
 
             if(collider == null)
                 collider = GetComponent<Collider2D>();
@@ -101,7 +99,6 @@ namespace BoardItems
         {
             timer = Time.time;
             print("StartBeingDrag");
-            used = true;
             rb = gameObject.GetComponent<Rigidbody2D>();
 
             if (rb == null)
@@ -115,12 +112,11 @@ namespace BoardItems
                     c.enabled = false;
             SetCollider(true);
 
-            if(bp != null)
-                Events.OnNewBodyPartSelected(bp);
+            if(bpOver != null)
+                Events.OnNewBodyPartSelected(bpOver);
         }
         public void StopBeingDrag()
         {
-            used = true;
             rb.isKinematic = false;
             foreach (Collider2D c in colliders)
                 c.enabled = true;
@@ -157,10 +153,7 @@ namespace BoardItems
         }
         public bool IsBeingUse()
         {
-            return used;
-            if (rb != null && rb.constraints == RigidbodyConstraints2D.FreezeAll)
-                return true;
-            return false;
+            return data.part != CharacterData.parts.none;
         }
         public bool IsInActiveBodyPart(BodyPart bodyPart)
         {
@@ -168,79 +161,36 @@ namespace BoardItems
                 return true;
             return false;
         }
-        [SerializeField] BodyPart bp;
+        public bool IsOverBodyPart()
+        {
+            if (bpOver != null)
+                return true;
+            return false;
+        }
+        [SerializeField] BodyPart bpOver;
        // [SerializeField] BodyPart bpEnter;
         void OnTriggerEnter2D(Collider2D collision)
         {
             BodyPart bpEnter = collision.gameObject.GetComponent<BodyPart>();
-            if (!IsInActiveBodyPart(bpEnter) || bpEnter.part != data.part)
-            {
-                return;
-            }
-            if (bp == null)
+            if (bpEnter.part != data.part)  return;
+            if (bpOver == null)
             {
                 data.SetCharacterPart(bpEnter.part);
                 Events.OnNewBodyPartSelected(bpEnter);
-                bp = bpEnter;
-                ArrengeZPos(bp);
+                bpOver = bpEnter;
+                ArrengeZPos(bpOver);
             }
-            //if(bp == null && bpEnter != null)
-            //    bp = bpEnter;
         }
         void OnTriggerExit2D(Collider2D collision)
         {
            // print("coll OnTriggerExit2D: " + (timer + 0.1f) + "     Timer " + Time.time);
             if (timer+0.01f > Time.time) return;
             BodyPart bpExit = collision.GetComponent<BodyPart>();
+            if (bpExit.part != data.part) return;
 
-            if (!IsInActiveBodyPart(bpExit) || bpExit.part != data.part)
-            {
-                bpExit = null; return;
-            }
-            if (bpExit != null)
-            {
-                if(bp == bpExit)
-                {    
-                    data.OutOfBody();
-                    //if (bp == bpEnter)
-                    //{
-
-                        data.SetCharacterPart(CharacterData.parts.none);
-                        Events.OnNewBodyPartSelected(null);
-                        bp = null;
-                       // bpEnter = null;
-                    //}
-                    //else
-                    //{
-                    //    bp = bpEnter;
-                    //    data.SetCharacterPart(bp.part);
-                    //    Events.OnNewBodyPartSelected(bp);
-                    //}
-                }
-                //else if (bpEnter != null)
-                //{
-                //    bpEnter = bp;
-                //    data.OutOfBody();
-                //    print("OnTriggerExit2D and set last bp: " + bp.part);
-                //    data.SetCharacterPart(bp.part);
-                //    Events.OnNewBodyPartSelected(bp);
-                //}
-            }
+            Events.OnNewBodyPartSelected(null);
+            bpOver = null;
         }
-        //void OnCollisionEnter2D(Collision2D collision)
-        //{
-        //   // print("coll: " + collision.gameObject.name);
-        //    if (collision.relativeVelocity.magnitude > 2)
-        //    {
-        //        if (!audioSource.isPlaying && AudioManager.Instance.IsVoiceRoom())
-        //        {
-        //            audioSource.volume = collision.relativeVelocity.magnitude * 0.25f * (0.15f + Random.Range(-0.05f, 0.05f));
-        //            audioSource.pitch = 0.75f + Random.Range(-0.25f, 0.25f);
-        //            audioSource.Play();
-        //            AudioManager.Instance.VoiceCount(audioSource.clip.length);
-        //        }
-        //    }
-        //}
         public ItemInScene GetMirror() {  return mirror;  }
         public void SetMirror(ItemInScene mirrored)
         {

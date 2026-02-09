@@ -31,17 +31,9 @@ namespace BoardItems
         {
             this.scale = originalScale;
         }
-        [SerializeField] int partsCount;
-        public int PartsCount { get { return partsCount; } }
-
-        public void OutOfBody()
-        {
-            partsCount--;
-        }
+       
         public void SetCharacterPart(CharacterData.parts part)
         {
-            if (part != CharacterData.parts.none)
-                partsCount++;
             this.part = part;
         }
         public void SetTransformByData()

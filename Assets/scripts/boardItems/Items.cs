@@ -283,20 +283,12 @@ namespace BoardItems
             characterManager.AttachItem(item);
             itemSelected = item;
         }
-        CharacterData.parts IsOverOnlyOneBodyPart(ItemInScene item)
-        {
-            if(item.data.PartsCount == 1) 
-                return item.data.part;
-            return CharacterData.parts.none;
-        }
         void OnStopDrag(ItemInScene item, Vector3 pos)
         {
-            
             item.StopBeingDrag();
-            //pos.x += item.collider.bounds.extents.x;
             float posX = Camera.main.WorldToScreenPoint(pos).x;
-            CharacterData.parts isOverPart = IsOverOnlyOneBodyPart(item);
-            if (isOverPart == CharacterData.parts.none)
+            bool isOverBodyPart = item.IsOverBodyPart();
+            if (!isOverBodyPart)
             {
                 Delete(item);
                 if (all.Count == 0)
@@ -304,8 +296,7 @@ namespace BoardItems
             }
             else
             {
-                SetItemInScene(item, isOverPart);
-                item.data.part = isOverPart;
+                SetItemInScene(item, item.data.part);
                 item.data.position = item.transform.localPosition;
                 item.data.rotation = item.transform.localEulerAngles;
                 item.data.scale = item.transform.localScale;
@@ -316,7 +307,7 @@ namespace BoardItems
                 FinishEditingItem(item);
                 Events.ActivateUIButtons(true);
 
-                BodyPart bp = characterManager.GetBodyPart(isOverPart);
+                BodyPart bp = characterManager.GetBodyPart(item.data.part);
                 bp.SetArrengedItems();
             }
         }
