@@ -58,6 +58,7 @@ namespace BoardItems
             SubMenuButton newSubMenuButton = Instantiate(subMenuButton);
             newSubMenuButton.transform.SetParent(container);
             newSubMenuButton.Init(id, sprite, OnClick, colors);
+            newSubMenuButton.transform.localScale = Vector2.one;
             id++;
         }
         void AddButtonAnims(Sprite sprite, AnimationsManager.AnimData animData)
@@ -65,6 +66,7 @@ namespace BoardItems
             SubMenuButton newSubMenuButton = Instantiate(subMenuButton);
             newSubMenuButton.transform.SetParent(container);
             newSubMenuButton.Init(id, sprite, OnClick);
+            newSubMenuButton.transform.localScale = Vector2.one;
             id++;
         }
         public void OnClick(int id)
