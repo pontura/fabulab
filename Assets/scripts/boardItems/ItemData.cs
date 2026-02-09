@@ -50,6 +50,20 @@ namespace BoardItems
             transform.localEulerAngles = rotation;
             transform.localScale = scale;
         }
+        public void ClonateFrom(ItemData itemDataOriginal)
+        {
+            part = itemDataOriginal.part;
+            galleryID = itemDataOriginal.galleryID;
+            rotation = itemDataOriginal.rotation;
+            position = itemDataOriginal.position;
+            scale = itemDataOriginal.scale;
+            id = itemDataOriginal.id;
+            paletteName = itemDataOriginal.paletteName;
+            colorName = itemDataOriginal.colorName;
+            anims = itemDataOriginal.anims;
+            anim = itemDataOriginal.anim;
+            originalScale = itemDataOriginal.originalScale;
+        }
     }
 
 }
