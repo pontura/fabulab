@@ -44,10 +44,12 @@ namespace UI
         }
         public void Add(ItemData itemData, Sprite s)
         {
+            print("AddItem " + itemData.id);
+            if (all == null) Reset();
             ItemButton i = Instantiate(itemButton, container);
             i.Init(this, itemData, s);
-            if(all == null) Reset();
             all.Add(itemData, i);
+            print("AddItem done " + itemData.id + " count: " + all.Count);
         }
         public void OnClicked(ItemButton b)
         {

@@ -41,6 +41,7 @@ namespace BoardItems
         }
         public void AddItem(ItemData itemData, Vector2 pos)
         {
+            print("AddItem " + itemData.id);
             itemData.transform.SetParent(items.container);
             //itemData.gameObject.AddComponent<Rigidbody2D>();
             ItemInScene itemInScene = itemData.gameObject.AddComponent<ItemInScene>();
