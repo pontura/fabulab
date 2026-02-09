@@ -1,14 +1,10 @@
-using BoardItems;
-using BoardItems.UI;
-using Google.MiniJSON;
-using System;
 using UnityEngine;
 
 namespace UI.MainApp
 {
     public class PresetsPreviewUI : MainScreen
     {
-        bool isPreview;
+        public bool isPreview;
         [SerializeField] GameObject savePanel;
         [SerializeField] TMPro.TMP_Text togglePreviewField;
         [SerializeField] PresetsUI presetsUI;

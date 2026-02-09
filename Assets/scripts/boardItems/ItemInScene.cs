@@ -173,7 +173,7 @@ namespace BoardItems
         void OnTriggerEnter2D(Collider2D collision)
         {
             BodyPart bpEnter = collision.gameObject.GetComponent<BodyPart>();
-            if (!IsInActiveBodyPart(bpEnter))
+            if (!IsInActiveBodyPart(bpEnter) || bpEnter.part != data.part)
             {
                 return;
             }
@@ -193,7 +193,7 @@ namespace BoardItems
             if (timer+0.01f > Time.time) return;
             BodyPart bpExit = collision.GetComponent<BodyPart>();
 
-            if (!IsInActiveBodyPart(bpExit))
+            if (!IsInActiveBodyPart(bpExit) || bpExit.part != data.part)
             {
                 bpExit = null; return;
             }

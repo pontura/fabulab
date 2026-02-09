@@ -62,6 +62,7 @@ namespace UI
         public void Toggle()
         {
             isPreset = !isPreset;
+
             SetToggle();
 
             if (isPreset)

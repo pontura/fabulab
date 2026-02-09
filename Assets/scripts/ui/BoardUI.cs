@@ -241,9 +241,12 @@ namespace UI
 
         void OpenWork(AlbumData.CharacterData wd)
         {
+            print("open work");
             foreach (AlbumData.CharacterData.SavedIData itemData in wd.items)
             {
                 ItemData newItem = CreateItem(itemData);
+
+                print("open work newItem part: " + newItem.part);
 
                 if (newItem.anim != AnimationsManager.anim.NONE)
                 {

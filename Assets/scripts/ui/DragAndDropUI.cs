@@ -44,7 +44,6 @@ namespace UI
         }
         public void Add(ItemData itemData, Sprite s)
         {
-            print("__________Add");
             ItemButton i = Instantiate(itemButton, container);
             i.Init(this, itemData, s);
             if(all == null) Reset();
