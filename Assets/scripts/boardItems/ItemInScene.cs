@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UI;
 using UnityEngine;
+using static AnimationsManager;
 
 namespace BoardItems
 {
@@ -205,6 +206,25 @@ namespace BoardItems
             Vector3 pos = transform.position;
             pos.z = z;
             transform.position = pos;
+        }
+        Animation anim;
+        public void SetTools(bool isOn, AnimationClip clip = null)
+        {
+            if (isOn)
+            {
+                if (anim == null)
+                {
+                    anim = colliders[0].gameObject.AddComponent<Animation>();
+                    anim.AddClip(clip, clip.name);
+                    anim.clip = clip;
+                    anim.Play();
+                }
+            }
+            else if(anim != null)
+            {
+                colliders[0].gameObject.transform.localScale = Vector3.one;
+                Destroy(anim);
+            }
         }
     }
 }

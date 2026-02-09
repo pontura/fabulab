@@ -1,4 +1,5 @@
 using BoardItems.Characters;
+using System.Linq;
 using UnityEngine;
 
 namespace BoardItems
@@ -64,6 +65,9 @@ namespace BoardItems
         {
             print("SetArrengedItems");
             ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
+            System.Array.Sort(all, (a, b) =>
+                a.transform.position.z.CompareTo(b.transform.position.z)
+            );
             float _z = 0;
             foreach (ItemInScene i in all)
             {

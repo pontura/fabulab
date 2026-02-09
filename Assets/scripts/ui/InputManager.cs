@@ -50,6 +50,7 @@ namespace UI
         {
             if(partActive == CharacterData.parts.none)
                 return;
+            if (IsPointerOverUIObject()) return;
 #if UNITY_EDITOR
             UpdateMouseInput();
 #elif UNITY_ANDROID || UNITY_IOS
@@ -191,7 +192,7 @@ namespace UI
                             OnCloseTools(states.IDLE);
 
                         ItemInScene itemInScene = hit.transform.gameObject.GetComponent<ItemInScene>();
-
+                        itemInScene.SetTools(false);
                         if (itemInScene.IsBeingUse() && itemInScene.data.part != partActive) return;
 
                         Vector3 _offset = cam.WorldToScreenPoint(hit.transform.position);
@@ -214,14 +215,20 @@ namespace UI
             OnStartDrag(itemInScene, Input.mousePosition);
             UIManager.Instance.boardUI.items.StartDrag(itemInScene);
         }
+        [SerializeField] AnimationClip clip;
+        ItemInScene itemSelected;
         void OpenTools()
         {
             state = states.TOOLS;
             Vector3 pos = Input.mousePosition;
-            toolsMenu.Init(items.GetItemSelected().data, pos, this);
+            itemSelected = items.GetItemSelected();
+            toolsMenu.Init(itemSelected.data, pos, this);
+            itemSelected.SetTools(true, clip);
         }
         public void OnCloseTools(states _state = states.IDLE)
         {
+            if(itemSelected != null)
+                itemSelected.SetTools(false);
             toolsMenu.SetOff();
             state = _state;
         }

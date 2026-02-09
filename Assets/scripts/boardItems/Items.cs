@@ -307,8 +307,8 @@ namespace BoardItems
                 FinishEditingItem(item);
                 Events.ActivateUIButtons(true);
 
-                BodyPart bp = characterManager.GetBodyPart(item.data.part);
-                bp.SetArrengedItems();
+                //BodyPart bp = characterManager.GetBodyPart(item.data.part);
+                //bp.SetArrengedItems();
             }
         }
 
