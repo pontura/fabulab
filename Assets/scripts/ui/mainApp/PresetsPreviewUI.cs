@@ -37,6 +37,7 @@ namespace UI.MainApp
         }   
         void Delayed()
         {
+            isPreview = false;
             SetTogglePreview();
         }
         public void TogglePreview()
