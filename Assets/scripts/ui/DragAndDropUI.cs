@@ -53,6 +53,7 @@ namespace UI
         {
             ItemInScene i = b.itemData.GetComponent<ItemInScene>();
             ItemInScene newItem = items.AddNewItemFromMenu(i);
+            newItem.data.part = UIManager.Instance.zoomManager.part;
             inputManager.OnInitDragging(newItem);
             canvasGroup.alpha = 0.2f;
         }

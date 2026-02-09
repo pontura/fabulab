@@ -191,9 +191,8 @@ namespace UI
                             OnCloseTools(states.IDLE);
 
                         ItemInScene itemInScene = hit.transform.gameObject.GetComponent<ItemInScene>();
-                        if (itemInScene.data.part != partActive) return;
 
-                        if (itemInScene.IsBeingUse() && itemInScene.data.part != UIManager.Instance.zoomManager.part) return;
+                        if (itemInScene.IsBeingUse() && itemInScene.data.part != partActive) return;
 
                         Vector3 _offset = cam.WorldToScreenPoint(hit.transform.position);
 
