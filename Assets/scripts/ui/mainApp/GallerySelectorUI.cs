@@ -26,22 +26,22 @@ namespace UI.MainApp
         {
             Events.ResetItems();
         }
-        public void SelectGalleryClicked(int id)
-        {
-            if (id == 0)
-            {
-                List<int> allGalleries = new List<int>();
-                allGalleries.Add(1);
-                allGalleries.Add(2);
-                SelectGallery(allGalleries);
-            }
-            else
-            {
-                Events.OnNewCharacter();
-                GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(id);
-                UIManager.Instance.InitGallery(gd, true, null);
-            }
-        }
+        //public void SelectGalleryClicked(int id)
+        //{
+        //    if (id == 0)
+        //    {
+        //        List<int> allGalleries = new List<int>();
+        //        allGalleries.Add(1);
+        //        allGalleries.Add(2);
+        //        SelectGallery(allGalleries);
+        //    }
+        //    else
+        //    {
+        //        Events.OnNewCharacter();
+        //        GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(id);
+        //        UIManager.Instance.InitGallery(gd, true, null);
+        //    }
+        //}
         List<int> allGalleriesToAdd;
         int galleryNum = 0;
         public void SelectGallery(List<int> allGalleriesToAdd)

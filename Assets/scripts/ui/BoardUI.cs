@@ -136,25 +136,25 @@ namespace UI
             AlbumData.CharacterData wd = Data.Instance.albumData.SetCurrentID(id);
            // UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID, true);
            //TO-DO:
-            List<int> galleries = new List<int>();
-            foreach(AlbumData.CharacterData.SavedIData item in wd.items)
-            {
-                if (!galleries.Contains(item.galleryID))
-                    galleries.Add(item.galleryID);
-            }
-            UIManager.Instance.gallerySelectorUI.SelectGallery(galleries);
+            //List<int> galleries = new List<int>();
+            //foreach(AlbumData.CharacterData.SavedIData item in wd.items)
+            //{
+            //    if (!galleries.Contains(item.galleryID))
+            //        galleries.Add(item.galleryID);
+            //}
+            //UIManager.Instance.gallerySelectorUI.SelectGallery(galleries);
             OpenWork(wd);
         }
         public void LoadPreset(AlbumData.CharacterData wd)
         {
             items.DeleteInPart(wd.items[0].part);
-            List<int> galleries = new List<int>();
-            foreach (AlbumData.CharacterData.SavedIData item in wd.items)
-            {
-                if (!galleries.Contains(item.galleryID))
-                    galleries.Add(item.galleryID);
-            }
-            UIManager.Instance.gallerySelectorUI.SelectGallery(galleries);
+           // List<int> galleries = new List<int>();
+            //foreach (AlbumData.CharacterData.SavedIData item in wd.items)
+            //{
+            //    if (!galleries.Contains(item.galleryID))
+            //        galleries.Add(item.galleryID);
+            //}
+            //UIManager.Instance.gallerySelectorUI.SelectGallery(galleries);
             OpenWork(wd);
         }
         [SerializeField] RenderTexture rt;

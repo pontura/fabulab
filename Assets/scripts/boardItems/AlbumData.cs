@@ -177,12 +177,13 @@ namespace BoardItems
             // wd.bgColorName = Data.Instance.palettesManager.GetColorName(UIManager.Instance.boardUI.cam.backgroundColor);
             wd.bgColorName = PalettesManager.colorNames.BLANCO;//To-DO
             wd.items = new List<CharacterData.SavedIData>();
-            int i = UIManager.Instance.boardUI.items.all.Count;
+            int totalItems = UIManager.Instance.boardUI.items.all.Count;
             int totalParts = 0;
             int partID = 0;
-            while (i > 0)
+            int i = 0;
+            while (i < totalItems)
             {
-                ItemInScene iInScene = UIManager.Instance.boardUI.items.all[i - 1];
+                ItemInScene iInScene = UIManager.Instance.boardUI.items.all[0];
                 int newPartID = (int)iInScene.data.part;
                 if (partID != newPartID)
                     totalParts++;
@@ -202,8 +203,8 @@ namespace BoardItems
                 }
                 bool mirrorDeleted = UIManager.Instance.boardUI.items.Delete(iInScene);
                 if (mirrorDeleted)
-                    i--;
-                i--;
+                    i++;
+                i++;
             }
             print("SAVE data: totalparts" + totalParts + " lastPArtID: "+ partID);
             currentCharacter = wd;

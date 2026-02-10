@@ -11,7 +11,6 @@ public static class Events
     public static System.Action<ItemInScene, Vector3> OnStartDrag = delegate { };
     public static System.Action<ItemInScene, Vector3> OnStopDrag = delegate { };
     public static System.Action<ItemInScene> ItemBackToMenu = delegate { };
-    public static System.Action<ItemInScene> OnNewItem = delegate { };
     public static System.Action<GaleriasData.GalleryData, bool, System.Action> InitGallery = delegate { };
     public static System.Action GalleryDone = delegate { };
     public static System.Action ResetItems = delegate { };

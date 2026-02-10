@@ -64,6 +64,7 @@ namespace UI
         }
         public void OnClicked(PresetButton pb)
         {
+            Events.ActivateUIButtons(true);
             print("OnClicked " + partID);
             if (partID == 9) //arms and legs colors:
             {

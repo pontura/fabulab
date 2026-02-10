@@ -26,7 +26,6 @@ namespace BoardItems
         {
             Events.EditMode += EditMode;
             Events.OnStopDrag += OnStopDrag;
-            Events.OnNewItem += OnNewItem;
             Events.InitGallery += InitGallery;
             Events.Colorize += Colorize;
             Events.AnimateItem += AnimateItem;
@@ -39,7 +38,6 @@ namespace BoardItems
         {
             Events.EditMode -= EditMode;
             Events.OnStopDrag -= OnStopDrag;
-            Events.OnNewItem -= OnNewItem;
             Events.InitGallery -= InitGallery;
             Events.Colorize -= Colorize;
             Events.AnimateItem -= AnimateItem;
@@ -182,14 +180,24 @@ namespace BoardItems
         {
             itemSelected = iInScene;
         }
+        bool initialized = false;
         void InitGallery(GaleriasData.GalleryData gallery, bool editMode, System.Action OnAllLoaded)
         {
-            print("InitGallery " + gallery.id);
-            //all.Clear();
-            Events.ActivateUIButtons(false);
-            StopAllCoroutines();
-            bg.color = Data.Instance.palettesManager.GetColor(gallery.colorUI);
-            inventary.Init(this, gallery.id, gallery.gallery, editMode, OnAllLoaded);
+            print("InitGallery " + initialized);
+            if (initialized)
+            {
+                if (OnAllLoaded != null)
+                    OnAllLoaded();
+            }
+            else
+            {
+                initialized = true;
+                print("InitGallery " + gallery.id);
+                //all.Clear();
+                StopAllCoroutines();
+                bg.color = Data.Instance.palettesManager.GetColor(gallery.colorUI);
+                inventary.Init(this, gallery.id, gallery.gallery, editMode, OnAllLoaded);
+            }
         }
         public void AddToInventary(ItemData itemData)
         {
@@ -202,30 +210,17 @@ namespace BoardItems
         ItemData InstantiateNewItem(int galleryID, ItemData itemData)
         {
             ItemData originalGO = Data.Instance.galeriasData.GetItem(galleryID, itemData.id);
-            print("____________" + originalGO.name);
             ItemData newGO = Instantiate(
                 originalGO,
                 originalGO.transform.position,
                 Quaternion.identity
             );
             return newGO;
-;
-
-            
-            //string itemName = "galerias/" + galleryID + "/item_" + itemData.id;
-            //print("InstantiateNewItem " + itemName);
-            //return Instantiate(Resources.Load<ItemData>(itemName));
-        }
-        void OnNewItem(ItemInScene item)
-        {
-            print("OnNewItem " + item);
-        //    all.Add(item);
-        //    //AddToInventary(item.data);
         }
         public void DeleteAll(CharacterData.parts exludePart)
         {
             StopAllCoroutines();
-            Events.ActivateUIButtons(false);
+            
             int i = all.Count;
             while (i > 0)
             {
@@ -248,7 +243,6 @@ namespace BoardItems
         public void DeleteAll()
         {
             StopAllCoroutines();
-            Events.ActivateUIButtons(false);
             int i = all.Count;
             while (i > 0)
             {
@@ -261,7 +255,6 @@ namespace BoardItems
         public void DeleteInPart(int partID)
         {
             StopAllCoroutines();
-            Events.ActivateUIButtons(false);
             int i = all.Count;
             while (i > 0)
             {
@@ -307,8 +300,8 @@ namespace BoardItems
                 FinishEditingItem(item);
                 Events.ActivateUIButtons(true);
 
-                //BodyPart bp = characterManager.GetBodyPart(item.data.part);
-                //bp.SetArrengedItems();
+                BodyPart bp = characterManager.GetBodyPart(item.data.part);
+                bp.SetArrengedItems();
             }
         }
 
@@ -376,7 +369,6 @@ namespace BoardItems
             itemSelected = item;
             item.data.position = item.transform.position;
 
-           // print("item.IsBeingUse() " + item.IsBeingUse());
 
             if (!item.IsBeingUse())
             {
@@ -385,9 +377,6 @@ namespace BoardItems
             }
 
             item.transform.position = item.data.position;
-
-            if (!item.IsBeingUse())
-                Events.OnNewItem(item);
 
             item.StartBeingDrag();
             AnimateItemDragDrop(true);
