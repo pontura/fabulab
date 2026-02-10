@@ -56,6 +56,11 @@ namespace UI
                 PresetButton b = Instantiate(itemButton, container);
                 b.Init(this, s, 1);
             }
+            foreach (colorNames s in Data.Instance.palettesManager.eyebrow)
+            {
+                PresetButton b = Instantiate(itemButton, container);
+                b.Init(this, s, 2);
+            }
         }
         public void Reset()
         {
@@ -70,8 +75,10 @@ namespace UI
             {
                 if(pb.partToColorizeID == 0)
                     Events.ColorizeArms(pb.color);
-                else
+                else if (pb.partToColorizeID == 1)
                     Events.ColorizeLegs(pb.color);
+                  else
+                    Events.ColorizeEyebrows(pb.color);
             }
             else
             {

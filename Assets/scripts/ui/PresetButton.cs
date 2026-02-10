@@ -27,8 +27,10 @@ namespace UI
 
             if(partToColorizeID == 0)
                 image.sprite = Data.Instance.palettesManager.arm;
-            else
+            else if (partToColorizeID == 1)
                 image.sprite = Data.Instance.palettesManager.leg;
+             else
+                image.sprite = Data.Instance.palettesManager.eyebrows;
 
             this.color = _color;
             this.manager = manager;

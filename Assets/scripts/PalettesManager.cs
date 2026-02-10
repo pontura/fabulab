@@ -11,9 +11,11 @@ public class PalettesManager : MonoBehaviour
 
     public Sprite arm;
     public Sprite leg;
+    public Sprite eyebrows;
 
     public colorNames[] arms; 
     public colorNames[] legs;
+    public colorNames[] eyebrow;
 
     [Serializable]
     public class ColorsData

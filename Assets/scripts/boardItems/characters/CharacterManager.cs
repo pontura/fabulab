@@ -12,6 +12,7 @@ namespace BoardItems.Characters
         [SerializeField] BodyPart[] bodyParts;
         [SerializeField] SpriteRenderer[] arms;
         [SerializeField] SpriteRenderer[] legs;
+        [SerializeField] SpriteRenderer[] eyebrows;
 
         private void Awake()
         {
@@ -19,6 +20,7 @@ namespace BoardItems.Characters
             Events.OnCharacterExpression += OnCharacterExpression;
             Events.ColorizeArms += ColorizeArms;
             Events.ColorizeLegs += ColorizeLegs;
+            Events.ColorizeEyebrows += ColorizeEyebrows;
             Events.Zoom += Zoom;
         }
         private void OnDestroy()
@@ -27,6 +29,7 @@ namespace BoardItems.Characters
             Events.OnCharacterExpression -= OnCharacterExpression;
             Events.ColorizeArms -= ColorizeArms;
             Events.ColorizeLegs -= ColorizeLegs;
+            Events.ColorizeEyebrows -= ColorizeEyebrows;
             Events.Zoom -= Zoom;
         }
 
@@ -54,6 +57,14 @@ namespace BoardItems.Characters
         private void ColorizeLegs(PalettesManager.colorNames colorName)
         {
             foreach (SpriteRenderer sr in legs)
+            {
+                List<Color> allColors = Data.Instance.palettesManager.GetColorsByName(colorName);
+                sr.color = allColors[0];
+            }
+        }
+        private void ColorizeEyebrows(PalettesManager.colorNames colorName)
+        {
+            foreach (SpriteRenderer sr in eyebrows)
             {
                 List<Color> allColors = Data.Instance.palettesManager.GetColorsByName(colorName);
                 sr.color = allColors[0];
