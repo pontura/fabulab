@@ -1,8 +1,9 @@
-﻿using UI;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using UI;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
@@ -397,9 +398,9 @@ namespace BoardItems
                         sd.galleryID = int.Parse(iData[0]);
                         sd.id = int.Parse(iData[1]);
                         Debug.Log("# " + iData[1]);
-                        sd.position = new Vector3(float.Parse(iData[2]), float.Parse(iData[3]), float.Parse(iData[4]));
-                        sd.rotation = new Vector3(0f, 0f, float.Parse(iData[5]));
-                        sd.scale = new Vector3(float.Parse(iData[6]), float.Parse(iData[6]), 0f);
+                        sd.position = new Vector3(float.Parse(iData[2], CultureInfo.InvariantCulture), float.Parse(iData[3], CultureInfo.InvariantCulture), float.Parse(iData[4], CultureInfo.InvariantCulture));
+                        sd.rotation = new Vector3(0f, 0f, float.Parse(iData[5], CultureInfo.InvariantCulture));
+                        sd.scale = new Vector3(float.Parse(iData[6], CultureInfo.InvariantCulture), float.Parse(iData[6], CultureInfo.InvariantCulture), 0f);
                         sd.color = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), iData[7]);
                         sd.anim = (AnimationsManager.anim)Enum.Parse(typeof(AnimationsManager.anim), iData[8]);
                         int newPartID = int.Parse(iData[9]);
@@ -458,9 +459,9 @@ namespace BoardItems
                         CharacterData.SavedIData sd = new CharacterData.SavedIData();
                         sd.galleryID = int.Parse(iData[0]);
                         sd.id = int.Parse(iData[1]);
-                        sd.position = new Vector3(float.Parse(iData[2]), float.Parse(iData[3]), float.Parse(iData[4]));
+                        sd.position = new Vector3(float.Parse(iData[2], CultureInfo.InvariantCulture), float.Parse(iData[3], CultureInfo.InvariantCulture), float.Parse(iData[4], CultureInfo.InvariantCulture));
                         sd.rotation = new Vector3(0f, 0f, float.Parse(iData[5]));
-                        sd.scale = new Vector3(float.Parse(iData[6]), float.Parse(iData[6]), 0f);
+                        sd.scale = new Vector3(float.Parse(iData[6], CultureInfo.InvariantCulture), float.Parse(iData[6], CultureInfo.InvariantCulture), 0f);
                         sd.color = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), iData[7]);
                         sd.anim = (AnimationsManager.anim)Enum.Parse(typeof(AnimationsManager.anim), iData[8]);
                         int newPartID = int.Parse(iData[9]);
