@@ -50,7 +50,7 @@ namespace UI
         {
             if(partActive == CharacterData.parts.none)
                 return;
-            if (IsPointerOverUIObject()) return;
+            
 #if UNITY_EDITOR
             UpdateMouseInput();
 #elif UNITY_ANDROID || UNITY_IOS
@@ -164,6 +164,7 @@ namespace UI
         }
         void OnPress()
         {
+            if (IsPointerOverUIObject()) return;
             AudioManager.Instance.sfxManager.StopLoop();
             clickPosition = Input.mousePosition;
             switch (state)
