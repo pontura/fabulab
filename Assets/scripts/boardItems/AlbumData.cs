@@ -295,19 +295,19 @@ namespace BoardItems
 
         void PersistThumbLocal(CharacterData wd)
         {
-            if (wd.id == "")
-                wd.id = System.DateTime.Now.ToString("yyyyMMddHHmmss");
+            //if (wd.id == "")
+            //    wd.id = System.DateTime.Now.ToString("yyyyMMddHHmmss");
 
-            byte[] bytes = wd.thumb.EncodeToPNG();
-            string folder = Path.Combine(Application.persistentDataPath, "Thumbs");
-            if (!Directory.Exists(folder))
-                Directory.CreateDirectory(folder);
-            string filename = Path.Combine(folder, "thumb_" + wd.id + ".png");
+            //byte[] bytes = wd.thumb.EncodeToPNG();
+            //string folder = Path.Combine(Application.persistentDataPath, "Thumbs");
+            //if (!Directory.Exists(folder))
+            //    Directory.CreateDirectory(folder);
+            //string filename = Path.Combine(folder, "thumb_" + wd.id + ".png");
 
-            System.IO.File.WriteAllBytes(filename, bytes);
-            Debug.Log(string.Format("thumb to: {0}", filename));
+            //System.IO.File.WriteAllBytes(filename, bytes);
+            //Debug.Log(string.Format("thumb to: {0}", filename));
 
-            OpenCharacterDetail(wd);
+            //OpenCharacterDetail(wd);
 
            // PersistWorkDataLocal(wd.id, wd);
         }
@@ -440,67 +440,67 @@ namespace BoardItems
         {
             return float.Parse(f, CultureInfo.InvariantCulture);
         }
-        IEnumerator LoadWorks()
-        {
-            string[] workIDs = PlayerPrefs.GetString("WorksIds").Split(fieldSeparator[0]);
-            for (int i = 0; i < workIDs.Length - 1; i++)
-            {
-                CharacterData wd = new CharacterData();
-                wd.id = workIDs[i];
-                string[] wData = PlayerPrefs.GetString("Work_" + workIDs[i]).Split(fieldSeparator[0]);
-                print("total art: " + wData.Length);
+        //IEnumerator LoadWorks()
+        //{
+        //    string[] workIDs = PlayerPrefs.GetString("WorksIds").Split(fieldSeparator[0]);
+        //    for (int i = 0; i < workIDs.Length - 1; i++)
+        //    {
+        //        CharacterData wd = new CharacterData();
+        //        wd.id = workIDs[i];
+        //        string[] wData = PlayerPrefs.GetString("Work_" + workIDs[i]).Split(fieldSeparator[0]);
+        //        print("total art: " + wData.Length);
 
-                if (wData[0] != "")
-                {
-                    wd.bgColorName = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[0]);
+        //        if (wData[0] != "")
+        //        {
+        //            wd.bgColorName = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[0]);
 
-                    List<CharacterData.SavedIData> items = new List<CharacterData.SavedIData>();
-                    string[] itemsData = wData[1].Split(itemSeparator[0]);
+        //            List<CharacterData.SavedIData> items = new List<CharacterData.SavedIData>();
+        //            string[] itemsData = wData[1].Split(itemSeparator[0]);
 
-                    int totalParts = 0;
-                    int partID = 0;
-                    for (int j = 0; j < itemsData.Length; j++)
-                    {
-                        string[] iData = itemsData[j].Split(itemFieldSeparator[0]);
+        //            int totalParts = 0;
+        //            int partID = 0;
+        //            for (int j = 0; j < itemsData.Length; j++)
+        //            {
+        //                string[] iData = itemsData[j].Split(itemFieldSeparator[0]);
 
-                        int num = 0;
-                        foreach (string s in iData)
-                        {
-                            Debug.Log(num + "___ " + s);
-                            num++;
-                        }
-                        CharacterData.SavedIData sd = new CharacterData.SavedIData();
-                        sd.galleryID = int.Parse(iData[0]);
-                        sd.id = int.Parse(iData[1]);
-                        sd.position = new Vector3(SetFloat(iData[2]), SetFloat(iData[3]), SetFloat(iData[4]));
-                        sd.rotation = new Vector3(0f, 0f, SetFloat(iData[5]));
-                        sd.scale = new Vector3(SetFloat(iData[6]), SetFloat(iData[6]), 0f);
-                        sd.color = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), iData[7]);
-                        sd.anim = (AnimationsManager.anim)Enum.Parse(typeof(AnimationsManager.anim), iData[8]);
-                        int newPartID = int.Parse(iData[9]);
-                        if (newPartID != partID)
-                            totalParts++;
-                        partID = newPartID;
-                        sd.part = partID;
-                        print("new partID " + partID + " totalParts " + totalParts);
-                        items.Add(sd);
-                    }
-                    wd.items = items;
+        //                int num = 0;
+        //                foreach (string s in iData)
+        //                {
+        //                    Debug.Log(num + "___ " + s);
+        //                    num++;
+        //                }
+        //                CharacterData.SavedIData sd = new CharacterData.SavedIData();
+        //                sd.galleryID = int.Parse(iData[0]);
+        //                sd.id = int.Parse(iData[1]);
+        //                sd.position = new Vector3(SetFloat(iData[2]), SetFloat(iData[3]), SetFloat(iData[4]));
+        //                sd.rotation = new Vector3(0f, 0f, SetFloat(iData[5]));
+        //                sd.scale = new Vector3(SetFloat(iData[6]), SetFloat(iData[6]), 0f);
+        //                sd.color = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), iData[7]);
+        //                sd.anim = (AnimationsManager.anim)Enum.Parse(typeof(AnimationsManager.anim), iData[8]);
+        //                int newPartID = int.Parse(iData[9]);
+        //                if (newPartID != partID)
+        //                    totalParts++;
+        //                partID = newPartID;
+        //                sd.part = partID;
+        //                print("new partID " + partID + " totalParts " + totalParts);
+        //                items.Add(sd);
+        //            }
+        //            wd.items = items;
 
-                    string folder = Path.Combine(Application.persistentDataPath, "Thumbs");
-                    if (!Directory.Exists(folder))
-                        Directory.CreateDirectory(folder);
-                    string filename = Path.Combine(folder, "thumb_" + workIDs[i] + ".png");
-                    wd.thumb = TextureUtils.LoadLocal(filename);
-                    print("partID " + partID + " totalParts " + totalParts);
-                    if (totalParts > 1) //is full character:
-                        characters.Add(wd);
-                    else //is preset part:
-                        AddPart(partID, wd);
-                }
-            }
-            yield return null;
-        }
+        //            string folder = Path.Combine(Application.persistentDataPath, "Thumbs");
+        //            if (!Directory.Exists(folder))
+        //                Directory.CreateDirectory(folder);
+        //            string filename = Path.Combine(folder, "thumb_" + workIDs[i] + ".png");
+        //            wd.thumb = TextureUtils.LoadLocal(filename);
+        //            print("partID " + partID + " totalParts " + totalParts);
+        //            if (totalParts > 1) //is full character:
+        //                characters.Add(wd);
+        //            else //is preset part:
+        //                AddPart(partID, wd);
+        //        }
+        //    }
+        //    yield return null;
+        //}
 
         /*WorkData ParseWork() {
 
