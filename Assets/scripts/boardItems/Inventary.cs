@@ -12,10 +12,10 @@ namespace BoardItems
         Items items;
         public void Reset()
         {
-            StopAllCoroutines();
+            //StopAllCoroutines();
             //if (items != null)
             //    Utils.RemoveAllChildsIn(items.container);
-            dragAndDropUI.Reset();
+           // dragAndDropUI.Reset();
         }
         public void Init(Items items, int galleryID, GameObject galleryAsset, bool editMode, System.Action OnAllLoaded)
         {
