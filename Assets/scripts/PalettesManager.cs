@@ -42,6 +42,7 @@ public class PalettesManager : MonoBehaviour
 		MARRON2,
 		VIOLETA,
 		GRIS,
+        TRANSPARENTE,
         BLANCO_NEGRO,
 		NEGRO_BLANCO,
 		AMARILLO_NEGRO,
