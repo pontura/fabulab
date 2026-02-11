@@ -13,8 +13,8 @@ namespace BoardItems
         public void Reset()
         {
             StopAllCoroutines();
-            if (items != null)
-                Utils.RemoveAllChildsIn(items.container);
+            //if (items != null)
+            //    Utils.RemoveAllChildsIn(items.container);
             dragAndDropUI.Reset();
         }
         public void Init(Items items, int galleryID, GameObject galleryAsset, bool editMode, System.Action OnAllLoaded)

@@ -206,10 +206,10 @@ namespace BoardItems
                     sd.color = iInScene.data.colorName;
                     sd.galleryID = iInScene.data.galleryID;
                     wd.items.Add(sd);
+                    bool mirrorDeleted = UIManager.Instance.boardUI.items.Delete(iInScene);
+                    if (mirrorDeleted)
+                        i++;
                 }
-                bool mirrorDeleted = UIManager.Instance.boardUI.items.Delete(iInScene);
-                if (mirrorDeleted)
-                    i++;
                 i++;
             }
             print("SAVE data: totalparts" + totalParts + " lastPArtID: "+ partID);

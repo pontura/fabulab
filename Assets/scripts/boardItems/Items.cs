@@ -50,13 +50,20 @@ namespace BoardItems
             while (i > 0)
             {
                 ItemInScene itemInScene = all[i - 1];
-                bool wasMirrorer = Delete(itemInScene);
-                if (wasMirrorer) i--;
+                if (itemInScene.data.part > 0)
+                {
+                    bool wasMirrorer = Delete(itemInScene);
+                    if (wasMirrorer)
+                    {
+                        all.Remove(all[i - 1]);
+                        i--;
+                    }
+                    all.Remove(all[i - 1]);
+                }
                 i--;
             }
-            all.Clear();
             inventary.Reset();
-            Utils.RemoveAllChildsIn(container);
+            //Utils.RemoveAllChildsIn(container);
         }
         public void ResetAllAnims()
         {
@@ -225,7 +232,7 @@ namespace BoardItems
                 if (thisPart == CharacterData.parts.FOOT_LEFT)
                     thisPart = CharacterData.parts.FOOT;
 
-                if (thisPart != exludePart)
+                if (thisPart != 0 && thisPart != exludePart)
                 {
                     bool mirrorDeleted = Delete(itemInScene);
                     if (mirrorDeleted) i--;
