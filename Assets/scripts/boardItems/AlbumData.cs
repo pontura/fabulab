@@ -307,25 +307,25 @@ namespace BoardItems
            // PersistWorkDataLocal(wd.id, wd);
         }
 
-        void PersistWorkDataLocal(string id, CharacterData wd)
-        {
-            string workData = "";
-            workData += Enum.GetName(typeof(PalettesManager.colorNames), wd.bgColorName) + fieldSeparator;
-            for (int i = 0; i < wd.items.Count; i++)
-            {
-                workData += wd.items[i].galleryID + itemFieldSeparator + wd.items[i].id + itemFieldSeparator + wd.items[i].position.x + itemFieldSeparator +
-                wd.items[i].position.y + itemFieldSeparator + wd.items[i].position.z + itemFieldSeparator + wd.items[i].rotation.z +
-                itemFieldSeparator + wd.items[i].scale.x +
-                itemFieldSeparator + Enum.GetName(typeof(PalettesManager.colorNames), wd.items[i].color) +
-                itemFieldSeparator + Enum.GetName(typeof(AnimationsManager.anim), wd.items[i].anim) +
-                itemFieldSeparator + wd.items[i].part;
-                if (i < wd.items.Count - 1)
-                    workData += itemSeparator;
-            }
+        //void PersistWorkDataLocal(string id, CharacterData wd)
+        //{
+        //    string workData = "";
+        //    workData += Enum.GetName(typeof(PalettesManager.colorNames), wd.bgColorName) + fieldSeparator;
+        //    for (int i = 0; i < wd.items.Count; i++)
+        //    {
+        //        workData += wd.items[i].galleryID + itemFieldSeparator + wd.items[i].id + itemFieldSeparator + wd.items[i].position.x + itemFieldSeparator +
+        //        wd.items[i].position.y + itemFieldSeparator + wd.items[i].position.z + itemFieldSeparator + wd.items[i].rotation.z +
+        //        itemFieldSeparator + wd.items[i].scale.x +
+        //        itemFieldSeparator + Enum.GetName(typeof(PalettesManager.colorNames), wd.items[i].color) +
+        //        itemFieldSeparator + Enum.GetName(typeof(AnimationsManager.anim), wd.items[i].anim) +
+        //        itemFieldSeparator + wd.items[i].part;
+        //        if (i < wd.items.Count - 1)
+        //            workData += itemSeparator;
+        //    }
 
-            PlayerPrefs.SetString("Work_" + id, workData);
-            PersistWorksIds();
-        }
+        //    PlayerPrefs.SetString("Work_" + id, workData);
+        //    PersistWorksIds();
+        //}
 
         void PersistWorksIds()
         {

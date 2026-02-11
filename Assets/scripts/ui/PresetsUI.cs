@@ -21,6 +21,7 @@ namespace UI
         int characterEditorID = 0;
         public void Init()
         {
+            isPreset = true;
             gameObject.SetActive(true);
             CharacterAnims.anims anim = CharacterAnims.anims.edit;
             Events.EditMode(true);
@@ -32,7 +33,7 @@ namespace UI
         {
             Events.OnPresetReset(); // Resetea si hay un preset abierto
             print(" preset clicked:" + id);
-            isPreset = true; 
+            //isPreset = true; 
             SetToggle();
             id += 1;
             lastPartID = id;
@@ -41,6 +42,7 @@ namespace UI
             if (id > 4) id += 2; // porque las manos y los pies ocupan 2 ids:
             if(id == 9) // arms and legs
             {
+                isPreset = true;
                 presetsDragAndDropToggleGO.SetActive(false);
                 Events.Zoom(0, false);
                 presetsSelector.SetOn(true, 9);
@@ -49,7 +51,10 @@ namespace UI
             {
                 CharacterData.parts part = (CharacterData.parts)id;
                 Events.Zoom(part, false);
-                presetsSelector.SetOn(true, id);
+                if (isPreset)
+                    presetsSelector.SetOn(true, id);
+                else
+                    DragAndDrop();
             }
                 
         }
