@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using UI;
 using UnityEngine;
+using UnityEngine.Windows;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
 
@@ -240,9 +241,9 @@ namespace BoardItems
             workData += Enum.GetName(typeof(PalettesManager.colorNames), wd.bgColorName) + fieldSeparator;
             for (int i = 0; i < wd.items.Count; i++)
             {
-                workData += wd.items[i].galleryID + itemFieldSeparator + wd.items[i].id + itemFieldSeparator + wd.items[i].position.x + itemFieldSeparator +
-                wd.items[i].position.y + itemFieldSeparator + wd.items[i].position.z + itemFieldSeparator + wd.items[i].rotation.z +
-                itemFieldSeparator + wd.items[i].scale.x +
+                workData += wd.items[i].galleryID + itemFieldSeparator + wd.items[i].id + itemFieldSeparator + SetRealFloat(wd.items[i].position.x) + itemFieldSeparator +
+                SetRealFloat(wd.items[i].position.y) + itemFieldSeparator + SetRealFloat(wd.items[i].position.z) + itemFieldSeparator + SetRealFloat(wd.items[i].rotation.z) +
+                itemFieldSeparator + SetRealFloat(wd.items[i].scale.x) +
                 itemFieldSeparator + Enum.GetName(typeof(PalettesManager.colorNames), wd.items[i].color) +
                 itemFieldSeparator + Enum.GetName(typeof(AnimationsManager.anim), wd.items[i].anim) +
                 itemFieldSeparator + wd.items[i].part;
@@ -252,7 +253,11 @@ namespace BoardItems
             Debug.Log("#workData: " + workData);
             return workData;
         }
-
+        string SetRealFloat(float f)
+        {
+            string result = f.ToString("F4", CultureInfo.InvariantCulture);
+            return result;
+        }
         void OnCharacterSavedToServer(bool succes, string id)
         {
             currentCharacter.id = id;
@@ -403,9 +408,9 @@ namespace BoardItems
                         sd.galleryID = int.Parse(iData[0]);
                         sd.id = int.Parse(iData[1]);
                         Debug.Log("# " + iData[1]);
-                        sd.position = new Vector3(float.Parse(iData[2], CultureInfo.InvariantCulture), float.Parse(iData[3], CultureInfo.InvariantCulture), float.Parse(iData[4], CultureInfo.InvariantCulture));
-                        sd.rotation = new Vector3(0f, 0f, float.Parse(iData[5], CultureInfo.InvariantCulture));
-                        sd.scale = new Vector3(float.Parse(iData[6], CultureInfo.InvariantCulture), float.Parse(iData[6], CultureInfo.InvariantCulture), 0f);
+                        sd.position = new Vector3(SetFloat(iData[2]), SetFloat(iData[3]), SetFloat(iData[4]));
+                        sd.rotation = new Vector3(0f, 0f, SetFloat(iData[5]));
+                        sd.scale = new Vector3(SetFloat(iData[6]), SetFloat(iData[6]), 0f);
                         sd.color = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), iData[7]);
                         sd.anim = (AnimationsManager.anim)Enum.Parse(typeof(AnimationsManager.anim), iData[8]);
                         int newPartID = int.Parse(iData[9]);
@@ -431,7 +436,10 @@ namespace BoardItems
 
             LoadPartMetadataFromServer();
         }
-
+        float SetFloat(string f)
+        {
+            return float.Parse(f, CultureInfo.InvariantCulture);
+        }
         IEnumerator LoadWorks()
         {
             string[] workIDs = PlayerPrefs.GetString("WorksIds").Split(fieldSeparator[0]);
@@ -464,9 +472,9 @@ namespace BoardItems
                         CharacterData.SavedIData sd = new CharacterData.SavedIData();
                         sd.galleryID = int.Parse(iData[0]);
                         sd.id = int.Parse(iData[1]);
-                        sd.position = new Vector3(float.Parse(iData[2], CultureInfo.InvariantCulture), float.Parse(iData[3], CultureInfo.InvariantCulture), float.Parse(iData[4], CultureInfo.InvariantCulture));
-                        sd.rotation = new Vector3(0f, 0f, float.Parse(iData[5]));
-                        sd.scale = new Vector3(float.Parse(iData[6], CultureInfo.InvariantCulture), float.Parse(iData[6], CultureInfo.InvariantCulture), 0f);
+                        sd.position = new Vector3(SetFloat(iData[2]), SetFloat(iData[3]), SetFloat(iData[4]));
+                        sd.rotation = new Vector3(0f, 0f, SetFloat(iData[5]));
+                        sd.scale = new Vector3(SetFloat(iData[6]), SetFloat(iData[6]), 0f);
                         sd.color = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), iData[7]);
                         sd.anim = (AnimationsManager.anim)Enum.Parse(typeof(AnimationsManager.anim), iData[8]);
                         int newPartID = int.Parse(iData[9]);
