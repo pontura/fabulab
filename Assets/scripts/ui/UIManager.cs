@@ -41,6 +41,13 @@ namespace UI
         private void Start()
         {
             Init();
+            Invoke("InitGalleryDelayed", 0.1f);
+        }
+        void InitGalleryDelayed() // to-do inicia los items:
+        {
+            GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(1);
+           // InitGallery(gd, true, null);
+            Events.InitGallery(gd, true, null);
         }
         void Init()
         {

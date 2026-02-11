@@ -6,7 +6,7 @@ namespace UI.MainApp.Home.User
 {
     public class UserCharactersScreen : MonoBehaviour
     {
-        public GameObject workBtn_prefab;
+        public CharacterSelectorBtn workBtn_prefab;
         public Transform worksContainer;
 
         int artID = 0;
@@ -34,21 +34,30 @@ namespace UI.MainApp.Home.User
         
         void LoadNext()
         {
-            print("LoadNext " + artID);
-            if (artID >= Data.Instance.albumData.characters.Count) return;
-            AlbumData.CharacterData wd = Data.Instance.albumData.characters[artID];
-            artID++;
-            if (wd.thumb != null)
+           // print("LoadNext " + artID);
+           // if (artID >= Data.Instance.albumData.characters.Count) return;
+            foreach(AlbumData.CharacterData cd in Data.Instance.albumData.characters)
             {
-                //if (Data.Instance.galeriasData.ExistGallery(wd.galleryID))
-                //{
-                    GameObject go = Instantiate(workBtn_prefab, worksContainer);
-                    print("go " + go);
-                    RawImage rm = go.GetComponentInChildren<RawImage>();
-                    UIManager.Instance.boardUI.GenerateThumb(wd, rm, LoadNext);
-                    go.GetComponent<Button>().onClick.AddListener(() => OpenWork(wd.id));
-                //}
+                CharacterSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
+                print("go " + go);
+                go.Init(cd);
+                //RawImage rm = go.GetComponentInChildren<RawImage>();
+               // UIManager.Instance.boardUI.GenerateThumb(wd, rm, LoadNext);
+                go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
             }
+            //AlbumData.CharacterData wd = Data.Instance.albumData.characters[artID];
+            //artID++;
+            //if (wd.thumb != null)
+            //{
+            //    //if (Data.Instance.galeriasData.ExistGallery(wd.galleryID))
+            //    //{
+            //        GameObject go = Instantiate(workBtn_prefab, worksContainer);
+            //        print("go " + go);
+            //        //RawImage rm = go.GetComponentInChildren<RawImage>();
+            //        //UIManager.Instance.boardUI.GenerateThumb(wd, rm, LoadNext);
+            //        go.GetComponent<Button>().onClick.AddListener(() => OpenWork(wd.id));
+            //    //}
+            //}
         }
         public void DuplicateWork(int PakaPakaObjectID)
         {

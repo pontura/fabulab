@@ -148,63 +148,8 @@ namespace UI
         public void LoadPreset(AlbumData.CharacterData wd)
         {
             items.DeleteInPart(wd.items[0].part);
-           // List<int> galleries = new List<int>();
-            //foreach (AlbumData.CharacterData.SavedIData item in wd.items)
-            //{
-            //    if (!galleries.Contains(item.galleryID))
-            //        galleries.Add(item.galleryID);
-            //}
-            //UIManager.Instance.gallerySelectorUI.SelectGallery(galleries);
             OpenWork(wd);
         }
-        [SerializeField] RenderTexture rt;
-        public void GenerateThumb(AlbumData.CharacterData wd, RawImage targetRawImage, System.Action OnReady)
-        {
-            items.DeleteAll();
-            //UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID, false);
-            foreach (AlbumData.CharacterData.SavedIData itemData in wd.items)
-            {
-                ItemData newItem = CreateItem(itemData, false);
-            }
-            StartCoroutine(GenerateThumbForRawImage(wd, targetRawImage, OnReady));
-        }
-
-        public Vector2Int thumbSize = new Vector2Int(128, 128);
-
-
-        public IEnumerator GenerateThumbForRawImage(AlbumData.CharacterData wd, RawImage targetRawImage, System.Action OnReady)
-        {
-            // 1️⃣ Crear RenderTexture temporal
-            RenderTexture rt = new RenderTexture(thumbSize.x, thumbSize.y, 24, RenderTextureFormat.ARGB32);
-            rt.Create();
-
-            cam.targetTexture = rt;
-
-            yield return new WaitForEndOfFrame();
-
-            // 2️⃣ Capturar frame en un Texture2D independiente
-            Texture2D tex = new Texture2D(thumbSize.x, thumbSize.y, TextureFormat.RGBA32, false);
-            RenderTexture.active = rt;
-            tex.ReadPixels(new Rect(0, 0, thumbSize.x, thumbSize.y), 0, 0);
-            tex.Apply(); // ✅ Ahora tex es una imagen independiente en memoria
-
-            // 3️⃣ Asignamos la textura al RawImage
-            targetRawImage.texture = tex;
-
-            // 4️⃣ DESCONECTAR la cámara del RenderTexture
-            cam.targetTexture = null;
-            RenderTexture.active = null;
-
-            // 5️⃣ Liberar SOLO el RenderTexture (¡NO destruir el Texture2D!)
-            rt.Release();
-            Destroy(rt); 
-            yield return new WaitForEndOfFrame();
-            OnReady();
-        }
-
-
-
-
         ItemData CreateItem(AlbumData.CharacterData.SavedIData itemData, bool isInScene)
         {
             ItemData originalGO = Data.Instance.galeriasData.GetItem(itemData.galleryID, itemData.id);

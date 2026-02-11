@@ -207,7 +207,7 @@ namespace Yaguar.StoryMaker.DB
                 }
             });
             
-            Debug.Log("Server: LoadUserCharacterMetadataFromServer");
+            Debug.Log("Server: LoadUserCharacterMetadataFromServer _uid: " + _uid);
             //Debug.Log(url);
         }
         

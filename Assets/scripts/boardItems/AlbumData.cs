@@ -44,6 +44,11 @@ namespace BoardItems
             public List<SavedIData> items;
 
             public Sprite GetSprite() {
+                if(thumb == null)
+                {
+                    Debug.LogError("No hay thumb para character id: " + id);
+                    return null;
+                }
                 return Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), Vector2.zero);
             }
 
@@ -226,7 +231,7 @@ namespace BoardItems
                 }
             }            
 
-            PersistThumbLocal(wd);
+            //PersistThumbLocal(wd);
             // SetPkpkShared(wd, false);
         }
         string EncodeCharacterData(CharacterData wd)
@@ -299,7 +304,7 @@ namespace BoardItems
 
             OpenCharacterDetail(wd);
 
-            PersistWorkDataLocal(wd.id, wd);
+           // PersistWorkDataLocal(wd.id, wd);
         }
 
         void PersistWorkDataLocal(string id, CharacterData wd)

@@ -199,14 +199,7 @@ namespace BoardItems
                 inventary.Init(this, gallery.id, gallery.gallery, editMode, OnAllLoaded);
             }
         }
-        public void AddToInventary(ItemData itemData)
-        {
-            print("____________AddToInventary " + itemData);
-            ItemData newItem = InstantiateNewItem(itemData.galleryID, itemData);
-            newItem.transform.localScale = itemData.scale;
-            newItem.transform.position = container.transform.position;
-            inventary.AddItem(newItem, new Vector3(10, 10, 0));
-        }
+       
         ItemData InstantiateNewItem(int galleryID, ItemData itemData)
         {
             ItemData originalGO = Data.Instance.galeriasData.GetItem(galleryID, itemData.id);
