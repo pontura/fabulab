@@ -14,6 +14,14 @@ namespace BoardItems.Characters
         [SerializeField] SpriteRenderer[] legs;
         [SerializeField] SpriteRenderer[] eyebrows;
 
+        [SerializeField] PalettesManager.colorNames armsColor;
+        [SerializeField] PalettesManager.colorNames legsColor;
+        [SerializeField] PalettesManager.colorNames eyebrowsColor;
+
+        public PalettesManager.colorNames GetArmsColor() { return armsColor; }
+        public PalettesManager.colorNames GetLegsColor() { return legsColor; }
+        public PalettesManager.colorNames GetEyebrowsColor() { return eyebrowsColor; }
+
         private void Awake()
         {
             Events.OnCharacterAnim += OnCharacterAnim;
@@ -48,6 +56,7 @@ namespace BoardItems.Characters
 
         private void ColorizeArms(PalettesManager.colorNames colorName)
         {
+            this.armsColor = colorName;
             foreach (SpriteRenderer sr in arms)
             {
                 List<Color> allColors = Data.Instance.palettesManager.GetColorsByName(colorName);
@@ -56,6 +65,7 @@ namespace BoardItems.Characters
         }
         private void ColorizeLegs(PalettesManager.colorNames colorName)
         {
+            this.legsColor = colorName;
             foreach (SpriteRenderer sr in legs)
             {
                 List<Color> allColors = Data.Instance.palettesManager.GetColorsByName(colorName);
@@ -64,6 +74,7 @@ namespace BoardItems.Characters
         }
         private void ColorizeEyebrows(PalettesManager.colorNames colorName)
         {
+            this.eyebrowsColor = colorName;
             foreach (SpriteRenderer sr in eyebrows)
             {
                 List<Color> allColors = Data.Instance.palettesManager.GetColorsByName(colorName);

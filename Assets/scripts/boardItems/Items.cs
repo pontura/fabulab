@@ -17,7 +17,7 @@ namespace BoardItems
         public SpriteRenderer bg;
         public Transform container;
         [SerializeField] CharacterManager characterManager;
-
+        public CharacterManager CharacterManager { get { return characterManager; } }
         private void Awake()
         {
             characterManager.Init();

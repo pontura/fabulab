@@ -199,7 +199,9 @@ namespace UI
                     Events.AnimateItem(animData);
                 }
             }
-            cam.backgroundColor = Data.Instance.palettesManager.GetColor(wd.bgColorName);
+            Events.ColorizeArms( wd.armsColor );
+            Events.ColorizeLegs( wd.legsColor );
+            Events.ColorizeEyebrows( wd.eyebrowsColor );
         }
 
     }

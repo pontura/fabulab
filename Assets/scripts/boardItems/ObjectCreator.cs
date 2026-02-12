@@ -18,7 +18,6 @@ namespace BoardItems
                 AlbumData.CharacterData wData = new AlbumData.CharacterData();
                 wData.items = new List<AlbumData.CharacterData.SavedIData>();
                 wData.id = id.ToString();
-                wData.isPakaPakaArt = true;
                 foreach (ItemData itemData in go.GetComponentsInChildren<ItemData>())
                 {
                     AlbumData.CharacterData.SavedIData s = SetItemData(itemData);

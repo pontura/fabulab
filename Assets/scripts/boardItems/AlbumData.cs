@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BoardItems.Characters;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -38,10 +39,11 @@ namespace BoardItems
 
         [Serializable]
         public class CharacterData {
-            public bool isPakaPakaArt;
             public string id;
             public Texture2D thumb;
-            public PalettesManager.colorNames bgColorName;
+            public PalettesManager.colorNames armsColor;
+            public PalettesManager.colorNames legsColor;
+            public PalettesManager.colorNames eyebrowsColor;
             public List<SavedIData> items;
 
             public Sprite GetSprite() {
@@ -179,10 +181,13 @@ namespace BoardItems
             }
             else
                 wd = GetCharacter(currentID);
+            CharacterManager cm = UIManager.Instance.boardUI.items.CharacterManager;
+
+            wd.armsColor = cm.GetArmsColor();
+            wd.legsColor = cm.GetLegsColor();
+            wd.eyebrowsColor = cm.GetEyebrowsColor();
 
             wd.thumb = tex;
-            // wd.bgColorName = Data.Instance.palettesManager.GetColorName(UIManager.Instance.boardUI.cam.backgroundColor);
-            wd.bgColorName = PalettesManager.colorNames.BLANCO;//To-DO
             wd.items = new List<CharacterData.SavedIData>();
             int totalItems = UIManager.Instance.boardUI.items.all.Count;
             int totalParts = 0;
@@ -238,7 +243,9 @@ namespace BoardItems
         string EncodeCharacterData(CharacterData wd)
         {
             string workData = "";
-            workData += Enum.GetName(typeof(PalettesManager.colorNames), wd.bgColorName) + fieldSeparator;
+            workData += Enum.GetName(typeof(PalettesManager.colorNames), wd.armsColor) + fieldSeparator;
+            workData += Enum.GetName(typeof(PalettesManager.colorNames), wd.legsColor) + fieldSeparator;
+            workData += Enum.GetName(typeof(PalettesManager.colorNames), wd.eyebrowsColor) + fieldSeparator;
             for (int i = 0; i < wd.items.Count; i++)
             {
                 workData += wd.items[i].galleryID + itemFieldSeparator + wd.items[i].id + itemFieldSeparator + SetRealFloat(wd.items[i].position.x) + itemFieldSeparator +
@@ -293,8 +300,8 @@ namespace BoardItems
             //Events.ResetItems();
         }
 
-        void PersistThumbLocal(CharacterData wd)
-        {
+      //  void PersistThumbLocal(CharacterData wd)
+     //   {
             //if (wd.id == "")
             //    wd.id = System.DateTime.Now.ToString("yyyyMMddHHmmss");
 
@@ -310,7 +317,7 @@ namespace BoardItems
             //OpenCharacterDetail(wd);
 
            // PersistWorkDataLocal(wd.id, wd);
-        }
+     //   }
 
         //void PersistWorkDataLocal(string id, CharacterData wd)
         //{
@@ -332,26 +339,26 @@ namespace BoardItems
         //    PersistWorksIds();
         //}
 
-        void PersistWorksIds()
-        {
-            string workIDs = "";
-            foreach (CharacterData wd in characters)
-                workIDs += wd.id + fieldSeparator;
-            foreach (CharacterData wd in heads)
-                workIDs += wd.id + fieldSeparator;
-            foreach (CharacterData wd in bellies)
-                workIDs += wd.id + fieldSeparator;
-            foreach (CharacterData wd in hands)
-                workIDs += wd.id + fieldSeparator;
-            foreach (CharacterData wd in feet)
-                workIDs += wd.id + fieldSeparator;
-            foreach (CharacterData wd in hairs)
-                workIDs += wd.id + fieldSeparator;
-            foreach (CharacterData wd in faces)
-                workIDs += wd.id + fieldSeparator;
+        //void PersistWorksIds()
+        //{
+        //    string workIDs = "";
+        //    foreach (CharacterData wd in characters)
+        //        workIDs += wd.id + fieldSeparator;
+        //    foreach (CharacterData wd in heads)
+        //        workIDs += wd.id + fieldSeparator;
+        //    foreach (CharacterData wd in bellies)
+        //        workIDs += wd.id + fieldSeparator;
+        //    foreach (CharacterData wd in hands)
+        //        workIDs += wd.id + fieldSeparator;
+        //    foreach (CharacterData wd in feet)
+        //        workIDs += wd.id + fieldSeparator;
+        //    foreach (CharacterData wd in hairs)
+        //        workIDs += wd.id + fieldSeparator;
+        //    foreach (CharacterData wd in faces)
+        //        workIDs += wd.id + fieldSeparator;
 
-            PlayerPrefs.SetString("WorksIds", workIDs);
-        }        
+        //    PlayerPrefs.SetString("WorksIds", workIDs);
+        //}        
 
         public void OnUserLoadCharacterDataFromServer(List<CharacterMetaData> sfds)
         {
@@ -383,10 +390,12 @@ namespace BoardItems
                 print("total art: " + wData.Length);
                 if (wData[0] != "") {
                     Debug.Log("bgColorIndex: " + wData[0]);
-                    wd.bgColorName = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[0]);
+                    wd.armsColor = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[0]);
+                    wd.legsColor = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[1]);
+                    wd.eyebrowsColor = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[2]);
 
                     List<CharacterData.SavedIData> items = new List<CharacterData.SavedIData>();
-                    string[] itemsData = wData[1].Split(itemSeparator[0]);
+                    string[] itemsData = wData[3].Split(itemSeparator[0]);
                     // Debug.Log("ItemCount: " + itemsData.Length);
 
                     int totalParts = 0;
@@ -525,11 +534,11 @@ namespace BoardItems
 
         public void DeleteCharacter(string id)
         {
-            CharacterData wd = characters.Find(x => x.id == id);
-            characters.Remove(wd);
-            PlayerPrefs.DeleteKey("Work_" + id);
+            //CharacterData wd = characters.Find(x => x.id == id);
+            //characters.Remove(wd);
+           // PlayerPrefs.DeleteKey("Work_" + id);
             //  PlayerPrefs.DeleteKey("PkpkShared_" + id);
-            PersistWorksIds();
+           // PersistWorksIds();
         }
 
         //public void SetPkpkShared(string id, bool enable)
