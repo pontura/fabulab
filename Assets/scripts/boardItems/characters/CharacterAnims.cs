@@ -9,8 +9,8 @@ public class CharacterAnims : MonoBehaviour
     }
     public enum anims
     {
-        idle,
         edit,
+        idle,
         walk_right,
         idle_2,
         idle_3,
