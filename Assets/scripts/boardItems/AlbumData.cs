@@ -163,7 +163,7 @@ namespace BoardItems
             FirebaseStoryMakerDBManager.Instance.LoadBodypartPresetsFromServer(loadedParts, OnLoadPresetsFromServer);
         }
         
-        void OnLoadPresetsFromServer(int partId, Dictionary<string,string> data) {
+        void OnLoadPresetsFromServer(int partId, Dictionary<string,string> data) {            
             if (data != null) {
                 GetPreset(partId).Clear();
                 LoadCharactersFromServer(data);
@@ -391,12 +391,14 @@ namespace BoardItems
                 if (wData[0] != "") {
                     Debug.Log("bgColorIndex: " + wData[0]);
                     wd.armsColor = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[0]);
-                    wd.legsColor = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[1]);
-                    wd.eyebrowsColor = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[2]);
+                    if(wData.Length>2)
+                        wd.legsColor = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[1]);
+                    if (wData.Length > 3)
+                        wd.eyebrowsColor = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[2]);
 
                     List<CharacterData.SavedIData> items = new List<CharacterData.SavedIData>();
-                    string[] itemsData = wData[3].Split(itemSeparator[0]);
-                    // Debug.Log("ItemCount: " + itemsData.Length);
+                    string[] itemsData = wData[wData.Length-1].Split(itemSeparator[0]);
+                    Debug.Log("ItemCount: " + itemsData.Length);
 
                     int totalParts = 0;
                     int partID = 0;
@@ -414,15 +416,15 @@ namespace BoardItems
                         //    Debug.Log(iD.id + ": spriteNull");
                         CharacterData.SavedIData sd = new CharacterData.SavedIData();
                         Debug.Log("# " + iData[0]);
-                        sd.galleryID = int.Parse(iData[0]);
-                        sd.id = int.Parse(iData[1]);
+                        sd.galleryID = int.Parse(iData[0], System.Globalization.CultureInfo.InvariantCulture);
+                        sd.id = int.Parse(iData[1], System.Globalization.CultureInfo.InvariantCulture);
                         Debug.Log("# " + iData[1]);
                         sd.position = new Vector3(SetFloat(iData[2]), SetFloat(iData[3]), SetFloat(iData[4]));
                         sd.rotation = new Vector3(0f, 0f, SetFloat(iData[5]));
                         sd.scale = new Vector3(SetFloat(iData[6]), SetFloat(iData[6]), 0f);
                         sd.color = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), iData[7]);
                         sd.anim = (AnimationsManager.anim)Enum.Parse(typeof(AnimationsManager.anim), iData[8]);
-                        int newPartID = int.Parse(iData[9]);
+                        int newPartID = int.Parse(iData[9], System.Globalization.CultureInfo.InvariantCulture);
                         if (newPartID != partID)
                             totalParts++;
                         partID = newPartID;
