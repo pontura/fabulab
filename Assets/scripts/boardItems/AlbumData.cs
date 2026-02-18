@@ -516,7 +516,10 @@ namespace BoardItems
         /*WorkData ParseWork() {
 
         }*/
-
+        public string GetCurrent()
+        {
+            return currentID;
+        }
         public CharacterData GetCharacter(string id)
         {
             return characters.Find(x => x.id == id);

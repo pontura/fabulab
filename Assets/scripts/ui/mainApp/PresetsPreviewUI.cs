@@ -6,6 +6,9 @@ namespace UI.MainApp
     {
         public bool isPreview;
         [SerializeField] GameObject savePanel;
+        [SerializeField] GameObject savePartButton;
+        [SerializeField] GameObject saveNewCharacterButton;
+        [SerializeField] GameObject saveCharacterButton;
         [SerializeField] GameObject[] togglePreviewParts;
         [SerializeField] PresetsUI presetsUI;
         [SerializeField] PreviewUI previewUI;
@@ -16,6 +19,7 @@ namespace UI.MainApp
             switch (type)
             {
                 case UIManager.screenType.Creation:
+                    SetButtons();
                     Show(true);
                     savePanel.SetActive(false);
                     OnActivateUIButtons(false);
@@ -88,14 +92,21 @@ namespace UI.MainApp
         {
             UIManager.Instance.boardUI.SaveWork();
         }
+        public void SetButtons()
+        {
+            savePartButton.SetActive(Data.Instance.userData.isAdmin);
+            saveCharacterButton.SetActive(Data.Instance.albumData.GetCurrent() != "");
+        }
         public void Save()
         {
             savePanel.SetActive(false);
+            Data.Instance.albumData.SetCurrentID("");// Resetea si hay un character elegido.
             UIManager.Instance.boardUI.SaveWork();
         }
-        public void Replace()
+        public void Replace()// Guarda la version editada del personaje.
         {
             savePanel.SetActive(false);
+            UIManager.Instance.boardUI.SaveWork();
         }
         public void Cancel()
         {
