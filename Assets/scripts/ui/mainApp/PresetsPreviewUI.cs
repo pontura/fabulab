@@ -6,7 +6,7 @@ namespace UI.MainApp
     {
         public bool isPreview;
         [SerializeField] GameObject savePanel;
-        [SerializeField] TMPro.TMP_Text togglePreviewField;
+        [SerializeField] GameObject[] togglePreviewParts;
         [SerializeField] PresetsUI presetsUI;
         [SerializeField] PreviewUI previewUI;
         public GameObject DoneBtn;
@@ -47,14 +47,17 @@ namespace UI.MainApp
         }
         void SetTogglePreview()
         {
-            togglePreviewField.text = isPreview ? "Edit" : "Preview";
             if (!isPreview)
             {
+                togglePreviewParts[0].SetActive(false);
+                togglePreviewParts[1].SetActive(true);
                 presetsUI.Init();
                 previewUI.SetOff();
             }
             else
             {
+                togglePreviewParts[0].SetActive(true);
+                togglePreviewParts[1].SetActive(false);
                 previewUI.Init();
                 presetsUI.SetOff();
             }
