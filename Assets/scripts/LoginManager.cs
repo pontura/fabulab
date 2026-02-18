@@ -7,6 +7,7 @@ using Yaguar.Auth;
 
 public class LoginManager : MonoBehaviour
 {
+    [SerializeField] GameObject container;
     [SerializeField] TMPro.TMP_InputField usernameField;
     [SerializeField] TMPro.TMP_InputField emailField;
     [SerializeField] TMPro.TMP_InputField passField;
@@ -45,7 +46,8 @@ public class LoginManager : MonoBehaviour
 
     private void OnSignedOut()
     {
-        gameObject.SetActive(true);
+        ResetRegisterFields();
+        container.SetActive(true);
     }
 
     void OnLogin(bool succes) {
@@ -74,11 +76,12 @@ public class LoginManager : MonoBehaviour
     }
 
     void OnTokenUpdated() {
+        Debug.Log("#OnTokenUpdated");
         Invoke(nameof(OnLogged), Time.deltaTime * 3);
     }
 
     void ResetRegisterFields() {
-        usernameField.text = "";
+        //usernameField.text = "";
         emailField.text = "";
         passField.text = "";
         error.text = "";
@@ -87,7 +90,9 @@ public class LoginManager : MonoBehaviour
     public void OnLogged() {
         CancelInvoke("OnLogged");
         print("logged");
-        gameObject.SetActive(false);
+        ResetRegisterFields();
+
+        container.SetActive(false);
     }
     
 
