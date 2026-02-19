@@ -1,5 +1,6 @@
 ﻿using BoardItems;
 using System;
+using System.Collections.Generic;
 using UI.MainApp;
 using UI.MainApp.Home;
 using UnityEngine;
@@ -34,8 +35,10 @@ namespace UI
                 return mInstance;
             }
         }
+        List<screenType> backToScreen;
         void Awake()
         {
+            backToScreen = new List<screenType>();
             zoomManager = GetComponent<ZoomsManager>();
             if (!mInstance)
                 mInstance = this;
@@ -50,9 +53,9 @@ namespace UI
         {
             Events.ShowScreen -= OnShowScreen;
         }
-
         private void OnShowScreen(screenType type)
         {
+            backToScreen.Add(type);
             switch(type)
             {
                 case screenType.Home:
@@ -110,7 +113,14 @@ namespace UI
         }
         public void Back()
         {
-            Home();
+            print("backToScreen.Count  " + backToScreen.Count);
+            print("backToScreen backToScreen[backToScreen.Count - 2] " + backToScreen[backToScreen.Count - 2]);
+            if (backToScreen.Count < 3)
+                Events.ShowScreen(screenType.Home);
+            else
+                Events.ShowScreen(backToScreen[backToScreen.Count - 2]);
+            backToScreen.RemoveAt(backToScreen.Count - 1);
+            backToScreen.RemoveAt(backToScreen.Count - 1);
         }
         public void ShowWorkDetail(CharacterData wd)
         {
