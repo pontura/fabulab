@@ -1,4 +1,5 @@
 ﻿using BoardItems;
+using System;
 using UI.MainApp;
 using UI.MainApp.Home;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace UI
 {
     public class UIManager : MonoBehaviour
     {
+        public GameObject backBtn;
         static UIManager mInstance = null;
         public CreatePanel create;
         public BoardUI boardUI;
@@ -40,8 +42,26 @@ namespace UI
         }
         private void Start()
         {
+            Events.ShowScreen += OnShowScreen;
             Init();
             Invoke("InitGalleryDelayed", 0.1f);
+        }
+        private void OnDestroy()
+        {
+            Events.ShowScreen -= OnShowScreen;
+        }
+
+        private void OnShowScreen(screenType type)
+        {
+            switch(type)
+            {
+                case screenType.Home:
+                    backBtn.SetActive(false);
+                    break;
+                default:
+                    backBtn.SetActive(true);
+                    break;
+            }
         }
         void InitGalleryDelayed() // to-do inicia los items:
         {

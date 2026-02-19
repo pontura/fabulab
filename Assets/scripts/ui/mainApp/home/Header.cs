@@ -5,6 +5,7 @@ namespace UI.MainApp.Home
 {
     public class Header : MonoBehaviour
     {
+        [SerializeField] GameObject userUI;
         [SerializeField] GameObject editBtn;
         [SerializeField] TMPro.TMP_Text usernameField;
 
@@ -27,12 +28,14 @@ namespace UI.MainApp.Home
             switch (type)
             {
                 case UIManager.screenType.Home:
+                    userUI.SetActive(true);
                     string username = Data.Instance.userData.userDataInDatabase.username;
                     OnChangeName(username);
-                    editBtn.SetActive(true);
+                    //editBtn.SetActive(true);
                     break;
                 case UIManager.screenType.UserScreen:
-                    editBtn.SetActive(false);
+                    userUI.SetActive(false);
+                    //editBtn.SetActive(false);
                     break;
             }
         }
