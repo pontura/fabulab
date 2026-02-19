@@ -45,7 +45,8 @@ namespace UI.MainApp
         }   
         void Delayed()
         {
-            isPreview = false;
+            bool isEditingCharacter = (Data.Instance.albumData.GetCurrent() != "");
+            isPreview = isEditingCharacter;
             SetTogglePreview();
         }
         public void TogglePreview()
