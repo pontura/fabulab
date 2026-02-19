@@ -135,7 +135,7 @@ namespace UI
             items.DeleteInPart(wd.items[0].part);
             OpenWork(wd);
         }
-        ItemData CreateItem(AlbumData.CharacterData.SavedIData itemData, bool isInScene)
+        ItemData CreateItem(AlbumData.CharacterData.SavedIData itemData)
         {
             ItemData originalGO = Data.Instance.galeriasData.GetItem(itemData.galleryID, itemData.id);
             print("____________" + originalGO.name);
@@ -162,7 +162,6 @@ namespace UI
             items.SetItemInScene(itemInScene, newItem.part);
             itemInScene.data.SetTransformByData();
 
-
             items.FinishEditingItem(itemInScene);
             return newItem;
         }
@@ -171,10 +170,15 @@ namespace UI
 
         void OpenWork(AlbumData.CharacterData wd)
         {
+            StartCoroutine(OpenWork_C(wd));
+        }
+        IEnumerator OpenWork_C(AlbumData.CharacterData wd)
+        {
             print("open work");
             foreach (AlbumData.CharacterData.SavedIData itemData in wd.items)
             {
-                ItemData newItem = CreateItem(itemData, true);
+                yield return new WaitForSeconds(0.05f);
+                ItemData newItem = CreateItem(itemData);
 
                 print("open work newItem part: " + newItem.part);
 
@@ -183,6 +187,10 @@ namespace UI
                     AnimationsManager.AnimData animData = Data.Instance.animationsManager.GetAnimByName(newItem.anim);
                     Events.AnimateItem(animData);
                 }
+                Vector3 to = itemData.position;
+                Vector3 from = itemData.position;
+                from.y -= 10;
+                newItem.GetComponent<ItemInScene>().Appear(from, to);
             }
             Events.ColorizeArms( wd.armsColor );
             Events.ColorizeLegs( wd.legsColor );

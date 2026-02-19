@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UI;
 using UnityEngine;
-using static AnimationsManager;
 
 namespace BoardItems
 {
@@ -15,6 +14,7 @@ namespace BoardItems
         [SerializeField] List<Collider2D> colliders;
         List<SpriteRenderer> sprites;
         AudioSource audioSource;
+        ItemInSceneAnims anims;
 
         private void Start()
         {
@@ -47,6 +47,13 @@ namespace BoardItems
 
             if (data != null)
                 SetColor(data.colorName);
+        }
+        public void Appear(Vector3 from, Vector3 to)
+        {
+            if (anims == null)
+                 anims = gameObject.AddComponent<ItemInSceneAnims>();
+
+            anims.Appear(from, to);
         }
         public void SetCollider(bool isOn)
         {
