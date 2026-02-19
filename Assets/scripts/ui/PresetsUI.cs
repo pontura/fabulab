@@ -56,7 +56,8 @@ namespace UI
                 else
                     DragAndDrop();
             }
-                
+
+            Events.OnCharacterPartAnim(characterEditorID, (CharacterData.parts)id);
         }
         public void DragAndDrop()
         {

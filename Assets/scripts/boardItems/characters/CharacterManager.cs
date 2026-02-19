@@ -25,6 +25,7 @@ namespace BoardItems.Characters
         private void Awake()
         {
             Events.OnCharacterAnim += OnCharacterAnim;
+            Events.OnCharacterPartAnim += OnCharacterPartAnim;
             Events.OnCharacterExpression += OnCharacterExpression;
             Events.ColorizeArms += ColorizeArms;
             Events.ColorizeLegs += ColorizeLegs;
@@ -34,6 +35,7 @@ namespace BoardItems.Characters
         private void OnDestroy()
         {
             Events.OnCharacterAnim -= OnCharacterAnim;
+            Events.OnCharacterPartAnim -= OnCharacterPartAnim;
             Events.OnCharacterExpression -= OnCharacterExpression;
             Events.ColorizeArms -= ColorizeArms;
             Events.ColorizeLegs -= ColorizeLegs;
@@ -90,8 +92,15 @@ namespace BoardItems.Characters
 
         void OnCharacterAnim(int characterID, CharacterAnims.anims anim)
         {
-            if (characterID != characterID) return;
+            print("OnCharacter Anim " + anim);
+            if (characterID != this.characterID) return;
             SetAnim(anim);
+        }
+        void OnCharacterPartAnim(int characterID, CharacterData.parts part)
+        {
+            if (characterID != this.characterID) return;
+            print("OnCharacter Part Anim " + part);
+            anims.Play("edit_" + part.ToString().ToLower());
         }
         public void Init()
         {
