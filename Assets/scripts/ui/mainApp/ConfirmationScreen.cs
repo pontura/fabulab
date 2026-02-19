@@ -1,15 +1,16 @@
 using System;
 using UI;
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 public class ConfirmationScreen : MonoBehaviour
 {
-    public GameObject panel;
     [SerializeField] TMPro.TMP_Text titleField;
     [SerializeField] TMPro.TMP_Text okBtnField;
     [SerializeField] TMPro.TMP_Text cancelBtnField;
+    Action<bool> OnDone;
 
-    void Start()
+    public void Init()
     {
         Close();
         Events.OnConfirm += OnConfirm;
@@ -18,21 +19,29 @@ public class ConfirmationScreen : MonoBehaviour
     {
         Events.OnConfirm -= OnConfirm;
     }
-    private void OnConfirm(string title, string btn1, string btn2, Action<bool> action)
+    private void OnConfirm(string title, string btn1, string btn2, Action<bool> OnDone)
     {
-        panel.SetActive(true);
+        print("OnConfirm ");
+        titleField.text = title;
+        okBtnField.text = btn1;
+        cancelBtnField.text = btn2;
+        this.OnDone = OnDone;
+        gameObject.SetActive(true);
     }
     public void Yes()
     {
-        GetComponent<BoardUI>().ResetBoardConfirmed();
+        OnDone(true);
+        UIManager.Instance.boardUI.ResetBoardConfirmed();
+        Close();
+    }
+    public void No()
+    {
+        OnDone(false);
         Close();
     }
     void Close()
     {
-        GetComponent<BoardUI>().ResetBoardConfirmed();
+        gameObject.SetActive(false);
     }
-    public void No()
-    {
-        panel.SetActive(false);
-    }
+    
 }

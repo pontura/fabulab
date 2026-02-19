@@ -15,6 +15,7 @@ namespace UI
         public GallerySelectorUI gallerySelectorUI;
         public WorkDetailUI workDetailUI;
         public ZoomsManager zoomManager;
+        [SerializeField] ConfirmationScreen confirmationScreen;
         public enum screenType
         {
             Home,
@@ -36,6 +37,7 @@ namespace UI
         List<screenType> backToScreen;
         void Awake()
         {
+            confirmationScreen.Init();
             backToScreen = new List<screenType>();
             zoomManager = GetComponent<ZoomsManager>();
             if (!mInstance)
@@ -111,12 +113,26 @@ namespace UI
         }
         public void Back()
         {
+            if (backToScreen[backToScreen.Count - 1] == screenType.Creation)
+            {
+                Events.OnConfirm("All changes will be lost", "Confirm and exit", "Cancel", ExitConfirmed);
+            } else {
+                SetBack();
+            }
+        }
+        void SetBack()
+        {
             if (backToScreen.Count < 3)
                 Events.ShowScreen(screenType.Home);
             else
                 Events.ShowScreen(backToScreen[backToScreen.Count - 2]);
             backToScreen.RemoveAt(backToScreen.Count - 1);
             backToScreen.RemoveAt(backToScreen.Count - 1);
+        }
+        void ExitConfirmed(bool exit)
+        {
+            if(exit)
+                SetBack();
         }
         public void ShowWorkDetail(CharacterData wd)
         {

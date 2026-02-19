@@ -45,17 +45,7 @@ namespace UI
         {
             AudioManager.Instance.musicManager.Play("board");
         }
-        public void ResetButton()
-        {
-            AudioManager.Instance.uiSfxManager.PlayNextScale("click");
-            ResetBoard();
-        }
-
-        public void ResetBoard()
-        {
-            Events.OnConfirm("Vas a perder los cambios, seguro querés salir?", "Cancelar", "Salir", OnResetConfirmed);
-            //GetComponent<DeleteAllPopup>().Init();
-        }
+       
         void OnResetConfirmed(bool confirmed)
         {
             if(confirmed)

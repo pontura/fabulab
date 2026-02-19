@@ -20,10 +20,10 @@ namespace UI.MainApp
             switch (type)
             {
                 case UIManager.screenType.Creation:
+                    OnActivateUIButtons(true);
                     SetButtons();
                     Show(true);
                     savePanel.SetActive(false);
-                    OnActivateUIButtons(false);
                     Invoke("Delayed", 0.1f);
                     break;
                 default:
