@@ -26,6 +26,7 @@ public static class Events
     public static System.Action<PalettesManager.colorNames> Colorize = delegate { };
     public static System.Action<AnimationsManager.AnimData> AnimateItem = delegate { };
     public static System.Action<bool> ActivateUIButtons = delegate { };
+    public static System.Action<bool> SetChangesMade = delegate { };
     public static System.Action<bool> OnLoading = delegate { };
     public static System.Action<string, System.Action> CaptureGif = delegate { };
     public static System.Action<bool> OnCanvasDragger = delegate { };

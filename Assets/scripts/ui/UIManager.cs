@@ -15,6 +15,7 @@ namespace UI
         public GallerySelectorUI gallerySelectorUI;
         public WorkDetailUI workDetailUI;
         public ZoomsManager zoomManager;
+        PresetsPreviewUI presetsPreviewUI;
         [SerializeField] ConfirmationScreen confirmationScreen;
         public enum screenType
         {
@@ -40,6 +41,7 @@ namespace UI
             confirmationScreen.Init();
             backToScreen = new List<screenType>();
             zoomManager = GetComponent<ZoomsManager>();
+            presetsPreviewUI = GetComponent<PresetsPreviewUI>();
             if (!mInstance)
                 mInstance = this;
         }
@@ -113,7 +115,7 @@ namespace UI
         }
         public void Back()
         {
-            if (backToScreen[backToScreen.Count - 1] == screenType.Creation)
+            if (backToScreen[backToScreen.Count - 1] == screenType.Creation && presetsPreviewUI.ChangesMade())
             {
                 Events.OnConfirm("All changes will be lost", "Confirm and exit", "Cancel", ExitConfirmed);
             } else {

@@ -299,6 +299,7 @@ namespace BoardItems
                 AnimateItemDragDrop(false);
                 FinishEditingItem(item);
                 Events.ActivateUIButtons(true);
+                Events.SetChangesMade(true);
 
                 BodyPart bp = characterManager.GetBodyPart(item.data.part);
                 bp.SetArrengedItems();

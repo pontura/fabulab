@@ -13,14 +13,15 @@ namespace UI.MainApp
         [SerializeField] GameObject[] togglePreviewParts;
         [SerializeField] PresetsUI presetsUI;
         [SerializeField] PreviewUI previewUI;
-        public GameObject DoneBtn;
+        [SerializeField] GameObject DoneBtn;
+        [SerializeField] bool changesMade;
 
         protected override void ShowScreen(UIManager.screenType type)
         {
             switch (type)
             {
                 case UIManager.screenType.Creation:
-                    OnActivateUIButtons(true);
+                    changesMade = false;
                     SetButtons();
                     Show(true);
                     savePanel.SetActive(false);
@@ -35,10 +36,12 @@ namespace UI.MainApp
         private void Start()
         {
             Events.ActivateUIButtons += OnActivateUIButtons;
+            Events.SetChangesMade += SetChangesMade;
         }
         public override void OnDestroyed() 
         {
             Events.ActivateUIButtons -= OnActivateUIButtons;
+            Events.SetChangesMade -= SetChangesMade;
         }   
         void Delayed()
         {
@@ -66,6 +69,14 @@ namespace UI.MainApp
                 previewUI.Init();
                 presetsUI.SetOff();
             }
+        }
+        void SetChangesMade(bool _changesMade)
+        {
+            this.changesMade = _changesMade;
+        }
+        public bool ChangesMade()
+        {
+            return changesMade;
         }
         private void OnActivateUIButtons(bool isOn)
         {
