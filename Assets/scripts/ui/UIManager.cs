@@ -1,8 +1,6 @@
 ﻿using BoardItems;
-using System;
 using System.Collections.Generic;
 using UI.MainApp;
-using UI.MainApp.Home;
 using UnityEngine;
 using static BoardItems.AlbumData;
 
@@ -113,8 +111,6 @@ namespace UI
         }
         public void Back()
         {
-            print("backToScreen.Count  " + backToScreen.Count);
-            print("backToScreen backToScreen[backToScreen.Count - 2] " + backToScreen[backToScreen.Count - 2]);
             if (backToScreen.Count < 3)
                 Events.ShowScreen(screenType.Home);
             else

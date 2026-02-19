@@ -1,3 +1,4 @@
+using BoardItems;
 using UnityEngine;
 
 namespace UI.MainApp
@@ -90,7 +91,7 @@ namespace UI.MainApp
         }
         void SavePartDelayed()
         {
-            UIManager.Instance.boardUI.SaveWork();
+            SaveWork();
         }
         public void SetButtons()
         {
@@ -101,17 +102,40 @@ namespace UI.MainApp
         {
             savePanel.SetActive(false);
             Data.Instance.albumData.SetCurrentID("");// Resetea si hay un character elegido.
-            UIManager.Instance.boardUI.SaveWork();
+            SaveWork();
         }
         public void Replace()// Guarda la version editada del personaje.
         {
             savePanel.SetActive(false);
-            UIManager.Instance.boardUI.SaveWork();
+            SaveWork();
         }
         public void Cancel()
         {
             DoneBtn.SetActive(true);
             savePanel.SetActive(false);
+        }
+        public void SaveProfilePic()
+        {
+            print("SaveProfilePic");
+            UIManager.Instance.zoomManager.Zoom(BoardItems.Characters.CharacterData.parts.HEAD, true);
+            savePanel.SetActive(false);
+            Invoke("SaveProfilePicDelayed", 1);
+        }
+        void SaveProfilePicDelayed()
+        {
+            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.albumData.thumbSize, SaveProfilePicture);
+        }
+        public void SaveProfilePicture(Texture2D tex)
+        {
+            print("TO-DO: graba la profilepicture");
+        }
+        void SaveWork()
+        {
+            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.albumData.thumbSize, OnTakeShotDone);
+        }
+        public void OnTakeShotDone(Texture2D tex)
+        {
+            Data.Instance.albumData.SaveCharacter(tex);
         }
 
     }

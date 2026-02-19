@@ -14,6 +14,7 @@ public static class Events
     public static System.Action<GaleriasData.GalleryData, bool, System.Action> InitGallery = delegate { };
     public static System.Action GalleryDone = delegate { };
     public static System.Action ResetItems = delegate { };
+    public static System.Action<string, string, string, System.Action<bool>> OnConfirm = delegate { };
     public static System.Action EmptyCharacterItems = delegate { };
     public static System.Action<CharacterData.parts> EmptyCharacterItemsButExlude = delegate { };
 

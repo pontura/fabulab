@@ -53,7 +53,13 @@ namespace UI
 
         public void ResetBoard()
         {
-            GetComponent<DeleteAllPopup>().Init();
+            Events.OnConfirm("Vas a perder los cambios, seguro querés salir?", "Cancelar", "Salir", OnResetConfirmed);
+            //GetComponent<DeleteAllPopup>().Init();
+        }
+        void OnResetConfirmed(bool confirmed)
+        {
+            if(confirmed)
+                ResetBoardConfirmed();
         }
         public void ResetBoardConfirmed()
         {
@@ -107,17 +113,6 @@ namespace UI
         public void SetBgColor(Color color)
         {
             cam.backgroundColor = color;
-        }
-
-        public void SaveWork()
-        {
-            AudioManager.Instance.uiSfxManager.Play("tilde", 0.4f);
-            screenshot.TakeShot(Data.Instance.albumData.thumbSize, OnTakeShotDone);
-        }
-
-        public void OnTakeShotDone(Texture2D tex)
-        {
-            Data.Instance.albumData.SaveCharacter(tex);
         }
 
         public IEnumerator CreateGif(string id, System.Action callback)
