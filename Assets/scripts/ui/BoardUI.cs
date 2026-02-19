@@ -187,10 +187,7 @@ namespace UI
                     AnimationsManager.AnimData animData = Data.Instance.animationsManager.GetAnimByName(newItem.anim);
                     Events.AnimateItem(animData);
                 }
-                Vector3 to = itemData.position;
-                Vector3 from = itemData.position;
-                from.y -= 10;
-                newItem.GetComponent<ItemInScene>().Appear(from, to);
+                newItem.GetComponent<ItemInScene>().Appear();
             }
             Events.ColorizeArms( wd.armsColor );
             Events.ColorizeLegs( wd.legsColor );

@@ -48,12 +48,13 @@ namespace BoardItems
             if (data != null)
                 SetColor(data.colorName);
         }
-        public void Appear(Vector3 from, Vector3 to)
+        public void Appear()
         {
+            
             if (anims == null)
                  anims = gameObject.AddComponent<ItemInSceneAnims>();
 
-            anims.Appear(from, to);
+            anims.Appear(data);
         }
         public void SetCollider(bool isOn)
         {
