@@ -4,6 +4,7 @@ using Yaguar.Auth;
 using Yaguar.DB;
 using Firebase.Database;
 using System.Threading.Tasks;
+using Firebase.Extensions;
 
 namespace Yaguar.DB
 {
@@ -50,9 +51,8 @@ namespace Yaguar.DB
         public void CheckUserExist(string uid, Action<bool> callback)
         {
             Debug.Log("#CheckUserExist " + uid);
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/");
-            reference.GetValueAsync().ContinueWith(task =>
+            reference.GetValueAsync().ContinueWithOnMainThread(task =>
             {
                 if (task.IsFaulted || task.IsCanceled)
                 {
@@ -66,7 +66,7 @@ namespace Yaguar.DB
                     callback(task.Result.HasChild(uid));
                     //return true;
                 }
-            }, taskScheduler);
+            });
         }
 
         public virtual void SaveUserToServer(FirebaseAuthManager.UserDataInDatabase userData)
@@ -75,7 +75,7 @@ namespace Yaguar.DB
             string s = JsonUtility.ToJson(userData);
             //string s = JsonConvert.SerializeObject(userData);
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + userData.uid);
-            reference.SetRawJsonValueAsync(s).ContinueWith(task =>
+            reference.SetRawJsonValueAsync(s).ContinueWithOnMainThread(task =>
             {
                 if (task.IsFaulted || task.IsCanceled)
                 {
@@ -89,10 +89,9 @@ namespace Yaguar.DB
 
         public virtual void LoadUserData(string uid, Action<string, string, string> callback)
         {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             Debug.Log("#LoadUserData");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + uid);
-            reference.GetValueAsync().ContinueWith(task =>
+            reference.GetValueAsync().ContinueWithOnMainThread(task =>
             {
                 if (task.IsFaulted || task.IsCanceled)
                 {
@@ -113,7 +112,7 @@ namespace Yaguar.DB
                         callback?.Invoke(userData.username, userData.email, userData.uid);
                     }
                 }
-            }, taskScheduler);
+            });
             Debug.Log("Server: OnUserLogin");
             //print("OnUserLogin url : " + url);
         }

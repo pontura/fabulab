@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System;
+using Firebase.Extensions;
 using Firebase.Auth;
 using Yaguar.DB;
 using System.Threading.Tasks;
+using Firebase.Extensions;
 
 namespace Yaguar.Auth
 {
@@ -59,8 +61,8 @@ namespace Yaguar.Auth
 
         void Start()
         {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
+            //var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
             {
                 var dependencyStatus = task.Result;
                 if (dependencyStatus == Firebase.DependencyStatus.Available)
@@ -76,7 +78,7 @@ namespace Yaguar.Auth
                       "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
                     // Firebase Unity SDK is not safe to use here.
                 }
-            }, taskScheduler);
+            });
 
         }
 
@@ -124,9 +126,8 @@ namespace Yaguar.Auth
         public void SignInWithPlayGames(string authCode, System.Action<bool> callback)
         {
             Debug.Log("#SignInWithPlayGames:  " + authCode);
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             Firebase.Auth.Credential credential = Firebase.Auth.PlayGamesAuthProvider.GetCredential(authCode);
-            _auth.SignInAndRetrieveDataWithCredentialAsync(credential).ContinueWith(task => {
+            _auth.SignInAndRetrieveDataWithCredentialAsync(credential).ContinueWithOnMainThread(task => {
                 if (task.IsCanceled)
                 {
                     Debug.Log("SignInAndRetrieveDataWithCredentialAsync was canceled.");
@@ -218,13 +219,12 @@ namespace Yaguar.Auth
                         callback(true);
                     }
                 });*/
-            }, taskScheduler);
+            });
         }
 
         public void SignUpUserEmail(string username, string email, string password)
         {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            _auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
+            _auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task => {
                 if (task.IsCanceled || task.IsFaulted)
                 {
                     Debug.Log("ERROR: " + task.Exception);
@@ -246,13 +246,12 @@ namespace Yaguar.Auth
                 firebaseDBManager.GetComponent<IFirebaseDBManager>().SaveUserToServer(udata);
                 //GetServerTime();
                 OnSignUp?.Invoke(true);
-            }, taskScheduler);
+            });
             Debug.Log("Server: SignUpUserEmail");
         }
         public void LoginUserByEmail(string email, string password)
         {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            _auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
+            _auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task => {
                 if (task.IsCanceled || task.IsFaulted)
                 {
                     Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error: " + task.Exception);
@@ -266,14 +265,13 @@ namespace Yaguar.Auth
                 OnLogin?.Invoke(true);
                 firebaseDBManager.GetComponent<IFirebaseDBManager>().LoadUserData(result.User.UserId, OnFirebaseAuthenticated);
                 
-            }, taskScheduler);
+            });
             Debug.Log("Server: LoginUserByEmail");
         }
 
         public void PasswordReset(string email)
         {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            _auth.SendPasswordResetEmailAsync(email).ContinueWith(task => {
+            _auth.SendPasswordResetEmailAsync(email).ContinueWithOnMainThread(task => {
                 if (task.IsCanceled || task.IsFaulted)
                 {
                     Debug.LogError("SendPasswordResetEmailAsync encountered an error: " + task.Exception);
@@ -283,7 +281,7 @@ namespace Yaguar.Auth
 
                 Debug.Log("Email reseted: " + email);
                 OnResetPassword?.Invoke(true);
-            }, taskScheduler);
+            });
             Debug.Log("Server: PasswordReset");
         }
     }

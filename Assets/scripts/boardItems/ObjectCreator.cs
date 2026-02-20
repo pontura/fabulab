@@ -16,20 +16,20 @@ namespace BoardItems
             foreach (GameObject go in go_to_create)
             {
                 AlbumData.CharacterData wData = new AlbumData.CharacterData();
-                wData.items = new List<AlbumData.CharacterData.SavedIData>();
+                wData.items = new List<AlbumData.SavedIData>();
                 wData.id = id.ToString();
                 foreach (ItemData itemData in go.GetComponentsInChildren<ItemData>())
                 {
-                    AlbumData.CharacterData.SavedIData s = SetItemData(itemData);
+                    AlbumData.SavedIData s = SetItemData(itemData);
                     wData.items.Add(s);
                 }
             //    Data.Instance.albumData.pakapakaAlbum.Add(wData);
                 id++;
             }
         }
-        AlbumData.CharacterData.SavedIData SetItemData(ItemData itemData)
+        AlbumData.SavedIData SetItemData(ItemData itemData)
         {
-            AlbumData.CharacterData.SavedIData d = new AlbumData.CharacterData.SavedIData();
+            AlbumData.SavedIData d = new AlbumData.SavedIData();
             d.position = itemData.gameObject.transform.position;
             d.rotation = itemData.gameObject.transform.localEulerAngles;
             d.scale = itemData.gameObject.transform.localScale;

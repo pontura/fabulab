@@ -38,35 +38,138 @@ namespace BoardItems
         [SerializeField] string loadedPresetId;
 
         [Serializable]
-        public class CharacterData {
-            public string id;
-            public Texture2D thumb;
+        public class CharacterPartServerData
+        {
+            public List<ServerIData> items;            
+        }
+
+        [Serializable]
+        public class CharacterServerData : CharacterPartServerData
+        {
             public PalettesManager.colorNames armsColor;
             public PalettesManager.colorNames legsColor;
             public PalettesManager.colorNames eyebrowsColor;
+        }
+
+        [Serializable]
+        public class CharacterPartData
+        {
+            public string id;
+            public Texture2D thumb;
             public List<SavedIData> items;
 
             public Sprite GetSprite() {
-                if(thumb == null)
-                {
+                if (thumb == null) {
                     Debug.LogError("No hay thumb para character id: " + id);
                     return null;
                 }
                 return Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), Vector2.zero);
+            }            
+        }
+
+        [Serializable]
+        public class CharacterData : CharacterPartData
+        {
+            public PalettesManager.colorNames armsColor;
+            public PalettesManager.colorNames legsColor;
+            public PalettesManager.colorNames eyebrowsColor;            
+
+            public CharacterServerData GetServerData() {
+                CharacterServerData csd = new CharacterServerData();
+                List<ServerIData> csdItems = new List<ServerIData>();
+                foreach(SavedIData sid in items) {
+                    csdItems.Add(sid.GetServerIData());
+                }
+                csd.items = csdItems;
+                csd.armsColor = armsColor;
+                csd.legsColor = legsColor;
+                csd.eyebrowsColor = eyebrowsColor;
+                return csd;
             }
 
-            [Serializable]
-            public class SavedIData {
-                public int galleryID;
-                public int part;
-                public int id;
-                public Vector3 position;
-                public Vector3 rotation;
-                public Vector3 scale;
-                public AnimationsManager.anim anim;
-                public PalettesManager.colorNames color;
+            public void LoadServerData(CharacterServerData serverData) {
+                items = new List<SavedIData>();
+                Debug.Log(serverData.items == null);
+                Debug.Log(serverData.items.Count);
+                foreach (ServerIData sid in serverData.items) {
+                    SavedIData savedData = new SavedIData();
+                    savedData.LoadServerData(sid);
+                    items.Add(savedData);
+                }
+                armsColor = serverData.armsColor;
+                legsColor = serverData.legsColor;
+                eyebrowsColor = serverData.eyebrowsColor;
             }
         }
+
+        [Serializable]
+        public class SavedIData
+        {
+            public int galleryID;
+            public int part;
+            public int id;
+            public Vector3 position;
+            public Vector3 rotation;
+            public Vector3 scale;
+            public AnimationsManager.anim anim;
+            public PalettesManager.colorNames color;
+
+            public ServerIData GetServerIData() {
+                ServerIData sid = new ServerIData();
+                sid.galleryID = galleryID;
+                sid.id = id;
+                sid.part = part;
+                sid.position = new V3(position);
+                sid.rotation = new V3(rotation);
+                sid.scale = new V3(scale);
+                sid.anim = anim;
+                sid.color = color;
+                return sid;
+            }
+
+            public void LoadServerData(ServerIData serverData) {
+                galleryID = serverData.galleryID;
+                part = serverData.part;
+                position = new Vector3(serverData.position.x, serverData.position.x, serverData.position.z);
+                rotation = new Vector3(serverData.rotation.x, serverData.rotation.x, serverData.rotation.z);
+                scale = new Vector3(serverData.scale.x, serverData.scale.x, serverData.scale.z);
+                anim = serverData.anim;
+                color = serverData.color;
+                Debug.Log(galleryID + ", " + part + ", " + position + ", " + rotation + ", " + scale + ", " + anim + ", " + color);
+            }
+        }
+
+        [Serializable]
+        public class ServerIData
+        {
+            public int galleryID;
+            public int part;
+            public int id;
+
+            public V3 position;
+            public V3 rotation;
+            public V3 scale;
+            public AnimationsManager.anim anim;
+            public PalettesManager.colorNames color;
+        }
+
+        public struct V3
+        {
+            public float x { get; set; }
+            public float y { get; set; }
+            public float z { get; set; }
+
+            public V3(float x, float y, float z) {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+            }
+            public V3(Vector3 v) {
+                this.x = v.x;
+                this.y = v.y;
+                this.z = v.z;
+            }
+        }        
 
         [Serializable]
         public class CharacterMetaData {
@@ -136,7 +239,7 @@ namespace BoardItems
             //}
         }
 
-        void LoadPartMetadataFromServer() {
+        /*void LoadPartMetadataFromServer() {
             Debug.Log("#LoadPartMetadataFromServer");
             //if (Data.Instance.userData.IsLogged()) {
                 FirebaseStoryMakerDBManager.Instance.LoadBodypartPresetMetadataFromServer(OnLoadPresetMetadataFromServer);
@@ -169,7 +272,7 @@ namespace BoardItems
                 LoadCharactersFromServer(data);
             }
             LoadPresetsFromServer();
-        }
+        }*/
 
         public void SaveCharacter(Texture2D tex)
         {
@@ -188,7 +291,7 @@ namespace BoardItems
             wd.eyebrowsColor = cm.GetEyebrowsColor();
 
             wd.thumb = tex;
-            wd.items = new List<CharacterData.SavedIData>();
+            wd.items = new List<SavedIData>();
             int totalItems = UIManager.Instance.boardUI.items.all.Count;
             int totalParts = 0;
             int partID = 0;
@@ -202,7 +305,7 @@ namespace BoardItems
                 partID = newPartID;
                 if (partID > 0)
                 {
-                    CharacterData.SavedIData sd = new CharacterData.SavedIData();
+                    SavedIData sd = new SavedIData();
                     sd.part = partID;
                     sd.id = iInScene.data.id;
                     sd.position = iInScene.data.position;
@@ -224,9 +327,10 @@ namespace BoardItems
             if (totalParts > 1) { // is a complete character;
                 if (wd.id == "") {
                     characters.Add(wd);
-                    FirebaseStoryMakerDBManager.Instance.SaveCharacterToServer(EncodeCharacterData(wd), OnCharacterSavedToServer);
+                    //FirebaseStoryMakerDBManager.Instance.SaveCharacterToServer(EncodeCharacterData(wd), OnCharacterSavedToServer);
+                    FirebaseStoryMakerDBManager.Instance.SaveCharacterToServer(wd.GetServerData(), OnCharacterSavedToServer);
                 } else {
-                    FirebaseStoryMakerDBManager.Instance.UpdateCharacterToServer(wd.id, EncodeCharacterData(wd), OnCharacterSavedToServer);
+                    FirebaseStoryMakerDBManager.Instance.UpdateCharacterToServer(wd.id, wd.GetServerData(), OnCharacterSavedToServer);
                 }
             } else if (Data.Instance.userData.isAdmin) { // is a part preset;
                 if (loadedPresetId == "") {
@@ -379,14 +483,19 @@ namespace BoardItems
             FirebaseStoryMakerDBManager.Instance.LoadUserCharactersFromServer(LoadCharactersFromServer);
         }
 
-        void LoadCharactersFromServer(Dictionary<string, string> data)
+        void LoadCharactersFromServer(Dictionary<string, CharacterServerData> data)
         {
-            foreach (KeyValuePair<string, string> e in data)
+            foreach (KeyValuePair<string, CharacterServerData> e in data)
             {
                 Debug.Log("#LoadCharactersFromServer " + e.Key + ": " + e.Value);
                 CharacterData wd = new CharacterData();
                 wd.id = e.Key;
-                string[] wData = e.Value.Split(fieldSeparator[0]);
+                Debug.Log("#Aca1: "+ e.Value.items.Count);
+                wd.LoadServerData(e.Value);
+                Debug.Log("#Aca2");
+                wd.thumb = charactersMetaData.Find(x => x.id == wd.id)?.thumb;
+                characters.Add(wd);
+                /*string[] wData = e.Value.Split(fieldSeparator[0]);
                 print("total art: " + wData.Length);
                 if (wData[0] != "") {
                     Debug.Log("bgColorIndex: " + wData[0]);
@@ -396,7 +505,7 @@ namespace BoardItems
                     if (wData.Length > 3)
                         wd.eyebrowsColor = (PalettesManager.colorNames)Enum.Parse(typeof(PalettesManager.colorNames), wData[2]);
 
-                    List<CharacterData.SavedIData> items = new List<CharacterData.SavedIData>();
+                    List<SavedIData> items = new List<SavedIData>();
                     string[] itemsData = wData[wData.Length-1].Split(itemSeparator[0]);
                     Debug.Log("ItemCount: " + itemsData.Length);
 
@@ -414,7 +523,7 @@ namespace BoardItems
                         //ItemData iD = Data.Instance.galeriasData.GetItem(wd.galleryID,int.Parse(iData[0]));
                         //if (iD.sprite == null)
                         //    Debug.Log(iD.id + ": spriteNull");
-                        CharacterData.SavedIData sd = new CharacterData.SavedIData();
+                        SavedIData sd = new SavedIData();
                         Debug.Log("# " + iData[0]);
                         sd.galleryID = int.Parse(iData[0], System.Globalization.CultureInfo.InvariantCulture);
                         sd.id = int.Parse(iData[1], System.Globalization.CultureInfo.InvariantCulture);
@@ -442,10 +551,10 @@ namespace BoardItems
                         wd.thumb.LoadImage(System.Convert.FromBase64String(serverPartsMetaData[wd.id].thumb));
                         AddPart(partID, wd);
                     }
-                }
+                }*/
             }
 
-            LoadPartMetadataFromServer();
+            //LoadPartMetadataFromServer();
         }
         float SetFloat(string f)
         {
@@ -565,7 +674,7 @@ namespace BoardItems
         {
             CharacterData wd = characters.Find(x => x.id == id);
             bool hasAnims = false;
-            foreach (CharacterData.SavedIData item in wd.items)
+            foreach (SavedIData item in wd.items)
             {
                 if (item.anim != AnimationsManager.anim.NONE)
                 {

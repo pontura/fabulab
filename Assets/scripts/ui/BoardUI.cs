@@ -150,7 +150,7 @@ namespace UI
             items.DeleteInPart(wd.items[0].part);
             OpenWork(wd);
         }
-        ItemData CreateItem(AlbumData.CharacterData.SavedIData itemData, bool isInScene)
+        ItemData CreateItem(AlbumData.SavedIData itemData, bool isInScene)
         {
             ItemData originalGO = Data.Instance.galeriasData.GetItem(itemData.galleryID, itemData.id);
             print("____________" + originalGO.name);
@@ -187,7 +187,7 @@ namespace UI
         void OpenWork(AlbumData.CharacterData wd)
         {
             print("open work");
-            foreach (AlbumData.CharacterData.SavedIData itemData in wd.items)
+            foreach (AlbumData.SavedIData itemData in wd.items)
             {
                 ItemData newItem = CreateItem(itemData, true);
 

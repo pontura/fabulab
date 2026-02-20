@@ -36,8 +36,10 @@ namespace Yaguar.StoryMaker.DB
             DontDestroyOnLoad(this.gameObject);            
             _uid = PlayerPrefs.GetString("uid", "");
 
-            //var db = FirebaseDatabase.DefaultInstance;
-            //db.SetPersistenceEnabled(true);
+#if UNITY_EDITOR
+            var db = FirebaseDatabase.DefaultInstance;
+            db.SetPersistenceEnabled(true);
+#endif
         }
         void Start()
         {
@@ -59,80 +61,96 @@ namespace Yaguar.StoryMaker.DB
             return FirebaseStoryMakerDBManager.Instance;
         }
 
-        public void UpdateCharacterToServer(string characterId, string characterData, System.Action<bool, string> callback) {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+        public void UpdateCharacterToServer(string characterId, CharacterServerData characterData, System.Action<bool, string> callback) {
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("characters/" + _uid + "/" + characterId);
             string s = JsonConvert.SerializeObject(characterData);
-            reference.SetRawJsonValueAsync(s).ContinueWith(task => {
+            reference.SetRawJsonValueAsync(s).ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#UpdateCharacterToServer FAIL");
                     Debug.Log(task.Exception);
                 } else {
-                    callback(true, characterId);
+                    try {
+                        callback(true, characterId);
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
                 }
-            }, taskScheduler);
+            });
             Debug.Log("Server: UpdateCharacterToServer");
             //print("UpdateCharacterToServer url : " + url);
         }
 
-        public void SaveCharacterToServer(string characterData, System.Action<bool, string> callback) {
+        public void SaveCharacterToServer(CharacterServerData characterData, System.Action<bool, string> callback) {
             if (_uid == null || _uid.Length == 0) {
                 Debug.LogError("Trying to save character without user id");
                 return;
             }
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("characters/" + _uid);
             string s = JsonConvert.SerializeObject(characterData);
             string key = reference.Push().Key;
-            reference.Child(key).SetRawJsonValueAsync(s).ContinueWith(task => {
+            reference.Child(key).SetRawJsonValueAsync(s).ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#SaveCharacterToServer FAIL");
                     Debug.Log(task.Exception);
                 } else {
+                    try { 
                     callback(true, key);
                     Debug.Log("Response: " + key);
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
                 }
-            }, taskScheduler);
+            });
             Debug.Log("Server: SaveCharacterToServer");
             //print("SaveCharacterToServer url : " + url);
         }
 
         public void DeleteCharacter(string presetId, System.Action<string> callback) {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("characters/" + _uid + "/" + presetId);
-            reference.RemoveValueAsync().ContinueWith(task => {
+            reference.RemoveValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#DeleteCharacter FAIL");
                     Debug.Log(task.Exception);
                 } else {
                     //DeleteCharacterMetadataFromServer(characterId);
-                    callback(presetId);
+                    try { 
+                        callback(presetId);
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
                 }
-            }, taskScheduler);
+            });
             Debug.Log("Server: DeleteCharacter");
             //Debug.Log(url);
         }
 
-        public void LoadUserCharactersFromServer(System.Action<Dictionary<string, string>> callback) {
+        public void LoadUserCharactersFromServer(System.Action<Dictionary<string, CharacterServerData>> callback) {
 
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("characters/" + _uid);
-            reference.GetValueAsync().ContinueWithOnMainThread((Task<DataSnapshot> task) => {
+            reference.GetValueAsync().ContinueWithOnMainThread(task => {
 
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#LoadUserCharactersFromServer FAIL");
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
-                    //SceneDataLyna[] sds = JsonConvert.DeserializeObject<SceneDataLyna[]>(task.Result.GetRawJsonValue());
-                    //Debug.Log(task.Result.GetRawJsonValue());
-                    DataSnapshot snapshot = task.Result;
-                    Dictionary<string, string> d = new Dictionary<string, string>();
-                    foreach (var child in snapshot.Children) {
-                        d.Add(child.Key, child.Value as string);
+                    try {
+                        //SceneDataLyna[] sds = JsonConvert.DeserializeObject<SceneDataLyna[]>(task.Result.GetRawJsonValue());
+                        //Debug.Log(task.Result.GetRawJsonValue());
+                        DataSnapshot snapshot = task.Result;
+                        Dictionary<string, CharacterServerData> d = new Dictionary<string, CharacterServerData>();
+                        foreach (var child in snapshot.Children) {
+                            string json = JsonConvert.SerializeObject(child.Value);
+                            Debug.Log(json);
+                            d.Add(child.Key, JsonConvert.DeserializeObject<CharacterServerData>(json));
+                        }
+                        /*Dictionary<string, string> d = JsonConvert.DeserializeObject<Dictionary<string, string>>(task.Result.GetRawJsonValue());
+                        Debug.Log("# " + d.Count);*/
+                        callback(d);
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
                     }
-                    /*Dictionary<string, string> d = JsonConvert.DeserializeObject<Dictionary<string, string>>(task.Result.GetRawJsonValue());
-                    Debug.Log("# " + d.Count);*/
-                    callback(d);
+
                 }
             });
             Debug.Log("Server: LoadUserCharactersFromServer");
@@ -141,8 +159,6 @@ namespace Yaguar.StoryMaker.DB
 
         public void LoadCharacterFromServer(string characterId, System.Action<bool, string> callback, string userId=null)
         {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-
             string uid = _uid;
             if (userId != null)
             {
@@ -150,7 +166,7 @@ namespace Yaguar.StoryMaker.DB
             }
 
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("characters/" + uid + "/" + characterId);
-            reference.GetValueAsync().ContinueWith(task => {
+            reference.GetValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled)
                 {
                     Debug.Log("#LoadCharacterFromServer FAIL");
@@ -159,12 +175,16 @@ namespace Yaguar.StoryMaker.DB
                 }
                 else if (task.IsCompleted)
                 {
+                    try { 
                     //SceneDataLyna[] sds = JsonConvert.DeserializeObject<SceneDataLyna[]>(task.Result.GetRawJsonValue());
                     string data = task.Result.GetRawJsonValue();
                     Debug.Log("# "+data);
                     callback(true, data);
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
                 }
-            }, taskScheduler);            
+            });            
             Debug.Log("Server: LoadCharacterFromServer");
             //print("LoadCharacterFromServer url : " + url);
         }
@@ -179,10 +199,11 @@ namespace Yaguar.StoryMaker.DB
             Debug.Log("Server: SaveCharacterMetadataToServer "+ characterId);           
         }
 
-        public void LoadUserCharacterMetadataFromServer(System.Action<List<CharacterMetaData>> callback)
-        {
+        public void LoadUserCharacterMetadataFromServer(System.Action<List<CharacterMetaData>> callback) {
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/characters");
-            reference.OrderByChild("userID").EqualTo(_uid).GetValueAsync().ContinueWithOnMainThread((Task<DataSnapshot> task) => {
+            Debug.Log("#_uid: " + _uid);
+            reference.OrderByChild("userID").EqualTo(_uid).GetValueAsync().ContinueWithOnMainThread(task => {
+            //reference.OrderByChild("user_id").EqualTo(_uid).GetValueAsync().ContinueWithOnMainThread(task => {
 
                 if (task.IsFaulted || task.IsCanceled)
                 {
@@ -191,19 +212,33 @@ namespace Yaguar.StoryMaker.DB
                 }
                 else if (task.IsCompleted)
                 {
-                    DataSnapshot snapshot = task.Result;
-                    List<CharacterMetaData> charactersMetaData = new List<CharacterMetaData>();
-                    foreach (var child in snapshot.Children) {
-                        CharacterMetaData fd = new CharacterMetaData();
-                        fd.id = child.Key;
-                        fd.userID = child.Child("userID").Value as string;
-                        fd.thumb = new Texture2D(1, 1);
-                        fd.thumb.LoadImage(System.Convert.FromBase64String(child.Child("thumb").Value as string));
-                        charactersMetaData.Add(fd);
+                    Debug.Log("#LoadUserCharacterMetadataFromServer IsCompleted");
+                    try {
+                        Debug.Log(task.Result.GetRawJsonValue());
+                        DataSnapshot snapshot = task.Result;
+                    
+                        if (snapshot.Exists) {
+                            Debug.Log("#LoadUserCharacterMetadataFromServer exists");
+                            List<CharacterMetaData> charactersMetaData = new List<CharacterMetaData>();
+                            Debug.Log("#LoadUserCharacterMetadataFromServer snapshot Count: " + snapshot.Children.Count<DataSnapshot>());
+
+                            foreach (var child in snapshot.Children) {
+                                Debug.Log(child.Key + ": " + child.Value.ToString());
+                                CharacterMetaData fd = new CharacterMetaData();
+                                fd.id = child.Key;
+                                fd.userID = child.Child("userID").Value as string;
+                                fd.thumb = new Texture2D(1, 1);
+                                fd.thumb.LoadImage(System.Convert.FromBase64String(child.Child("thumb").Value as string));
+                                charactersMetaData.Add(fd);
+                            }
+                            //Dictionary<string, AlbumData.ServerCharacterMetaData> d = JsonConvert.DeserializeObject<Dictionary<string, AlbumData.ServerCharacterMetaData>>(task.Result.GetRawJsonValue());
+                            callback(charactersMetaData);
+                        } else {
+                            Debug.LogWarning("No se encontraron datos para ese userID");
+                        }
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
                     }
-                    //Dictionary<string, AlbumData.ServerCharacterMetaData> d = JsonConvert.DeserializeObject<Dictionary<string, AlbumData.ServerCharacterMetaData>>(task.Result.GetRawJsonValue());
-                    callback(charactersMetaData);
-                    // Do something with snapshot...
                 }
             });
             
@@ -215,7 +250,7 @@ namespace Yaguar.StoryMaker.DB
 
             string pId = BoardItems.Characters.CharacterData.GetServerUniquePartsId(partId);
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/bodypart/" + pId);
-            reference.GetValueAsync().ContinueWithOnMainThread((Task<DataSnapshot> task) => {
+            reference.GetValueAsync().ContinueWithOnMainThread(task => {
 
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#LoadBodypartPresetsFromServer FAIL");
@@ -224,6 +259,7 @@ namespace Yaguar.StoryMaker.DB
                     //SceneDataLyna[] sds = JsonConvert.DeserializeObject<SceneDataLyna[]>(task.Result.GetRawJsonValue());
                     //Debug.Log(task.Result.GetRawJsonValue());
 
+                    try { 
                     DataSnapshot snapshot = task.Result;
                     Dictionary<string, string> d = new Dictionary<string, string>();
                     foreach (var child in snapshot.Children) {
@@ -233,10 +269,13 @@ namespace Yaguar.StoryMaker.DB
                     //Debug.Log(data);
                     if (d.Count>0) {
                         //Dictionary<string, string> d = JsonConvert.DeserializeObject<Dictionary<string, string>>(task.Result.GetRawJsonValue());
-                        //Debug.Log("# " + d.Count);
+                        Debug.Log("# " + d.Count);
                         callback(partId, d);
                     } else
                         callback(partId, null);
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
                 }
             });
             Debug.Log("Server: LoadBodypartPresetsFromServer " + pId);
@@ -244,52 +283,61 @@ namespace Yaguar.StoryMaker.DB
         }
 
         public void UpdateBodypartPresetToServer(string presetId, string presetData, string partId, System.Action<bool, string, string> callback) {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/bodypart/" + partId + "/"  + presetId);
             string s = JsonConvert.SerializeObject(presetData);
-            reference.SetRawJsonValueAsync(s).ContinueWith(task => {
+            reference.SetRawJsonValueAsync(s).ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#UpdateBodypartPresetToServer FAIL");
                     Debug.Log(task.Exception);
                 } else {
-                    callback(true, presetId, partId);
+                    try { 
+                        callback(true, presetId, partId);
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
                 }
-            }, taskScheduler);
+            });
             Debug.Log("Server: UpdateBodypartPresetToServer");
             //print("UpdateCharacterToServer url : " + url);
         }
 
         public void SaveBodypartPresetToServer(string presetData, string partId, System.Action<bool, string, string> callback) {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/bodypart/" + partId );
             string s = JsonConvert.SerializeObject(presetData);
             string key = reference.Push().Key;
-            reference.Child(key).SetRawJsonValueAsync(s).ContinueWith(task => {
+            reference.Child(key).SetRawJsonValueAsync(s).ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#SaveBodypartPresetToServer FAIL");
                     Debug.Log(task.Exception);
                 } else {
-                    callback(true, key, partId);
-                    Debug.Log("Response: " + key);
+                    try {
+                        callback(true, key, partId);
+                        Debug.Log("Response: " + key);
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
                 }
-            }, taskScheduler);
+            });
             Debug.Log("Server: SaveBodypartPresetToServer");
             //print("SaveCharacterToServer url : " + url);
         }
 
         public void DeleteBodypartPreset(string presetId, string partId, System.Action<string> callback) {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/bodypart/" + partId + "/" + presetId);
-            reference.RemoveValueAsync().ContinueWith((Action<Task>)(task => {
+            reference.RemoveValueAsync().ContinueWithOnMainThread((Action<Task>)(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#DeleteBodypartPreset FAIL");
                     Debug.Log(task.Exception);
                 } else {
+                    try { 
                     DeleteBodypartPresetMetadataFromServer(presetId);
                     callback((string)presetId);
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
                 }
-            }), taskScheduler);
+            }));
             Debug.Log("Server: DeleteBodypartPreset");
             //Debug.Log(url);
         }
@@ -304,12 +352,13 @@ namespace Yaguar.StoryMaker.DB
 
         public void LoadBodypartPresetMetadataFromServer(System.Action<Dictionary<string, AlbumData.ServerPartMetaData>> callback) {
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/presets/bodypart");
-            reference.GetValueAsync().ContinueWithOnMainThread((Task<DataSnapshot> task) => {
+            reference.GetValueAsync().ContinueWithOnMainThread(task => {
 
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#LoadBodypartPresetMetadataFromServer FAIL");
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
+                    try { 
                     DataSnapshot snapshot = task.Result;
                     Dictionary<string, AlbumData.ServerPartMetaData> d = new Dictionary<string, AlbumData.ServerPartMetaData>();
                     foreach (var child in snapshot.Children) {
@@ -325,7 +374,10 @@ namespace Yaguar.StoryMaker.DB
                     Dictionary<string, AlbumData.ServerPartMetaData> d = JsonConvert.DeserializeObject<Dictionary<string, AlbumData.ServerPartMetaData>>(result);
                     Debug.Log(d == null);*/
                     callback(d);
-                    // Do something with snapshot...
+                        // Do something with snapshot...
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
                 }
             });
 
@@ -338,7 +390,7 @@ namespace Yaguar.StoryMaker.DB
         {
             //Debug.Log("ACA");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/presets/bodypart/" + presetId);
-            reference.RemoveValueAsync().ContinueWith(task =>
+            reference.RemoveValueAsync().ContinueWithOnMainThread(task =>
             {
                 if (task.IsFaulted || task.IsCanceled)
                 {
@@ -432,7 +484,7 @@ namespace Yaguar.StoryMaker.DB
             childUpdates[data] = "";
 
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("inventory/" + _uid + "/" + type);
-            reference.UpdateChildrenAsync(childUpdates).ContinueWith( task =>
+            reference.UpdateChildrenAsync(childUpdates).ContinueWithOnMainThread( task =>
             {
                 if (task.IsFaulted || task.IsCanceled)
                 {
@@ -491,10 +543,8 @@ namespace Yaguar.StoryMaker.DB
         
         public void GetUsernameFromServer(string uid, System.Action<string, string> callback)
         {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + uid);
-            reference.GetValueAsync().ContinueWith(task =>
+            reference.GetValueAsync().ContinueWithOnMainThread(task =>
             {
                 if (task.IsFaulted || task.IsCanceled)
                 {
@@ -505,7 +555,7 @@ namespace Yaguar.StoryMaker.DB
                 {
                     callback(uid, task.Result.GetRawJsonValue());
                 }
-            }, taskScheduler);
+            });
             Debug.Log("Server: GetUsernameFromServer " + uid);
         }
     }
