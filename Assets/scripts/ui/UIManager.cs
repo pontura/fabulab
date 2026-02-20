@@ -1,10 +1,8 @@
 ﻿using BoardItems;
-using BoardItems.BoardData;
-using BoardItems.Characters;
 using System.Collections.Generic;
 using UI.MainApp;
 using UnityEngine;
-using static BoardItems.CharactersData;
+using static UI.BoardUI;
 
 namespace UI
 {
@@ -92,7 +90,12 @@ namespace UI
         }
         public void CreateSelected(int id)
         {
-            NewCharacter();//Albums();
+            if (id == 1)
+                NewCharacter(); // TO-DO
+            else if (id == 2)
+                NewCharacter();
+            else
+                NewObject();
         }
         public void Albums()
         {
@@ -100,21 +103,36 @@ namespace UI
         }       
         public void NewCharacter()
         {
+            boardUI.SetEditingType(editingTypes.CHARACTER);
             print("NewCharacter");
-            Data.Instance.charactersData.ResetCurrentID();
-            Events.OnNewCharacter();
+            Data.Instance.albumData.ResetCurrentID();
+            Data.Instance.albumData.ResetPreset();
             GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(1);
-            InitGallery(gd, true, null);
-            Events.EmptyCharacterItems();
+            Events.InitGallery(gd, true, InitCharacterScreen);
+            Events.EmptySceneItems();
+        }
+        void InitCharacterScreen()
+        {
+            Events.ShowScreen(UIManager.screenType.Creation_Character);
+        }
+        public void NewObject()
+        {
+            boardUI.SetEditingType(editingTypes.OBJECT);
+            print("new object");
+            Data.Instance.albumData.ResetCurrentID();
+            Data.Instance.albumData.ResetPreset();
+            GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(1);
+            Events.InitGallery(gd, true, InitObjectsScreen);
+            Events.EmptySceneItems();
+        }
+        void InitObjectsScreen()
+        {
+            Events.ShowScreen(UIManager.screenType.Creation_Objects);
         }
         public void LoadWork(string id)
         {
+            boardUI.SetEditingType(editingTypes.CHARACTER);
             boardUI.LoadWork(id);
-            Events.ShowScreen(UIManager.screenType.Creation_Character);
-        }
-        public void InitGallery(GaleriasData.GalleryData gd, bool a, System.Action s)
-        {
-            Events.InitGallery(gd, a, s);
             Events.ShowScreen(UIManager.screenType.Creation_Character);
         }
         public void Back()
@@ -140,7 +158,7 @@ namespace UI
             if(exit)
                 SetBack();
         }
-        public void ShowWorkDetail(CharacterData wd)
+        public void ShowWorkDetail(AlbumData.CharacterData wd)
         {
             Sprite sprite = Sprite.Create(wd.thumb, new Rect(0, 0, wd.thumb.width, wd.thumb.height), Vector2.zero);
             Events.ShowScreen(UIManager.screenType.WorkDetail);

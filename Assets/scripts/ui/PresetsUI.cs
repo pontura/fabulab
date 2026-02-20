@@ -1,5 +1,6 @@
 using BoardItems.Characters;
 using Common.UI;
+using UnityEditor;
 using UnityEngine;
 
 namespace UI
@@ -7,6 +8,7 @@ namespace UI
     public class PresetsUI : MonoBehaviour
     {
         [SerializeField] PresetsSelector presetsSelector;
+        [SerializeField] Transform dragAndDropContainer;
         [SerializeField] DragAndDropUI dragAndDropUI;
         [SerializeField] TabController tabs;
         [SerializeField] GameObject[] togglesGO;
@@ -21,6 +23,7 @@ namespace UI
         int characterEditorID = 0;
         public void Init()
         {
+            dragAndDropUI.transform.SetParent(dragAndDropContainer);
             isPreset = true;
             gameObject.SetActive(true);
             CharacterAnims.anims anim = CharacterAnims.anims.edit;
@@ -37,7 +40,7 @@ namespace UI
             SetToggle();
             id += 1;
             lastPartID = id;
-            dragAndDropUI.gameObject.SetActive(false);
+            dragAndDropContainer.gameObject.SetActive(false);
             presetsDragAndDropToggleGO.SetActive(true);
             if (id > 4) id += 2; // porque las manos y los pies ocupan 2 ids:
             if(id == 9) // arms and legs
@@ -63,6 +66,7 @@ namespace UI
         {
             isPreset = false;
             presetsSelector.gameObject.SetActive(false);
+            dragAndDropContainer.gameObject.SetActive(true);
             dragAndDropUI.SetOn(true);
         }
         public void Toggle()

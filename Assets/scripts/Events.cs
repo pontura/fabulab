@@ -1,5 +1,6 @@
 ﻿using BoardItems;
 using BoardItems.Characters;
+using BoardItems.SceneObjects;
 using BoardItems.UI;
 using UI;
 using UI.MainApp;
@@ -7,6 +8,7 @@ using UnityEngine;
 
 public static class Events
 {
+    public static System.Action<bool> OnNewPartSelected = delegate { };
     public static System.Action<BodyPart> OnNewBodyPartSelected = delegate { };
     public static System.Action<ItemInScene, Vector3> OnStartDrag = delegate { };
     public static System.Action<ItemInScene, Vector3> OnStopDrag = delegate { };
@@ -15,7 +17,6 @@ public static class Events
     public static System.Action GalleryDone = delegate { };
     public static System.Action ResetItems = delegate { };
     public static System.Action<string, string, string, System.Action<bool>> OnConfirm = delegate { };
-    public static System.Action EmptyCharacterItems = delegate { };
     public static System.Action<CharacterPartsHelper.parts> EmptyCharacterItemsButExlude = delegate { };
 
     public static System.Action<PalettesManager.colorNames> ColorizeArms = delegate { };
@@ -39,7 +40,6 @@ public static class Events
 
     public static System.Action OnPresetReset = delegate { }; // si hay un preset abierto lo resetea:
     public static System.Action<string> OnPresetLoaded = delegate { };
-    public static System.Action OnNewCharacter = delegate { };
 
     public static System.Action<UIManager.screenType> ShowScreen = delegate { };
 }

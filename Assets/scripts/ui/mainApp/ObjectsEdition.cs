@@ -1,9 +1,12 @@
+using UnityEditor.Presets;
 using UnityEngine;
 
 namespace UI.MainApp
 {
     public class ObjectsEdition : MainScreen
     {
+        [SerializeField] Transform dragAndDropContainer;
+        [SerializeField] DragAndDropUI dragAndDropUI;
         [SerializeField] GameObject savePanel;
         [SerializeField] GameObject saveNewCharacterButton;
         [SerializeField] GameObject saveCharacterButton;
@@ -15,17 +18,19 @@ namespace UI.MainApp
             switch (type)
             {
                 case UIManager.screenType.Creation_Objects:
+                    Events.Zoom(BoardItems.Characters.CharacterData.parts.BODY, false);
                     changesMade = false;
                     SetButtons();
                     Show(true);
                     savePanel.SetActive(false);
+                    dragAndDropUI.SetOn(true);
+                    dragAndDropUI.transform.SetParent(dragAndDropContainer);
                     break;
                 default:
                     Show(false);
                     break;
             }
         }
-
         private void Start()
         {
             Events.ActivateUIButtons += OnActivateUIButtons;

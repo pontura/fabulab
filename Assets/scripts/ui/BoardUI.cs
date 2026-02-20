@@ -1,7 +1,8 @@
 ﻿using BoardItems;
 using BoardItems.Characters;
-using BoardItems.BoardData;
+using BoardItems.SceneObjects;
 using System.Collections;
+using UI.MainApp;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEditor.Progress;
@@ -18,7 +19,40 @@ namespace UI
         public GameObject colorPicketBtnPrefab;
         public Camera cam;
         public Screenshot screenshot;
+
+        BoardItemManager activeBoardItem;
+
         public CharacterManager characterManager;
+        public SceneObjectManager sceneobjectsManager;
+
+        public editingTypes editingType;
+        public enum editingTypes
+        {
+            SCENE,
+            CHARACTER,
+            OBJECT
+        }
+        public void SetEditingType(editingTypes t)  {
+            this.editingType = t;
+            switch (t)
+            {   
+                case editingTypes.SCENE:
+                    sceneobjectsManager.gameObject.SetActive(false);
+                    activeBoardItem = characterManager;
+                    break;
+                case editingTypes.CHARACTER:
+                    sceneobjectsManager.gameObject.SetActive(false);
+                    activeBoardItem = characterManager;
+                    break;
+                case editingTypes.OBJECT:
+                    characterManager.gameObject.SetActive(false);
+                    activeBoardItem = sceneobjectsManager;
+                    break;
+                default:
+                    break;
+            }
+            activeBoardItem.gameObject.SetActive(true);
+        }
 
         int captureGifFramerate = 40;
 
@@ -28,23 +62,26 @@ namespace UI
         }
         private void Start()
         {
-            characterManager.SetAnim(CharacterAnims.anims.edit);
+
+            CharacterAnims.anims anim = CharacterAnims.anims.edit;
+            Events.OnCharacterAnim(0, anim);
+
             Events.GalleryDone += GalleryDone;
-            Events.EmptyCharacterItems += EmptyCharacterItems;
+            Events.EmptySceneItems += EmptySceneItems;
             Events.EmptyCharacterItemsButExlude += EmptyCharacterItemsButExlude;
         }
 
         private void OnDestroy()
         {
             Events.GalleryDone -= GalleryDone;
-            Events.EmptyCharacterItems -= EmptyCharacterItems;
+            Events.EmptySceneItems -= EmptySceneItems;
             Events.EmptyCharacterItemsButExlude -= EmptyCharacterItemsButExlude;
         }
-        void EmptyCharacterItems()
+        void EmptySceneItems()
         {
             items.DeleteAll();
         }
-        void EmptyCharacterItemsButExlude(CharacterPartsHelper.parts part) 
+        void EmptyCharacterItemsButExlude(CharacterData.parts part) 
         {
             items.DeleteAll(part);
         }
@@ -115,7 +152,7 @@ namespace UI
         public IEnumerator CreateGif(string id, System.Action callback)
         {
             yield return new WaitForSeconds(1);
-            CharacterData wd = Data.Instance.charactersData.SetCurrentID(id);
+            AlbumData.CharacterData wd = Data.Instance.albumData.SetCurrentID(id);
            // Data.Instance.galeriasData.SetGallery(wd.galleryID);
             OpenWork(wd);
             items.NextStepAnims(0, captureGifFramerate);
@@ -125,7 +162,7 @@ namespace UI
         public void LoadWork(string id)
         {
             items.DeleteAll();
-            CharacterData wd = Data.Instance.charactersData.SetCurrentID(id);
+            AlbumData.CharacterData wd = Data.Instance.albumData.SetCurrentID(id);
            // UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID, true);
            //TO-DO:
             //List<int> galleries = new List<int>();
@@ -137,12 +174,12 @@ namespace UI
             //UIManager.Instance.gallerySelectorUI.SelectGallery(galleries);
             OpenWork(wd);
         }
-        public void LoadPreset(CharacterPartData wd)
+        public void LoadPreset(AlbumData.CharacterData wd)
         {
             items.DeleteInPart(wd.items[0].part);
             OpenWork(wd);
         }
-        ItemData CreateItem(SavedIData itemData)
+        ItemData CreateItem(AlbumData.CharacterData.SavedIData itemData)
         {
             ItemData originalGO = Data.Instance.galeriasData.GetItem(itemData.galleryID, itemData.id);
             print("____________" + originalGO.name);
@@ -155,7 +192,7 @@ namespace UI
             //ItemData newItem = Instantiate(Resources.Load<ItemData>("galerias/" + itemData.galleryID + "/item_" + itemData.id));
             // Debug.Log("ID" + itemData.id + ":" + itemData.position);
             newItem.galleryID = itemData.galleryID;
-            newItem.part = (CharacterPartsHelper.parts)itemData.part;
+            newItem.part = (CharacterData.parts)itemData.part;
             newItem.position = itemData.position;
             newItem.rotation = itemData.rotation;
             newItem.scale = itemData.scale;
@@ -175,14 +212,14 @@ namespace UI
 
 
 
-        void OpenWork(CharacterPartData wd)
+        void OpenWork(AlbumData.CharacterData wd)
         {
             StartCoroutine(OpenWork_C(wd));
         }
-        IEnumerator OpenWork_C(CharacterPartData wd)
+        IEnumerator OpenWork_C(AlbumData.CharacterData wd)
         {
-            print("open work: "+wd.id);
-            foreach (SavedIData itemData in wd.items)
+            print("open work");
+            foreach (AlbumData.CharacterData.SavedIData itemData in wd.items)
             {
                 yield return new WaitForSeconds(0.05f);
                 ItemData newItem = CreateItem(itemData);
@@ -196,32 +233,25 @@ namespace UI
                 }
                 newItem.GetComponent<ItemInScene>().Appear();
             }
-            if (wd is CharacterData characterType) {
-                Events.ColorizeArms(characterType.armsColor);
-                Events.ColorizeLegs(characterType.legsColor);
-                Events.ColorizeEyebrows(characterType.eyebrowsColor);
-            }
+            Events.ColorizeArms( wd.armsColor );
+            Events.ColorizeLegs( wd.legsColor );
+            Events.ColorizeEyebrows( wd.eyebrowsColor );
         }
         public void AttachItem(ItemInScene item)
         {
-            characterManager.AttachItem(item);
+            activeBoardItem.AttachItem(item);
         }
         public void OnStopDrag(ItemInScene item)
         {
-            BodyPart bp = characterManager.GetBodyPart(item.data.part);
-            bp.SetArrengedItems();
+            activeBoardItem.OnStopDrag(item);
         }
-        public void MoveBack(ItemInScene itemSelected)
+        public void MoveBack(ItemInScene item)
         {
-            CharacterPartsHelper.parts p = itemSelected.data.part;
-            BodyPart bp = characterManager.GetBodyPart(p);
-            bp.SendToBack(itemSelected);
+            activeBoardItem.MoveBack(item);
         }
-        public void MoveUp(ItemInScene itemSelected)
+        public void MoveUp(ItemInScene item)
         {
-            CharacterPartsHelper.parts p = itemSelected.data.part;
-            BodyPart bp = characterManager.GetBodyPart(p);
-            bp.SendToTop(itemSelected);
+            activeBoardItem.MoveUp(item);
         }
 
     }
