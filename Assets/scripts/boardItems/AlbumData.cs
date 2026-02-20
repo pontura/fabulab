@@ -102,7 +102,6 @@ namespace BoardItems
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
             Events.OnPresetReset += OnPresetReset;
             Events.OnPresetLoaded += OnPresetLoaded;
-            Events.OnNewCharacter += OnNewCharacter;
             /*if(charactersMetaData.Count<1)
                 LoadUserCharacterMetadataFromServer();*/
 
@@ -116,7 +115,6 @@ namespace BoardItems
             FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
             Events.OnPresetReset -= OnPresetReset;
             Events.OnPresetLoaded -= OnPresetLoaded;
-            Events.OnNewCharacter -= OnNewCharacter;
         }
 
         void OnTokenUpdated() {
@@ -181,7 +179,7 @@ namespace BoardItems
             }
             else
                 wd = GetCharacter(currentID);
-            CharacterManager cm = UIManager.Instance.boardUI.characterManager;
+            CharacterManager cm = UIManager.Instance.boardUI.characterManager.GetComponent<CharacterManager>();
 
             wd.armsColor = cm.GetArmsColor();
             wd.legsColor = cm.GetLegsColor();
@@ -638,8 +636,8 @@ namespace BoardItems
             loadedPresetId = presetId;
         }
 
-        void OnNewCharacter() {
-            Debug.Log("# OnNewCharacter");
+        public void ResetPreset() {
+            Debug.Log("# reset preset");
             loadedPresetId = "";
         }
         private void OnPresetReset()

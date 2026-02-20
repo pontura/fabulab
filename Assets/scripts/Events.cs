@@ -15,7 +15,7 @@ public static class Events
     public static System.Action GalleryDone = delegate { };
     public static System.Action ResetItems = delegate { };
     public static System.Action<string, string, string, System.Action<bool>> OnConfirm = delegate { };
-    public static System.Action EmptyCharacterItems = delegate { };
+    public static System.Action EmptySceneItems = delegate { };
     public static System.Action<CharacterData.parts> EmptyCharacterItemsButExlude = delegate { };
 
     public static System.Action<PalettesManager.colorNames> ColorizeArms = delegate { };
@@ -39,7 +39,6 @@ public static class Events
 
     public static System.Action OnPresetReset = delegate { }; // si hay un preset abierto lo resetea:
     public static System.Action<string> OnPresetLoaded = delegate { };
-    public static System.Action OnNewCharacter = delegate { };
 
     public static System.Action<UIManager.screenType> ShowScreen = delegate { };
 }

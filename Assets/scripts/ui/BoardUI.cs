@@ -1,6 +1,7 @@
 ﻿using BoardItems;
 using BoardItems.Characters;
 using System.Collections;
+using UI.MainApp;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEditor.Progress;
@@ -17,7 +18,39 @@ namespace UI
         public GameObject colorPicketBtnPrefab;
         public Camera cam;
         public Screenshot screenshot;
-        public CharacterManager characterManager;
+
+        BoardItemManager activeBoardItem;
+
+        public BoardItemManager characterManager;
+        public BoardItemManager sceneobjectsManager;
+
+        editingTypes editingType;
+        public enum editingTypes
+        {
+            SCENE,
+            CHARACTER,
+            OBJECT
+        }
+        public void SetEditingType(editingTypes t)  {
+            if(activeBoardItem != null)
+                activeBoardItem.gameObject.SetActive(false);
+            this.editingType = t;
+            switch (t)
+            {   
+                case editingTypes.SCENE:
+                    activeBoardItem = characterManager;
+                    break;
+                case editingTypes.CHARACTER:
+                    activeBoardItem = characterManager;
+                    break;
+                case editingTypes.OBJECT:
+                    activeBoardItem = sceneobjectsManager;
+                    break;
+                default:
+                    break;
+            }
+            activeBoardItem.gameObject.SetActive(true);
+        }
 
         int captureGifFramerate = 40;
 
@@ -27,19 +60,22 @@ namespace UI
         }
         private void Start()
         {
-            characterManager.SetAnim(CharacterAnims.anims.edit);
+
+            CharacterAnims.anims anim = CharacterAnims.anims.edit;
+            Events.OnCharacterAnim(0, anim);
+
             Events.GalleryDone += GalleryDone;
-            Events.EmptyCharacterItems += EmptyCharacterItems;
+            Events.EmptySceneItems += EmptySceneItems;
             Events.EmptyCharacterItemsButExlude += EmptyCharacterItemsButExlude;
         }
 
         private void OnDestroy()
         {
             Events.GalleryDone -= GalleryDone;
-            Events.EmptyCharacterItems -= EmptyCharacterItems;
+            Events.EmptySceneItems -= EmptySceneItems;
             Events.EmptyCharacterItemsButExlude -= EmptyCharacterItemsButExlude;
         }
-        void EmptyCharacterItems()
+        void EmptySceneItems()
         {
             items.DeleteAll();
         }
@@ -205,20 +241,15 @@ namespace UI
         }
         public void OnStopDrag(ItemInScene item)
         {
-            BodyPart bp = characterManager.GetBodyPart(item.data.part);
-            bp.SetArrengedItems();
+            activeBoardItem.OnStopDrag(item);
         }
-        public void MoveBack(ItemInScene itemSelected)
+        public void MoveBack(ItemInScene item)
         {
-            CharacterData.parts p = itemSelected.data.part;
-            BodyPart bp = characterManager.GetBodyPart(p);
-            bp.SendToBack(itemSelected);
+            activeBoardItem.MoveBack(item);
         }
-        public void MoveUp(ItemInScene itemSelected)
+        public void MoveUp(ItemInScene item)
         {
-            CharacterData.parts p = itemSelected.data.part;
-            BodyPart bp = characterManager.GetBodyPart(p);
-            bp.SendToTop(itemSelected);
+            activeBoardItem.MoveUp(item);
         }
 
     }

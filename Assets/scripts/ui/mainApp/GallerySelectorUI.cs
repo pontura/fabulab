@@ -59,7 +59,7 @@ namespace UI.MainApp
             } else
             {
                 GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(allGalleriesToAdd[galleryNum]);
-                UIManager.Instance.InitGallery(gd, true, LoadNextGallery);
+                Events.InitGallery(gd, true, LoadNextGallery);
                 galleryNum++;
             }
         }

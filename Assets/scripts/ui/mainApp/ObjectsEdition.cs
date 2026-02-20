@@ -1,9 +1,11 @@
+using UnityEditor.Presets;
 using UnityEngine;
 
 namespace UI.MainApp
 {
     public class ObjectsEdition : MainScreen
     {
+        [SerializeField] DragAndDropUI dragAndDropUI;
         [SerializeField] GameObject savePanel;
         [SerializeField] GameObject saveNewCharacterButton;
         [SerializeField] GameObject saveCharacterButton;
@@ -19,13 +21,13 @@ namespace UI.MainApp
                     SetButtons();
                     Show(true);
                     savePanel.SetActive(false);
+                    dragAndDropUI.SetOn(true);
                     break;
                 default:
                     Show(false);
                     break;
             }
         }
-
         private void Start()
         {
             Events.ActivateUIButtons += OnActivateUIButtons;

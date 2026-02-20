@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using UI.MainApp;
 using UnityEngine;
 
 namespace BoardItems.Characters
 {
-    public class CharacterManager : MonoBehaviour
+    public class CharacterManager : BoardItemManager
     {
         public int characterID = 0;
         CharacterAnims anims;
@@ -102,7 +103,7 @@ namespace BoardItems.Characters
             print("OnCharacter Part Anim " + part);
             anims.Play("edit_" + part.ToString().ToLower());
         }
-        public void Init()
+        public override void Init()
         {
             anims = GetComponent<CharacterAnims>();
             expressions = GetComponent<CharacterExpressions>();
@@ -111,7 +112,7 @@ namespace BoardItems.Characters
         {
             anims.Play(anim);
         }
-        public void AttachItem(ItemInScene item)
+        public override void AttachItem(ItemInScene item)
         {
             BodyPart bp = GetBodyPart(item.data.part);
             item.transform.SetParent(bp.transform);
@@ -125,6 +126,23 @@ namespace BoardItems.Characters
                     return p;
             }
             return null;
+        }
+        public override void OnStopDrag(ItemInScene item)
+        {
+            BodyPart bp = GetBodyPart(item.data.part);
+            bp.SetArrengedItems();
+        }
+        public override void MoveBack(ItemInScene itemSelected)
+        {
+            CharacterData.parts p = itemSelected.data.part;
+            BodyPart bp = GetBodyPart(p);
+            bp.SendToBack(itemSelected);
+        }
+        public override void MoveUp(ItemInScene itemSelected)
+        {
+            CharacterData.parts p = itemSelected.data.part;
+            BodyPart bp = GetBodyPart(p);
+            bp.SendToTop(itemSelected);
         }
     }
 }

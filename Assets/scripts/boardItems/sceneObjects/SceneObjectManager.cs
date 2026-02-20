@@ -1,8 +1,9 @@
+using UI.MainApp;
 using UnityEngine;
 
 namespace BoardItems.SceneObjects
 {
-    public class SceneObjectManager : MonoBehaviour
+    public class SceneObjectManager : BoardItemManager
     {
         public int id = 0;
         [SerializeField] Collider2D container;
@@ -13,10 +14,10 @@ namespace BoardItems.SceneObjects
         private void OnDestroy()
         {
         }
-        public void Init()
+        public override void Init()
         {
         }
-        public void AttachItem(ItemInScene item)
+        public override void AttachItem(ItemInScene item)
         {
             item.transform.SetParent(container.transform);
         }
