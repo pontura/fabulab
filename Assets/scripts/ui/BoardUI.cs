@@ -141,7 +141,7 @@ namespace UI
             items.DeleteInPart(wd.items[0].part);
             OpenWork(wd);
         }
-        ItemData CreateItem(AlbumData.CharacterData.SavedIData itemData)
+        ItemData CreateItem(AlbumData.SavedIData itemData)
         {
             ItemData originalGO = Data.Instance.galeriasData.GetItem(itemData.galleryID, itemData.id);
             print("____________" + originalGO.name);
@@ -181,7 +181,7 @@ namespace UI
         IEnumerator OpenWork_C(AlbumData.CharacterData wd)
         {
             print("open work");
-            foreach (AlbumData.CharacterData.SavedIData itemData in wd.items)
+            foreach (AlbumData.SavedIData itemData in wd.items)
             {
                 yield return new WaitForSeconds(0.05f);
                 ItemData newItem = CreateItem(itemData);
