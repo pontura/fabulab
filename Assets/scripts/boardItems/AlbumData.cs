@@ -181,7 +181,7 @@ namespace BoardItems
             }
             else
                 wd = GetCharacter(currentID);
-            CharacterManager cm = UIManager.Instance.boardUI.items.CharacterManager;
+            CharacterManager cm = UIManager.Instance.boardUI.characterManager;
 
             wd.armsColor = cm.GetArmsColor();
             wd.legsColor = cm.GetLegsColor();

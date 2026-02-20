@@ -1,9 +1,9 @@
 ﻿using BoardItems;
 using BoardItems.Characters;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 namespace UI
 {
@@ -17,11 +17,17 @@ namespace UI
         public GameObject colorPicketBtnPrefab;
         public Camera cam;
         public Screenshot screenshot;
+        public CharacterManager characterManager;
 
         int captureGifFramerate = 40;
 
+        private void Awake()
+        {
+            characterManager.Init();
+        }
         private void Start()
         {
+            characterManager.SetAnim(CharacterAnims.anims.edit);
             Events.GalleryDone += GalleryDone;
             Events.EmptyCharacterItems += EmptyCharacterItems;
             Events.EmptyCharacterItemsButExlude += EmptyCharacterItemsButExlude;
@@ -192,6 +198,27 @@ namespace UI
             Events.ColorizeArms( wd.armsColor );
             Events.ColorizeLegs( wd.legsColor );
             Events.ColorizeEyebrows( wd.eyebrowsColor );
+        }
+        public void AttachItem(ItemInScene item)
+        {
+            characterManager.AttachItem(item);
+        }
+        public void OnStopDrag(ItemInScene item)
+        {
+            BodyPart bp = characterManager.GetBodyPart(item.data.part);
+            bp.SetArrengedItems();
+        }
+        public void MoveBack(ItemInScene itemSelected)
+        {
+            CharacterData.parts p = itemSelected.data.part;
+            BodyPart bp = characterManager.GetBodyPart(p);
+            bp.SendToBack(itemSelected);
+        }
+        public void MoveUp(ItemInScene itemSelected)
+        {
+            CharacterData.parts p = itemSelected.data.part;
+            BodyPart bp = characterManager.GetBodyPart(p);
+            bp.SendToTop(itemSelected);
         }
 
     }

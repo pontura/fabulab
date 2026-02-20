@@ -1,4 +1,5 @@
 ﻿using BoardItems;
+using BoardItems.Characters;
 using System.Collections.Generic;
 using UI.MainApp;
 using UnityEngine;
@@ -17,6 +18,7 @@ namespace UI
         public ZoomsManager zoomManager;
         CharacterEdition characterEdition;
         [SerializeField] ConfirmationScreen confirmationScreen;
+
         public enum screenType
         {
             Home,
@@ -25,7 +27,8 @@ namespace UI
             Galleries,
             Creation_Character,
             WorkDetail,
-            UserScreen
+            UserScreen,
+            Creation_Objects
         }
 
         public static UIManager Instance
@@ -136,7 +139,7 @@ namespace UI
             if(exit)
                 SetBack();
         }
-        public void ShowWorkDetail(CharacterData wd)
+        public void ShowWorkDetail(AlbumData.CharacterData wd)
         {
             Sprite sprite = Sprite.Create(wd.thumb, new Rect(0, 0, wd.thumb.width, wd.thumb.height), Vector2.zero);
             Events.ShowScreen(UIManager.screenType.WorkDetail);
