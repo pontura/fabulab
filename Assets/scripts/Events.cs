@@ -1,5 +1,6 @@
 ﻿using BoardItems;
 using BoardItems.Characters;
+using BoardItems.SceneObjects;
 using BoardItems.UI;
 using UI;
 using UI.MainApp;
@@ -7,6 +8,7 @@ using UnityEngine;
 
 public static class Events
 {
+    public static System.Action<bool> OnNewPartSelected = delegate { };
     public static System.Action<BodyPart> OnNewBodyPartSelected = delegate { };
     public static System.Action<ItemInScene, Vector3> OnStartDrag = delegate { };
     public static System.Action<ItemInScene, Vector3> OnStopDrag = delegate { };

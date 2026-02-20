@@ -1,4 +1,5 @@
 using BoardItems.Characters;
+using BoardItems.SceneObjects;
 using UnityEngine;
 
 namespace BoardItems

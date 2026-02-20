@@ -1,5 +1,6 @@
 ﻿using BoardItems;
 using BoardItems.Characters;
+using BoardItems.SceneObjects;
 using System.Collections;
 using UI.MainApp;
 using UnityEngine;
@@ -21,10 +22,10 @@ namespace UI
 
         BoardItemManager activeBoardItem;
 
-        public BoardItemManager characterManager;
-        public BoardItemManager sceneobjectsManager;
+        public CharacterManager characterManager;
+        public SceneObjectManager sceneobjectsManager;
 
-        editingTypes editingType;
+        public editingTypes editingType;
         public enum editingTypes
         {
             SCENE,
@@ -32,18 +33,19 @@ namespace UI
             OBJECT
         }
         public void SetEditingType(editingTypes t)  {
-            if(activeBoardItem != null)
-                activeBoardItem.gameObject.SetActive(false);
             this.editingType = t;
             switch (t)
             {   
                 case editingTypes.SCENE:
+                    sceneobjectsManager.gameObject.SetActive(false);
                     activeBoardItem = characterManager;
                     break;
                 case editingTypes.CHARACTER:
+                    sceneobjectsManager.gameObject.SetActive(false);
                     activeBoardItem = characterManager;
                     break;
                 case editingTypes.OBJECT:
+                    characterManager.gameObject.SetActive(false);
                     activeBoardItem = sceneobjectsManager;
                     break;
                 default:
@@ -237,7 +239,7 @@ namespace UI
         }
         public void AttachItem(ItemInScene item)
         {
-            characterManager.AttachItem(item);
+            activeBoardItem.AttachItem(item);
         }
         public void OnStopDrag(ItemInScene item)
         {
