@@ -18,7 +18,7 @@ namespace UI.MainApp
             switch (type)
             {
                 case UIManager.screenType.Creation_Objects:
-                    Events.Zoom(BoardItems.Characters.CharacterData.parts.BODY, false);
+                    Events.Zoom(BoardItems.Characters.CharacterPartsHelper.parts.BODY, false);
                     changesMade = false;
                     SetButtons();
                     Show(true);

@@ -18,6 +18,7 @@ public static class Events
     public static System.Action ResetItems = delegate { };
     public static System.Action<string, string, string, System.Action<bool>> OnConfirm = delegate { };
     public static System.Action<CharacterPartsHelper.parts> EmptyCharacterItemsButExlude = delegate { };
+    public static System.Action EmptySceneItems = delegate { };
 
     public static System.Action<PalettesManager.colorNames> ColorizeArms = delegate { };
     public static System.Action<PalettesManager.colorNames> ColorizeLegs = delegate { };
@@ -38,6 +39,7 @@ public static class Events
     public static System.Action<bool> EditMode = delegate { };
     public static System.Action<CharacterPartsHelper.parts, bool> Zoom = delegate { };
 
+    public static System.Action OnCharacterReset = delegate { }; // si hay un preset abierto lo resetea:
     public static System.Action OnPresetReset = delegate { }; // si hay un preset abierto lo resetea:
     public static System.Action<string> OnPresetLoaded = delegate { };
 

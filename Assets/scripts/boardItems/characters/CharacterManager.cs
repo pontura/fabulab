@@ -134,13 +134,13 @@ namespace BoardItems.Characters
         }
         public override void MoveBack(ItemInScene itemSelected)
         {
-            CharacterData.parts p = itemSelected.data.part;
+            CharacterPartsHelper.parts p = itemSelected.data.part;
             BodyPart bp = GetBodyPart(p);
             bp.SendToBack(itemSelected);
         }
         public override void MoveUp(ItemInScene itemSelected)
         {
-            CharacterData.parts p = itemSelected.data.part;
+            CharacterPartsHelper.parts p = itemSelected.data.part;
             BodyPart bp = GetBodyPart(p);
             bp.SendToTop(itemSelected);
         }

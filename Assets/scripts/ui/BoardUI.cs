@@ -1,4 +1,5 @@
 ﻿using BoardItems;
+using BoardItems.BoardData;
 using BoardItems.Characters;
 using BoardItems.SceneObjects;
 using System.Collections;
@@ -67,21 +68,21 @@ namespace UI
             Events.OnCharacterAnim(0, anim);
 
             Events.GalleryDone += GalleryDone;
-            Events.EmptySceneItems += EmptySceneItems;
+            //Events.EmptySceneItems += EmptySceneItems;
             Events.EmptyCharacterItemsButExlude += EmptyCharacterItemsButExlude;
         }
 
         private void OnDestroy()
         {
             Events.GalleryDone -= GalleryDone;
-            Events.EmptySceneItems -= EmptySceneItems;
+            //Events.EmptySceneItems -= EmptySceneItems;
             Events.EmptyCharacterItemsButExlude -= EmptyCharacterItemsButExlude;
         }
         void EmptySceneItems()
         {
             items.DeleteAll();
         }
-        void EmptyCharacterItemsButExlude(CharacterData.parts part) 
+        void EmptyCharacterItemsButExlude(CharacterPartsHelper.parts part) 
         {
             items.DeleteAll(part);
         }
@@ -152,7 +153,7 @@ namespace UI
         public IEnumerator CreateGif(string id, System.Action callback)
         {
             yield return new WaitForSeconds(1);
-            AlbumData.CharacterData wd = Data.Instance.albumData.SetCurrentID(id);
+            CharacterData wd = Data.Instance.charactersData.SetCurrentID(id);
            // Data.Instance.galeriasData.SetGallery(wd.galleryID);
             OpenWork(wd);
             items.NextStepAnims(0, captureGifFramerate);
@@ -162,7 +163,7 @@ namespace UI
         public void LoadWork(string id)
         {
             items.DeleteAll();
-            AlbumData.CharacterData wd = Data.Instance.albumData.SetCurrentID(id);
+            CharacterData wd = Data.Instance.charactersData.SetCurrentID(id);
            // UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID, true);
            //TO-DO:
             //List<int> galleries = new List<int>();
@@ -174,12 +175,12 @@ namespace UI
             //UIManager.Instance.gallerySelectorUI.SelectGallery(galleries);
             OpenWork(wd);
         }
-        public void LoadPreset(AlbumData.CharacterData wd)
+        public void LoadPreset(CharacterPartData wd)
         {
             items.DeleteInPart(wd.items[0].part);
             OpenWork(wd);
         }
-        ItemData CreateItem(AlbumData.CharacterData.SavedIData itemData)
+        ItemData CreateItem(SavedIData itemData)
         {
             ItemData originalGO = Data.Instance.galeriasData.GetItem(itemData.galleryID, itemData.id);
             print("____________" + originalGO.name);
@@ -192,7 +193,7 @@ namespace UI
             //ItemData newItem = Instantiate(Resources.Load<ItemData>("galerias/" + itemData.galleryID + "/item_" + itemData.id));
             // Debug.Log("ID" + itemData.id + ":" + itemData.position);
             newItem.galleryID = itemData.galleryID;
-            newItem.part = (CharacterData.parts)itemData.part;
+            newItem.part = (CharacterPartsHelper.parts)itemData.part;
             newItem.position = itemData.position;
             newItem.rotation = itemData.rotation;
             newItem.scale = itemData.scale;
@@ -212,14 +213,14 @@ namespace UI
 
 
 
-        void OpenWork(AlbumData.CharacterData wd)
+        void OpenWork(CharacterPartData wd)
         {
             StartCoroutine(OpenWork_C(wd));
         }
-        IEnumerator OpenWork_C(AlbumData.CharacterData wd)
+        IEnumerator OpenWork_C(CharacterPartData wd)
         {
             print("open work");
-            foreach (AlbumData.CharacterData.SavedIData itemData in wd.items)
+            foreach (SavedIData itemData in wd.items)
             {
                 yield return new WaitForSeconds(0.05f);
                 ItemData newItem = CreateItem(itemData);
@@ -233,9 +234,11 @@ namespace UI
                 }
                 newItem.GetComponent<ItemInScene>().Appear();
             }
-            Events.ColorizeArms( wd.armsColor );
-            Events.ColorizeLegs( wd.legsColor );
-            Events.ColorizeEyebrows( wd.eyebrowsColor );
+            if (wd is CharacterData characterData) {
+                Events.ColorizeArms(characterData.armsColor);
+                Events.ColorizeLegs(characterData.legsColor);
+                Events.ColorizeEyebrows(characterData.eyebrowsColor);
+            }
         }
         public void AttachItem(ItemInScene item)
         {

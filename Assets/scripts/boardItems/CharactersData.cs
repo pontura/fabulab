@@ -43,7 +43,7 @@ namespace BoardItems
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
             Events.OnPresetReset += OnPresetReset;
             Events.OnPresetLoaded += OnPresetLoaded;
-            Events.OnNewCharacter += OnNewCharacter;            
+            Events.OnCharacterReset += OnCharacterReset;            
         }
 
        
@@ -52,7 +52,7 @@ namespace BoardItems
             FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
             Events.OnPresetReset -= OnPresetReset;
             Events.OnPresetLoaded -= OnPresetLoaded;
-            Events.OnNewCharacter -= OnNewCharacter;
+            Events.OnCharacterReset -= OnCharacterReset;
         }
 
         void OnTokenUpdated() {
@@ -378,7 +378,7 @@ namespace BoardItems
             loadedPresetId = presetId;
         }
 
-        void OnNewCharacter() {
+        void OnCharacterReset() {
             Debug.Log("# OnNewCharacter");
             loadedPresetId = "";
         }

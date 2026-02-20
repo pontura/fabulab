@@ -1,4 +1,5 @@
 ﻿using BoardItems;
+using BoardItems.BoardData;
 using System.Collections.Generic;
 using UI.MainApp;
 using UnityEngine;
@@ -105,8 +106,8 @@ namespace UI
         {
             boardUI.SetEditingType(editingTypes.CHARACTER);
             print("NewCharacter");
-            Data.Instance.albumData.ResetCurrentID();
-            Data.Instance.albumData.ResetPreset();
+            Data.Instance.charactersData.ResetCurrentID();
+            Events.OnPresetReset();
             GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(1);
             Events.InitGallery(gd, true, InitCharacterScreen);
             Events.EmptySceneItems();
@@ -119,8 +120,8 @@ namespace UI
         {
             boardUI.SetEditingType(editingTypes.OBJECT);
             print("new object");
-            Data.Instance.albumData.ResetCurrentID();
-            Data.Instance.albumData.ResetPreset();
+            Events.OnCharacterReset();
+            Events.OnPresetReset();
             GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(1);
             Events.InitGallery(gd, true, InitObjectsScreen);
             Events.EmptySceneItems();
@@ -158,7 +159,7 @@ namespace UI
             if(exit)
                 SetBack();
         }
-        public void ShowWorkDetail(AlbumData.CharacterData wd)
+        public void ShowWorkDetail(CharacterData wd)
         {
             Sprite sprite = Sprite.Create(wd.thumb, new Rect(0, 0, wd.thumb.width, wd.thumb.height), Vector2.zero);
             Events.ShowScreen(UIManager.screenType.WorkDetail);
