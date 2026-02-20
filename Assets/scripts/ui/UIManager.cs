@@ -15,7 +15,7 @@ namespace UI
         public GallerySelectorUI gallerySelectorUI;
         public WorkDetailUI workDetailUI;
         public ZoomsManager zoomManager;
-        PresetsPreviewUI presetsPreviewUI;
+        CharacterEdition characterEdition;
         [SerializeField] ConfirmationScreen confirmationScreen;
         public enum screenType
         {
@@ -23,7 +23,7 @@ namespace UI
             Create,
             Albums,
             Galleries,
-            Creation,
+            Creation_Character,
             WorkDetail,
             UserScreen
         }
@@ -41,7 +41,7 @@ namespace UI
             confirmationScreen.Init();
             backToScreen = new List<screenType>();
             zoomManager = GetComponent<ZoomsManager>();
-            presetsPreviewUI = GetComponent<PresetsPreviewUI>();
+            characterEdition = GetComponent<CharacterEdition>();
             if (!mInstance)
                 mInstance = this;
         }
@@ -106,16 +106,16 @@ namespace UI
         public void LoadWork(string id)
         {
             boardUI.LoadWork(id);
-            Events.ShowScreen(UIManager.screenType.Creation);
+            Events.ShowScreen(UIManager.screenType.Creation_Character);
         }
         public void InitGallery(GaleriasData.GalleryData gd, bool a, System.Action s)
         {
             Events.InitGallery(gd, a, s);
-            Events.ShowScreen(UIManager.screenType.Creation);
+            Events.ShowScreen(UIManager.screenType.Creation_Character);
         }
         public void Back()
         {
-            if (backToScreen[backToScreen.Count - 1] == screenType.Creation && presetsPreviewUI.ChangesMade())
+            if (backToScreen[backToScreen.Count - 1] == screenType.Creation_Character && characterEdition.ChangesMade())
             {
                 Events.OnConfirm("All changes will be lost", "Confirm and exit", "Cancel", ExitConfirmed);
             } else {

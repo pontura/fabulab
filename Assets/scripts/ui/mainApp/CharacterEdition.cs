@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UI.MainApp
 {
-    public class PresetsPreviewUI : MainScreen
+    public class CharacterEdition : MainScreen
     {
         public bool isPreview;
         [SerializeField] GameObject savePanel;
@@ -20,7 +20,7 @@ namespace UI.MainApp
         {
             switch (type)
             {
-                case UIManager.screenType.Creation:
+                case UIManager.screenType.Creation_Character:
                     changesMade = false;
                     SetButtons();
                     Show(true);
