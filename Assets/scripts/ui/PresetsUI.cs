@@ -49,7 +49,7 @@ namespace UI
             }
             else
             {
-                CharacterData.parts part = (CharacterData.parts)id;
+                CharacterPartsHelper.parts part = (CharacterPartsHelper.parts)id;
                 Events.Zoom(part, false);
                 if (isPreset)
                     presetsSelector.SetOn(true, id);
@@ -57,7 +57,7 @@ namespace UI
                     DragAndDrop();
             }
 
-            Events.OnCharacterPartAnim(characterEditorID, (CharacterData.parts)id);
+            Events.OnCharacterPartAnim(characterEditorID, (CharacterPartsHelper.parts)id);
         }
         public void DragAndDrop()
         {

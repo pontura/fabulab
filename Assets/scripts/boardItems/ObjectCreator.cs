@@ -1,4 +1,4 @@
-﻿using BoardItems;
+﻿using BoardItems.BoardData;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,21 +15,21 @@ namespace BoardItems
             int id = 1;
             foreach (GameObject go in go_to_create)
             {
-                AlbumData.CharacterData wData = new AlbumData.CharacterData();
-                wData.items = new List<AlbumData.SavedIData>();
+                CharacterData wData = new CharacterData();
+                wData.items = new List<SavedIData>();
                 wData.id = id.ToString();
                 foreach (ItemData itemData in go.GetComponentsInChildren<ItemData>())
                 {
-                    AlbumData.SavedIData s = SetItemData(itemData);
+                    SavedIData s = SetItemData(itemData);
                     wData.items.Add(s);
                 }
             //    Data.Instance.albumData.pakapakaAlbum.Add(wData);
                 id++;
             }
         }
-        AlbumData.SavedIData SetItemData(ItemData itemData)
+        SavedIData SetItemData(ItemData itemData)
         {
-            AlbumData.SavedIData d = new AlbumData.SavedIData();
+            SavedIData d = new SavedIData();
             d.position = itemData.gameObject.transform.position;
             d.rotation = itemData.gameObject.transform.localEulerAngles;
             d.scale = itemData.gameObject.transform.localScale;

@@ -1,9 +1,10 @@
 ﻿using BoardItems;
+using BoardItems.BoardData;
 using BoardItems.Characters;
 using System.Collections.Generic;
 using UI.MainApp;
 using UnityEngine;
-using static BoardItems.AlbumData;
+using static BoardItems.CharactersData;
 
 namespace UI
 {
@@ -100,7 +101,7 @@ namespace UI
         public void NewCharacter()
         {
             print("NewCharacter");
-            Data.Instance.albumData.ResetCurrentID();
+            Data.Instance.charactersData.ResetCurrentID();
             Events.OnNewCharacter();
             GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(1);
             InitGallery(gd, true, null);
@@ -139,7 +140,7 @@ namespace UI
             if(exit)
                 SetBack();
         }
-        public void ShowWorkDetail(AlbumData.CharacterData wd)
+        public void ShowWorkDetail(CharacterData wd)
         {
             Sprite sprite = Sprite.Create(wd.thumb, new Rect(0, 0, wd.thumb.width, wd.thumb.height), Vector2.zero);
             Events.ShowScreen(UIManager.screenType.WorkDetail);

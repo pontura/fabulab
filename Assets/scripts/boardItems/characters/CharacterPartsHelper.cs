@@ -3,7 +3,7 @@ using System;
 namespace BoardItems.Characters
 {
     [Serializable]
-    public static class CharacterData
+    public static class CharacterPartsHelper
     {
         public enum parts
         {

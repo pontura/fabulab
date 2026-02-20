@@ -1,7 +1,7 @@
 using BoardItems;
 using System.Collections.Generic;
 using UnityEngine;
-using static BoardItems.AlbumData;
+using BoardItems.BoardData;
 using static PalettesManager;
 
 namespace UI
@@ -31,9 +31,9 @@ namespace UI
                     OpenColors();
                 else
                 {
-                    List<CharacterData> all = Data.Instance.albumData.GetPreset(partID);
+                    List<CharacterPartData> all = Data.Instance.charactersData.GetPreset(partID);
                     artID++;
-                    foreach (CharacterData wd in all)
+                    foreach (CharacterPartData wd in all)
                     {
                         if (wd.thumb != null)
                         {

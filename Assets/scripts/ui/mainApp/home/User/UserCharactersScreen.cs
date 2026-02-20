@@ -1,4 +1,4 @@
-﻿using BoardItems;
+﻿using BoardItems.BoardData;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,8 +35,8 @@ namespace UI.MainApp.Home.User
         void LoadNext()
         {
            // print("LoadNext " + artID);
-           // if (artID >= Data.Instance.albumData.characters.Count) return;
-            foreach(AlbumData.CharacterData cd in Data.Instance.albumData.characters)
+           // if (artID >= Data.Instance.characters.Count) return;
+            foreach(CharacterData cd in Data.Instance.charactersData.userCharacters)
             {
                 CharacterSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
@@ -45,7 +45,7 @@ namespace UI.MainApp.Home.User
                // UIManager.Instance.boardUI.GenerateThumb(wd, rm, LoadNext);
                 go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
             }
-            //AlbumData.CharacterData wd = Data.Instance.albumData.characters[artID];
+            //CharacterData wd = Data.Instance.albumData.characters[artID];
             //artID++;
             //if (wd.thumb != null)
             //{

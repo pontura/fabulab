@@ -9,7 +9,7 @@ namespace BoardItems
     [Serializable]
     public class ItemData : MonoBehaviour
     {
-        public CharacterData.parts part;
+        public CharacterPartsHelper.parts part;
         public int galleryID;
         public Vector3 rotation;
         public Vector3 position;
@@ -32,7 +32,7 @@ namespace BoardItems
             this.scale = originalScale;
         }
        
-        public void SetCharacterPart(CharacterData.parts part)
+        public void SetCharacterPart(CharacterPartsHelper.parts part)
         {
             this.part = part;
         }

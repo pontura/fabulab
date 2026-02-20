@@ -162,7 +162,7 @@ namespace BoardItems
         }
         public bool IsBeingUse()
         {
-            return data.part != CharacterData.parts.none;
+            return data.part != CharacterPartsHelper.parts.none;
         }
         public bool IsInActiveBodyPart(BodyPart bodyPart)
         {

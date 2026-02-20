@@ -13,7 +13,7 @@ public class Data : MonoBehaviour
     public AdminData adminData;
     public PalettesManager palettesManager;
     public GaleriasData galeriasData;
-    public AlbumData albumData;
+    public CharactersData charactersData;
     public AnimationsManager animationsManager;
     public Settings settings;
 

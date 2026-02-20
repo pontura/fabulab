@@ -19,7 +19,7 @@ namespace BoardItems
         {
             Events.Zoom -= Zoom;
         }
-        public void Zoom(CharacterData.parts part, bool saving = false)
+        public void Zoom(CharacterPartsHelper.parts part, bool saving = false)
         {
             animator.SetInteger("zoom", (int)part);
         }

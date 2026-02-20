@@ -6,8 +6,8 @@ namespace UI
     public class ZoomsManager : MonoBehaviour
     {
         [SerializeField] Animator animator;
-        public CharacterData.parts part;
-        public CharacterData.parts lastZoom;
+        public CharacterPartsHelper.parts part;
+        public CharacterPartsHelper.parts lastZoom;
 
         private void Awake()
         {
@@ -21,7 +21,7 @@ namespace UI
         {
             Events.Zoom(lastZoom, true);
         }
-        public void Zoom(CharacterData.parts _part, bool saving = false)
+        public void Zoom(CharacterPartsHelper.parts _part, bool saving = false)
         {
             this.lastZoom = part;
             this.part = _part;

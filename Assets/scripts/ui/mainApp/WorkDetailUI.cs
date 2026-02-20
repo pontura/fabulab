@@ -92,7 +92,7 @@ namespace UI.MainApp
         {
             if (enable)
             {
-                Data.Instance.albumData.DeleteCharacter(id);
+                Data.Instance.charactersData.DeleteCharacter(id);
                 Back();
                 confirmation.SetActive(false);
             }

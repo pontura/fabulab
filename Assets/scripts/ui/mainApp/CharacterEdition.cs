@@ -45,7 +45,7 @@ namespace UI.MainApp
         }   
         void Delayed()
         {
-            bool isEditingCharacter = (Data.Instance.albumData.GetCurrent() != "");
+            bool isEditingCharacter = (Data.Instance.charactersData.GetCurrent() != "");
             isPreview = isEditingCharacter;
             SetTogglePreview();
         }
@@ -108,12 +108,12 @@ namespace UI.MainApp
         public void SetButtons()
         {
             savePartButton.SetActive(Data.Instance.userData.isAdmin);
-            saveCharacterButton.SetActive(Data.Instance.albumData.GetCurrent() != "");
+            saveCharacterButton.SetActive(Data.Instance.charactersData.GetCurrent() != "");
         }
         public void Save()
         {
             savePanel.SetActive(false);
-            Data.Instance.albumData.SetCurrentID("");// Resetea si hay un character elegido.
+            Data.Instance.charactersData.SetCurrentID("");// Resetea si hay un character elegido.
             SaveWork();
         }
         public void Replace()// Guarda la version editada del personaje.
@@ -129,13 +129,13 @@ namespace UI.MainApp
         public void SaveProfilePic()
         {
             print("SaveProfilePic");
-            UIManager.Instance.zoomManager.Zoom(BoardItems.Characters.CharacterData.parts.HEAD, true);
+            UIManager.Instance.zoomManager.Zoom(BoardItems.Characters.CharacterPartsHelper.parts.HEAD, true);
             savePanel.SetActive(false);
             Invoke("SaveProfilePicDelayed", 1);
         }
         void SaveProfilePicDelayed()
         {
-            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.albumData.thumbSize, SaveProfilePicture);
+            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, SaveProfilePicture);
         }
         public void SaveProfilePicture(Texture2D tex)
         {
@@ -143,11 +143,11 @@ namespace UI.MainApp
         }
         void SaveWork()
         {
-            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.albumData.thumbSize, OnTakeShotDone);
+            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, OnTakeShotDone);
         }
         public void OnTakeShotDone(Texture2D tex)
         {
-            Data.Instance.albumData.SaveCharacter(tex);
+            Data.Instance.charactersData.SaveCharacter(tex);
         }
 
     }

@@ -19,7 +19,7 @@ namespace UI.MainApp.Home
             if (isOn)
             {
                 tabs.Init(OnTabClicked);
-                int charactersQty = Data.Instance.albumData.characters.Count;
+                int charactersQty = Data.Instance.charactersData.userCharacters.Count;
                 List<string> tabNames = new List<string>() { "Settings", "Stories", "Characters (" + charactersQty + ")", "Objects" };
                 tabs.SetTabNames(tabNames);
             }

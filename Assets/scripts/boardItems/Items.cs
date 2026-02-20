@@ -213,7 +213,7 @@ namespace BoardItems
             );
             return newGO;
         }
-        public void DeleteAll(CharacterData.parts exludePart)
+        public void DeleteAll(CharacterPartsHelper.parts exludePart)
         {
             StopAllCoroutines();
             
@@ -221,12 +221,12 @@ namespace BoardItems
             while (i > 0)
             {
                 ItemInScene itemInScene = all[i - 1];
-                CharacterData.parts thisPart = itemInScene.data.part;
+                CharacterPartsHelper.parts thisPart = itemInScene.data.part;
 
-                if(thisPart == CharacterData.parts.HAND_LEFT)
-                    thisPart = CharacterData.parts.HAND;
-                if (thisPart == CharacterData.parts.FOOT_LEFT)
-                    thisPart = CharacterData.parts.FOOT;
+                if(thisPart == CharacterPartsHelper.parts.HAND_LEFT)
+                    thisPart = CharacterPartsHelper.parts.HAND;
+                if (thisPart == CharacterPartsHelper.parts.FOOT_LEFT)
+                    thisPart = CharacterPartsHelper.parts.FOOT;
 
                 if (thisPart != 0 && thisPart != exludePart)
                 {
@@ -255,7 +255,7 @@ namespace BoardItems
             while (i > 0)
             {
                 ItemInScene itemInScene = all[i - 1];
-                if (itemInScene.data.part == (CharacterData.parts)partID)
+                if (itemInScene.data.part == (CharacterPartsHelper.parts)partID)
                 {
                     bool mirrorDeleted = Delete(itemInScene);
                     if (mirrorDeleted) i--;
@@ -267,7 +267,7 @@ namespace BoardItems
         {
             Delete(itemSelected);
         }
-        public void SetItemInScene(ItemInScene item, CharacterData.parts part)
+        public void SetItemInScene(ItemInScene item, CharacterPartsHelper.parts part)
         {
             board.AttachItem(item);
             itemSelected = item;
@@ -319,10 +319,10 @@ namespace BoardItems
         bool IsInMirrorPart(ItemInScene item)
         {
             //print(" IsInMirrorPart " + item.data.part);
-            return item.data.part == CharacterData.parts.FOOT
-                || item.data.part == CharacterData.parts.FOOT_LEFT
-                || item.data.part == CharacterData.parts.HAND
-                || item.data.part == CharacterData.parts.HAND_LEFT;
+            return item.data.part == CharacterPartsHelper.parts.FOOT
+                || item.data.part == CharacterPartsHelper.parts.FOOT_LEFT
+                || item.data.part == CharacterPartsHelper.parts.HAND
+                || item.data.part == CharacterPartsHelper.parts.HAND_LEFT;
         }
         void CheckMirror(ItemInScene item)
         {
@@ -336,10 +336,10 @@ namespace BoardItems
         {
             switch(item.data.part)
             {
-                case CharacterData.parts.FOOT:  mirror.data.part = CharacterData.parts.FOOT_LEFT; break;
-                case CharacterData.parts.FOOT_LEFT: mirror.data.part = CharacterData.parts.FOOT; break;
-                case CharacterData.parts.HAND: mirror.data.part = CharacterData.parts.HAND_LEFT; break;
-                case CharacterData.parts.HAND_LEFT: mirror.data.part = CharacterData.parts.HAND; break;
+                case CharacterPartsHelper.parts.FOOT:  mirror.data.part = CharacterPartsHelper.parts.FOOT_LEFT; break;
+                case CharacterPartsHelper.parts.FOOT_LEFT: mirror.data.part = CharacterPartsHelper.parts.FOOT; break;
+                case CharacterPartsHelper.parts.HAND: mirror.data.part = CharacterPartsHelper.parts.HAND_LEFT; break;
+                case CharacterPartsHelper.parts.HAND_LEFT: mirror.data.part = CharacterPartsHelper.parts.HAND; break;
             }
             SetItemInScene(mirror, mirror.data.part);
 

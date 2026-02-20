@@ -2,7 +2,7 @@ using BoardItems.UI;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static BoardItems.AlbumData;
+using BoardItems.BoardData;
 using static PalettesManager;
 
 namespace UI
@@ -11,11 +11,11 @@ namespace UI
     {
         [SerializeField] Image image;
         PresetsSelector manager;
-        public CharacterData workData;
+        public CharacterPartData workData;
         public colorNames color;
         public int partToColorizeID = 0; //0 = amrs; 1 = legs
 
-        public void Init(PresetsSelector manager, CharacterData workData)
+        public void Init(PresetsSelector manager, CharacterPartData workData)
         {
             this.workData = workData;
             this.manager = manager;

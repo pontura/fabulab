@@ -1,4 +1,4 @@
-using BoardItems;
+using BoardItems.BoardData;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +7,7 @@ namespace UI.MainApp.Home.User
     public class CharacterSelectorBtn : MonoBehaviour
     {
         [SerializeField] Image thumb;
-        public void Init(AlbumData.CharacterData cd)
+        public void Init(CharacterData cd)
         {
             thumb.sprite = cd.GetSprite();
         }

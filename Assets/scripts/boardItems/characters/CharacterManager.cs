@@ -43,7 +43,7 @@ namespace BoardItems.Characters
             Events.Zoom -= Zoom;
         }
 
-        private void Zoom(CharacterData.parts part, bool saving = false)
+        private void Zoom(CharacterPartsHelper.parts part, bool saving = false)
         {
             foreach (BodyPart p in bodyParts)
             {
@@ -96,7 +96,7 @@ namespace BoardItems.Characters
             if (characterID != this.characterID) return;
             SetAnim(anim);
         }
-        void OnCharacterPartAnim(int characterID, CharacterData.parts part)
+        void OnCharacterPartAnim(int characterID, CharacterPartsHelper.parts part)
         {
             if (characterID != this.characterID) return;
             print("OnCharacter Part Anim " + part);
@@ -117,7 +117,7 @@ namespace BoardItems.Characters
             item.transform.SetParent(bp.transform);
             item.data.part = bp.part;
         }       
-        public BodyPart GetBodyPart(CharacterData.parts part)
+        public BodyPart GetBodyPart(CharacterPartsHelper.parts part)
         {
             foreach (BodyPart p in bodyParts)
             {

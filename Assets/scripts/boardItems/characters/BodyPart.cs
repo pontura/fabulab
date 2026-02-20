@@ -6,7 +6,7 @@ namespace BoardItems
     public class BodyPart : MonoBehaviour
     {
         Collider2D col2D;
-        public CharacterData.parts part;
+        public CharacterPartsHelper.parts part;
         [SerializeField] GameObject selectedBodySignal;
         [SerializeField] BodyPart mirror;
         float z_displacement = 0.001f;

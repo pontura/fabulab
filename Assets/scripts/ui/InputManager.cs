@@ -15,7 +15,7 @@ namespace UI
         public states state;
         Vector3 clickPosition;
         public Items items;
-        CharacterData.parts partActive;
+        CharacterPartsHelper.parts partActive;
 
         public enum states
         {
@@ -34,7 +34,7 @@ namespace UI
         {
             Events.Zoom -= OnZoom;
         }
-        private void OnZoom(CharacterData.parts part, bool saving = false)
+        private void OnZoom(CharacterPartsHelper.parts part, bool saving = false)
         {
             this.partActive = part;
         }
@@ -48,7 +48,7 @@ namespace UI
         float lastMouseX;
         void LateUpdate()
         {
-            if(partActive == CharacterData.parts.none)
+            if(partActive == CharacterPartsHelper.parts.none)
                 return;
             
 #if UNITY_EDITOR
