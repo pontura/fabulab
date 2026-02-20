@@ -284,7 +284,7 @@ namespace BoardItems
             }
             else
                 wd = GetCharacter(currentID);
-            CharacterManager cm = UIManager.Instance.boardUI.items.CharacterManager;
+            CharacterManager cm = UIManager.Instance.boardUI.characterManager;
 
             wd.armsColor = cm.GetArmsColor();
             wd.legsColor = cm.GetLegsColor();
@@ -625,7 +625,10 @@ namespace BoardItems
         /*WorkData ParseWork() {
 
         }*/
-
+        public string GetCurrent()
+        {
+            return currentID;
+        }
         public CharacterData GetCharacter(string id)
         {
             return characters.Find(x => x.id == id);

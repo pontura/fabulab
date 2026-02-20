@@ -1,9 +1,9 @@
 ﻿using BoardItems;
 using BoardItems.Characters;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 namespace UI
 {
@@ -17,11 +17,17 @@ namespace UI
         public GameObject colorPicketBtnPrefab;
         public Camera cam;
         public Screenshot screenshot;
+        public CharacterManager characterManager;
 
         int captureGifFramerate = 40;
 
+        private void Awake()
+        {
+            characterManager.Init();
+        }
         private void Start()
         {
+            characterManager.SetAnim(CharacterAnims.anims.edit);
             Events.GalleryDone += GalleryDone;
             Events.EmptyCharacterItems += EmptyCharacterItems;
             Events.EmptyCharacterItemsButExlude += EmptyCharacterItemsButExlude;
@@ -45,15 +51,11 @@ namespace UI
         {
             AudioManager.Instance.musicManager.Play("board");
         }
-        public void ResetButton()
+       
+        void OnResetConfirmed(bool confirmed)
         {
-            AudioManager.Instance.uiSfxManager.PlayNextScale("click");
-            ResetBoard();
-        }
-
-        public void ResetBoard()
-        {
-            GetComponent<DeleteAllPopup>().Init();
+            if(confirmed)
+                ResetBoardConfirmed();
         }
         public void ResetBoardConfirmed()
         {
@@ -109,17 +111,6 @@ namespace UI
             cam.backgroundColor = color;
         }
 
-        public void SaveWork()
-        {
-            AudioManager.Instance.uiSfxManager.Play("tilde", 0.4f);
-            screenshot.TakeShot(Data.Instance.albumData.thumbSize, OnTakeShotDone);
-        }
-
-        public void OnTakeShotDone(Texture2D tex)
-        {
-            Data.Instance.albumData.SaveCharacter(tex);
-        }
-
         public IEnumerator CreateGif(string id, System.Action callback)
         {
             yield return new WaitForSeconds(1);
@@ -150,7 +141,7 @@ namespace UI
             items.DeleteInPart(wd.items[0].part);
             OpenWork(wd);
         }
-        ItemData CreateItem(AlbumData.SavedIData itemData, bool isInScene)
+        ItemData CreateItem(AlbumData.CharacterData.SavedIData itemData)
         {
             ItemData originalGO = Data.Instance.galeriasData.GetItem(itemData.galleryID, itemData.id);
             print("____________" + originalGO.name);
@@ -177,7 +168,6 @@ namespace UI
             items.SetItemInScene(itemInScene, newItem.part);
             itemInScene.data.SetTransformByData();
 
-
             items.FinishEditingItem(itemInScene);
             return newItem;
         }
@@ -186,10 +176,15 @@ namespace UI
 
         void OpenWork(AlbumData.CharacterData wd)
         {
+            StartCoroutine(OpenWork_C(wd));
+        }
+        IEnumerator OpenWork_C(AlbumData.CharacterData wd)
+        {
             print("open work");
-            foreach (AlbumData.SavedIData itemData in wd.items)
+            foreach (AlbumData.CharacterData.SavedIData itemData in wd.items)
             {
-                ItemData newItem = CreateItem(itemData, true);
+                yield return new WaitForSeconds(0.05f);
+                ItemData newItem = CreateItem(itemData);
 
                 print("open work newItem part: " + newItem.part);
 
@@ -198,10 +193,32 @@ namespace UI
                     AnimationsManager.AnimData animData = Data.Instance.animationsManager.GetAnimByName(newItem.anim);
                     Events.AnimateItem(animData);
                 }
+                newItem.GetComponent<ItemInScene>().Appear();
             }
             Events.ColorizeArms( wd.armsColor );
             Events.ColorizeLegs( wd.legsColor );
             Events.ColorizeEyebrows( wd.eyebrowsColor );
+        }
+        public void AttachItem(ItemInScene item)
+        {
+            characterManager.AttachItem(item);
+        }
+        public void OnStopDrag(ItemInScene item)
+        {
+            BodyPart bp = characterManager.GetBodyPart(item.data.part);
+            bp.SetArrengedItems();
+        }
+        public void MoveBack(ItemInScene itemSelected)
+        {
+            CharacterData.parts p = itemSelected.data.part;
+            BodyPart bp = characterManager.GetBodyPart(p);
+            bp.SendToBack(itemSelected);
+        }
+        public void MoveUp(ItemInScene itemSelected)
+        {
+            CharacterData.parts p = itemSelected.data.part;
+            BodyPart bp = characterManager.GetBodyPart(p);
+            bp.SendToTop(itemSelected);
         }
 
     }

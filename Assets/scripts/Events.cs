@@ -14,6 +14,7 @@ public static class Events
     public static System.Action<GaleriasData.GalleryData, bool, System.Action> InitGallery = delegate { };
     public static System.Action GalleryDone = delegate { };
     public static System.Action ResetItems = delegate { };
+    public static System.Action<string, string, string, System.Action<bool>> OnConfirm = delegate { };
     public static System.Action EmptyCharacterItems = delegate { };
     public static System.Action<CharacterData.parts> EmptyCharacterItemsButExlude = delegate { };
 
@@ -25,11 +26,13 @@ public static class Events
     public static System.Action<PalettesManager.colorNames> Colorize = delegate { };
     public static System.Action<AnimationsManager.AnimData> AnimateItem = delegate { };
     public static System.Action<bool> ActivateUIButtons = delegate { };
+    public static System.Action<bool> SetChangesMade = delegate { };
     public static System.Action<bool> OnLoading = delegate { };
     public static System.Action<string, System.Action> CaptureGif = delegate { };
     public static System.Action<bool> OnCanvasDragger = delegate { };
     public static System.Action<System.Action<bool>> OnParentalGate = delegate { };
     public static System.Action<int, CharacterAnims.anims> OnCharacterAnim = delegate { };
+    public static System.Action<int, CharacterData.parts> OnCharacterPartAnim = delegate { };
     public static System.Action<int, CharacterExpressions.expressions> OnCharacterExpression = delegate { };
     public static System.Action<bool> EditMode = delegate { };
     public static System.Action<CharacterData.parts, bool> Zoom = delegate { };

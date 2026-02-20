@@ -28,4 +28,8 @@ public class CharacterAnims : MonoBehaviour
     {
         anim.Play(animName.ToString());
     }
+    public void Play(string animName)
+    {
+        anim.Play(animName);
+    }
 }

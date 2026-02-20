@@ -1,6 +1,7 @@
 ﻿using BoardItems;
+using BoardItems.Characters;
+using System.Collections.Generic;
 using UI.MainApp;
-using UI.MainApp.Home;
 using UnityEngine;
 using static BoardItems.AlbumData;
 
@@ -8,21 +9,26 @@ namespace UI
 {
     public class UIManager : MonoBehaviour
     {
+        public GameObject backBtn;
         static UIManager mInstance = null;
         public CreatePanel create;
         public BoardUI boardUI;
         public GallerySelectorUI gallerySelectorUI;
         public WorkDetailUI workDetailUI;
         public ZoomsManager zoomManager;
+        CharacterEdition characterEdition;
+        [SerializeField] ConfirmationScreen confirmationScreen;
+
         public enum screenType
         {
             Home,
             Create,
             Albums,
             Galleries,
-            Creation,
+            Creation_Character,
             WorkDetail,
-            UserScreen
+            UserScreen,
+            Creation_Objects
         }
 
         public static UIManager Instance
@@ -32,16 +38,38 @@ namespace UI
                 return mInstance;
             }
         }
+        List<screenType> backToScreen;
         void Awake()
         {
+            confirmationScreen.Init();
+            backToScreen = new List<screenType>();
             zoomManager = GetComponent<ZoomsManager>();
+            characterEdition = GetComponent<CharacterEdition>();
             if (!mInstance)
                 mInstance = this;
         }
         private void Start()
         {
+            Events.ShowScreen += OnShowScreen;
             Init();
             Invoke("InitGalleryDelayed", 0.1f);
+        }
+        private void OnDestroy()
+        {
+            Events.ShowScreen -= OnShowScreen;
+        }
+        private void OnShowScreen(screenType type)
+        {
+            backToScreen.Add(type);
+            switch(type)
+            {
+                case screenType.Home:
+                    backBtn.SetActive(false);
+                    break;
+                default:
+                    backBtn.SetActive(true);
+                    break;
+            }
         }
         void InitGalleryDelayed() // to-do inicia los items:
         {
@@ -81,18 +109,37 @@ namespace UI
         public void LoadWork(string id)
         {
             boardUI.LoadWork(id);
-            Events.ShowScreen(UIManager.screenType.Creation);
+            Events.ShowScreen(UIManager.screenType.Creation_Character);
         }
         public void InitGallery(GaleriasData.GalleryData gd, bool a, System.Action s)
         {
             Events.InitGallery(gd, a, s);
-            Events.ShowScreen(UIManager.screenType.Creation);
+            Events.ShowScreen(UIManager.screenType.Creation_Character);
         }
         public void Back()
         {
-            Home();
+            if (backToScreen[backToScreen.Count - 1] == screenType.Creation_Character && characterEdition.ChangesMade())
+            {
+                Events.OnConfirm("All changes will be lost", "Confirm and exit", "Cancel", ExitConfirmed);
+            } else {
+                SetBack();
+            }
         }
-        public void ShowWorkDetail(CharacterData wd)
+        void SetBack()
+        {
+            if (backToScreen.Count < 3)
+                Events.ShowScreen(screenType.Home);
+            else
+                Events.ShowScreen(backToScreen[backToScreen.Count - 2]);
+            backToScreen.RemoveAt(backToScreen.Count - 1);
+            backToScreen.RemoveAt(backToScreen.Count - 1);
+        }
+        void ExitConfirmed(bool exit)
+        {
+            if(exit)
+                SetBack();
+        }
+        public void ShowWorkDetail(AlbumData.CharacterData wd)
         {
             Sprite sprite = Sprite.Create(wd.thumb, new Rect(0, 0, wd.thumb.width, wd.thumb.height), Vector2.zero);
             Events.ShowScreen(UIManager.screenType.WorkDetail);

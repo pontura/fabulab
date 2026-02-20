@@ -1,5 +1,6 @@
 ﻿using BoardItems.Characters;
 using System.Collections.Generic;
+using UI;
 using UnityEngine;
 
 namespace BoardItems
@@ -16,12 +17,8 @@ namespace BoardItems
         public Inventary inventary;
         public SpriteRenderer bg;
         public Transform container;
-        [SerializeField] CharacterManager characterManager;
-        public CharacterManager CharacterManager { get { return characterManager; } }
-        private void Awake()
-        {
-            characterManager.Init();
-        }
+        [SerializeField] BoardUI board;
+       
         void Start()
         {
             Events.EditMode += EditMode;
@@ -31,7 +28,6 @@ namespace BoardItems
             Events.AnimateItem += AnimateItem;
             Events.ResetItems += ResetItems;
 
-            characterManager.SetAnim(CharacterAnims.anims.edit);
             Events.EditMode(true);
         }
         void OnDestroy()
@@ -273,7 +269,7 @@ namespace BoardItems
         }
         public void SetItemInScene(ItemInScene item, CharacterData.parts part)
         {
-            characterManager.AttachItem(item);
+            board.AttachItem(item);
             itemSelected = item;
         }
         void OnStopDrag(ItemInScene item, Vector3 pos)
@@ -299,9 +295,9 @@ namespace BoardItems
                 AnimateItemDragDrop(false);
                 FinishEditingItem(item);
                 Events.ActivateUIButtons(true);
+                Events.SetChangesMade(true);
 
-                BodyPart bp = characterManager.GetBodyPart(item.data.part);
-                bp.SetArrengedItems();
+                board.OnStopDrag(item);
             }
         }
 
@@ -431,16 +427,12 @@ namespace BoardItems
         float back_z;
         public void MoveBack()
         {
-            CharacterData.parts p = itemSelected.data.part;
-            BodyPart bp = characterManager.GetBodyPart(p);
-            bp.SendToBack(itemSelected);
+            board.MoveBack(itemSelected);
             FinishEditingItem(itemSelected);
         }
         public void MoveUp()
         {
-            CharacterData.parts p = itemSelected.data.part;
-            BodyPart bp = characterManager.GetBodyPart(p);
-            bp.SendToTop(itemSelected);
+            board.MoveUp(itemSelected);
             FinishEditingItem(itemSelected);
         }
         public void ResetItemTransform()

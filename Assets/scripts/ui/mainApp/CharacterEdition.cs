@@ -1,24 +1,30 @@
+using BoardItems;
 using UnityEngine;
 
 namespace UI.MainApp
 {
-    public class PresetsPreviewUI : MainScreen
+    public class CharacterEdition : MainScreen
     {
         public bool isPreview;
         [SerializeField] GameObject savePanel;
+        [SerializeField] GameObject savePartButton;
+        [SerializeField] GameObject saveNewCharacterButton;
+        [SerializeField] GameObject saveCharacterButton;
         [SerializeField] GameObject[] togglePreviewParts;
         [SerializeField] PresetsUI presetsUI;
         [SerializeField] PreviewUI previewUI;
-        public GameObject DoneBtn;
+        [SerializeField] GameObject DoneBtn;
+        [SerializeField] bool changesMade;
 
         protected override void ShowScreen(UIManager.screenType type)
         {
             switch (type)
             {
-                case UIManager.screenType.Creation:
+                case UIManager.screenType.Creation_Character:
+                    changesMade = false;
+                    SetButtons();
                     Show(true);
                     savePanel.SetActive(false);
-                    OnActivateUIButtons(false);
                     Invoke("Delayed", 0.1f);
                     break;
                 default:
@@ -30,14 +36,17 @@ namespace UI.MainApp
         private void Start()
         {
             Events.ActivateUIButtons += OnActivateUIButtons;
+            Events.SetChangesMade += SetChangesMade;
         }
         public override void OnDestroyed() 
         {
             Events.ActivateUIButtons -= OnActivateUIButtons;
+            Events.SetChangesMade -= SetChangesMade;
         }   
         void Delayed()
         {
-            isPreview = false;
+            bool isEditingCharacter = (Data.Instance.albumData.GetCurrent() != "");
+            isPreview = isEditingCharacter;
             SetTogglePreview();
         }
         public void TogglePreview()
@@ -61,6 +70,14 @@ namespace UI.MainApp
                 previewUI.Init();
                 presetsUI.SetOff();
             }
+        }
+        void SetChangesMade(bool _changesMade)
+        {
+            this.changesMade = _changesMade;
+        }
+        public bool ChangesMade()
+        {
+            return changesMade;
         }
         private void OnActivateUIButtons(bool isOn)
         {
@@ -86,21 +103,51 @@ namespace UI.MainApp
         }
         void SavePartDelayed()
         {
-            UIManager.Instance.boardUI.SaveWork();
+            SaveWork();
+        }
+        public void SetButtons()
+        {
+            savePartButton.SetActive(Data.Instance.userData.isAdmin);
+            saveCharacterButton.SetActive(Data.Instance.albumData.GetCurrent() != "");
         }
         public void Save()
         {
             savePanel.SetActive(false);
-            UIManager.Instance.boardUI.SaveWork();
+            Data.Instance.albumData.SetCurrentID("");// Resetea si hay un character elegido.
+            SaveWork();
         }
-        public void Replace()
+        public void Replace()// Guarda la version editada del personaje.
         {
             savePanel.SetActive(false);
+            SaveWork();
         }
         public void Cancel()
         {
             DoneBtn.SetActive(true);
             savePanel.SetActive(false);
+        }
+        public void SaveProfilePic()
+        {
+            print("SaveProfilePic");
+            UIManager.Instance.zoomManager.Zoom(BoardItems.Characters.CharacterData.parts.HEAD, true);
+            savePanel.SetActive(false);
+            Invoke("SaveProfilePicDelayed", 1);
+        }
+        void SaveProfilePicDelayed()
+        {
+            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.albumData.thumbSize, SaveProfilePicture);
+        }
+        public void SaveProfilePicture(Texture2D tex)
+        {
+            print("TO-DO: graba la profilepicture");
+        }
+        void SaveWork()
+        {
+            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.albumData.thumbSize, OnTakeShotDone);
+        }
+        public void OnTakeShotDone(Texture2D tex)
+        {
+            Data.Instance.albumData.SaveCharacter(tex);
         }
 
     }

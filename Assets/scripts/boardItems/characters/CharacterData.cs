@@ -1,5 +1,4 @@
 using System;
-using static BoardItems.Characters.CharacterData;
 
 namespace BoardItems.Characters
 {
