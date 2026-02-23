@@ -1,4 +1,6 @@
 ﻿using BoardItems;
+//using static BoardItems.AlbumData;
+using BoardItems.BoardData;
 using Firebase.Database;
 using Firebase.Extensions;
 using Newtonsoft.Json;
@@ -6,11 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.DB;
-//using static BoardItems.AlbumData;
-using BoardItems.BoardData;
 
 namespace Yaguar.StoryMaker.DB
 {
@@ -375,6 +376,7 @@ namespace Yaguar.StoryMaker.DB
         public void DeleteBodypartPreset(string presetId, string partId, System.Action<string> callback) {
 
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/bodypart/" + partId + "/" + presetId);
+            Debug.Log("#DeleteBodypartPreset presets / bodypart / " + partId + " / " + presetId);
             reference.RemoveValueAsync().ContinueWithOnMainThread((Action<Task>)(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#DeleteBodypartPreset FAIL");

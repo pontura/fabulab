@@ -111,7 +111,7 @@ namespace UI.MainApp
         public void DeletePart()
         {
             string presetID = Data.Instance.charactersData.PresetID;
-            string partID = UIManager.Instance.zoomManager.part.ToString();
+            string partID = UIManager.Instance.zoomManager.lastZoom.ToString();
             FirebaseStoryMakerDBManager.Instance.DeleteBodypartPreset(presetID, partID, OnPartDeleted);
         }
         void OnPartDeleted(string result)
@@ -121,10 +121,10 @@ namespace UI.MainApp
         }
         public void SetButtons()
         {
-            if (Data.Instance.charactersData.PresetID != "" && Data.Instance.userData.isAdmin)
+            if (Data.Instance.userData.isAdmin)
             {
                 savePartButton.SetActive(true);
-                deletePartButton.SetActive(true);
+                deletePartButton.SetActive(Data.Instance.charactersData.PresetID != "");
 
                 savePartButton.GetComponentInChildren<TMPro.TMP_Text>().text = "Save " + UIManager.Instance.zoomManager.lastZoom.ToString();
                 deletePartButton.GetComponentInChildren<TMPro.TMP_Text>().text = "Delete " + UIManager.Instance.zoomManager.lastZoom.ToString();
