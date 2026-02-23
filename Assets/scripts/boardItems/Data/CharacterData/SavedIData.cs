@@ -37,7 +37,7 @@ namespace BoardItems.BoardData
             scale = new Vector3(serverData.scale.x, serverData.scale.y, serverData.scale.z);
             anim = serverData.anim;
             color = serverData.color;
-            Debug.Log(galleryID + ", " + part + ", " + position + ", " + rotation + ", " + scale + ", " + anim + ", " + color);
+            //Debug.Log(galleryID + ", " + part + ", " + position + ", " + rotation + ", " + scale + ", " + anim + ", " + color);
         }
     }
 }

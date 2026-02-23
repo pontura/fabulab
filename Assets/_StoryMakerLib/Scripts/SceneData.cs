@@ -232,6 +232,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         public virtual void MakeCharactersWalk(float timeToNextFrame)
         {
+            Debug.Log(scenesElements);
             foreach (string data in scenesElements)
             {
                 SOData soAvatarToMove = GetAvatarFromSring(data);

@@ -31,8 +31,6 @@ namespace BoardItems.BoardData
 
         public void LoadServerData(CharacterPartServerData serverData) {
             items = new List<SavedIData>();
-            Debug.Log(serverData.items == null);
-            Debug.Log(serverData.items.Count);
             foreach (ServerIData sid in serverData.items) {
                 SavedIData savedData = new SavedIData();
                 savedData.LoadServerData(sid);

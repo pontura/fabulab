@@ -25,7 +25,7 @@ namespace Yaguar.StoryMaker.Editor
 
             StoryMakerEvents.ChangeSpeed(ScenesManager.Instance.currentFilmData.speed);
 
-            Invoke(nameof(Reset), Time.deltaTime * 3);
+            //Invoke(nameof(Reset), Time.deltaTime * 3);
         }
 
         private void OnDestroy()

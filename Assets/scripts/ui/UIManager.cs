@@ -28,7 +28,8 @@ namespace UI
             Creation_Character,
             WorkDetail,
             UserScreen,
-            Creation_Objects
+            Creation_Objects,
+            StoryMaker
         }
 
         public static UIManager Instance
@@ -92,7 +93,7 @@ namespace UI
         public void CreateSelected(int id)
         {
             if (id == 1)
-                NewCharacter(); // TO-DO
+                NewStory(); // TO-DO
             else if (id == 2)
                 NewCharacter();
             else
@@ -101,7 +102,12 @@ namespace UI
         public void Albums()
         {
             Events.ShowScreen(UIManager.screenType.Albums);
-        }       
+        }
+        public void NewStory() {
+            boardUI.SetEditingType(editingTypes.SCENE);
+            print("NewStory");
+            Data.Instance.scenesData.StartNewStory("");
+        }
         public void NewCharacter()
         {
             boardUI.SetEditingType(editingTypes.CHARACTER);

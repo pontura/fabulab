@@ -38,8 +38,8 @@ namespace UI
             switch (t)
             {   
                 case editingTypes.SCENE:
-                    sceneobjectsManager.gameObject.SetActive(false);
-                    activeBoardItem = characterManager;
+                    sceneobjectsManager.gameObject.SetActive(true);
+                    activeBoardItem = sceneobjectsManager;
                     break;
                 case editingTypes.CHARACTER:
                     sceneobjectsManager.gameObject.SetActive(false);

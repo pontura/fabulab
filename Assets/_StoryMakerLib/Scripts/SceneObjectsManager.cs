@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 
@@ -67,7 +68,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         public virtual void AddSceneObject(SOData data)
         {
-
+            Debug.Log("# AddSceneObject");
             if (data is SOAvatarData)
             {
                 
@@ -78,7 +79,9 @@ namespace Yaguar.StoryMaker.Editor
             }
             else if (data is SOBGData)
             {
-                
+                /*bgData = Data.Instance.items.GetBackground(data.id);
+                background.sprite = bgData.icon;*/
+                return;
             }
             sceneObjects.Add(selected);
         }

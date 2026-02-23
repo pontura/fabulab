@@ -92,7 +92,7 @@ namespace BoardItems
                 return;
             loadedParts++;
             string partName = BoardItems.Characters.CharacterPartsHelper.GetServerUniquePartsId(loadedParts);
-            Debug.Log("#partName "+partName + ":  " + loadedParts);
+            //Debug.Log("#partName "+partName + ":  " + loadedParts);
             if (partName == null) {
                 LoadPresetsFromServer();
                 return;
@@ -247,12 +247,10 @@ namespace BoardItems
         {
             foreach (KeyValuePair<string, CharacterServerData> e in data)
             {
-                Debug.Log("#LoadCharactersFromServer " + e.Key + ": " + e.Value);
+                //Debug.Log("#LoadCharactersFromServer " + e.Key + ": " + e.Value);
                 CharacterData wd = new CharacterData();
                 wd.id = e.Key;
-                Debug.Log("#Aca1: "+ e.Value.items.Count);
                 wd.LoadServerData(e.Value);
-                Debug.Log("#Aca2");
                 wd.thumb = userCharactersMetaData.Find(x => x.id == wd.id)?.thumb;
                 userCharacters.Add(wd);
                 
@@ -262,12 +260,10 @@ namespace BoardItems
 
         void LoadBodyPartsFromServer(Dictionary<string, CharacterPartServerData> data) {
             foreach (KeyValuePair<string, CharacterPartServerData> e in data) {
-                Debug.Log("#LoadCharactersFromServer " + e.Key + ": " + e.Value);
+                //Debug.Log("#LoadCharactersFromServer " + e.Key + ": " + e.Value);
                 CharacterPartData wd = new CharacterPartData();
                 wd.id = e.Key;
-                Debug.Log("#Aca1: " + e.Value.items.Count);
                 wd.LoadServerData(e.Value);
-                Debug.Log("#Aca2");
                 wd.thumb = new Texture2D(1, 1);
                 wd.thumb.LoadImage(System.Convert.FromBase64String(serverPartsMetaData[wd.id].thumb));
                 AddPart(wd.items[0].part, wd);

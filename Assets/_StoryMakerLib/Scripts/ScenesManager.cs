@@ -65,6 +65,7 @@ namespace Yaguar.StoryMaker.Editor
         {
             SceneData activeScene = new SceneData();
             currentSceneId = _id;
+            activeScene.Init();
             scenes.Insert(currentSceneId - 1, activeScene);
         }
         public void RemoveScene(int _id)

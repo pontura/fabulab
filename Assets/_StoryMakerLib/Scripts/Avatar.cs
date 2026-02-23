@@ -9,8 +9,6 @@ namespace Yaguar.StoryMaker.Editor
     {
 
         protected GameObject asset;
-        protected Animator anim;
-        [SerializeField] protected Animator headAnim;
 
         private void Start()
         {
@@ -19,28 +17,7 @@ namespace Yaguar.StoryMaker.Editor
         private void OnDestroy()
         {
             StoryMakerEvents.SetAvatarData -= SetData;
-        }
-
-        public Animator GetAnimator()
-        {
-            return anim;
-        }
-        public Animator GetHeadAnimator()
-        {
-            return headAnim;
-        }
-
-        public void LookAtLeft(bool left)
-        {
-            if (left)
-            {
-                asset.transform.localScale = new Vector3(-1, 1, 1);
-            }
-            else
-            {
-                asset.transform.localScale = Vector3.one;
-            }
-        }
+        }        
 
         public virtual void Run()
         {

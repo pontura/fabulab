@@ -16,6 +16,8 @@ public class Data : MonoBehaviour
     public CharactersData charactersData;
     public AnimationsManager animationsManager;
     public Settings settings;
+    public ScenesData scenesData;
+    public CacheData cacheData;
 
     public static Data Instance {  get  {  return mInstance;  }  }
 

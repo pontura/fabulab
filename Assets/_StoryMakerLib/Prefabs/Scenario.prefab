@@ -43,7 +43,6 @@ GameObject:
   - component: {fileID: 1302201411410649436}
   - component: {fileID: 4112414539458509059}
   - component: {fileID: 2951177527848311275}
-  - component: {fileID: 3588170849251460868}
   - component: {fileID: 8604298622065555597}
   - component: {fileID: 3552554920248719210}
   - component: {fileID: 91942998707480798}
@@ -86,7 +85,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Cam>k__BackingField: {fileID: 0}
   <Offset>k__BackingField: {x: 0, y: 0, z: 0}
-  <sceneObejctsManager>k__BackingField: {fileID: 3588170849251460868}
+  <sceneObejctsManager>k__BackingField: {fileID: 2951177527848311275}
   <movementManager>k__BackingField: {fileID: 91942998707480798}
 --- !u!114 &2951177527848311275
 MonoBehaviour:
@@ -102,51 +101,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <sceneObjects>k__BackingField: []
   container: {fileID: 2483542861202735194}
-  avatar_to_instantiate: {fileID: 0}
+  avatar_to_instantiate: {fileID: 499359931069363994, guid: 268114331615ebd43bf1d47be5910443, type: 3}
   object_to_instantiate: {fileID: 0}
   objectSignal_to_instantiate: []
   finalSignal_to_instantiate: []
-  background: {fileID: 0}
-  selected: {fileID: 0}
-  selectedAvatar: {fileID: 0}
-  avatar: {fileID: 0}
-  <inputsManager>k__BackingField: {fileID: 8604298622065555597}
-  <bgData>k__BackingField:
-    itemName: 
-    pos: {x: 0, y: 0, z: 0}
-    goLeft: 0
-    size: 0
-    rot: 0
-    id: 0
-    customizationSerialized: 
-    icon: {fileID: 0}
---- !u!114 &3588170849251460868
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1201349775349204177}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9d45454f1a1199469df499a1db8f9e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <sceneObjects>k__BackingField: []
-  container: {fileID: 2483542861202735194}
-  avatar_to_instantiate: {fileID: 0}
-  object_to_instantiate: {fileID: 3769469068092430215, guid: f1f3aff25b7f51243936154fecf915a9,
-    type: 3}
-  objectSignal_to_instantiate:
-  - {fileID: 7805212782829322128, guid: f3dc779b81673a64b920675297668b20, type: 3}
-  - {fileID: 7805212782829322128, guid: 506beb9b82bc72746b4a6ab666f5fdec, type: 3}
-  finalSignal_to_instantiate:
-  - {fileID: -6931836746651080946, guid: 5c7fd9d73a5b788408c874cc3fff2727, type: 3}
   background: {fileID: 8526684808880322748}
   selected: {fileID: 0}
   selectedAvatar: {fileID: 0}
   avatar: {fileID: 0}
-  <inputsManager>k__BackingField: {fileID: 0}
+  <inputsManager>k__BackingField: {fileID: 8604298622065555597}
   <bgData>k__BackingField:
     itemName: 
     pos: {x: 0, y: 0, z: 0}
@@ -165,10 +128,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1201349775349204177}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe62c6867470953418478fac1d3d5ab1, type: 3}
+  m_Script: {fileID: 11500000, guid: 51ac8fda53978884191720dd570a2a3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneObjectsManager: {fileID: 3588170849251460868}
+  sceneObjectsManager: {fileID: 2951177527848311275}
 --- !u!114 &3552554920248719210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,6 +205,11 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -263,6 +231,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -274,7 +243,7 @@ SpriteRenderer:
   m_Size: {x: 24.36, y: 11.25}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &3080243525211836707
@@ -288,14 +257,13 @@ GameObject:
   - component: {fileID: 5721823002092485929}
   - component: {fileID: 2361201249165773556}
   - component: {fileID: 6041257190644296910}
-  - component: {fileID: 2882745700425778606}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5721823002092485929
 Transform:
   m_ObjectHideFlags: 0
@@ -370,20 +338,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3080243525211836707}
   m_Enabled: 1
---- !u!114 &2882745700425778606
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3080243525211836707}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80037d57ac9e4ca4c863619b8cf5552d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  thumbRes: {x: 80, y: 60}
-  cameraToScreen: {fileID: 2361201249165773556}
 --- !u!1 &5310286269382182273
 GameObject:
   m_ObjectHideFlags: 0
@@ -409,7 +363,7 @@ Transform:
   m_GameObject: {fileID: 5310286269382182273}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -16, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

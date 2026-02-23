@@ -20,11 +20,7 @@ namespace Yaguar.StoryMaker.Editor
             else
                 avatar.Walk();
 
-            if (avatar.transform.position.x > to.x)
-                avatar.LookAtLeft(true);
-            else
-                avatar.LookAtLeft(false);
-
+            
             iTween.MoveTo(avatar.gameObject, iTween.Hash(
                 "position", to,
                 "time", timeToNextFrame,
