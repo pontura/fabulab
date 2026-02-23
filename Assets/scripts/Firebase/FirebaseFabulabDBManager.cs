@@ -40,7 +40,7 @@ namespace Yaguar.StoryMaker.DB
 
 #if UNITY_EDITOR
             var db = FirebaseDatabase.DefaultInstance;
-            db.SetPersistenceEnabled(true);
+            db.SetPersistenceEnabled(false);
 #endif
         }
         void Start()
