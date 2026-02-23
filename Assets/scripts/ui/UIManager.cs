@@ -11,7 +11,6 @@ namespace UI
     {
         public GameObject backBtn;
         static UIManager mInstance = null;
-        public CreatePanel create;
         public BoardUI boardUI;
         public GallerySelectorUI gallerySelectorUI;
         public WorkDetailUI workDetailUI;
@@ -107,6 +106,7 @@ namespace UI
             boardUI.SetEditingType(editingTypes.SCENE);
             print("NewStory");
             Data.Instance.scenesData.StartNewStory("");
+            Events.ShowScreen(UIManager.screenType.StoryMaker);
         }
         public void NewCharacter()
         {
