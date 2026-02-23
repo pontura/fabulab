@@ -171,7 +171,7 @@ namespace BoardItems
                     AddPart(partID, wd);
                     FirebaseStoryMakerDBManager.Instance.SaveBodypartPresetToServer((wd as CharacterPartData).GetServerData(), BoardItems.Characters.CharacterPartsHelper.GetServerPartsId(partID), OnPresetSavedToServer);
                 } else {
-                    FirebaseStoryMakerDBManager.Instance.UpdateBodypartPresetToServer(loadedPresetId, EncodeCharacterData(wd), BoardItems.Characters.CharacterPartsHelper.GetServerPartsId(partID), OnPresetSavedToServer);
+                    FirebaseStoryMakerDBManager.Instance.UpdateBodypartPresetToServer(loadedPresetId, (wd as CharacterPartData).GetServerData(), BoardItems.Characters.CharacterPartsHelper.GetServerPartsId(partID), OnPresetSavedToServer);
                 }
             }            
 
