@@ -37,12 +37,12 @@ namespace UI
         }
         private void OnEnable()
         {
-            Invoke("SelectLast", 0.1f);
+          //  Invoke("SelectLast", 0.1f);
         }
-        void SelectLast()
-        {
-            Clicked(lastActionSelected);
-        }
+        //void SelectLast()
+        //{
+        //    Clicked(lastActionSelected);
+        //}
         int characterEditorID = 0;
         void Clicked(int id)
         {
