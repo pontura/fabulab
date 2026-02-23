@@ -8,8 +8,8 @@ namespace UI.MainApp
         [SerializeField] Transform dragAndDropContainer;
         [SerializeField] DragAndDropUI dragAndDropUI;
         [SerializeField] GameObject savePanel;
-        [SerializeField] GameObject saveNewCharacterButton;
-        [SerializeField] GameObject saveCharacterButton;
+        [SerializeField] GameObject saveButton;
+        [SerializeField] GameObject replaceButton;
         [SerializeField] GameObject DoneBtn;
         [SerializeField] bool changesMade;
 
@@ -59,24 +59,14 @@ namespace UI.MainApp
             UIManager.Instance.boardUI.toolsMenu.SetOff();
             OnActivateUIButtons(false);
         }
-        public void SavePart()
-        {
-            Events.EmptyCharacterItemsButExlude(UIManager.Instance.zoomManager.lastZoom);
-            UIManager.Instance.zoomManager.ZoomToLastPart();
-            savePanel.SetActive(false);
-            Invoke("SavePartDelayed", 1);
-        }
-        void SavePartDelayed()
-        {
-            SaveWork();
-        }
-        public void SetButtons() { 
-            saveCharacterButton.SetActive(Data.Instance.charactersData.GetCurrent() != "");
+        public void SetButtons() {
+            saveButton.SetActive(true);
+            replaceButton.SetActive(Data.Instance.sObjectsData.GetCurrent() != "");
         }
         public void Save()
         {
             savePanel.SetActive(false);
-            Data.Instance.charactersData.SetCurrentID("");// Resetea si hay un character elegido.
+            Data.Instance.sObjectsData.SetCurrentID("");// Resetea si hay un character elegido.
             SaveWork();
         }
         public void Replace()// Guarda la version editada del personaje.
@@ -89,13 +79,6 @@ namespace UI.MainApp
             DoneBtn.SetActive(true);
             savePanel.SetActive(false);
         }
-        public void SaveProfilePic()
-        {
-            print("SaveProfilePic");
-            UIManager.Instance.zoomManager.Zoom(BoardItems.Characters.CharacterPartsHelper.parts.HEAD, true);
-            savePanel.SetActive(false);
-            Invoke("SaveProfilePicDelayed", 1);
-        }
         void SaveProfilePicDelayed()
         {
             UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, SaveProfilePicture);
@@ -106,11 +89,11 @@ namespace UI.MainApp
         }
         void SaveWork()
         {
-            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, OnTakeShotDone);
+           UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, OnTakeShotDone);
         }
         public void OnTakeShotDone(Texture2D tex)
         {
-            Data.Instance.charactersData.SaveCharacter(tex);
+            Data.Instance.sObjectsData.SaveSO(tex);
         }
 
     }

@@ -163,17 +163,17 @@ namespace UI
         public void LoadWork(string id)
         {
             items.DeleteAll();
-            CharacterData wd = Data.Instance.charactersData.SetCurrentID(id);
-           // UIManager.Instance.gallerySelectorUI.SelectGallery(wd.galleryID, true);
-           //TO-DO:
-            //List<int> galleries = new List<int>();
-            //foreach(AlbumData.CharacterData.SavedIData item in wd.items)
-            //{
-            //    if (!galleries.Contains(item.galleryID))
-            //        galleries.Add(item.galleryID);
-            //}
-            //UIManager.Instance.gallerySelectorUI.SelectGallery(galleries);
-            OpenWork(wd);
+            CharacterData cd;
+            switch (editingType)
+            {
+                case editingTypes.CHARACTER:
+                    cd = Data.Instance.charactersData.SetCurrentID(id);
+                    break;
+                default:
+                    cd = Data.Instance.sObjectsData.SetCurrentID(id);
+                    break;
+            }
+            OpenWork(cd);
         }
         public void LoadPreset(CharacterPartData wd)
         {

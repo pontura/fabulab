@@ -10,7 +10,7 @@ namespace UI.MainApp.Home
         [SerializeField] TabController tabs;
         [SerializeField] GameObject stories;
         [SerializeField] UserCharactersScreen charactersScreen;
-        [SerializeField] GameObject objects;
+        [SerializeField] UserObjectsScreen objects;
 
         public void Show(bool isOn)
         {
@@ -28,9 +28,9 @@ namespace UI.MainApp.Home
             print("On home TabClicked " + id);
 
             charactersScreen.Show(false);
+            objects.Show(false);
 
             stories.SetActive(false);
-            objects.SetActive(false);
 
             switch (id)
             {
@@ -41,7 +41,7 @@ namespace UI.MainApp.Home
                     charactersScreen.Show(true);
                     break;
                 case 2:
-                    objects.SetActive(true);
+                    objects.Show(true);
                     break;
             }
         }

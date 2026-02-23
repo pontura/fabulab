@@ -136,11 +136,19 @@ namespace UI
         {
             Events.ShowScreen(UIManager.screenType.Creation_Objects);
         }
-        public void LoadWork(string id)
+        public void LoadWork(editingTypes type, string id)
         {
-            boardUI.SetEditingType(editingTypes.CHARACTER);
+            boardUI.SetEditingType(type);
             boardUI.LoadWork(id);
-            Events.ShowScreen(UIManager.screenType.Creation_Character);
+            switch(type)
+            {
+                case editingTypes.CHARACTER:
+                    Events.ShowScreen(UIManager.screenType.Creation_Character);
+                    break;
+                case editingTypes.OBJECT:
+                    Events.ShowScreen(UIManager.screenType.Creation_Objects);
+                    break;
+            }
         }
         public void Back()
         {
