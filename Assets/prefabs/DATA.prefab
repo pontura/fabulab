@@ -18,6 +18,8 @@ GameObject:
   - component: {fileID: 3492618111843239389}
   - component: {fileID: 4141622965416536780}
   - component: {fileID: 5560444328876281907}
+  - component: {fileID: 7900181744596394278}
+  - component: {fileID: 4781433556235439642}
   m_Layer: 0
   m_Name: DATA
   m_TagString: Untagged
@@ -63,6 +65,8 @@ MonoBehaviour:
   sObjectsData: {fileID: 5560444328876281907}
   animationsManager: {fileID: 3492618111843239389}
   settings: {fileID: 2886292639552119932}
+  scenesData: {fileID: 7900181744596394278}
+  cacheData: {fileID: 4781433556235439642}
 --- !u!114 &4740097183744302633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -359,6 +363,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BoardItems.SObjectsData
   thumbSize: {x: 0, y: 0}
   data: []
-  all: []
   metaData: []
   currentID: 
+--- !u!114 &7900181744596394278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000013221123710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b3b15ba679c02f4684a458b530e7ec3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BoardItems.ScenesData
+  userFilmsData: []
+  filmsData: []
+  currentFilmData:
+    speed: 0
+    id: 
+    localId: 0
+    framecount: 0
+    thumb: {fileID: 0}
+    name: 
+    userID: 
+    username: 
+    likes: 0
+  loadedDone: 0
+--- !u!114 &4781433556235439642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000013221123710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba222933ba6b4e34f84d258e541c8cd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CacheData
+  users: []
+  filmData: []
