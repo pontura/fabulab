@@ -20,6 +20,8 @@ namespace Yaguar.StoryMaker.Editor
 
         protected Vector3 startPoint;
 
+        public bool isEnabled;        
+
         public void ResetAll()
         {
             isDragging = false;
@@ -28,6 +30,9 @@ namespace Yaguar.StoryMaker.Editor
         }
         void Update()
         {
+            if (!isEnabled)
+                return;
+
             if (!isDragging)
             {
                 if (Input.GetMouseButtonDown(0))
