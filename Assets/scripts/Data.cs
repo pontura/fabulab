@@ -14,6 +14,7 @@ public class Data : MonoBehaviour
     public PalettesManager palettesManager;
     public GaleriasData galeriasData;
     public CharactersData charactersData;
+    public SObjectsData sObjectsData;
     public AnimationsManager animationsManager;
     public Settings settings;
 

@@ -11,7 +11,7 @@ namespace UI.MainApp.Home
         [SerializeField] UserDataScreen userDataScreen;
         [SerializeField] GameObject stories;
         [SerializeField] UserCharactersScreen charactersScreen;
-        [SerializeField] GameObject objects;
+        [SerializeField] UserObjectsScreen objects;
 
         public void Show(bool isOn)
         {
@@ -26,13 +26,13 @@ namespace UI.MainApp.Home
         }
         void OnTabClicked(int id)
         {
-            print("OnTabClicked " + id);
+            print("OnTabClicked " + id + " name: "  +gameObject.name);
 
             userDataScreen.Show(false);
             charactersScreen.Show(false);
 
             stories.SetActive(false);
-            objects.SetActive(false);
+            objects.Show(false);
 
             switch (id)
             {
@@ -46,7 +46,7 @@ namespace UI.MainApp.Home
                     charactersScreen.Show(true);
                     break;
                 case 3:
-                    objects.SetActive(true);
+                    objects.Show(true);
                     break;
             }
         }

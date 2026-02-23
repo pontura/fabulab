@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 1297325420911194233}
   - component: {fileID: 3492618111843239389}
   - component: {fileID: 4141622965416536780}
+  - component: {fileID: 5560444328876281907}
   m_Layer: 0
   m_Name: DATA
   m_TagString: Untagged
@@ -59,6 +60,7 @@ MonoBehaviour:
   palettesManager: {fileID: 7409230328347419374}
   galeriasData: {fileID: 1297325420911194233}
   charactersData: {fileID: 4141622965416536780}
+  sObjectsData: {fileID: 5560444328876281907}
   animationsManager: {fileID: 3492618111843239389}
   settings: {fileID: 2886292639552119932}
 --- !u!114 &4740097183744302633
@@ -332,7 +334,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardItems.AlbumData
   thumbSize: {x: 512, y: 512}
-  characters: []
+  userCharacters: []
   heads: []
   bellies: []
   hands: []
@@ -340,5 +342,23 @@ MonoBehaviour:
   hairs: []
   faces: []
   charactersMetaData: []
+  userCharactersMetaData: []
   currentID: 
   loadedPresetId: 
+--- !u!114 &5560444328876281907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000013221123710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81614cc75c035c5408d5cadc2a44dcf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BoardItems.SObjectsData
+  thumbSize: {x: 0, y: 0}
+  data: []
+  all: []
+  metaData: []
+  currentID: 

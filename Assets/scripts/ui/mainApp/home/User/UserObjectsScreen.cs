@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace UI.MainApp.Home.User
 {
-    public class UserCharactersScreen : MonoBehaviour
+    public class UserObjectsScreen : MonoBehaviour
     {
         public CharacterSelectorBtn workBtn_prefab;
         public Transform worksContainer;
@@ -34,9 +34,10 @@ namespace UI.MainApp.Home.User
         
         void LoadNext()
         {
-           // print("LoadNext " + artID);
-           // if (artID >= Data.Instance.characters.Count) return;
-            foreach(CharacterData cd in Data.Instance.charactersData.userCharacters)
+            print("SO LoadNext " + artID);
+            print("SO count:  " + Data.Instance.sObjectsData.data.Count);
+            // if (artID >= Data.Instance.characters.Count) return;
+            foreach (CharacterData cd in Data.Instance.sObjectsData.data)
             {
                 CharacterSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
@@ -65,8 +66,9 @@ namespace UI.MainApp.Home.User
            // album.SetActive(false);
         }
 
-        public void OpenWork(string id) { 
-            UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);    
+        public void OpenWork(string id)
+        {
+            UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
         }
 
         public void New()
