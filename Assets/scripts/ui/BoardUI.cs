@@ -173,8 +173,24 @@ namespace UI
                     cd = Data.Instance.sObjectsData.SetCurrentID(id);
                     break;
             }
-            OpenWork(cd);
+            if (cd != null)
+                OpenWork(cd);
+            else
+                LoadOthersWork(id);
         }
+
+        public void LoadOthersWork(string id) {
+            items.DeleteAll();
+            CharacterData cd;
+            switch (editingType) {
+                case editingTypes.CHARACTER:
+                    Data.Instance.charactersData.LoadOthersCharacter(id, OpenWork);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public void LoadPreset(CharacterPartData wd)
         {
             items.DeleteInPart(wd.items[0].part);

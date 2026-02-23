@@ -1,4 +1,5 @@
-﻿using BoardItems.Characters;
+﻿using BoardItems.BoardData;
+using BoardItems.Characters;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,10 +7,10 @@ using System.Globalization;
 using System.IO;
 using UI;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.Windows;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
-using BoardItems.BoardData;
 
 namespace BoardItems
 {
@@ -17,6 +18,7 @@ namespace BoardItems
         public Vector2Int thumbSize;
 
         public List<CharacterData> userCharacters;
+        public List<CharacterData> othersCharacters;
 
         public List<CharacterPartData> heads;
         public List<CharacterPartData> bellies;
@@ -117,7 +119,7 @@ namespace BoardItems
                 wd.id = "";
             }
             else
-                wd = GetCharacter(currentID);
+                wd = GetUserCharacter(currentID);
             CharacterManager cm = UIManager.Instance.boardUI.characterManager;
 
             wd.armsColor = cm.GetArmsColor();
@@ -275,16 +277,53 @@ namespace BoardItems
         {
             return currentID;
         }
-        public CharacterData GetCharacter(string id)
+        public CharacterData GetUserCharacter(string id)
         {
             return userCharacters.Find(x => x.id == id);
         }
 
         public CharacterData SetCurrentID(string id)
         {
-            currentID = id;
+            CharacterData chd = userCharacters.Find(x => x.id == id);
+            if(chd != null)
+                currentID = id;
             //  Debug.Log(currentID);
-            return userCharacters.Find(x => x.id == id);
+            return chd;
+        }
+
+        public void LoadOthersCharacter(string id, System.Action<CharacterData> OnDone) {
+            currentID = "";
+            //  Debug.Log(currentID);
+            if(othersCharacters==null)
+                othersCharacters = new List<CharacterData>();
+            CharacterData chd = othersCharacters.Find(x => x.id == id);
+            if (chd != null)
+                OnDone(chd);
+            else {
+                CharacterMetaData chmd = charactersMetaData.Find(x => x.id == id);
+                if (chmd == null) {
+                    Debug.Log("Fail getting Character Meta Data");
+                    return;
+                }
+
+                FirebaseStoryMakerDBManager.Instance.LoadCharacterFromServer(id, (success, key, data) => {
+                    if (success) {
+                        CharacterData chD = new CharacterData();
+                        chD.id = key;
+                        chD.LoadServerData(data);
+                        chD.thumb = userCharactersMetaData.Find(x => x.id == chD.id)?.thumb;
+                        othersCharacters.Add(chD);
+                        OnDone(chD);
+                    } else {
+                        Debug.Log("Fail getting Character Data");
+                        return;
+                    }
+
+                }, chmd.userID);
+                //Debug.Log("#LoadCharactersFromServer " + e.Key + ": " + e.Value);
+                
+            }
+
         }
 
         public void ResetCurrentID()

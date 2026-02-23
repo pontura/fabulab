@@ -3,6 +3,7 @@
 using BoardItems.BoardData;
 using Firebase.Database;
 using Firebase.Extensions;
+using Google.MiniJSON;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -159,7 +160,7 @@ namespace Yaguar.StoryMaker.DB
             //print("LoadCharacterFromServer url : " + url);
         }
 
-        public void LoadCharacterFromServer(string characterId, System.Action<bool, string> callback, string userId=null)
+        public void LoadCharacterFromServer(string characterId, System.Action<bool, string, CharacterServerData> callback, string userId=null)
         {
             string uid = _uid;
             if (userId != null)
@@ -172,16 +173,16 @@ namespace Yaguar.StoryMaker.DB
                 if (task.IsFaulted || task.IsCanceled)
                 {
                     Debug.Log("#LoadCharacterFromServer FAIL");
-                    callback(false, null);
+                    callback(false, "", null);
                     Debug.Log(task.Exception);
                 }
                 else if (task.IsCompleted)
                 {
                     try { 
                     //SceneDataLyna[] sds = JsonConvert.DeserializeObject<SceneDataLyna[]>(task.Result.GetRawJsonValue());
-                    string data = task.Result.GetRawJsonValue();
+                    string data = task.Result.GetRawJsonValue();                    
                     Debug.Log("# "+data);
-                    callback(true, data);
+                    callback(true, task.Result.Key, JsonConvert.DeserializeObject<CharacterServerData>(data));
                     } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");
                     }

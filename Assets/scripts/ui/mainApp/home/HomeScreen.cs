@@ -9,7 +9,7 @@ namespace UI.MainApp.Home
     {
         [SerializeField] TabController tabs;
         [SerializeField] GameObject stories;
-        [SerializeField] UserCharactersScreen charactersScreen;
+        [SerializeField] AllCharactersScreen charactersScreen;
         [SerializeField] UserObjectsScreen objects;
 
         public void Show(bool isOn)

@@ -11,5 +11,9 @@ namespace UI.MainApp.Home.User
         {
             thumb.sprite = cd.GetSprite();
         }
+
+        public void Init(CharacterMetaData cd) {
+            thumb.sprite = cd.GetSprite();
+        }
     }
 }
