@@ -333,7 +333,7 @@ namespace Yaguar.StoryMaker.DB
             //print("LoadCharacterFromServer url : " + url);
         }
 
-        public void UpdateBodypartPresetToServer(string presetId, string presetData, string partId, System.Action<bool, string, string> callback) {
+        public void UpdateBodypartPresetToServer(string presetId, CharacterPartServerData presetData, string partId, System.Action<bool, string, string> callback) {
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/bodypart/" + partId + "/"  + presetId);
             string s = JsonConvert.SerializeObject(presetData);
             reference.SetRawJsonValueAsync(s).ContinueWithOnMainThread(task => {
