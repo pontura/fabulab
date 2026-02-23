@@ -1,5 +1,6 @@
 using BoardItems;
 using UnityEngine;
+using Yaguar.StoryMaker.DB;
 
 namespace UI.MainApp
 {
@@ -8,6 +9,7 @@ namespace UI.MainApp
         public bool isPreview;
         [SerializeField] GameObject savePanel;
         [SerializeField] GameObject savePartButton;
+        [SerializeField] GameObject deletePartButton;
         [SerializeField] GameObject saveNewCharacterButton;
         [SerializeField] GameObject saveCharacterButton;
         [SerializeField] GameObject[] togglePreviewParts;
@@ -93,6 +95,7 @@ namespace UI.MainApp
             isPreview = true;
             SetTogglePreview();
             OnActivateUIButtons(false);
+            SetButtons();
         }
         public void SavePart()
         {
@@ -105,9 +108,31 @@ namespace UI.MainApp
         {
             SaveWork();
         }
+        public void DeletePart()
+        {
+            string presetID = Data.Instance.charactersData.PresetID;
+            string partID = UIManager.Instance.zoomManager.part.ToString();
+            FirebaseStoryMakerDBManager.Instance.DeleteBodypartPreset(presetID, partID, OnPartDeleted);
+        }
+        void OnPartDeleted(string result)
+        {
+            Debug.Log("DeletePart: " + result);
+            Cancel();
+        }
         public void SetButtons()
         {
-            savePartButton.SetActive(Data.Instance.userData.isAdmin);
+            if (Data.Instance.charactersData.PresetID != "" && Data.Instance.userData.isAdmin)
+            {
+                savePartButton.SetActive(true);
+                deletePartButton.SetActive(true);
+
+                savePartButton.GetComponentInChildren<TMPro.TMP_Text>().text = "Save " + UIManager.Instance.zoomManager.lastZoom.ToString();
+                deletePartButton.GetComponentInChildren<TMPro.TMP_Text>().text = "Delete " + UIManager.Instance.zoomManager.lastZoom.ToString();
+            } else
+            {
+                savePartButton.SetActive(false);
+                deletePartButton.SetActive(false);
+            }
             saveCharacterButton.SetActive(Data.Instance.charactersData.GetCurrent() != "");
         }
         public void Save()

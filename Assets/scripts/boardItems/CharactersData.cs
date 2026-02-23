@@ -37,7 +37,8 @@ namespace BoardItems
         CharacterData currentCharacter;
         Dictionary<string, ServerPartMetaData> serverPartsMetaData;
 
-        [SerializeField] string loadedPresetId;                      
+        [SerializeField] string loadedPresetId;
+        public string PresetID { get { return loadedPresetId; } }
        
         private void Start() {
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
