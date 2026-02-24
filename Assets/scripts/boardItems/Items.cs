@@ -272,6 +272,7 @@ namespace BoardItems
             board.AttachItem(item);
             itemSelected = item;
         }
+        public bool snap = true;
         void OnStopDrag(ItemInScene item, Vector3 pos)
         {
             item.StopBeingDrag();

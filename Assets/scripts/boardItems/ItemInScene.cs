@@ -1,7 +1,9 @@
 ﻿using BoardItems.Characters;
+using Firebase.Analytics;
 using System.Collections.Generic;
 using UI;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 namespace BoardItems
 {
@@ -142,7 +144,14 @@ namespace BoardItems
         }
         public void SetPos(Vector2 pos)
         {
+            pos.x = (int)pos.x;
+            pos.y = (int)pos.y;
+
             transform.position = new Vector3(pos.x, pos.y, transform.position.z);
+        }
+        void Snap()
+        {
+
         }
         public void SetPosByData()
         {
