@@ -163,6 +163,10 @@ namespace BoardItems
                 pos.x = snappedLeft + size.x / 2f;
                 pos.y = snappedBottom + size.y / 2f;
 
+                pos.x = (float)System.Math.Round(pos.x, 4);
+                pos.y = (float)System.Math.Round(pos.y, 4);
+
+
                 transform.position = pos;
 
             }
