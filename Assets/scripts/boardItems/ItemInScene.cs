@@ -142,11 +142,13 @@ namespace BoardItems
                 c.enabled = true;
             SetCollider(true);
         }
-        public void SetPos(Vector2 pos)
+        public void SetPos(Vector2 pos, bool snap = false)
         {
-            //pos.x = (int)pos.x;
-            //pos.y = (int)pos.y;
-
+            if (snap)
+            {
+                pos.x = (int)pos.x;
+                pos.y = (int)pos.y;
+            }
             transform.position = new Vector3(pos.x, pos.y, transform.position.z);
         }
         void Snap()

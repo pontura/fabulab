@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UI;
 namespace BoardItems
 {
     public class ItemDragHandler : MonoBehaviour
@@ -41,7 +42,7 @@ namespace BoardItems
             if (item == null)
                 return;
             Vector2 pos = Camera.main.ScreenToWorldPoint(posInput - offset);
-                item.SetPos(pos);
+            item.SetPos(pos, UIManager.Instance.boardUI.snap);
 
         }
         public static bool IsPointerOverUIObject()

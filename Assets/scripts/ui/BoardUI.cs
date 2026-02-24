@@ -12,6 +12,7 @@ namespace UI
 {
     public class BoardUI : MonoBehaviour
     {
+        public bool snap;
         public GameObject zoomBar;
         public Items items;
         public ToolsMenu toolsMenu;

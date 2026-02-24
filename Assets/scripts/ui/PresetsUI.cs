@@ -1,6 +1,5 @@
 using BoardItems.Characters;
 using Common.UI;
-using UnityEditor;
 using UnityEngine;
 
 namespace UI
@@ -13,11 +12,21 @@ namespace UI
         [SerializeField] TabController tabs;
         [SerializeField] GameObject[] togglesGO;
         [SerializeField] GameObject presetsDragAndDropToggleGO;
+        [SerializeField] ToggleButton snapToggle;
+
         bool isPreset;
         int lastPartID;
-       
+        private void Awake()
+        {
+            snapToggle.Init(OnToggle);
+        }
+        void OnToggle(bool isOn)
+        {
+            UIManager.Instance.boardUI.snap = isOn;
+        }
         public void SetOff()
         {
+            snapToggle.Show(false);
             gameObject.SetActive(false);
         }
         int characterEditorID = 0;
@@ -86,9 +95,15 @@ namespace UI
             togglesGO[1].SetActive(false);
 
             if (isPreset)
+            {
+                snapToggle.Show(false);
                 togglesGO[0].SetActive(true);
+            }
             else
-                togglesGO[1].SetActive(true);    
+            {
+                snapToggle.Show(true);
+                togglesGO[1].SetActive(true);
+            } 
         }
         
     }
