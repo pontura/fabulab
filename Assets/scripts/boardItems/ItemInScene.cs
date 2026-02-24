@@ -144,8 +144,8 @@ namespace BoardItems
         }
         public void SetPos(Vector2 pos)
         {
-            pos.x = (int)pos.x;
-            pos.y = (int)pos.y;
+            //pos.x = (int)pos.x;
+            //pos.y = (int)pos.y;
 
             transform.position = new Vector3(pos.x, pos.y, transform.position.z);
         }
