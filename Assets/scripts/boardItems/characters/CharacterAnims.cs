@@ -24,6 +24,7 @@ public class CharacterAnims : MonoBehaviour
         shake,
         spin
     }
+
     public void Play(anims animName)
     {
         anim.Play(animName.ToString());
@@ -31,5 +32,9 @@ public class CharacterAnims : MonoBehaviour
     public void Play(string animName)
     {
         anim.Play(animName);
+    }
+    public void Idle()
+    {
+        Play(anims.idle);
     }
 }

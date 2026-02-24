@@ -137,12 +137,14 @@ namespace UI.MainApp
         }
         public void Save()
         {
+            Events.SetCharacterIdle(0);
             savePanel.SetActive(false);
             Data.Instance.charactersData.SetCurrentID("");// Resetea si hay un character elegido.
-            SaveWork();
+            Invoke("SaveWork", 0.1f);
         }
         public void Replace()// Guarda la version editada del personaje.
         {
+            Events.SetCharacterIdle(0);
             savePanel.SetActive(false);
             SaveWork();
         }

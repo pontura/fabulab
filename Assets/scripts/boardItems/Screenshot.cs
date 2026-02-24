@@ -1,6 +1,7 @@
-﻿using UnityEngine;
-using BoardItems.Characters;
+﻿using BoardItems.Characters;
 using System.Collections;
+using UI;
+using UnityEngine;
 
 namespace BoardItems
 {
@@ -21,7 +22,10 @@ namespace BoardItems
         }
         public void Zoom(CharacterPartsHelper.parts part, bool saving = false)
         {
-            animator.SetInteger("zoom", (int)part);
+            if (UIManager.Instance.boardUI.editingType == BoardUI.editingTypes.OBJECT)
+                animator.SetInteger("zoom", 0);
+            else
+                animator.SetInteger("zoom", (int)part);
         }
 
         IEnumerator CaptureRoutine(System.Action<Texture2D> OnDone)
