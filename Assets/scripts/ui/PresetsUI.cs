@@ -16,10 +16,6 @@ namespace UI
 
         bool isPreset;
         int lastPartID;
-        private void Awake()
-        {
-            snapToggle.Init(OnToggle);
-        }
         void OnToggle(bool isOn)
         {
             UIManager.Instance.boardUI.snap = isOn;
@@ -32,6 +28,7 @@ namespace UI
         int characterEditorID = 0;
         public void Init()
         {
+            snapToggle.Init(OnToggle, UIManager.Instance.boardUI.snap);
             dragAndDropUI.transform.SetParent(dragAndDropContainer);
             isPreset = true;
             gameObject.SetActive(true);

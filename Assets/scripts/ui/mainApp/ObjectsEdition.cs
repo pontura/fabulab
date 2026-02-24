@@ -12,12 +12,18 @@ namespace UI.MainApp
         [SerializeField] GameObject replaceButton;
         [SerializeField] GameObject DoneBtn;
         [SerializeField] bool changesMade;
+        [SerializeField] ToggleButton snapToggle;
 
+        void OnToggle(bool isOn)
+        {
+            UIManager.Instance.boardUI.snap = isOn;
+        }
         protected override void ShowScreen(UIManager.screenType type)
         {
             switch (type)
             {
                 case UIManager.screenType.Creation_Objects:
+                    snapToggle.Init(OnToggle, UIManager.Instance.boardUI.snap);
                     Events.Zoom(BoardItems.Characters.CharacterPartsHelper.parts.BODY, false);
                     changesMade = false;
                     SetButtons();

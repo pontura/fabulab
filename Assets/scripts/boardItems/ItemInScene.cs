@@ -142,12 +142,13 @@ namespace BoardItems
                 c.enabled = true;
             SetCollider(true);
         }
+        float gridSize = 0.51f;
         public void SetPos(Vector2 pos, bool snap = false)
         {
             if (snap)
             {
-                pos.x = (int)pos.x;
-                pos.y = (int)pos.y;
+                pos.x = Mathf.Round(pos.x / gridSize) * gridSize;
+                pos.y = Mathf.Round(pos.y / gridSize) * gridSize;
             }
             transform.position = new Vector3(pos.x, pos.y, transform.position.z);
         }
