@@ -142,13 +142,29 @@ namespace BoardItems
                 c.enabled = true;
             SetCollider(true);
         }
-        float gridSize = 0.51f;
+        float gridSize = 0.512f;
         public void SetPos(Vector2 pos, bool snap = false)
         {
             if (snap)
             {
-                pos.x = Mathf.Round(pos.x / gridSize) * gridSize;
-                pos.y = Mathf.Round(pos.y / gridSize) * gridSize;
+                SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+
+                Vector3 size = sr.bounds.size;
+
+                // calcular borde inferior izquierdo
+                float left = pos.x - size.x / 2f;
+                float bottom = pos.y - size.y / 2f;
+
+                // snapear ese borde
+                float snappedLeft = Mathf.Round(left / gridSize) * gridSize;
+                float snappedBottom = Mathf.Round(bottom / gridSize) * gridSize;
+
+                // reconstruir posición
+                pos.x = snappedLeft + size.x / 2f;
+                pos.y = snappedBottom + size.y / 2f;
+
+                transform.position = pos;
+
             }
             transform.position = new Vector3(pos.x, pos.y, transform.position.z);
         }
