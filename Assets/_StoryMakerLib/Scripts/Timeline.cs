@@ -11,7 +11,7 @@ namespace Yaguar.StoryMaker.Editor
         public Transform container;
         public List<KeyFrameUI> all;
         public KeyframeMarker keyFrameMarker;
-        private float total_x_marker = 407;
+        private float total_x_marker = 282;
         public float timer;
         public float totalTimer;
         public float keyframe_duration;
@@ -66,6 +66,7 @@ namespace Yaguar.StoryMaker.Editor
             kf.transform.SetParent(container);
             kf.transform.localScale = Vector2.one;
             kf.transform.localPosition = Vector2.zero;
+            Debug.Log(kf.transform.localPosition);
         }
         public void RemoveKeyframe()
         {

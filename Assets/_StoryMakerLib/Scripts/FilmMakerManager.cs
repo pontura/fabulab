@@ -150,7 +150,10 @@ namespace Yaguar.StoryMaker.Editor
         }
         public void Delete()
         {
-            DeleteDialog(OnDelete);            
+            if (DeleteDialog != null)
+                DeleteDialog(OnDelete);
+            else
+                OnDelete(true);
         }
         public void OnDelete(bool doIt)
         {

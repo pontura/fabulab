@@ -6,7 +6,7 @@ using Yaguar.StoryMaker.Editor;
 
 public class TimelineInSceneUI : MonoBehaviour
 {
-    public Text field;
+    public TMPro.TextMeshProUGUI field;
     public void Init()
     {
         RefreshField(0);
