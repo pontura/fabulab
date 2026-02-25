@@ -95,6 +95,11 @@ namespace BoardItems
             UIManager.Instance.boardUI.items.RotateSnaped();
             //inputManager.OnCloseTools(InputManager.states.IDLE);
         }
+        public void ScaleSnaped(bool up)
+        {
+            UIManager.Instance.boardUI.items.ScaleSnaped(up);
+            //inputManager.OnCloseTools(InputManager.states.IDLE);
+        }
 
     }
 

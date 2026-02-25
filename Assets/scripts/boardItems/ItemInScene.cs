@@ -142,9 +142,9 @@ namespace BoardItems
                 c.enabled = true;
             SetCollider(true);
         }
-        float gridSize = 0.512f;
         public void SetPos(Vector3 pos, bool snap = false)
         {
+            float snapGride = Data.Instance.settings.snapGride;
             if (snap)
             {
                 SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
@@ -156,8 +156,8 @@ namespace BoardItems
                 float bottom = pos.y - size.y / 2f;
 
                 // snapear ese borde
-                float snappedLeft = Mathf.Round(left / gridSize) * gridSize;
-                float snappedBottom = Mathf.Round(bottom / gridSize) * gridSize;
+                float snappedLeft = Mathf.Round(left / snapGride) * snapGride;
+                float snappedBottom = Mathf.Round(bottom / snapGride) * snapGride;
 
                 // reconstruir posición
                 pos.x = snappedLeft + size.x / 2f;

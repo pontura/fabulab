@@ -476,22 +476,23 @@ namespace BoardItems
             Destroy(item.gameObject);
             return mirror != null;
         }
-        //IEnumerator RemoveFromCanvas(float delay, ItemInScene item)
-        //{
-        //    yield return new WaitForEndOfFrame();
-        //    if (item != null)
-        //        item.StartFalling();
-        //    all.Remove(item);
-        //    yield return new WaitForSeconds(delay);
-        //    if (item != null && item != itemSelected)
-        //        Destroy(item.gameObject);
-        //    if (all.Count == 0)
-        //    {
-        //        Events.ActivateUIButtons(false);
-        //    }
+        public void ScaleSnaped(bool up)
+        {
+            float snapScale = Data.Instance.settings.snapScale;
+            float scale = itemSelected.data.scale.x;
 
-        //}
+            if (up)
+                scale += snapScale;
+            else
+                scale -= snapScale;
 
+            if (scale < snapScale) scale = snapScale;
+
+            scale = snapScale * (scale / snapScale);
+            itemSelected.data.scale = new Vector3(scale, scale, scale);
+            itemSelected.transform.localScale = itemSelected.data.scale;
+            FinishEditingItem(itemSelected);
+        }
         public void Rotate(float _x)
         {
             itemSelected.RotateSetValue(_x);
