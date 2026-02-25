@@ -143,7 +143,7 @@ namespace BoardItems
             SetCollider(true);
         }
         float gridSize = 0.512f;
-        public void SetPos(Vector2 pos, bool snap = false)
+        public void SetPos(Vector3 pos, bool snap = false)
         {
             if (snap)
             {
