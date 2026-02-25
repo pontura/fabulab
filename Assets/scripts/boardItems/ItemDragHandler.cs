@@ -41,7 +41,8 @@ namespace BoardItems
         {
             if (item == null)
                 return;
-            Vector2 pos = Camera.main.ScreenToWorldPoint(posInput - offset);
+            Vector3 pos = Camera.main.ScreenToWorldPoint(posInput - offset);
+            pos.z = item.data.position.z;
             item.SetPos(pos, UIManager.Instance.boardUI.snap);
 
         }
