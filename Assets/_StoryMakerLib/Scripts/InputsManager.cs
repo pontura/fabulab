@@ -95,6 +95,7 @@ namespace Yaguar.StoryMaker.Editor
                 hit = hits[0];
             foreach (RaycastHit2D h in hits)
             {
+                Debug.Log("#"+h.collider.gameObject.name);
                 if (h.collider.gameObject.GetComponent<SceneObject>().GetData() is SOIconData)
                 {
                     hit = h;
@@ -104,6 +105,7 @@ namespace Yaguar.StoryMaker.Editor
 
             if (hit.collider != null)
             {
+                Debug.Log("#" + hit.collider.gameObject.name);
                 sceneObjectsManager.selected = hit.collider.gameObject.GetComponent<SceneObject>();
                 if (sceneObjectsManager.selected != null)
                 {

@@ -1,12 +1,14 @@
-﻿using BoardItems.Characters;
+﻿using BoardItems.BoardData;
+using BoardItems.Characters;
+using System.Collections;
 using System.Collections.Generic;
 using UI;
+using UI.MainApp;
 using UnityEngine;
 
 namespace BoardItems
 {
-    public class Items : MonoBehaviour
-    {
+    public class Items : MonoBehaviour {
         public AnimationClip GetItemAnim;
         public AnimationClip ReleaseItemAnim;
         public ItemInScene itemInScene_to_instantiate;
@@ -18,7 +20,9 @@ namespace BoardItems
         public SpriteRenderer bg;
         public Transform container;
         [SerializeField] BoardUI board;
-       
+
+        BoardItemManager boardItem;
+
         void Start()
         {
             Events.EditMode += EditMode;
@@ -27,6 +31,7 @@ namespace BoardItems
             Events.Colorize += Colorize;
             Events.AnimateItem += AnimateItem;
             Events.ResetItems += ResetItems;
+            Events.LoadBoardItemForStory += LoadBoardItemForStory;
 
             Events.EditMode(true);
         }
@@ -38,6 +43,7 @@ namespace BoardItems
             Events.Colorize -= Colorize;
             Events.AnimateItem -= AnimateItem;
             Events.ResetItems -= ResetItems;
+            Events.LoadBoardItemForStory -= LoadBoardItemForStory;
         }
         void ResetItems()
         {
@@ -269,7 +275,10 @@ namespace BoardItems
         }
         public void SetItemInScene(ItemInScene item, CharacterPartsHelper.parts part)
         {
-            board.AttachItem(item);
+            if(boardItem != null)
+                boardItem.AttachItem(item);
+            else
+                board.AttachItem(item);
             itemSelected = item;
         }
         public bool snap = true;
@@ -499,6 +508,67 @@ namespace BoardItems
             print("EditMode " + isEditMode);
             foreach (ItemInScene item in all)
                 item.SetCollider(isEditMode);
+        }
+
+        void LoadBoardItemForStory(BoardItemManager itemManager, CharacterPartData wd) {
+            boardItem = itemManager;
+            OpenWork(wd);
+        }
+
+        ItemData CreateItem(SavedIData itemData) {
+            ItemData originalGO = Data.Instance.galeriasData.GetItem(itemData.galleryID, itemData.id);
+            print("____________" + originalGO.name);
+            ItemData newItem = Instantiate(
+                originalGO,
+                originalGO.transform.position,
+                Quaternion.identity
+            );
+            //return newGO;
+            //ItemData newItem = Instantiate(Resources.Load<ItemData>("galerias/" + itemData.galleryID + "/item_" + itemData.id));
+            // Debug.Log("ID" + itemData.id + ":" + itemData.position);
+            newItem.galleryID = itemData.galleryID;
+            newItem.part = (CharacterPartsHelper.parts)itemData.part;
+            newItem.position = itemData.position;
+            newItem.rotation = itemData.rotation;
+            newItem.scale = itemData.scale;
+            newItem.colorName = itemData.color;
+            newItem.anim = itemData.anim;
+
+            ItemInScene itemInScene = newItem.gameObject.AddComponent<ItemInScene>();
+            itemInScene.SetCollider(false);
+            itemInScene.data = newItem;
+            all.Add(itemInScene);
+            SetItemInScene(itemInScene, newItem.part);
+            itemInScene.data.SetTransformByData();
+
+            FinishEditingItem(itemInScene);
+            return newItem;
+        }
+
+        public void OpenWork(CharacterPartData wd) {
+            StartCoroutine(OpenWork_C(wd));
+        }
+        IEnumerator OpenWork_C(CharacterPartData wd) {
+            print("open work");
+            foreach (SavedIData itemData in wd.items) {
+                yield return new WaitForSeconds(0.05f);
+                ItemData newItem = CreateItem(itemData);
+
+                print("open work newItem part: " + newItem.part);
+
+                if (newItem.anim != AnimationsManager.anim.NONE) {
+                    AnimationsManager.AnimData animData = Data.Instance.animationsManager.GetAnimByName(newItem.anim);
+                    Events.AnimateItem(animData);
+                }
+                newItem.GetComponent<ItemInScene>().Appear();
+            }
+            if (wd is CharacterData characterData) {
+                Events.ColorizeArms(characterData.armsColor);
+                Events.ColorizeLegs(characterData.legsColor);
+                Events.ColorizeEyebrows(characterData.eyebrowsColor);
+            }
+
+            boardItem = null;
         }
 
     }

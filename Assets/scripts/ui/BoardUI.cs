@@ -197,66 +197,11 @@ namespace UI
             items.DeleteInPart(wd.items[0].part);
             OpenWork(wd);
         }
-        ItemData CreateItem(SavedIData itemData)
-        {
-            ItemData originalGO = Data.Instance.galeriasData.GetItem(itemData.galleryID, itemData.id);
-            print("____________" + originalGO.name);
-            ItemData newItem = Instantiate(
-                originalGO,
-                originalGO.transform.position,
-                Quaternion.identity
-            );
-            //return newGO;
-            //ItemData newItem = Instantiate(Resources.Load<ItemData>("galerias/" + itemData.galleryID + "/item_" + itemData.id));
-            // Debug.Log("ID" + itemData.id + ":" + itemData.position);
-            newItem.galleryID = itemData.galleryID;
-            newItem.part = (CharacterPartsHelper.parts)itemData.part;
-            newItem.position = itemData.position;
-            newItem.rotation = itemData.rotation;
-            newItem.scale = itemData.scale;
-            newItem.colorName = itemData.color;
-            newItem.anim = itemData.anim;
 
-            ItemInScene itemInScene = newItem.gameObject.AddComponent<ItemInScene>();
-            itemInScene.SetCollider(false);
-            itemInScene.data = newItem;
-            items.all.Add(itemInScene);
-            items.SetItemInScene(itemInScene, newItem.part);
-            itemInScene.data.SetTransformByData();
-
-            items.FinishEditingItem(itemInScene);
-            return newItem;
+        void OpenWork(CharacterPartData wd) {
+            items.OpenWork(wd);
         }
-
-
-
-        void OpenWork(CharacterPartData wd)
-        {
-            StartCoroutine(OpenWork_C(wd));
-        }
-        IEnumerator OpenWork_C(CharacterPartData wd)
-        {
-            print("open work");
-            foreach (SavedIData itemData in wd.items)
-            {
-                yield return new WaitForSeconds(0.05f);
-                ItemData newItem = CreateItem(itemData);
-
-                print("open work newItem part: " + newItem.part);
-
-                if (newItem.anim != AnimationsManager.anim.NONE)
-                {
-                    AnimationsManager.AnimData animData = Data.Instance.animationsManager.GetAnimByName(newItem.anim);
-                    Events.AnimateItem(animData);
-                }
-                newItem.GetComponent<ItemInScene>().Appear();
-            }
-            if (wd is CharacterData characterData) {
-                Events.ColorizeArms(characterData.armsColor);
-                Events.ColorizeLegs(characterData.legsColor);
-                Events.ColorizeEyebrows(characterData.eyebrowsColor);
-            }
-        }
+        
         public void AttachItem(ItemInScene item)
         {
             activeBoardItem.AttachItem(item);

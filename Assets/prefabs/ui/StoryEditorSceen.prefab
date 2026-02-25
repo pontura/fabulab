@@ -166,6 +166,8 @@ GameObject:
   - component: {fileID: 6461516695359273252}
   - component: {fileID: 7711161214775164194}
   - component: {fileID: 8102724252690334293}
+  - component: {fileID: 988781987286539277}
+  - component: {fileID: 5212170361740526878}
   m_Layer: 5
   m_Name: StoryEditorSceen
   m_TagString: Untagged
@@ -212,6 +214,8 @@ MonoBehaviour:
   timeline: {fileID: 428833887303520037}
   itemList: {fileID: 1041746984370589945}
   itemListContainer: {fileID: 2944062781038424540}
+  characterScreen: {fileID: 988781987286539277}
+  objectsScreen: {fileID: 5212170361740526878}
 --- !u!114 &8102724252690334293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -233,6 +237,34 @@ MonoBehaviour:
   timelineInSceneUI: {fileID: 7738072994496619065}
   timeline: {fileID: 3385957743872813117}
   isEditing: 0
+--- !u!114 &988781987286539277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629746025469846592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 573bd97c07ca5564bb3b94d09ffcf48e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.MainApp.Home.User.AvatarSelectionScreen
+  workBtn_prefab: {fileID: 8509828674426686842, guid: db58be10723a5044c9a6ab80ffca998c, type: 3}
+  worksContainer: {fileID: 2944062781038424540}
+--- !u!114 &5212170361740526878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629746025469846592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f9509082ded86a4a9876b47adbdaeeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.MainApp.Home.User.ObjectSelectionScreen
+  workBtn_prefab: {fileID: 8509828674426686842, guid: db58be10723a5044c9a6ab80ffca998c, type: 3}
+  worksContainer: {fileID: 2944062781038424540}
 --- !u!1 &649759606169392269
 GameObject:
   m_ObjectHideFlags: 0
@@ -875,8 +907,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.827451, g: 0.8784314, b: 0.9098039, a: 1}
-  m_RaycastTarget: 1
+  m_Color: {r: 0.827451, g: 0.8784314, b: 0.9098039, a: 0}
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1866,8 +1898,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

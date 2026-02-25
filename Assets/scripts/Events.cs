@@ -1,4 +1,5 @@
 ﻿using BoardItems;
+using BoardItems.BoardData;
 using BoardItems.Characters;
 using BoardItems.SceneObjects;
 using BoardItems.UI;
@@ -19,6 +20,7 @@ public static class Events
     public static System.Action<string, string, string, System.Action<bool>> OnConfirm = delegate { };
     public static System.Action<CharacterPartsHelper.parts> EmptyCharacterItemsButExlude = delegate { };
     public static System.Action EmptySceneItems = delegate { };
+    public static System.Action<BoardItemManager,CharacterPartData> LoadBoardItemForStory = delegate { };
 
     public static System.Action<PalettesManager.colorNames> ColorizeArms = delegate { };
     public static System.Action<PalettesManager.colorNames> ColorizeLegs = delegate { };

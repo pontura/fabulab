@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BoardItems.Characters;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -8,6 +9,7 @@ namespace Yaguar.StoryMaker.Editor
     {
 
         public GameObject character_to_instantiate;
+        public CharacterManager characterManager;
 
         private void Start()
         {
@@ -31,7 +33,7 @@ namespace Yaguar.StoryMaker.Editor
             asset.transform.localEulerAngles = Vector3.zero;
             asset.transform.localPosition = Vector3.zero;
             asset.SetActive(true);
-
+            characterManager = asset.GetComponent<CharacterManager>();
         }
     }
 }
