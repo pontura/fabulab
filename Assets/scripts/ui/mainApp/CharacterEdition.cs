@@ -156,17 +156,18 @@ namespace UI.MainApp
         public void SaveProfilePic()
         {
             print("SaveProfilePic");
-            UIManager.Instance.zoomManager.Zoom(BoardItems.Characters.CharacterPartsHelper.parts.HEAD, true);
+            Events.Zoom(BoardItems.Characters.CharacterPartsHelper.parts.HEAD, true);
             savePanel.SetActive(false);
             Invoke("SaveProfilePicDelayed", 1);
         }
         void SaveProfilePicDelayed()
         {
-            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, SaveProfilePicture);
+            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, SaveProfilePictureDone);
         }
-        public void SaveProfilePicture(Texture2D tex)
+        public void SaveProfilePictureDone(Texture2D tex)
         {
-            print("TO-DO: graba la profilepicture");
+            string thumb = System.Convert.ToBase64String(tex.EncodeToPNG());
+            FirebaseStoryMakerDBManager.Instance.SaveProfilePicture(thumb);
         }
         void SaveWork()
         {

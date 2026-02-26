@@ -12,12 +12,14 @@ namespace UI.MainApp.Home
         [SerializeField] GameObject stories;
         [SerializeField] UserCharactersScreen charactersScreen;
         [SerializeField] UserObjectsScreen objects;
+        [SerializeField] ProfilePicture profilePicture;
 
         public void Show(bool isOn)
         {
             gameObject.SetActive(isOn);
             if (isOn)
             {
+                profilePicture.InitOwner();
                 tabs.Init(OnTabClicked);
                 int charactersQty = Data.Instance.charactersData.userCharacters.Count;
                 List<string> tabNames = new List<string>() { "Settings", "Stories", "Characters (" + charactersQty + ")", "Objects" };

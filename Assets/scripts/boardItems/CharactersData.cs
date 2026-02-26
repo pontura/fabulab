@@ -164,7 +164,6 @@ namespace BoardItems
             if (totalParts > 1) { // is a complete character;
                 if (wd.id == "") {
                     userCharacters.Add(wd);
-                    //FirebaseStoryMakerDBManager.Instance.SaveCharacterToServer(EncodeCharacterData(wd), OnCharacterSavedToServer);
                     FirebaseStoryMakerDBManager.Instance.SaveToServer("characters", wd.GetServerData(), OnCharacterSavedToServer);
                 } else {
                     FirebaseStoryMakerDBManager.Instance.UpdateDataToServer("characters", wd.id, wd.GetServerData(), OnCharacterSavedToServer);
@@ -176,30 +175,7 @@ namespace BoardItems
                 } else {
                     FirebaseStoryMakerDBManager.Instance.UpdateBodypartPresetToServer(loadedPresetId, type, (wd as CharacterPartData).GetServerData(), BoardItems.Characters.CharacterPartsHelper.GetServerPartsId(partID), OnPresetSavedToServer);
                 }
-            }            
-
-            //PersistThumbLocal(wd);
-            // SetPkpkShared(wd, false);
-        }
-        string EncodeCharacterData(CharacterData wd)
-        {
-            string workData = "";
-            workData += Enum.GetName(typeof(PalettesManager.colorNames), wd.armsColor) + fieldSeparator;
-            workData += Enum.GetName(typeof(PalettesManager.colorNames), wd.legsColor) + fieldSeparator;
-            workData += Enum.GetName(typeof(PalettesManager.colorNames), wd.eyebrowsColor) + fieldSeparator;
-            for (int i = 0; i < wd.items.Count; i++)
-            {
-                workData += wd.items[i].galleryID + itemFieldSeparator + wd.items[i].id + itemFieldSeparator + SetRealFloat(wd.items[i].position.x) + itemFieldSeparator +
-                SetRealFloat(wd.items[i].position.y) + itemFieldSeparator + SetRealFloat(wd.items[i].position.z) + itemFieldSeparator + SetRealFloat(wd.items[i].rotation.z) +
-                itemFieldSeparator + SetRealFloat(wd.items[i].scale.x) +
-                itemFieldSeparator + Enum.GetName(typeof(PalettesManager.colorNames), wd.items[i].color) +
-                itemFieldSeparator + Enum.GetName(typeof(AnimationsManager.anim), wd.items[i].anim) +
-                itemFieldSeparator + wd.items[i].part;
-                if (i < wd.items.Count - 1)
-                    workData += itemSeparator;
-            }
-            Debug.Log("#workData: " + workData);
-            return workData;
+            }  
         }
         string SetRealFloat(float f)
         {

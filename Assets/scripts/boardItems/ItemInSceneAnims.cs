@@ -14,6 +14,7 @@ namespace BoardItems
         Vector3 finalRot;
         Vector3 finalPos;
         Vector3 _goto;
+        float speed = 10;
 
         public void Appear(ItemData itemData)
         {
@@ -41,8 +42,8 @@ namespace BoardItems
             if (anim == anims.OFF)
                 return;
             Transform t = transform;
-            float r = Mathf.Lerp(t.localEulerAngles.z, finalRot.z, 0.1f);
-            Vector3 g = Vector3.Lerp(t.localPosition, finalPos, 0.1f);
+            float r = Mathf.Lerp(t.localEulerAngles.z, finalRot.z, Time.deltaTime * speed);
+            Vector3 g = Vector3.Lerp(t.localPosition, finalPos, Time.deltaTime * speed);
 
             t.localPosition = g;
             t.localEulerAngles = new Vector3(0,0,r);

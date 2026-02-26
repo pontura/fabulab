@@ -9,6 +9,8 @@ namespace UI.MainApp.Home
         [SerializeField] GameObject editBtn;
         [SerializeField] TMPro.TMP_Text usernameField;
 
+        [SerializeField] ProfilePicture profilePicture;
+
         private void Awake()
         {
             Events.ChangeName += OnChangeName;
@@ -28,6 +30,7 @@ namespace UI.MainApp.Home
             switch (type)
             {
                 case UIManager.screenType.Home:
+                    profilePicture.InitOwner();
                     userUI.SetActive(true);
                     string username = Data.Instance.userData.userDataInDatabase.username;
                     OnChangeName(username);

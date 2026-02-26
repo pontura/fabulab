@@ -1,8 +1,10 @@
 ﻿using BoardItems;
 using BoardItems.BoardData;
+using System;
 using System.Collections.Generic;
 using UI.MainApp;
 using UnityEngine;
+using Yaguar.StoryMaker.DB;
 using static UI.BoardUI;
 
 namespace UI
@@ -79,8 +81,17 @@ namespace UI
         }
         void Init()
         {
+            string uid = Data.Instance.userData.userDataInDatabase.uid;
+            if (uid != "")
+                Data.Instance.cacheData.GetUser(uid, OnUserDone);
             Home();
         }
+
+        private void OnUserDone(CacheData.UserData uData)
+        {
+            print("OnUserDone UID " + uData);
+        }
+
         public void Home()
         {
             Events.ShowScreen(UIManager.screenType.Home);
@@ -104,7 +115,6 @@ namespace UI
         }
         public void NewStory() {
             boardUI.SetEditingType(editingTypes.SCENE);
-            print("NewStory");
             Data.Instance.scenesData.StartNewStory("");
             boardUI.SetEditingType(editingTypes.NONE);
             Events.ShowScreen(UIManager.screenType.StoryMaker);
@@ -112,7 +122,6 @@ namespace UI
         public void NewCharacter()
         {
             boardUI.SetEditingType(editingTypes.CHARACTER);
-            print("NewCharacter");
             Data.Instance.charactersData.ResetCurrentID();
             Events.OnPresetReset();
             GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(1);
@@ -126,7 +135,6 @@ namespace UI
         public void NewObject()
         {
             boardUI.SetEditingType(editingTypes.OBJECT);
-            print("new object");
             Events.OnCharacterReset();
             Events.OnPresetReset();
             GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(1);

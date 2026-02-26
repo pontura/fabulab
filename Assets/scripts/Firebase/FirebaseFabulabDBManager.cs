@@ -634,7 +634,7 @@ namespace Yaguar.StoryMaker.DB
             //Debug.Log(url);
         }*/
         
-        public void GetUsernameFromServer(string uid, System.Action<string, string> callback)
+        public void GetUser(string uid, System.Action<string, string> callback)
         {
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + uid);
             reference.GetValueAsync().ContinueWithOnMainThread(task =>
@@ -650,6 +650,23 @@ namespace Yaguar.StoryMaker.DB
                 }
             });
             Debug.Log("Server: GetUsernameFromServer " + uid);
+        }
+        public void SaveProfilePicture(string thumb)
+        {
+            Dictionary<string, System.Object> childUpdates = new Dictionary<string, System.Object>();
+            childUpdates["thumb"] = thumb;
+
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + _uid);
+            reference.UpdateChildrenAsync(childUpdates).ContinueWithOnMainThread(task =>
+            {
+                if (task.IsFaulted || task.IsCanceled)
+                {
+                    Debug.Log("#SaveProfilePicture FAIL " + task.Exception);
+                }
+                Debug.Log("Server: SaveProfilePicture done!");
+            });
+            Debug.Log("Server: SaveProfilePicture thumb: " + thumb);
+            //print("SaveInventoryItem url : " + url);
         }
     }
 }

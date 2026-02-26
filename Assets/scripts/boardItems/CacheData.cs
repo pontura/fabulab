@@ -1,23 +1,32 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using BoardItems;
+using Firebase.Analytics;
 using System;
-using System.Linq;
+using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+using UnityEngine.SocialPlatforms;
 using Yaguar.StoryMaker.DB;
 using Yaguar.StoryMaker.Editor;
-using BoardItems;
 
 public class CacheData : MonoBehaviour
 {
     public Dictionary<string, List<SceneData>> filmsCache;
-    public List<userData> users;
+    public List<UserData> users;
 
     [SerializeField] List<SceneData> filmData;
 
     [Serializable]
-    public class userData {
-        public string userId;
-        public string username;        
+    public class ServerMetaData
+    {
+        public string thumb;
+        public string username;
+    }
+
+    [Serializable]
+    public class UserData {
+        public string uid;
+        public string username;
+        public Texture2D thumb;
     }
 
     [Serializable]
@@ -57,21 +66,29 @@ public class CacheData : MonoBehaviour
         filmData = filmsCache[id];
         return CloneFilmData(filmsCache[id]);
     }
+    public void GetUser(string uid, System.Action<UserData> OnReady)
+    {
+        foreach (UserData u in users)
+        {
+            if (u.uid == uid)
+            {
+                OnReady( u);
+            }
+        }
+        FirebaseStoryMakerDBManager.Instance.GetUser(uid, (uid, rawjson) =>
+        {
+            ServerMetaData s = JsonUtility.FromJson<ServerMetaData>(rawjson);
+            UserData ud = new UserData();
+            ud.uid = uid;
 
-    public void GetUserName(string uId, System.Action<string> callback) {
-        userData udata = users.Find(x => x.userId == uId);
-        if (udata != null)
-            callback(udata.username);
-        else
-            FirebaseStoryMakerDBManager.Instance.GetUsernameFromServer(uId, OnGetUserNameFromServer);
-    }
+            ud.thumb = new Texture2D(1, 1);
+            if(s.thumb != "")
+                ud.thumb.LoadImage(System.Convert.FromBase64String(s.thumb));
 
-    void OnGetUserNameFromServer(string uid, string uname) {
-        userData udata = new userData();
-        udata.userId = uid;
-        udata.username = uname;
-        users.Add(udata);
-        //Events.OnGetUserName(uname);
+            users.Add(ud);
+            OnReady(ud);
+        });
     }
+  
     
 }
