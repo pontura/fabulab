@@ -48,7 +48,7 @@ namespace BoardItems
             t.localPosition = g;
             t.localEulerAngles = new Vector3(0,0,r);
 
-            if (Vector3.Distance(t.localPosition, finalPos) <0.1)
+            if (Vector3.Distance(t.localPosition, finalPos) <0.01f)
             {
                 t.localEulerAngles = finalRot;
                 t.localPosition = finalPos;
