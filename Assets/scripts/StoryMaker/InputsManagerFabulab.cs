@@ -119,6 +119,36 @@ namespace Yaguar.StoryMaker.Editor
                     }
                 }
             }
-        }        
+        }
+
+        protected override void EditorRotateSO() {
+            if (!isRotating) {
+                startPoint = Input.mousePosition;
+                isRotating = true;
+            } else {
+                float delta = (Input.mousePosition.y - startPoint.y) / (Screen.height * 0.5f);
+                float mapped = 180 * delta;
+                float rotateVal = Mathf.Clamp(mapped, -180f, 180f);
+
+                sceneObjectsManager.selected.Rotate(rotateVal);
+
+            }
+        }
+
+        protected override void EditorResizeSo() {
+            if (!isResize) {
+                startPoint = Input.mousePosition;
+                isResize = true;
+            } else {
+                float delta = (Input.mousePosition.y - startPoint.y) / (Screen.height * 0.5f);
+                float mapped = 1 + delta;
+                float sizeFactor = Mathf.Clamp(mapped, 0f, 2f);
+
+                //float sizeFactor = 2 * (Input.mousePosition.y- startPoint.y) / Screen.height;
+
+                sceneObjectsManager.selected.Resize(sizeFactor);
+
+            }
+        }
     }
 }
