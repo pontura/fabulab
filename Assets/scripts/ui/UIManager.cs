@@ -106,6 +106,7 @@ namespace UI
             boardUI.SetEditingType(editingTypes.SCENE);
             print("NewStory");
             Data.Instance.scenesData.StartNewStory("");
+            boardUI.SetEditingType(editingTypes.NONE);
             Events.ShowScreen(UIManager.screenType.StoryMaker);
         }
         public void NewCharacter()

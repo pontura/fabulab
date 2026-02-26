@@ -256,7 +256,7 @@ GameObject:
   - component: {fileID: 6420313576386189202}
   - component: {fileID: 7587675356396570705}
   - component: {fileID: 1217234101069551955}
-  - component: {fileID: 1589472438840455187}
+  - component: {fileID: 529931456682646929}
   - component: {fileID: 3327311084673562030}
   - component: {fileID: 1929399780539312835}
   m_Layer: 0
@@ -298,7 +298,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Cam>k__BackingField: {fileID: 0}
   <Offset>k__BackingField: {x: 0, y: 0, z: 0}
-  <sceneObejctsManager>k__BackingField: {fileID: 0}
+  <sceneObejctsManager>k__BackingField: {fileID: 1217234101069551955}
   <movementManager>k__BackingField: {fileID: 1929399780539312835}
 --- !u!114 &1217234101069551955
 MonoBehaviour:
@@ -322,7 +322,7 @@ MonoBehaviour:
   selected: {fileID: 0}
   selectedAvatar: {fileID: 0}
   avatar: {fileID: 0}
-  <inputsManager>k__BackingField: {fileID: 1589472438840455187}
+  <inputsManager>k__BackingField: {fileID: 529931456682646929}
   <bgData>k__BackingField:
     itemName: 
     pos: {x: 0, y: 0, z: 0}
@@ -332,7 +332,7 @@ MonoBehaviour:
     id: 0
     customizationSerialized: 
     icon: {fileID: 0}
---- !u!114 &1589472438840455187
+--- !u!114 &529931456682646929
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -341,9 +341,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7777193998746027846}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51ac8fda53978884191720dd570a2a3c, type: 3}
+  m_Script: {fileID: 11500000, guid: dfa74203e4bcb694bae38687de67babf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::Yaguar.StoryMaker.Editor.InputsManagerFabulab
   sceneObjectsManager: {fileID: 1217234101069551955}
   isEnabled: 0
 --- !u!114 &3327311084673562030

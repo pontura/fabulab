@@ -21,7 +21,7 @@ namespace UI.MainApp
         protected override void ShowScreen(UIManager.screenType type)
         {
             switch (type)
-            {
+            {                
                 case UIManager.screenType.Creation_Character:
                     changesMade = false;
                     SetButtons();

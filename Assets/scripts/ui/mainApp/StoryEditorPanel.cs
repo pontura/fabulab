@@ -1,3 +1,5 @@
+using Yaguar.StoryMaker.Editor;
+
 namespace UI.MainApp
 {
     public class StoryEditorPanel : MainScreen
@@ -8,9 +10,11 @@ namespace UI.MainApp
             {
                 case UIManager.screenType.StoryMaker:
                     Show(true);
+                    StoryMakerEvents.EnableInputManager(true);
                     break;
                 default:
                     Show(false);
+                    StoryMakerEvents.EnableInputManager(false);
                     break;
             }
         }        

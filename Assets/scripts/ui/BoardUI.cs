@@ -32,7 +32,8 @@ namespace UI
         {
             SCENE,
             CHARACTER,
-            OBJECT
+            OBJECT,
+            NONE
         }
         public void SetEditingType(editingTypes t)  {
             this.editingType = t;
@@ -44,16 +45,21 @@ namespace UI
                     break;
                 case editingTypes.CHARACTER:
                     sceneobjectsManager.gameObject.SetActive(false);
+                    characterManager.gameObject.SetActive(true);
                     activeBoardItem = characterManager;
                     break;
                 case editingTypes.OBJECT:
                     characterManager.gameObject.SetActive(false);
+                    sceneobjectsManager.gameObject.SetActive(true);
                     activeBoardItem = sceneobjectsManager;
                     break;
                 default:
+                    Debug.Log("# default");
+                    characterManager.gameObject.SetActive(false);
+                    sceneobjectsManager.gameObject.SetActive(false);
+                    activeBoardItem.gameObject.SetActive(false);
                     break;
-            }
-            activeBoardItem.gameObject.SetActive(true);
+            }            
         }
 
         int captureGifFramerate = 40;

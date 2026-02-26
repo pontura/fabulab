@@ -1,7 +1,8 @@
-﻿using System.Collections;
+﻿using BoardItems.Characters;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BoardItems.Characters;
+using UnityEngine.UIElements;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -34,6 +35,21 @@ namespace Yaguar.StoryMaker.Editor
             asset.transform.localPosition = Vector3.zero;
             asset.SetActive(true);
             characterManager = asset.GetComponent<CharacterManager>();
+
+            BoxCollider2D collider = GetComponent<BoxCollider2D>();
+
+            Bounds bounds = new Bounds(transform.position, Vector3.zero);
+
+            foreach (SpriteRenderer sr in GetComponentsInChildren<SpriteRenderer>()) {
+                bounds.Encapsulate(sr.bounds);
+            }
+
+            Vector3 localCenter = transform.InverseTransformPoint(bounds.center);
+            Vector3 localSize = transform.InverseTransformVector(bounds.size);
+
+            collider.offset = localCenter;
+            collider.size = localSize;
+
         }
     }
 }

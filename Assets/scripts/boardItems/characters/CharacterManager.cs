@@ -149,5 +149,11 @@ namespace BoardItems.Characters
             BodyPart bp = GetBodyPart(p);
             bp.SendToTop(itemSelected);
         }
+
+        public void SetColliderActive(bool active) {
+            foreach(Collider2D c in GetComponentsInChildren<Collider2D>(true)) {
+                c.enabled = active;
+            }
+        }
     }
 }

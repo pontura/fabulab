@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using BoardItems.Characters;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,7 +35,9 @@ namespace Yaguar.StoryMaker.Editor
                 selected.Init(data);
                 selectedAvatar = selected;
                 inputsManager.ResetAll();
-                Events.LoadBoardItemForStory(selected.GetComponent<AvatarFabulab>().characterManager, (data as SOAvatarFabulabData).characterData);
+                CharacterManager characterManager = selected.GetComponent<AvatarFabulab>().characterManager;
+                Events.LoadBoardItemForStory(characterManager, (data as SOAvatarFabulabData).characterData);
+                characterManager.SetColliderActive(false);
             }            
         }
 

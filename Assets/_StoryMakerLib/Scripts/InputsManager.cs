@@ -20,8 +20,6 @@ namespace Yaguar.StoryMaker.Editor
 
         protected Vector3 startPoint;
 
-        public bool isEnabled;        
-
         public void ResetAll()
         {
             isDragging = false;
@@ -30,9 +28,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         void Update()
         {
-            if (!isEnabled)
-                return;
-
+            
             if (!isDragging)
             {
                 if (Input.GetMouseButtonDown(0))
@@ -126,7 +122,7 @@ namespace Yaguar.StoryMaker.Editor
             }
         }
 
-        void RotateSO()
+        protected virtual void RotateSO()
         {
             if (!isRotating)
             {
@@ -155,7 +151,7 @@ namespace Yaguar.StoryMaker.Editor
             }
         }
 
-        void ResizeSo()
+        protected virtual void ResizeSo()
         {
             isResize = true;
             // Store both touches.
@@ -176,7 +172,7 @@ namespace Yaguar.StoryMaker.Editor
             sceneObjectsManager.selected.Resize(deltaMagnitudeDiff);
         }
 
-        void EditorRotateSO()
+        protected virtual void EditorRotateSO()
         {
             if (!isRotating)
             {
@@ -206,7 +202,7 @@ namespace Yaguar.StoryMaker.Editor
             }
         }
 
-        void EditorResizeSo()
+        protected virtual void EditorResizeSo()
         {
             if (!isResize)
             {
