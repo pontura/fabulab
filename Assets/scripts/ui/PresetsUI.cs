@@ -30,10 +30,7 @@ namespace UI
         {
             snapToggle.Init(OnToggle, UIManager.Instance.boardUI.snap);
             dragAndDropUI.transform.SetParent(dragAndDropContainer);
-            dragAndDropUI.GetComponent<RectTransform>().anchorMin = Vector2.zero;
-            dragAndDropUI.GetComponent<RectTransform>().anchorMax = Vector2.one;
-            dragAndDropUI.GetComponent<RectTransform>().offsetMin = Vector2.zero;
-            dragAndDropUI.GetComponent<RectTransform>().offsetMax = Vector2.zero;
+            dragAndDropUI.Init();
             isPreset = true;
             gameObject.SetActive(true);
             CharacterAnims.anims anim = CharacterAnims.anims.edit;

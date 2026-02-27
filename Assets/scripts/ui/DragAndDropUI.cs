@@ -1,5 +1,6 @@
 using BoardItems;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace UI
@@ -16,6 +17,13 @@ namespace UI
         private void Awake()
         {
             Events.OnStopDrag += OnStopDrag;
+        }
+        public void Init()
+        {
+            GetComponent<RectTransform>().anchorMin = Vector2.zero;
+            GetComponent<RectTransform>().anchorMax = Vector2.one;
+            GetComponent<RectTransform>().offsetMin = Vector2.zero;
+            GetComponent<RectTransform>().offsetMax = Vector2.zero;
         }
         public void SetOn(bool isOn)
         {

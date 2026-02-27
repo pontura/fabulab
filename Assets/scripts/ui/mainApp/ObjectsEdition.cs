@@ -32,10 +32,7 @@ namespace UI.MainApp
                     savePanel.SetActive(false);
                     dragAndDropUI.SetOn(true);
                     dragAndDropUI.transform.SetParent(dragAndDropContainer);
-                    dragAndDropUI.GetComponent<RectTransform>().anchorMin = Vector2.zero;
-                    dragAndDropUI.GetComponent<RectTransform>().anchorMax = Vector2.one;
-                    dragAndDropUI.GetComponent<RectTransform>().offsetMin = Vector2.zero; 
-                    dragAndDropUI.GetComponent<RectTransform>().offsetMax = Vector2.zero;  
+                    dragAndDropUI.Init();
                     break;
                 default:
                     Show(false);
