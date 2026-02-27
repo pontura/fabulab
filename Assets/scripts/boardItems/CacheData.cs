@@ -81,7 +81,7 @@ public class CacheData : MonoBehaviour
             ServerMetaData s = JsonUtility.FromJson<ServerMetaData>(rawjson);
             UserData ud = new UserData();
             ud.uid = uid;
-
+            ud.username = s.username;
             ud.thumb = new Texture2D(1, 1);
             if(s.thumb != "")
                 ud.thumb.LoadImage(System.Convert.FromBase64String(s.thumb));
