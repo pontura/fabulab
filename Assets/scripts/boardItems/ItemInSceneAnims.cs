@@ -23,7 +23,7 @@ namespace BoardItems
             this.finalRot = itemData.rotation;
 
             Vector3 from = itemData.position;
-            from.y -= 10;
+            from.y -= 2;
             transform.localPosition = from;
 
             Vector3 rotateFrom = itemData.position;
