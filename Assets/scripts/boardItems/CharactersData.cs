@@ -160,6 +160,7 @@ namespace BoardItems
             print("SAVE data: totalparts" + totalParts + " lastPArtID: "+ partID);
             currentCharacter = wd;
 
+
             string type = "bodypart";
             if (totalParts > 1) { // is a complete character;
                 if (wd.id == "") {
@@ -188,6 +189,8 @@ namespace BoardItems
             currentID = id;
 
             ServerCharacterMetaData swmd = new ServerCharacterMetaData();
+
+            swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
             swmd.thumb = System.Convert.ToBase64String(currentCharacter.thumb.EncodeToPNG());
             swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer("characters", currentID, swmd);

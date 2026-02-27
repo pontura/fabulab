@@ -15,5 +15,6 @@ namespace BoardItems.BoardData
         public PalettesManager.colorNames armsColor;
         public PalettesManager.colorNames legsColor;
         public PalettesManager.colorNames eyebrowsColor;
+        public List<string> creators;
     }
 }

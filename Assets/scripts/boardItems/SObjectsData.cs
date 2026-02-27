@@ -94,17 +94,15 @@ namespace BoardItems
             ServerCharacterMetaData swmd = new ServerCharacterMetaData();
             swmd.thumb = System.Convert.ToBase64String(currentSO.thumb.EncodeToPNG());
             swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
+            swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid); 
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer("so", currentID, swmd);
 
             OpenSODetail(currentSO);
         }
-
         void OpenSODetail(CharacterData wd)
         {
-            Debug.Log("Open SO Detal !!");
-           // UIManager.Instance.ShowWorkDetail(wd);            
+            Debug.Log("Open SO Detal !!");         
         }
-      
         public void OnLoadSODataFromServer(List<CharacterMetaData> sfds)
         {
             Debug.Log("OnLoadSODataFromServer !!");

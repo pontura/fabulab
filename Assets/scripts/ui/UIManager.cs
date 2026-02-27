@@ -1,10 +1,8 @@
 ﻿using BoardItems;
 using BoardItems.BoardData;
-using System;
 using System.Collections.Generic;
 using UI.MainApp;
 using UnityEngine;
-using Yaguar.StoryMaker.DB;
 using static UI.BoardUI;
 
 namespace UI

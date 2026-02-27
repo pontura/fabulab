@@ -6,7 +6,6 @@ using System.Collections;
 using UI.MainApp;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 namespace UI
 {

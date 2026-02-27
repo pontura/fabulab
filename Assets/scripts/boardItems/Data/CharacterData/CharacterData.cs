@@ -35,5 +35,6 @@ namespace BoardItems.BoardData
             legsColor = serverData.legsColor;
             eyebrowsColor = serverData.eyebrowsColor;
         }
+       
     }
 }

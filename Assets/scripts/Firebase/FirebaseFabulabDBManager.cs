@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.DB;
@@ -202,52 +203,6 @@ namespace Yaguar.StoryMaker.DB
             Debug.Log("Server: SaveCharacterMetadataToServer "+ characterId);           
         }
 
-        public void LoadUserCharacterMetadataFromServer(System.Action<List<CharacterMetaData>> callback) {
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/characters");
-            Debug.Log("#_uid: " + _uid);
-            reference.OrderByChild("userID").EqualTo(_uid).GetValueAsync().ContinueWithOnMainThread(task => {
-            //reference.OrderByChild("user_id").EqualTo(_uid).GetValueAsync().ContinueWithOnMainThread(task => {
-
-                if (task.IsFaulted || task.IsCanceled)
-                {
-                    Debug.Log("#LoadUserCharacterMetadataFromServer FAIL");                    
-                    Debug.Log(task.Exception);
-                }
-                else if (task.IsCompleted)
-                {
-                    Debug.Log("#LoadUserCharacterMetadataFromServer IsCompleted");
-                    try {
-                        Debug.Log(task.Result.GetRawJsonValue());
-                        DataSnapshot snapshot = task.Result;
-                    
-                        if (snapshot.Exists) {
-                            Debug.Log("#LoadUserCharacterMetadataFromServer exists");
-                            List<CharacterMetaData> charactersMetaData = new List<CharacterMetaData>();
-                            Debug.Log("#LoadUserCharacterMetadataFromServer snapshot Count: " + snapshot.Children.Count<DataSnapshot>());
-
-                            foreach (var child in snapshot.Children) {
-                                Debug.Log(child.Key + ": " + child.Value.ToString());
-                                CharacterMetaData fd = new CharacterMetaData();
-                                fd.id = child.Key;
-                                fd.userID = child.Child("userID").Value as string;
-                                fd.thumb = new Texture2D(1, 1);
-                                fd.thumb.LoadImage(System.Convert.FromBase64String(child.Child("thumb").Value as string));
-                                charactersMetaData.Add(fd);
-                            }
-                            //Dictionary<string, ServerCharacterMetaData> d = JsonConvert.DeserializeObject<Dictionary<string, ServerCharacterMetaData>>(task.Result.GetRawJsonValue());
-                            callback(charactersMetaData);
-                        } else {
-                            Debug.LogWarning("No se encontraron datos para ese userID");
-                        }
-                    } catch (Exception ex) {
-                        Debug.LogError($"Error en callback: {ex}");
-                    }
-                }
-            });
-            
-            Debug.Log("Server: LoadUserCharacterMetadataFromServer _uid: " + _uid);
-            //Debug.Log(url);
-        }
 
         public void LoadMetadataFromServer(string type, System.Action<List<CharacterMetaData>> callback) {
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/" + type);
@@ -272,6 +227,12 @@ namespace Yaguar.StoryMaker.DB
                                 CharacterMetaData fd = new CharacterMetaData();
                                 fd.id = child.Key;
                                 fd.userID = child.Child("userID").Value as string;
+                                fd.creators = new List<string>();
+                                if (child.HasChild("creators"))
+                                {                                   
+                                    foreach (var uid in child.Child("creators").Children)
+                                        fd.creators.Add(uid.Value as string);
+                                }
                                 fd.thumb = new Texture2D(1, 1);
                                 fd.thumb.LoadImage(System.Convert.FromBase64String(child.Child("thumb").Value as string));
                                 metas.Add(fd);
