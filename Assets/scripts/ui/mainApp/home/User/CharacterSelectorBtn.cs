@@ -9,7 +9,7 @@ namespace UI.MainApp.Home.User
         [SerializeField] Image thumb;
         [SerializeField] CreatorsList creatorList;
 
-        public void Init(CharacterData cd)
+        public void Init(SOPartData cd)
         {
             thumb.sprite = cd.GetSprite();
         }

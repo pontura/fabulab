@@ -10,12 +10,12 @@ namespace BoardItems
     public class SObjectsData : MonoBehaviour {
         public Vector2Int thumbSize;
 
-        public List<CharacterData> data;
+        public List<BoardItems.BoardData.SOData> data;
         public List<CharacterMetaData> metaData;
 
         [SerializeField] string currentID;
 
-        CharacterData currentSO;
+        BoardItems.BoardData.SOData currentSO;
         Dictionary<string, ServerPartMetaData> serverPartsMetaData;
 
        
@@ -43,10 +43,10 @@ namespace BoardItems
 
         public void SaveSO(Texture2D tex)
         {
-            CharacterData wd;
+            BoardItems.BoardData.SOData wd;
             if (currentID == "" || currentID == null)
             {
-                wd = new CharacterData();
+                wd = new BoardItems.BoardData.SOData();
                 wd.id = "";
             }
             else
@@ -99,7 +99,7 @@ namespace BoardItems
 
             OpenSODetail(currentSO);
         }
-        void OpenSODetail(CharacterData wd)
+        void OpenSODetail(BoardItems.BoardData.SOData wd)
         {
             Debug.Log("Open SO Detal !!");         
         }
@@ -118,7 +118,7 @@ namespace BoardItems
             foreach (KeyValuePair<string, CharacterServerData> e in d)
             {
                 Debug.Log("#LoadCharactersFromServer " + e.Key + ": " + e.Value);
-                CharacterData wd = new CharacterData();
+                BoardItems.BoardData.SOData wd = new BoardItems.BoardData.SOData();
                 wd.id = e.Key;
                 Debug.Log("#Aca1: " + e.Value.items.Count);
                 wd.LoadServerData(e.Value);
@@ -132,12 +132,12 @@ namespace BoardItems
         {
             return currentID;
         }
-        public CharacterData GetSO(string id)
+        public BoardItems.BoardData.SOData GetSO(string id)
         {
             return data.Find(x => x.id == id);
         }
 
-        public CharacterData SetCurrentID(string id)
+        public BoardItems.BoardData.SOData SetCurrentID(string id)
         {
             currentID = id;
             return data.Find(x => x.id == id);
@@ -175,11 +175,11 @@ namespace BoardItems
         }
 
 
-        void AddPart(CharacterData wd)
+        void AddPart(BoardItems.BoardData.SOData wd)
         {
             data.Add(wd);
         }
-        public List<CharacterData> GetPreset()
+        public List<BoardItems.BoardData.SOData> GetPreset()
         {
             return data;
         }

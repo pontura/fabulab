@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace BoardItems.BoardData
 {
-    [Serializable]
-    public class SOData : CharacterPartData
-    {
 
+    [Serializable]
+    public class SOData : SOPartData
+    {
         public new CharacterServerData GetServerData()
         {
             CharacterServerData csd = new CharacterServerData();
@@ -29,5 +29,6 @@ namespace BoardItems.BoardData
                 items.Add(savedData);
             }
         }
+
     }
 }

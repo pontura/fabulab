@@ -11,11 +11,11 @@ namespace UI
     {
         [SerializeField] Image image;
         PresetsSelector manager;
-        public CharacterPartData workData;
+        public SOPartData workData;
         public colorNames color;
         public int partToColorizeID = 0; //0 = amrs; 1 = legs
 
-        public void Init(PresetsSelector manager, CharacterPartData workData)
+        public void Init(PresetsSelector manager, SOPartData workData)
         {
             this.workData = workData;
             this.manager = manager;

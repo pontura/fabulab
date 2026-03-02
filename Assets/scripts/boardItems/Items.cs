@@ -28,6 +28,7 @@ namespace BoardItems
             Events.EditMode += EditMode;
             Events.OnStopDrag += OnStopDrag;
             Events.InitGallery += InitGallery;
+            Events.ColorizeBG += ColorizeBG;
             Events.Colorize += Colorize;
             Events.AnimateItem += AnimateItem;
             Events.ResetItems += ResetItems;
@@ -40,6 +41,7 @@ namespace BoardItems
             Events.EditMode -= EditMode;
             Events.OnStopDrag -= OnStopDrag;
             Events.InitGallery -= InitGallery;
+            Events.ColorizeBG -= ColorizeBG;
             Events.Colorize -= Colorize;
             Events.AnimateItem -= AnimateItem;
             Events.ResetItems -= ResetItems;
@@ -179,6 +181,11 @@ namespace BoardItems
             itemSelected.SetColor(name);
             ItemInScene mirror = itemSelected.GetMirror();
             if (mirror != null) mirror.SetColor(name);
+        }
+        void ColorizeBG(PalettesManager.colorNames name)
+        {
+            Color color = Data.Instance.palettesManager.GetColor(name);
+            bg.color = color;
         }
         public ItemInScene GetItemSelected()
         {
@@ -511,7 +518,7 @@ namespace BoardItems
                 item.SetCollider(isEditMode);
         }
 
-        void LoadBoardItemForStory(BoardItemManager itemManager, CharacterPartData wd) {
+        void LoadBoardItemForStory(BoardItemManager itemManager, SOPartData wd) {
             boardItem = itemManager;
             OpenWork(wd);
         }
@@ -546,10 +553,10 @@ namespace BoardItems
             return newItem;
         }
 
-        public void OpenWork(CharacterPartData wd) {
+        public void OpenWork(SOPartData wd) {
             StartCoroutine(OpenWork_C(wd));
         }
-        IEnumerator OpenWork_C(CharacterPartData wd) {
+        IEnumerator OpenWork_C(SOPartData wd) {
             print("open work");
             foreach (SavedIData itemData in wd.items) {
                 yield return new WaitForSeconds(0.05f);

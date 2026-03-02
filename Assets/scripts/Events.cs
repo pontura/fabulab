@@ -20,14 +20,15 @@ public static class Events
     public static System.Action<string, string, string, System.Action<bool>> OnConfirm = delegate { };
     public static System.Action<CharacterPartsHelper.parts> EmptyCharacterItemsButExlude = delegate { };
     public static System.Action EmptySceneItems = delegate { };
-    public static System.Action<BoardItemManager,CharacterPartData> LoadBoardItemForStory = delegate { };
+    public static System.Action<BoardItemManager, SOPartData> LoadBoardItemForStory = delegate { };
 
+    public static System.Action<PalettesManager.colorNames> Colorize = delegate { };
+    public static System.Action<PalettesManager.colorNames> ColorizeBG = delegate { };
     public static System.Action<PalettesManager.colorNames> ColorizeArms = delegate { };
     public static System.Action<PalettesManager.colorNames> ColorizeLegs = delegate { };
     public static System.Action<PalettesManager.colorNames> ColorizeEyebrows = delegate { };
     public static System.Action<string> ChangeName = delegate { };
 
-    public static System.Action<PalettesManager.colorNames> Colorize = delegate { };
     public static System.Action<AnimationsManager.AnimData> AnimateItem = delegate { };
     public static System.Action<bool> ActivateUIButtons = delegate { };
     public static System.Action<bool> SetChangesMade = delegate { };

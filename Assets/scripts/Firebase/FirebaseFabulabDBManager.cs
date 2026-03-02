@@ -252,7 +252,7 @@ namespace Yaguar.StoryMaker.DB
             //Debug.Log(url);
         }
 
-        public void LoadBodypartPresetsFromServer(int partId, System.Action<int, Dictionary<string, CharacterPartServerData>> callback) {
+        public void LoadBodypartPresetsFromServer(int partId, System.Action<int, Dictionary<string, SOPartServerData>> callback) {
 
             string pId = BoardItems.Characters.CharacterPartsHelper.GetServerUniquePartsId(partId);
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/bodypart/" + pId);
@@ -269,12 +269,12 @@ namespace Yaguar.StoryMaker.DB
                                              
 
                         DataSnapshot snapshot = task.Result;
-                        Dictionary<string, CharacterPartServerData> d = new Dictionary<string, CharacterPartServerData>();
+                        Dictionary<string, SOPartServerData> d = new Dictionary<string, SOPartServerData>();
                         foreach (var child in snapshot.Children) {
                                 string json = JsonConvert.SerializeObject(child.Value);
                                 //Debug.Log(json);
                                 if (!json.Contains("#"))
-                                    d.Add(child.Key, JsonConvert.DeserializeObject<CharacterPartServerData>(json));
+                                    d.Add(child.Key, JsonConvert.DeserializeObject<SOPartServerData>(json));
                         }
                         //string data = task.Result.GetRawJsonValue();
                         //Debug.Log(data);
@@ -294,7 +294,7 @@ namespace Yaguar.StoryMaker.DB
             //print("LoadCharacterFromServer url : " + url);
         }
 
-        public void UpdateBodypartPresetToServer(string presetId, string type, CharacterPartServerData presetData, string partId, System.Action<bool, string, string> callback) {
+        public void UpdateBodypartPresetToServer(string presetId, string type, SOPartServerData presetData, string partId, System.Action<bool, string, string> callback) {
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/" + type + "/" + partId + "/"  + presetId);
             string s = JsonConvert.SerializeObject(presetData);
             reference.SetRawJsonValueAsync(s).ContinueWithOnMainThread(task => {
@@ -313,7 +313,7 @@ namespace Yaguar.StoryMaker.DB
             //print("UpdateCharacterToServer url : " + url);
         }
 
-        public void SaveBodypartPresetToServer(CharacterPartServerData presetData, string type, string partId, System.Action<bool, string, string> callback) {
+        public void SaveBodypartPresetToServer(SOPartServerData presetData, string type, string partId, System.Action<bool, string, string> callback) {
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/" + type + "/" + partId );
             string s = JsonConvert.SerializeObject(presetData);
             string key = reference.Push().Key;

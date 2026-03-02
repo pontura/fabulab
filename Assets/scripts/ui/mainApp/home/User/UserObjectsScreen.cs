@@ -7,7 +7,10 @@ namespace UI.MainApp.Home.User
     public class UserObjectsScreen : MonoBehaviour
     {
         public CharacterSelectorBtn workBtn_prefab;
-        public Transform worksContainer;
+        public Transform container;
+        public Transform backgroundsContainer;
+        public Transform objectsContainer;
+        [SerializeField] TitleScrollView[] titleScrollView;
 
         int artID = 0;
         public void Show(bool isOn)
@@ -18,54 +21,37 @@ namespace UI.MainApp.Home.User
                 Init();
             }
         }
-
         public void Init()
         {
             artID = 0;
-
-            foreach (Transform child in worksContainer)
-            {
-                if (child.tag != "Persistent")
-                    Destroy(child.gameObject);
-            }
-
             LoadNext();
-        }
-        
+        }        
         void LoadNext()
         {
-            print("SO LoadNext " + artID);
-            print("SO count:  " + Data.Instance.sObjectsData.data.Count);
-            // if (artID >= Data.Instance.characters.Count) return;
-            foreach (CharacterData cd in Data.Instance.sObjectsData.data)
+            Utils.RemoveAllChildsIn(backgroundsContainer);
+            Utils.RemoveAllChildsIn(objectsContainer);
+            AddTitle(0, "Objects");
+            foreach (BoardItems.BoardData.SOData cd in Data.Instance.sObjectsData.data)
             {
-                CharacterSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
+                CharacterSelectorBtn go = Instantiate(workBtn_prefab, objectsContainer);
                 print("go " + go);
                 go.Init(cd);
-                //RawImage rm = go.GetComponentInChildren<RawImage>();
-               // UIManager.Instance.boardUI.GenerateThumb(wd, rm, LoadNext);
                 go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
             }
-            //CharacterData wd = Data.Instance.albumData.characters[artID];
-            //artID++;
-            //if (wd.thumb != null)
-            //{
-            //    //if (Data.Instance.galeriasData.ExistGallery(wd.galleryID))
-            //    //{
-            //        GameObject go = Instantiate(workBtn_prefab, worksContainer);
-            //        print("go " + go);
-            //        //RawImage rm = go.GetComponentInChildren<RawImage>();
-            //        //UIManager.Instance.boardUI.GenerateThumb(wd, rm, LoadNext);
-            //        go.GetComponent<Button>().onClick.AddListener(() => OpenWork(wd.id));
-            //    //}
-            //}
+            AddTitle(1, "Backgrounds");
+            foreach (BoardItems.BoardData.SOData cd in Data.Instance.sObjectsData.data)
+            {
+                CharacterSelectorBtn go = Instantiate(workBtn_prefab, backgroundsContainer);
+                print("go " + go);
+                go.Init(cd);
+                go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
+            }
         }
-        public void DuplicateWork(int PakaPakaObjectID)
+        void AddTitle(int id, string s)
         {
-          //  UIManager.Instance.boardUI.LoadPakapakaWork(PakaPakaObjectID);
-           // album.SetActive(false);
+            TitleScrollView t = titleScrollView[id];
+            t.Init(s);
         }
-
         public void OpenWork(string id)
         {
             UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);

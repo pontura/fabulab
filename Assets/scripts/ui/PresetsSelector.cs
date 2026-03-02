@@ -31,9 +31,9 @@ namespace UI
                     OpenColors();
                 else
                 {
-                    List<CharacterPartData> all = Data.Instance.charactersData.GetPreset(partID);
+                    List<SOPartData> all = Data.Instance.charactersData.GetPreset(partID);
                     artID++;
-                    foreach (CharacterPartData wd in all)
+                    foreach (SOPartData wd in all)
                     {
                         if (wd.thumb != null)
                         {

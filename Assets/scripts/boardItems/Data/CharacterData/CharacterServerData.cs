@@ -4,13 +4,13 @@ using System.Collections.Generic;
 namespace BoardItems.BoardData
 {
     [Serializable]
-    public class CharacterPartServerData
+    public class SOPartServerData
     {
         public List<ServerIData> items;
     }
 
     [Serializable]
-    public class CharacterServerData : CharacterPartServerData
+    public class CharacterServerData : SOPartServerData
     {
         public PalettesManager.colorNames armsColor;
         public PalettesManager.colorNames legsColor;

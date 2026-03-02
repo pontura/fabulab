@@ -169,7 +169,7 @@ namespace UI
         public void LoadWork(string id)
         {
             items.DeleteAll();
-            CharacterData cd;
+            SOPartData cd;
             switch (editingType)
             {
                 case editingTypes.CHARACTER:
@@ -197,13 +197,13 @@ namespace UI
             }
         }
 
-        public void LoadPreset(CharacterPartData wd)
+        public void LoadPreset(SOPartData wd)
         {
             items.DeleteInPart(wd.items[0].part);
             OpenWork(wd);
         }
 
-        void OpenWork(CharacterPartData wd) {
+        void OpenWork(SOPartData wd) {
             items.OpenWork(wd);
         }
         

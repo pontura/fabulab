@@ -5,7 +5,7 @@ namespace BoardItems.BoardData
 {
 
     [Serializable]
-    public class CharacterData : CharacterPartData
+    public class CharacterData : SOPartData
     {
         public PalettesManager.colorNames armsColor;
         public PalettesManager.colorNames legsColor;

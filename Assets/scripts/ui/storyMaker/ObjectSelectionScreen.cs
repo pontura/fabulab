@@ -1,8 +1,5 @@
-﻿using BoardItems.BoardData;
-using Unity.Android.Gradle.Manifest;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
 {
@@ -31,7 +28,7 @@ namespace UI.MainApp.Home.User
             print("SO LoadNext " + artID);
             print("SO count:  " + Data.Instance.sObjectsData.data.Count);
             // if (artID >= Data.Instance.characters.Count) return;
-            foreach (CharacterData cd in Data.Instance.sObjectsData.data)
+            foreach (BoardItems.BoardData.SOData cd in Data.Instance.sObjectsData.data)
             {
                 CharacterSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
