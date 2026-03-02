@@ -104,8 +104,10 @@ namespace UI
                 NewStory(); // TO-DO
             else if (id == 2)
                 NewCharacter();
-            else
-                NewObject();
+            else if(id == 3)
+                NewObject(SObjectData.types.generic);
+             else if (id == 4)
+                NewObject(SObjectData.types.background);
         }
         public void Albums()
         {
@@ -130,8 +132,9 @@ namespace UI
         {
             Events.ShowScreen(UIManager.screenType.Creation_Character);
         }
-        public void NewObject()
+        public void NewObject(SObjectData.types type)
         {
+            Data.Instance.sObjectsData.SetType(type);
             boardUI.SetEditingType(editingTypes.OBJECT);
             Events.OnCharacterReset();
             Events.OnPresetReset();

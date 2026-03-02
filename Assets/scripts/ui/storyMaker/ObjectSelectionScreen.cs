@@ -28,7 +28,7 @@ namespace UI.MainApp.Home.User
             print("SO LoadNext " + artID);
             print("SO count:  " + Data.Instance.sObjectsData.data.Count);
             // if (artID >= Data.Instance.characters.Count) return;
-            foreach (BoardItems.BoardData.SOData cd in Data.Instance.sObjectsData.data)
+            foreach (BoardItems.BoardData.SObjectData cd in Data.Instance.sObjectsData.data)
             {
                 CharacterSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);

@@ -65,9 +65,9 @@ namespace Yaguar.StoryMaker.DB
             return FirebaseStoryMakerDBManager.Instance;
         }
 
-        public void UpdateDataToServer(string type, string characterId, CharacterServerData characterData, System.Action<bool, string> callback) {
+        public void UpdateDataToServer(string type, string characterId, SOPartServerData soData, System.Action<bool, string> callback) {
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference(type + "/" + _uid + "/" + characterId);
-            string s = JsonConvert.SerializeObject(characterData);
+            string s = JsonConvert.SerializeObject(soData);
             reference.SetRawJsonValueAsync(s).ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#UpdateCharacterToServer FAIL");
@@ -84,13 +84,13 @@ namespace Yaguar.StoryMaker.DB
             //print("UpdateCharacterToServer url : " + url);
         }
 
-        public void SaveToServer(string type, CharacterServerData characterData, System.Action<bool, string> callback) {
+        public void SaveToServer(string type, SOPartServerData soData, System.Action<bool, string> callback) {
             if (_uid == null || _uid.Length == 0) {
                 Debug.LogError("Trying to save character without user id");
                 return;
             }
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference(type + "/" + _uid);
-            string s = JsonConvert.SerializeObject(characterData);
+            string s = JsonConvert.SerializeObject(soData);
             string key = reference.Push().Key;
             reference.Child(key).SetRawJsonValueAsync(s).ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
@@ -127,31 +127,38 @@ namespace Yaguar.StoryMaker.DB
             Debug.Log("Server: DeleteCharacter");
             //Debug.Log(url);
         }
-
-        public void LoadUserAssetsFromServer(string type, System.Action<Dictionary<string, CharacterServerData>> callback) {
+        public void LoadUserAssetsFromServer(string type, System.Action<Dictionary<string, CharacterServerData>> callback)
+        {
 
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference(type + "/" + _uid);
             reference.GetValueAsync().ContinueWithOnMainThread(task => {
 
-                if (task.IsFaulted || task.IsCanceled) {
+                if (task.IsFaulted || task.IsCanceled)
+                {
                     Debug.Log("#LoadUserCharactersFromServer FAIL");
                     Debug.Log(task.Exception);
-                } else if (task.IsCompleted) {
-                    try {
+                }
+                else if (task.IsCompleted)
+                {
+                    try
+                    {
                         //SceneDataLyna[] sds = JsonConvert.DeserializeObject<SceneDataLyna[]>(task.Result.GetRawJsonValue());
                         //Debug.Log(task.Result.GetRawJsonValue());
                         DataSnapshot snapshot = task.Result;
                         Dictionary<string, CharacterServerData> d = new Dictionary<string, CharacterServerData>();
-                        foreach (var child in snapshot.Children) {
+                        foreach (var child in snapshot.Children)
+                        {
                             string json = JsonConvert.SerializeObject(child.Value);
                             Debug.Log(json);
-                            if(!json.Contains("#"))
+                            if (!json.Contains("#"))
                                 d.Add(child.Key, JsonConvert.DeserializeObject<CharacterServerData>(json));
                         }
                         /*Dictionary<string, string> d = JsonConvert.DeserializeObject<Dictionary<string, string>>(task.Result.GetRawJsonValue());
                         Debug.Log("# " + d.Count);*/
                         callback(d);
-                    } catch (Exception ex) {
+                    }
+                    catch (Exception ex)
+                    {
                         Debug.LogError($"Error en callback: {ex}");
                     }
 
@@ -160,6 +167,47 @@ namespace Yaguar.StoryMaker.DB
             Debug.Log("Server: LoadUserCharactersFromServer");
             //print("LoadCharacterFromServer url : " + url);
         }
+        public void LoadUserAssetsFromServer(string type, System.Action<Dictionary<string, SObjectServerData>> callback)
+        {
+
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference(type + "/" + _uid);
+            reference.GetValueAsync().ContinueWithOnMainThread(task => {
+
+                if (task.IsFaulted || task.IsCanceled)
+                {
+                    Debug.Log("#LoadUserCharactersFromServer FAIL");
+                    Debug.Log(task.Exception);
+                }
+                else if (task.IsCompleted)
+                {
+                    try
+                    {
+                        //SceneDataLyna[] sds = JsonConvert.DeserializeObject<SceneDataLyna[]>(task.Result.GetRawJsonValue());
+                        //Debug.Log(task.Result.GetRawJsonValue());
+                        DataSnapshot snapshot = task.Result;
+                        Dictionary<string, SObjectServerData> d = new Dictionary<string, SObjectServerData>();
+                        foreach (var child in snapshot.Children)
+                        {
+                            string json = JsonConvert.SerializeObject(child.Value);
+                            Debug.Log(json);
+                            if (!json.Contains("#"))
+                                d.Add(child.Key, JsonConvert.DeserializeObject<SObjectServerData>(json));
+                        }
+                        /*Dictionary<string, string> d = JsonConvert.DeserializeObject<Dictionary<string, string>>(task.Result.GetRawJsonValue());
+                        Debug.Log("# " + d.Count);*/
+                        callback(d);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
+
+                }
+            });
+            Debug.Log("Server: LoadUserCharactersFromServer");
+            //print("LoadCharacterFromServer url : " + url);
+        }
+
 
         public void LoadCharacterFromServer(string characterId, System.Action<bool, string, CharacterServerData> callback, string userId=null)
         {

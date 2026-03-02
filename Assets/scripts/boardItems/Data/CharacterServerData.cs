@@ -17,4 +17,10 @@ namespace BoardItems.BoardData
         public PalettesManager.colorNames eyebrowsColor;
         public List<string> creators;
     }
+    [Serializable]
+    public class SObjectServerData : SOPartServerData
+    {
+        public SObjectData.types type;
+        public List<string> creators;
+    }
 }
