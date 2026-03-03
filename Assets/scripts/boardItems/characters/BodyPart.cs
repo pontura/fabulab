@@ -1,6 +1,7 @@
 using BoardItems.Characters;
 using BoardItems.SceneObjects;
 using Google.MiniJSON;
+using System;
 using UnityEngine;
 
 namespace BoardItems
@@ -16,19 +17,28 @@ namespace BoardItems
         void Start()
         {
             Events.OnNewBodyPartSelected += OnNewBodyPartSelected;
+            Events.Zoom += Zoom;
             col2D = GetComponentInChildren<Collider2D>();
             SetSelection(false);
         }
         void OnDestroy()
         {
             Events.OnNewBodyPartSelected -= OnNewBodyPartSelected;
+            Events.Zoom -= Zoom;
             col2D = GetComponentInChildren<Collider2D>();
         }
+
+        private void Zoom(CharacterPartsHelper.parts parts, bool save)
+        {
+            ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
+            bool canInteract = parts == part;
+            foreach (ItemInScene i in all) 
+                i.rb.simulated = canInteract;
+        }
+
         void OnNewBodyPartSelected(BodyPart bp)
         {
-            SetSelection(bp == this);
-            ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
-            foreach (ItemInScene i in all) i.rb.simulated = bp == this;
+            SetSelection(bp == this);          
         }
         public void SetSelection(bool isOn)
         {           
