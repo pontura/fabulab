@@ -8,14 +8,15 @@ using UnityEngine;
 
 namespace BoardItems
 {
-    public class Items : MonoBehaviour {
+    public class Items : MonoBehaviour
+    {
         public AnimationClip GetItemAnim;
         public AnimationClip ReleaseItemAnim;
         public ItemInScene itemInScene_to_instantiate;
         float _z;
         float _z_value = 0.001f;
         ItemInScene itemSelected;
-        public List<ItemInScene> all;
+        //public List<ItemInScene> all;
         public Inventary inventary;
         public SpriteRenderer bg;
         public Transform container;
@@ -34,7 +35,7 @@ namespace BoardItems
             Events.ResetItems += ResetItems;
             Events.LoadBoardItemForStory += LoadBoardItemForStory;
 
-            Events.EditMode(true);
+            // Events.EditMode(true);
         }
         void OnDestroy()
         {
@@ -46,6 +47,22 @@ namespace BoardItems
             Events.AnimateItem -= AnimateItem;
             Events.ResetItems -= ResetItems;
             Events.LoadBoardItemForStory -= LoadBoardItemForStory;
+        }
+        public List<ItemInScene> all
+        {
+            get
+            {
+                List<ItemInScene> a = new List<ItemInScene>();
+                foreach (BodyPart bp in UIManager.Instance.boardUI.AllBodyParts)
+                {
+                    foreach (ItemInScene i in bp.GetComponentsInChildren<ItemInScene>())
+                    {
+                        a.Add(i);
+                    }
+                }
+                print("::::::ALL " + a.Count);
+                return a;
+            }
         }
         void ResetItems()
         {
@@ -59,15 +76,12 @@ namespace BoardItems
                     bool wasMirrorer = Delete(itemInScene);
                     if (wasMirrorer)
                     {
-                        all.Remove(all[i - 1]);
                         i--;
                     }
-                    all.Remove(all[i - 1]);
                 }
                 i--;
             }
             inventary.Reset();
-            //Utils.RemoveAllChildsIn(container);
         }
         public void ResetAllAnims()
         {
@@ -82,14 +96,14 @@ namespace BoardItems
         void AnimateItem(AnimationsManager.AnimData anim)
         {
             DoAnimate(anim, itemSelected);
-            if(IsInMirrorPart(itemSelected))
+            if (IsInMirrorPart(itemSelected))
             {
                 ItemInScene mirror = itemSelected.GetMirror();
                 DoAnimate(anim, mirror);
             }
         }
         void DoAnimate(AnimationsManager.AnimData anim, ItemInScene item)
-        { 
+        {
             ResetAllAnims();
             item.data.anim = anim.animName;
             Animation animComponent = item.GetComponent<Animation>();
@@ -215,7 +229,7 @@ namespace BoardItems
                 inventary.Init(this, gallery.id, gallery.gallery, editMode, OnAllLoaded);
             }
         }
-       
+
         ItemData InstantiateNewItem(int galleryID, ItemData itemData)
         {
             ItemData originalGO = Data.Instance.galeriasData.GetItem(galleryID, itemData.id);
@@ -229,14 +243,14 @@ namespace BoardItems
         public void DeleteAll(CharacterPartsHelper.parts exludePart)
         {
             StopAllCoroutines();
-            
+
             int i = all.Count;
             while (i > 0)
             {
                 ItemInScene itemInScene = all[i - 1];
                 CharacterPartsHelper.parts thisPart = itemInScene.data.part;
 
-                if(thisPart == CharacterPartsHelper.parts.HAND_LEFT)
+                if (thisPart == CharacterPartsHelper.parts.HAND_LEFT)
                     thisPart = CharacterPartsHelper.parts.HAND;
                 if (thisPart == CharacterPartsHelper.parts.FOOT_LEFT)
                     thisPart = CharacterPartsHelper.parts.FOOT;
@@ -256,8 +270,8 @@ namespace BoardItems
             while (i > 0)
             {
                 ItemInScene itemInScene = all[i - 1];
-                bool mirrorDeleted = Delete(itemInScene);
-                if (mirrorDeleted) i--;
+                if (itemInScene != null)
+                    Delete(itemInScene);
                 i--;
             }
         }
@@ -268,10 +282,10 @@ namespace BoardItems
             while (i > 0)
             {
                 ItemInScene itemInScene = all[i - 1];
-                if (itemInScene.data.part == (CharacterPartsHelper.parts)partID)
+                if (itemInScene != null)
                 {
-                    bool mirrorDeleted = Delete(itemInScene);
-                    if (mirrorDeleted) i--;
+                    if (itemInScene.data.part == (CharacterPartsHelper.parts)partID)
+                        Delete(itemInScene);
                 }
                 i--;
             }
@@ -282,7 +296,7 @@ namespace BoardItems
         }
         public void SetItemInScene(ItemInScene item, CharacterPartsHelper.parts part)
         {
-            if(boardItem != null)
+            if (boardItem != null)
                 boardItem.AttachItem(item);
             else
                 board.AttachItem(item);
@@ -351,9 +365,9 @@ namespace BoardItems
         }
         void EditMirror(ItemInScene item, ItemInScene mirror)
         {
-            switch(item.data.part)
+            switch (item.data.part)
             {
-                case CharacterPartsHelper.parts.FOOT:  mirror.data.part = CharacterPartsHelper.parts.FOOT_LEFT; break;
+                case CharacterPartsHelper.parts.FOOT: mirror.data.part = CharacterPartsHelper.parts.FOOT_LEFT; break;
                 case CharacterPartsHelper.parts.FOOT_LEFT: mirror.data.part = CharacterPartsHelper.parts.FOOT; break;
                 case CharacterPartsHelper.parts.HAND: mirror.data.part = CharacterPartsHelper.parts.HAND_LEFT; break;
                 case CharacterPartsHelper.parts.HAND_LEFT: mirror.data.part = CharacterPartsHelper.parts.HAND; break;
@@ -370,7 +384,7 @@ namespace BoardItems
 
         }
         void AddMirror(ItemInScene item)
-        { 
+        {
             Vector3 pos = item.data.position;
             ItemInScene newItemInScene = Clonate(pos);
             item.SetMirror(newItemInScene);
@@ -399,7 +413,7 @@ namespace BoardItems
             this.itemSelected = newItem;
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             pos.z = -0.1f;
-            ItemInScene itemInScene =  Clonate(pos);
+            ItemInScene itemInScene = Clonate(pos);
             return itemInScene;
         }
         public ItemInScene Clonate(Vector3 pos)
@@ -431,7 +445,7 @@ namespace BoardItems
             }
             itemInScene.SetPos(newItem.transform.position);
             newItem.Init();
-            all.Add(itemInScene);
+            //all.Add(itemInScene);
             itemSelected = itemInScene;
             if (newItem.anim != AnimationsManager.anim.NONE)
             {
@@ -476,10 +490,8 @@ namespace BoardItems
             ItemInScene mirror = item.GetMirror();
             if (mirror != null)
             {
-                all.Remove(mirror);
                 Destroy(mirror.gameObject);
             }
-            all.Remove(item);
             Destroy(item.gameObject);
             return mirror != null;
         }
@@ -518,13 +530,21 @@ namespace BoardItems
                 item.SetCollider(isEditMode);
         }
 
-        void LoadBoardItemForStory(BoardItemManager itemManager, string id) {
+        void LoadBoardItemForStory(BoardItemManager itemManager, string id)
+        {
             CharacterData cd = Data.Instance.charactersData.SetCurrentID(id);
             boardItem = itemManager;
             OpenWork(cd);
         }
 
-        ItemData CreateItem(SavedIData itemData) {
+        //void LoadBoardItemForStory(BoardItemManager itemManager, SOPartData wd)
+        //{
+        //    boardItem = itemManager;
+        //    OpenWork(wd);
+        //}
+
+        ItemData CreateItem(SavedIData itemData)
+        {
             ItemData originalGO = Data.Instance.galeriasData.GetItem(itemData.galleryID, itemData.id);
             print("____________" + originalGO.name);
             ItemData newItem = Instantiate(
@@ -546,7 +566,7 @@ namespace BoardItems
             ItemInScene itemInScene = newItem.gameObject.AddComponent<ItemInScene>();
             itemInScene.SetCollider(false);
             itemInScene.data = newItem;
-            all.Add(itemInScene);
+            //all.Add(itemInScene);
             SetItemInScene(itemInScene, newItem.part);
             itemInScene.data.SetTransformByData();
 
@@ -554,24 +574,29 @@ namespace BoardItems
             return newItem;
         }
 
-        public void OpenWork(SOPartData wd) {
+        public void OpenWork(SOPartData wd)
+        {
             StartCoroutine(OpenWork_C(wd));
         }
-        IEnumerator OpenWork_C(SOPartData wd) {
+        IEnumerator OpenWork_C(SOPartData wd)
+        {
             print("open work");
-            foreach (SavedIData itemData in wd.items) {
+            foreach (SavedIData itemData in wd.items)
+            {
                 yield return new WaitForSeconds(0.05f);
                 ItemData newItem = CreateItem(itemData);
 
                 print("open work newItem part: " + newItem.part);
 
-                if (newItem.anim != AnimationsManager.anim.NONE) {
+                if (newItem.anim != AnimationsManager.anim.NONE)
+                {
                     AnimationsManager.AnimData animData = Data.Instance.animationsManager.GetAnimByName(newItem.anim);
                     Events.AnimateItem(animData);
                 }
                 newItem.GetComponent<ItemInScene>().Appear();
             }
-            if (wd is CharacterData characterData) {
+            if (wd is CharacterData characterData)
+            {
                 Events.ColorizeArms(characterData.armsColor);
                 Events.ColorizeLegs(characterData.legsColor);
                 Events.ColorizeEyebrows(characterData.eyebrowsColor);

@@ -22,6 +22,8 @@ namespace UI
         public Screenshot screenshot;
 
         BoardItemManager activeBoardItem;
+        BodyPart[] allBodyParts;
+        public BodyPart[] AllBodyParts { get { return allBodyParts; } }
 
         public CharacterManager characterManager;
         public SceneObjectManager sceneobjectsManager;
@@ -34,23 +36,24 @@ namespace UI
             OBJECT,
             NONE
         }
-        public void SetEditingType(editingTypes t)  {
+        public void SetEditingType(editingTypes t)
+        {
             this.editingType = t;
             switch (t)
-            {   
+            {
                 case editingTypes.SCENE:
                     sceneobjectsManager.gameObject.SetActive(true);
-                    activeBoardItem = sceneobjectsManager;
+                    SetActiveBoard(sceneobjectsManager);
                     break;
                 case editingTypes.CHARACTER:
                     sceneobjectsManager.gameObject.SetActive(false);
                     characterManager.gameObject.SetActive(true);
-                    activeBoardItem = characterManager;
+                    SetActiveBoard(characterManager);
                     break;
                 case editingTypes.OBJECT:
                     characterManager.gameObject.SetActive(false);
                     sceneobjectsManager.gameObject.SetActive(true);
-                    activeBoardItem = sceneobjectsManager;
+                    SetActiveBoard(sceneobjectsManager);
                     break;
                 default:
                     Debug.Log("# default");
@@ -58,9 +61,15 @@ namespace UI
                     sceneobjectsManager.gameObject.SetActive(false);
                     activeBoardItem.gameObject.SetActive(false);
                     break;
-            }            
-        }
+            }
 
+        }
+        void SetActiveBoard(BoardItemManager activeBoardItem)
+        {
+            this.activeBoardItem = activeBoardItem;
+            allBodyParts = new BodyPart[0];
+            allBodyParts = activeBoardItem.GetComponentsInChildren<BodyPart>();
+        }
         int captureGifFramerate = 40;
 
         private void Awake()
@@ -88,7 +97,7 @@ namespace UI
         {
             items.DeleteAll();
         }
-        void EmptyCharacterItemsButExlude(CharacterPartsHelper.parts part) 
+        void EmptyCharacterItemsButExlude(CharacterPartsHelper.parts part)
         {
             items.DeleteAll(part);
         }
@@ -96,10 +105,10 @@ namespace UI
         {
             AudioManager.Instance.musicManager.Play("board");
         }
-       
+
         void OnResetConfirmed(bool confirmed)
         {
-            if(confirmed)
+            if (confirmed)
                 ResetBoardConfirmed();
         }
         public void ResetBoardConfirmed()
@@ -116,7 +125,7 @@ namespace UI
                 foreach (Transform child in colorPickerContent)
                     Destroy(child.gameObject);
 
-                int galleryID =1;
+                int galleryID = 1;
 
                 if (items.GetItemSelected() != null)
                     galleryID = items.GetItemSelected().data.galleryID;
@@ -160,12 +169,12 @@ namespace UI
         {
             yield return new WaitForSeconds(1);
             CharacterData wd = Data.Instance.charactersData.SetCurrentID(id);
-           // Data.Instance.galeriasData.SetGallery(wd.galleryID);
+            // Data.Instance.galeriasData.SetGallery(wd.galleryID);
             OpenWork(wd);
             items.NextStepAnims(0, captureGifFramerate);
             Events.CaptureGif(id, callback);
         }
-      
+
         public void LoadWork(string id)
         {
             items.DeleteAll();
@@ -185,9 +194,12 @@ namespace UI
                 LoadOthersWork(id);
         }
 
-        public void LoadOthersWork(string id) {
+        public void LoadOthersWork(string id)
+        {
             items.DeleteAll();
-            switch (editingType) {
+            CharacterData cd;
+            switch (editingType)
+            {
                 case editingTypes.CHARACTER:
                     Data.Instance.charactersData.LoadOthersCharacter(id, OpenWork);
                     break;
@@ -202,10 +214,11 @@ namespace UI
             OpenWork(wd);
         }
 
-        void OpenWork(SOPartData wd) {
+        void OpenWork(SOPartData wd)
+        {
             items.OpenWork(wd);
         }
-        
+
         public void AttachItem(ItemInScene item)
         {
             activeBoardItem.AttachItem(item);

@@ -128,21 +128,27 @@ namespace BoardItems
 
             wd.thumb = tex;
             wd.items = new List<SavedIData>();
-            int totalItems = UIManager.Instance.boardUI.items.all.Count;
+
             int totalParts = 0;
             int partID = 0;
-            int i = 0;
-            while (i < totalItems)
+
+            List<ItemInScene> mirrors = new List<ItemInScene>();
+            foreach (ItemInScene iInScene in UIManager.Instance.boardUI.items.all)
             {
-                ItemInScene iInScene = UIManager.Instance.boardUI.items.all[0];
-                int newPartID = (int)iInScene.data.part;
-                if (partID != newPartID)
-                    totalParts++;
-                partID = newPartID;
-                if (partID > 0)
+                bool isMirror = false;
+                foreach (ItemInScene m in mirrors)
                 {
+                    isMirror = (iInScene == m);
+                }
+                if (!isMirror)
+                {
+                    int newPartID = (int)iInScene.data.part;
+                    if (partID != newPartID)
+                        totalParts++;
+                    partID = newPartID;
+
                     SavedIData sd = new SavedIData();
-                    sd.part = partID;
+                    sd.part = newPartID;
                     sd.id = iInScene.data.id;
                     sd.position = iInScene.data.position;
                     sd.rotation = iInScene.data.rotation;
@@ -151,12 +157,40 @@ namespace BoardItems
                     sd.color = iInScene.data.colorName;
                     sd.galleryID = iInScene.data.galleryID;
                     wd.items.Add(sd);
-                    bool mirrorDeleted = UIManager.Instance.boardUI.items.Delete(iInScene);
-                    if (mirrorDeleted)
-                        i++;
+                    ItemInScene mirror = iInScene.GetMirror();
+                    if (mirror != null)
+                        mirrors.Add(mirror);
                 }
-                i++;
+                // UIManager.Instance.boardUI.items.Delete(iInScene);
             }
+            //int totalItems = UIManager.Instance.boardUI.items.all.Count;
+            
+            //int i = 0;
+            //while (i < totalItems)
+            //{
+            //    ItemInScene iInScene = UIManager.Instance.boardUI.items.all[0];
+            //    int newPartID = (int)iInScene.data.part;
+            //    if (partID != newPartID)
+            //        totalParts++;
+            //    partID = newPartID;
+            //    if (partID > 0)
+            //    {
+            //        SavedIData sd = new SavedIData();
+            //        sd.part = partID;
+            //        sd.id = iInScene.data.id;
+            //        sd.position = iInScene.data.position;
+            //        sd.rotation = iInScene.data.rotation;
+            //        sd.scale = iInScene.data.scale;
+            //        sd.anim = iInScene.data.anim;
+            //        sd.color = iInScene.data.colorName;
+            //        sd.galleryID = iInScene.data.galleryID;
+            //        wd.items.Add(sd);
+            //        bool mirrorDeleted = UIManager.Instance.boardUI.items.Delete(iInScene);
+            //        if (mirrorDeleted)
+            //            i++;
+            //    }
+            //    i++;
+            //}
             print("SAVE data: totalparts" + totalParts + " lastPArtID: "+ partID);
             currentCharacter = wd;
 

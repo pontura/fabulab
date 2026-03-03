@@ -1,5 +1,6 @@
 using BoardItems.Characters;
 using BoardItems.SceneObjects;
+using Google.MiniJSON;
 using UnityEngine;
 
 namespace BoardItems
@@ -26,9 +27,11 @@ namespace BoardItems
         void OnNewBodyPartSelected(BodyPart bp)
         {
             SetSelection(bp == this);
+            ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
+            foreach (ItemInScene i in all) i.rb.simulated = bp == this;
         }
         public void SetSelection(bool isOn)
-        {
+        {           
             selectedBodySignal.gameObject.SetActive(isOn);
         }
         public void SendToBack(ItemInScene item)

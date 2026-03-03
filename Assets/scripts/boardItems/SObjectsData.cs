@@ -62,26 +62,34 @@ namespace BoardItems
             wd.type = currentType;
             wd.thumb = tex;
             wd.items = new List<SavedIData>();
-            int totalItems = UIManager.Instance.boardUI.items.all.Count;
-         
-            int i = 0;
-            while (i < totalItems)
+
+            List<ItemInScene> mirrors = new List<ItemInScene>();
+            foreach (ItemInScene iInScene in UIManager.Instance.boardUI.items.all)
             {
-                ItemInScene iInScene = UIManager.Instance.boardUI.items.all[0];
-                int newPartID = (int)iInScene.data.part;
-             
-                SavedIData sd = new SavedIData();
-                sd.part = newPartID;
-                sd.id = iInScene.data.id;
-                sd.position = iInScene.data.position;
-                sd.rotation = iInScene.data.rotation;
-                sd.scale = iInScene.data.scale;
-                sd.anim = iInScene.data.anim;
-                sd.color = iInScene.data.colorName;
-                sd.galleryID = iInScene.data.galleryID;
-                wd.items.Add(sd);
-                UIManager.Instance.boardUI.items.Delete(iInScene);
-                i++;
+                bool isMirror = false;
+                foreach (ItemInScene m in mirrors)
+                {
+                    isMirror = (iInScene == m);
+                }
+                if (!isMirror)
+                {
+                    int newPartID = (int)iInScene.data.part;
+
+                    SavedIData sd = new SavedIData();
+                    sd.part = newPartID;
+                    sd.id = iInScene.data.id;
+                    sd.position = iInScene.data.position;
+                    sd.rotation = iInScene.data.rotation;
+                    sd.scale = iInScene.data.scale;
+                    sd.anim = iInScene.data.anim;
+                    sd.color = iInScene.data.colorName;
+                    sd.galleryID = iInScene.data.galleryID;
+                    wd.items.Add(sd);
+                    ItemInScene mirror = iInScene.GetMirror();
+                    if (mirror != null)
+                        mirrors.Add(mirror);
+                }
+                // UIManager.Instance.boardUI.items.Delete(iInScene);
             }
             currentSO = wd;
 
@@ -147,7 +155,8 @@ namespace BoardItems
         {
             currentID = id;
             SObjectData o =  data.Find(x => x.id == id);
-            currentType = o.type;
+            if(o != null)
+                currentType = o.type;
             return o;
         }
 
