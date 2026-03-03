@@ -11,6 +11,7 @@ using UnityEngine.TextCore.Text;
 using UnityEngine.Windows;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
+using static BoardItems.Characters.CharacterPartsHelper;
 
 namespace BoardItems
 {
@@ -109,7 +110,6 @@ namespace BoardItems
             }
             LoadPresetsFromServer();
         }
-
         public void SaveCharacter(Texture2D tex)
         {
             CharacterData wd;
@@ -129,8 +129,6 @@ namespace BoardItems
             wd.thumb = tex;
             wd.items = new List<SavedIData>();
 
-            int totalParts = 0;
-            int partID = 0;
 
             List<ItemInScene> mirrors = new List<ItemInScene>();
             foreach (ItemInScene iInScene in UIManager.Instance.boardUI.items.all)
@@ -142,10 +140,7 @@ namespace BoardItems
                 }
                 if (!isMirror)
                 {
-                    int newPartID = (int)iInScene.data.part;
-                    if (partID != newPartID)
-                        totalParts++;
-                    partID = newPartID;
+                    int newPartID = (int)iInScene.data.part;;
 
                     SavedIData sd = new SavedIData();
                     sd.part = newPartID;
@@ -161,49 +156,48 @@ namespace BoardItems
                     if (mirror != null)
                         mirrors.Add(mirror);
                 }
-                // UIManager.Instance.boardUI.items.Delete(iInScene);
             }
-            //int totalItems = UIManager.Instance.boardUI.items.all.Count;
-            
-            //int i = 0;
-            //while (i < totalItems)
-            //{
-            //    ItemInScene iInScene = UIManager.Instance.boardUI.items.all[0];
-            //    int newPartID = (int)iInScene.data.part;
-            //    if (partID != newPartID)
-            //        totalParts++;
-            //    partID = newPartID;
-            //    if (partID > 0)
-            //    {
-            //        SavedIData sd = new SavedIData();
-            //        sd.part = partID;
-            //        sd.id = iInScene.data.id;
-            //        sd.position = iInScene.data.position;
-            //        sd.rotation = iInScene.data.rotation;
-            //        sd.scale = iInScene.data.scale;
-            //        sd.anim = iInScene.data.anim;
-            //        sd.color = iInScene.data.colorName;
-            //        sd.galleryID = iInScene.data.galleryID;
-            //        wd.items.Add(sd);
-            //        bool mirrorDeleted = UIManager.Instance.boardUI.items.Delete(iInScene);
-            //        if (mirrorDeleted)
-            //            i++;
-            //    }
-            //    i++;
-            //}
-            print("SAVE data: totalparts" + totalParts + " lastPArtID: "+ partID);
             currentCharacter = wd;
+            if (wd.id == "")
+            {
+                userCharacters.Add(wd);
+                FirebaseStoryMakerDBManager.Instance.SaveToServer("characters", wd.GetServerData(), OnCharacterSavedToServer);
+            }
+            else
+            {
+                FirebaseStoryMakerDBManager.Instance.UpdateDataToServer("characters", wd.id, wd.GetServerData(), OnCharacterSavedToServer);
+            }
+            
+        }
+        public void SavePartCharacter(Texture2D tex, CharacterPartsHelper.parts part)
+        {
+            CharacterData wd = new CharacterData();
+            CharacterManager cm = UIManager.Instance.boardUI.characterManager;
 
-
-            string type = "bodypart";
-            if (totalParts > 1) { // is a complete character;
-                if (wd.id == "") {
-                    userCharacters.Add(wd);
-                    FirebaseStoryMakerDBManager.Instance.SaveToServer("characters", wd.GetServerData(), OnCharacterSavedToServer);
-                } else {
-                    FirebaseStoryMakerDBManager.Instance.UpdateDataToServer("characters", wd.id, wd.GetServerData(), OnCharacterSavedToServer);
+            wd.thumb = tex;
+            wd.items = new List<SavedIData>();
+            int partID = 0;
+            foreach (ItemInScene iInScene in UIManager.Instance.boardUI.items.all)
+            {
+                if (iInScene.data.part == part)
+                {
+                    partID = (int)part;
+                    SavedIData sd = new SavedIData();
+                    sd.part = partID;
+                    sd.id = iInScene.data.id;
+                    sd.position = iInScene.data.position;
+                    sd.rotation = iInScene.data.rotation;
+                    sd.scale = iInScene.data.scale;
+                    sd.anim = iInScene.data.anim;
+                    sd.color = iInScene.data.colorName;
+                    sd.galleryID = iInScene.data.galleryID;
+                    wd.items.Add(sd);
                 }
-            } else if (Data.Instance.userData.isAdmin) { // is a part preset;
+            }
+            currentCharacter = wd;
+            string type = "bodypart";
+            print("save part " + partID);
+           if (Data.Instance.userData.isAdmin) { // is a part preset;
                 if (loadedPresetId == "") {
                     AddPart(partID, wd);
                     FirebaseStoryMakerDBManager.Instance.SaveBodypartPresetToServer((wd as SOPartData).GetServerData(), type, BoardItems.Characters.CharacterPartsHelper.GetServerPartsId(partID), OnPresetSavedToServer);

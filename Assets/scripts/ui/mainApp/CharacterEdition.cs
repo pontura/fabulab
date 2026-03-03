@@ -99,6 +99,7 @@ namespace UI.MainApp
         }
         public void SavePart()
         {
+            savingPart = true;
             Events.EmptyCharacterItemsButExlude(UIManager.Instance.zoomManager.lastZoom);
             UIManager.Instance.zoomManager.ZoomToLastPart();
             savePanel.SetActive(false);
@@ -137,6 +138,7 @@ namespace UI.MainApp
         }
         public void Save()
         {
+            savingPart = false;
             Events.SetCharacterIdle(0);
             savePanel.SetActive(false);
             Data.Instance.charactersData.SetCurrentID("");// Resetea si hay un character elegido.
@@ -144,6 +146,7 @@ namespace UI.MainApp
         }
         public void Replace()// Guarda la version editada del personaje.
         {
+            savingPart = false;
             Events.SetCharacterIdle(0);
             savePanel.SetActive(false);
             SaveWork();
@@ -173,9 +176,13 @@ namespace UI.MainApp
         {
             UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, OnTakeShotDone);
         }
+        bool savingPart = false;
         public void OnTakeShotDone(Texture2D tex)
         {
-            Data.Instance.charactersData.SaveCharacter(tex);
+            if(savingPart)
+                Data.Instance.charactersData.SavePartCharacter(tex, UIManager.Instance.zoomManager.part);
+            else
+                Data.Instance.charactersData.SaveCharacter(tex);
         }
 
     }
