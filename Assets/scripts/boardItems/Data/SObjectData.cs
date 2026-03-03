@@ -3,23 +3,32 @@ using System.Collections.Generic;
 
 namespace BoardItems.BoardData
 {
-    [Serializable]
-    public class SOData : CharacterPartData
-    {
 
-        public new CharacterServerData GetServerData()
+    [Serializable]
+    public class SObjectData : SOPartData
+    {
+        public types type;
+
+        public enum types
         {
-            CharacterServerData csd = new CharacterServerData();
+            generic,
+            background
+        }
+
+        public new SObjectServerData GetServerData()
+        {
+            SObjectServerData csd = new SObjectServerData();
             List<ServerIData> csdItems = new List<ServerIData>();
             foreach (SavedIData sid in items)
             {
                 csdItems.Add(sid.GetServerIData());
             }
+            csd.type = type;
             csd.items = csdItems;
             return csd;
         }
 
-        public void LoadServerData(CharacterServerData serverData)
+        public void LoadServerData(SObjectServerData serverData)
         {
             items = new List<SavedIData>();
             foreach (ServerIData sid in serverData.items)
@@ -28,6 +37,8 @@ namespace BoardItems.BoardData
                 savedData.LoadServerData(sid);
                 items.Add(savedData);
             }
+            type = serverData.type;
         }
+
     }
 }

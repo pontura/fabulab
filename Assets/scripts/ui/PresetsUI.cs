@@ -30,6 +30,7 @@ namespace UI
         {
             snapToggle.Init(OnToggle, UIManager.Instance.boardUI.snap);
             dragAndDropUI.transform.SetParent(dragAndDropContainer);
+            dragAndDropUI.Init();
             isPreset = true;
             gameObject.SetActive(true);
             CharacterAnims.anims anim = CharacterAnims.anims.edit;

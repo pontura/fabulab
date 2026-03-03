@@ -68,6 +68,7 @@ public class CacheData : MonoBehaviour
     }
     public void GetUser(string uid, System.Action<UserData> OnReady)
     {
+        print("GET user: " + uid);
         foreach (UserData u in users)
         {
             if (u.uid == uid)
@@ -80,11 +81,18 @@ public class CacheData : MonoBehaviour
             ServerMetaData s = JsonUtility.FromJson<ServerMetaData>(rawjson);
             UserData ud = new UserData();
             ud.uid = uid;
-
+            ud.username = s.username;
             ud.thumb = new Texture2D(1, 1);
             if(s.thumb != "")
                 ud.thumb.LoadImage(System.Convert.FromBase64String(s.thumb));
-
+            foreach (UserData u in users)
+            {
+                if (u.uid == uid)
+                {
+                    OnReady(u);
+                    return;
+                }
+            }
             users.Add(ud);
             OnReady(ud);
         });

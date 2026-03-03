@@ -1,4 +1,3 @@
-using UnityEditor.Presets;
 using UnityEngine;
 
 namespace UI.MainApp
@@ -31,6 +30,7 @@ namespace UI.MainApp
                     savePanel.SetActive(false);
                     dragAndDropUI.SetOn(true);
                     dragAndDropUI.transform.SetParent(dragAndDropContainer);
+                    dragAndDropUI.Init();
                     break;
                 default:
                     Show(false);

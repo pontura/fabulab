@@ -10,12 +10,19 @@ namespace BoardItems
     public class SObjectsData : MonoBehaviour {
         public Vector2Int thumbSize;
 
-        public List<CharacterData> data;
+        public List<SObjectData> data;
         public List<CharacterMetaData> metaData;
 
-        [SerializeField] string currentID;
+        public void SetType(SObjectData.types type) { this.currentType = type; }
+        public List<SObjectData> GetDataByType(SObjectData.types type)
+        {
+           return data.FindAll(x => x.type == type);
+        }
 
-        CharacterData currentSO;
+        [SerializeField] string currentID;
+        [SerializeField] SObjectData.types currentType;
+
+        SObjectData currentSO;
         Dictionary<string, ServerPartMetaData> serverPartsMetaData;
 
        
@@ -43,15 +50,16 @@ namespace BoardItems
 
         public void SaveSO(Texture2D tex)
         {
-            CharacterData wd;
+            SObjectData wd;
             if (currentID == "" || currentID == null)
             {
-                wd = new CharacterData();
+                wd = new SObjectData();
                 wd.id = "";
             }
             else
                 wd = GetSO(currentID);
 
+            wd.type = currentType;
             wd.thumb = tex;
             wd.items = new List<SavedIData>();
             int totalItems = UIManager.Instance.boardUI.items.all.Count;
@@ -94,33 +102,29 @@ namespace BoardItems
             ServerCharacterMetaData swmd = new ServerCharacterMetaData();
             swmd.thumb = System.Convert.ToBase64String(currentSO.thumb.EncodeToPNG());
             swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
+            swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid); 
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer("so", currentID, swmd);
 
             OpenSODetail(currentSO);
         }
-
-        void OpenSODetail(CharacterData wd)
+        void OpenSODetail(SObjectData wd)
         {
-            Debug.Log("Open SO Detal !!");
-           // UIManager.Instance.ShowWorkDetail(wd);            
+            Debug.Log("Open SO Detal !!");         
         }
-      
         public void OnLoadSODataFromServer(List<CharacterMetaData> sfds)
         {
             Debug.Log("OnLoadSODataFromServer !!");
             metaData = sfds;
             data = new();
-            //  metaData = charactersMetaData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid);
-            // userCharacters = new();
             FirebaseStoryMakerDBManager.Instance.LoadUserAssetsFromServer("so", LoadAssetsFromServer);
         }
 
-        void LoadAssetsFromServer(Dictionary<string, CharacterServerData> d)
+        void LoadAssetsFromServer(Dictionary<string, SObjectServerData> d)
         {
-            foreach (KeyValuePair<string, CharacterServerData> e in d)
+            foreach (KeyValuePair<string, SObjectServerData> e in d)
             {
                 Debug.Log("#LoadCharactersFromServer " + e.Key + ": " + e.Value);
-                CharacterData wd = new CharacterData();
+                SObjectData wd = new SObjectData();
                 wd.id = e.Key;
                 Debug.Log("#Aca1: " + e.Value.items.Count);
                 wd.LoadServerData(e.Value);
@@ -134,15 +138,17 @@ namespace BoardItems
         {
             return currentID;
         }
-        public CharacterData GetSO(string id)
+        public SObjectData GetSO(string id)
         {
             return data.Find(x => x.id == id);
         }
 
-        public CharacterData SetCurrentID(string id)
+        public SObjectData SetCurrentID(string id)
         {
             currentID = id;
-            return data.Find(x => x.id == id);
+            SObjectData o =  data.Find(x => x.id == id);
+            currentType = o.type;
+            return o;
         }
 
         public void ResetCurrentID()
@@ -163,25 +169,14 @@ namespace BoardItems
         public bool HasAnims(string id)
         {
             return false;
-            //CharacterData wd = userCharacters.Find(x => x.id == id);
-            //bool hasAnims = false;
-            //foreach (SavedIData item in wd.items)
-            //{
-            //    if (item.anim != AnimationsManager.anim.NONE)
-            //    {
-            //        hasAnims = true;
-            //        return hasAnims;
-            //    }
-            //}
-            //return hasAnims;
         }
 
 
-        void AddPart(CharacterData wd)
+        void AddPart(SObjectData wd)
         {
             data.Add(wd);
         }
-        public List<CharacterData> GetPreset()
+        public List<SObjectData> GetPreset()
         {
             return data;
         }

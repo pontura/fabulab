@@ -5,7 +5,7 @@ using UnityEngine;
 namespace BoardItems.BoardData
 {
     [Serializable]
-    public class CharacterPartData
+    public class SOPartData
     {
         public string id;
         public Texture2D thumb;
@@ -19,8 +19,8 @@ namespace BoardItems.BoardData
             return Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), Vector2.zero);
         }
 
-        public CharacterPartServerData GetServerData() {
-            CharacterPartServerData cpsd = new CharacterPartServerData();
+        public SOPartServerData GetServerData() {
+            SOPartServerData cpsd = new SOPartServerData();
             List<ServerIData> csdItems = new List<ServerIData>();
             foreach (SavedIData sid in items) {
                 csdItems.Add(sid.GetServerIData());
@@ -29,7 +29,7 @@ namespace BoardItems.BoardData
             return cpsd;
         }
 
-        public void LoadServerData(CharacterPartServerData serverData) {
+        public void LoadServerData(SOPartServerData serverData) {
             items = new List<SavedIData>();
             foreach (ServerIData sid in serverData.items) {
                 SavedIData savedData = new SavedIData();

@@ -20,12 +20,12 @@ namespace BoardItems
         public List<CharacterData> userCharacters;
         public List<CharacterData> othersCharacters;
 
-        public List<CharacterPartData> heads;
-        public List<CharacterPartData> bellies;
-        public List<CharacterPartData> hands;
-        public List<CharacterPartData> feet;
-        public List<CharacterPartData> hairs;
-        public List<CharacterPartData> faces;
+        public List<SOPartData> heads;
+        public List<SOPartData> bellies;
+        public List<SOPartData> hands;
+        public List<SOPartData> feet;
+        public List<SOPartData> hairs;
+        public List<SOPartData> faces;
 
         public List<CharacterMetaData> charactersMetaData;
         public List<CharacterMetaData> userCharactersMetaData;
@@ -102,7 +102,7 @@ namespace BoardItems
             FirebaseStoryMakerDBManager.Instance.LoadBodypartPresetsFromServer(loadedParts, OnLoadPresetsFromServer);
         }
         
-        void OnLoadPresetsFromServer(int partId, Dictionary<string,CharacterPartServerData> data) {            
+        void OnLoadPresetsFromServer(int partId, Dictionary<string, SOPartServerData> data) {            
             if (data != null) {
                 GetPreset(partId).Clear();
                 LoadBodyPartsFromServer(data);
@@ -160,6 +160,7 @@ namespace BoardItems
             print("SAVE data: totalparts" + totalParts + " lastPArtID: "+ partID);
             currentCharacter = wd;
 
+
             string type = "bodypart";
             if (totalParts > 1) { // is a complete character;
                 if (wd.id == "") {
@@ -171,9 +172,9 @@ namespace BoardItems
             } else if (Data.Instance.userData.isAdmin) { // is a part preset;
                 if (loadedPresetId == "") {
                     AddPart(partID, wd);
-                    FirebaseStoryMakerDBManager.Instance.SaveBodypartPresetToServer((wd as CharacterPartData).GetServerData(), type, BoardItems.Characters.CharacterPartsHelper.GetServerPartsId(partID), OnPresetSavedToServer);
+                    FirebaseStoryMakerDBManager.Instance.SaveBodypartPresetToServer((wd as SOPartData).GetServerData(), type, BoardItems.Characters.CharacterPartsHelper.GetServerPartsId(partID), OnPresetSavedToServer);
                 } else {
-                    FirebaseStoryMakerDBManager.Instance.UpdateBodypartPresetToServer(loadedPresetId, type, (wd as CharacterPartData).GetServerData(), BoardItems.Characters.CharacterPartsHelper.GetServerPartsId(partID), OnPresetSavedToServer);
+                    FirebaseStoryMakerDBManager.Instance.UpdateBodypartPresetToServer(loadedPresetId, type, (wd as SOPartData).GetServerData(), BoardItems.Characters.CharacterPartsHelper.GetServerPartsId(partID), OnPresetSavedToServer);
                 }
             }  
         }
@@ -188,6 +189,8 @@ namespace BoardItems
             currentID = id;
 
             ServerCharacterMetaData swmd = new ServerCharacterMetaData();
+
+            swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
             swmd.thumb = System.Convert.ToBase64String(currentCharacter.thumb.EncodeToPNG());
             swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer("characters", currentID, swmd);
@@ -237,10 +240,10 @@ namespace BoardItems
             LoadPartMetadataFromServer();
         }
 
-        void LoadBodyPartsFromServer(Dictionary<string, CharacterPartServerData> data) {
-            foreach (KeyValuePair<string, CharacterPartServerData> e in data) {
+        void LoadBodyPartsFromServer(Dictionary<string, SOPartServerData> data) {
+            foreach (KeyValuePair<string, SOPartServerData> e in data) {
                 //Debug.Log("#LoadCharactersFromServer " + e.Key + ": " + e.Value);
-                CharacterPartData wd = new CharacterPartData();
+                SOPartData wd = new SOPartData();
                 wd.id = e.Key;
                 wd.LoadServerData(e.Value);
                 wd.thumb = new Texture2D(1, 1);
@@ -333,7 +336,7 @@ namespace BoardItems
         }
 
 
-        void AddPart(int partID, CharacterPartData wd)
+        void AddPart(int partID, SOPartData wd)
         {
             switch (partID)
             {
@@ -363,7 +366,7 @@ namespace BoardItems
                     break;
             }
         }
-        public List<CharacterPartData> GetPreset(int partID)
+        public List<SOPartData> GetPreset(int partID)
         {
             switch (partID)
             {
