@@ -68,8 +68,7 @@ namespace UI.MainApp.Home.User
 
         public void OpenWork(string id) {
             SOAvatarFabulabData data = new SOAvatarFabulabData();
-            CharacterData cd = Data.Instance.charactersData.SetCurrentID(id);
-            data.characterData = cd;
+            data.customization = id;
             StoryMakerEvents.AddSceneObject(data);
             //UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);    
         }

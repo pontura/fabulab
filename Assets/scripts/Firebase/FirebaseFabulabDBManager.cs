@@ -137,7 +137,7 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
                     try {
-                        //SceneDataLyna[] sds = JsonConvert.DeserializeObject<SceneDataLyna[]>(task.Result.GetRawJsonValue());
+                        //SceneDataFabulabLyna[] sds = JsonConvert.DeserializeObject<SceneDataFabulabLyna[]>(task.Result.GetRawJsonValue());
                         //Debug.Log(task.Result.GetRawJsonValue());
                         DataSnapshot snapshot = task.Result;
                         Dictionary<string, CharacterServerData> d = new Dictionary<string, CharacterServerData>();
@@ -179,7 +179,7 @@ namespace Yaguar.StoryMaker.DB
                 else if (task.IsCompleted)
                 {
                     try { 
-                    //SceneDataLyna[] sds = JsonConvert.DeserializeObject<SceneDataLyna[]>(task.Result.GetRawJsonValue());
+                    //SceneDataFabulabLyna[] sds = JsonConvert.DeserializeObject<SceneDataFabulabLyna[]>(task.Result.GetRawJsonValue());
                     string data = task.Result.GetRawJsonValue();                    
                     Debug.Log("# "+data);
                     callback(true, task.Result.Key, JsonConvert.DeserializeObject<CharacterServerData>(data));
@@ -301,7 +301,7 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log("#LoadBodypartPresetsFromServer FAIL");
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
-                    //SceneDataLyna[] sds = JsonConvert.DeserializeObject<SceneDataLyna[]>(task.Result.GetRawJsonValue());
+                    //SceneDataFabulabLyna[] sds = JsonConvert.DeserializeObject<SceneDataFabulabLyna[]>(task.Result.GetRawJsonValue());
                     //Debug.Log(task.Result.GetRawJsonValue());
 
                     try {
@@ -494,7 +494,7 @@ namespace Yaguar.StoryMaker.DB
             //Debug.Log(url);
         }
 
-        public void UpdateFilmToServer(string filmId, List<SceneData> sd, System.Action<bool, string> callback) {
+        public void UpdateFilmToServer(string filmId, List<SceneDataFabulab> sd, System.Action<bool, string> callback) {
             var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("stories/" + _uid + "/" + filmId);
             string s = JsonConvert.SerializeObject(sd);
@@ -510,7 +510,7 @@ namespace Yaguar.StoryMaker.DB
             //print("UpdateFilmToServer url : " + url);
         }
 
-        public void SaveFilmToServer(List<SceneData> sd, System.Action<bool, string> callback) {
+        public void SaveFilmToServer(List<SceneDataFabulab> sd, System.Action<bool, string> callback) {
             var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("stories/" + _uid);
             string s = JsonConvert.SerializeObject(sd);
@@ -545,7 +545,7 @@ namespace Yaguar.StoryMaker.DB
             //Debug.Log(url);
         }
 
-        public void LoadFilmFromServer(ScenesData.FilmDataFabulab fd, System.Action<bool, SceneData[]> callback) {
+        public void LoadFilmFromServer(ScenesData.FilmDataFabulab fd, System.Action<bool, SceneDataFabulab[]> callback) {
             var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
             string uid = _uid;
@@ -560,7 +560,7 @@ namespace Yaguar.StoryMaker.DB
                     callback(false, null);
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
-                    SceneData[] sds = JsonConvert.DeserializeObject<SceneData[]>(task.Result.GetRawJsonValue());
+                    SceneDataFabulab[] sds = JsonConvert.DeserializeObject<SceneDataFabulab[]>(task.Result.GetRawJsonValue());
                     Debug.Log("# " + sds.Length);
                     callback(true, sds);
                     // Do something with snapshot...

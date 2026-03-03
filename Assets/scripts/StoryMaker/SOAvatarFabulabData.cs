@@ -7,6 +7,5 @@ using BoardItems.BoardData;
 [Serializable]
 public class SOAvatarFabulabData : SOAvatarData
 {
-    public CharacterData characterData;
 
 }

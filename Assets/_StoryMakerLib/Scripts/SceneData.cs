@@ -10,11 +10,11 @@ namespace Yaguar.StoryMaker.Editor
     public class SceneData
     {
         public int bgID;
-        public List<string> scenesElements;
-        protected string stringSeparator = "|";
-        protected string stringCustomizerSeparator = "*";
-        protected string serialSeparator = "#";
-        protected string soSeparator = "&";
+        protected List<string> scenesElements;
+        string stringSeparator = "|";
+        string stringCustomizerSeparator = "*";
+        string serialSeparator = "#";
+        string soSeparator = "&";
 
         public void Init()
         {
@@ -31,7 +31,7 @@ namespace Yaguar.StoryMaker.Editor
             return nuevo;
         }
 
-        public void Reset()
+        public virtual void Reset()
         {
             scenesElements = new List<string>();
         }
@@ -57,7 +57,7 @@ namespace Yaguar.StoryMaker.Editor
                 if (soData is SOInputData)
                 {
                     (soData as SOInputData).SetIcon();
-                    data += "*" + soData.customizationSerialized;
+                    data += "*" + soData.customization;
                 }
                 (soData as SOIconData).SetIcon();
             }
@@ -99,9 +99,9 @@ namespace Yaguar.StoryMaker.Editor
 
             if (otherSceneID < 0)
                 return null;
-            else if (otherSceneID >= ScenesManager.Instance.scenes.Count)
+            else if (otherSceneID >= ScenesManager.Instance.Scenes.Count)
                 return null;
-            return ScenesManager.Instance.scenes[otherSceneID].scenesElements;
+            return ScenesManager.Instance.Scenes[otherSceneID].scenesElements;
         }
         public void DeleteChangedSO(bool next)
         {
@@ -173,7 +173,7 @@ namespace Yaguar.StoryMaker.Editor
                 string[] serializedValueArr = itemName.Split("*"[0]);
                 if (serializedValueArr.Length > 1)
                 {
-                    soData.customizationSerialized = serializedValueArr[1];
+                    soData.customization = serializedValueArr[1];
                     itemName = serializedValueArr[0];
                 }
                 soData.itemName = itemName;
@@ -202,7 +202,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         protected void SetCustomizerBySerialization(SOData soData, string data)
         {
-            soData.customizationSerialized = data;
+            soData.customization = data;
             StoryMakerEvents.SetNewAvatarCustomization(data);
         }
 
@@ -272,7 +272,7 @@ namespace Yaguar.StoryMaker.Editor
             if (arr[7] == "a")
             {
                 soData = new SOAvatarData();
-                soData.customizationSerialized = arr[8];
+                soData.customization = arr[8];
                 soData.goLeft = false;
                 if (arr[6].ToString() != "False")
                     soData.goLeft = true;
@@ -280,5 +280,10 @@ namespace Yaguar.StoryMaker.Editor
             }
             return soData;
         }
+
+        public List<string> GetScenesElements() {
+            return scenesElements;
+        }
+
     }
 }

@@ -1,0 +1,138 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using Yaguar.StoryMaker.Editor;
+
+namespace Yaguar.StoryMaker.Editor
+{
+    public class FilmMakerManagerFabulab : FilmMakerManager
+    {        
+        protected override void SetButtons()
+        {
+            int total = ScenesManagerFabulab.Instance.Scenes.Count;
+            if (ScenesManagerFabulab.Instance.currentSceneId == 1)
+                prevButton.interactable = false;
+            else
+                prevButton.interactable = true;
+
+            if (total > 1 || !isEditing)
+                playButton.interactable = true;
+            // else
+            // playButton.interactable = false;
+
+            if (ScenesManagerFabulab.Instance.currentSceneId >= total)
+                nextButton.interactable = false;
+            else
+                nextButton.interactable = true;
+
+            if (total > 1)
+                deleteButton.interactable = true;
+            else
+                deleteButton.interactable = false;
+
+            timelineInSceneUI.RefreshField(ScenesManagerFabulab.Instance.currentSceneId);
+
+
+        }
+        public override void New()
+        {
+            Debug.Log(ScenesManagerFabulab.Instance == null);
+
+            if (timeline.all.Count >= ScenesManagerFabulab.Instance.MaxKeyframes)
+            {
+                RunOnMaxFramesEvent();                
+                return;
+            }
+            //Events.OnAddScore(2);
+            StoryMakerEvents.OnSaveScene();
+            //ScenesManagerFabulab.Instance.OnSaveScene();
+            ScenesManagerFabulab.Instance.currentSceneId++;
+            ScenesManagerFabulab.Instance.AddNewScene(ScenesManagerFabulab.Instance.currentSceneId);
+            SetButtons();
+            timeline.AddNewKeyframe();
+            timeline.JumpTo(ScenesManagerFabulab.Instance.currentSceneId);
+        }
+        
+        public override void OnDelete(bool doIt)
+        {
+            if (doIt)
+            {
+                if (Scenario.Instance != null)
+                {
+                    Scenario.Instance.sceneObejctsManager.ResetScene();
+                }
+
+                ScenesManagerFabulab.Instance.RemoveScene(ScenesManagerFabulab.Instance.currentSceneId);
+
+                if (ScenesManagerFabulab.Instance.currentSceneId > 1)
+                    ScenesManagerFabulab.Instance.currentSceneId--;
+
+                SetButtons();
+                ScenesManagerFabulab.Instance.AddSceneObjectsToScene(false);
+
+                timeline.RemoveKeyframe();
+
+                timeline.JumpTo(ScenesManagerFabulab.Instance.currentSceneId);
+            }
+        }
+        public override void Next()
+        {
+            StoryMakerEvents.OnSaveScene();
+            //ScenesManagerFabulab.Instance.OnSaveScene();
+            ScenesManagerFabulab.Instance.currentSceneId++;
+            SetScene(true);
+            timeline.JumpTo(ScenesManagerFabulab.Instance.currentSceneId);
+        }
+        public override void Prev()
+        {
+            StoryMakerEvents.OnSaveScene();
+            //ScenesManagerFabulab.Instance.OnSaveScene();
+            ScenesManagerFabulab.Instance.currentSceneId--;
+            SetScene(false);
+            timeline.JumpTo(ScenesManagerFabulab.Instance.currentSceneId);
+        }
+        protected override void SetScene(bool next)
+        {
+            int total = ScenesManagerFabulab.Instance.Scenes.Count;
+            int nextSceneid = ScenesManagerFabulab.Instance.currentSceneId + 1;
+
+            if (State == states.PLAYING && nextSceneid <= total)
+            {
+                int backgroundID = ScenesManagerFabulab.Instance.GetBackground(ScenesManagerFabulab.Instance.currentSceneId);
+                int nextBackgroundID = ScenesManagerFabulab.Instance.GetBackground(nextSceneid);
+                print(ScenesManagerFabulab.Instance.currentSceneId + " nextSceneid : " + nextSceneid + " backgroundID: " + backgroundID + " : " + nextBackgroundID);
+                if (backgroundID == nextBackgroundID)
+                {
+                    float delay = timeline.keyframe_duration - (timeline.keyframe_duration / 3);
+                    StartCoroutine(MoveAvatarsAfter(delay));
+                }
+            }
+
+            if (ScenesManagerFabulab.Instance.currentSceneId > total)
+                ScenesManagerFabulab.Instance.currentSceneId = total;
+            else if (ScenesManagerFabulab.Instance.currentSceneId <= 1)
+                ScenesManagerFabulab.Instance.currentSceneId = 1;
+
+            SetButtons();
+
+            ScenesManagerFabulab.Instance.AddSceneObjectsToScene(next);
+            StoryMakerEvents.ReorderSceneObjectsInZ();
+        }
+        protected override IEnumerator MoveAvatarsAfter(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            if (State == states.PLAYING)
+                ScenesManagerFabulab.Instance.GetActiveScene().MakeCharactersWalk(timeline.keyframe_duration - delay);
+        }
+        public override void JumpTo(int keyframeID)
+        {
+            Debug.Log("#JumpTo");
+            ScenesManagerFabulab.Instance.currentSceneId = keyframeID;
+            SetScene(true);
+        }
+    }
+}

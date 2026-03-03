@@ -9,7 +9,16 @@ namespace Yaguar.StoryMaker.Editor
     {
         static ScenesManager mInstance = null;
 
-        public List<SceneData> scenes;
+        public List<SceneData> Scenes { 
+            get {
+                return scenes;
+            }
+            set {
+                scenes = value;
+            }
+        }
+
+        private List<SceneData> scenes;
         public int currentSceneId;
         public string currentFDataID;
         public FilmData currentFilmData;
@@ -49,13 +58,13 @@ namespace Yaguar.StoryMaker.Editor
             sd.Init();
             scenes.Add(sd);
         }
-        public int GetBackground(int id)
+        public virtual int GetBackground(int id)
         {
             if (id - 1 >= scenes.Count)
                 return -1;
             return scenes[id - 1].bgID;
         }
-        public void DeleteActiveScene()
+        public virtual void DeleteActiveScene()
         {
             SceneData sd = GetActiveScene();
             scenes.Remove(sd);
@@ -68,27 +77,27 @@ namespace Yaguar.StoryMaker.Editor
             activeScene.Init();
             scenes.Insert(currentSceneId - 1, activeScene);
         }
-        public void RemoveScene(int _id)
+        public virtual void RemoveScene(int _id)
         {
             scenes.RemoveAt(currentSceneId - 1);
         }
-        public SceneData GetActiveScene()
+        public virtual SceneData GetActiveScene()
         {
-            Debug.Log("# count: " + scenes.Count + " currentSceneId: " + currentSceneId);
-            return scenes.Count > 0 ? scenes[currentSceneId - 1] : null;
+            Debug.Log("# count: " + Scenes.Count + " currentSceneId: " + currentSceneId);
+            return Scenes.Count > 0 ? Scenes[currentSceneId - 1] : null;
         }
-        public SceneData GetNextActiveScene()
+        public virtual SceneData GetNextActiveScene()
         {
             if (scenes.Count <= currentSceneId)
                 return null;
             return scenes[currentSceneId];
         }
-        public int GetTotalScenes()
+        /*public int GetTotalScenes()
         {
-            return scenes.Count;
-        }
+            return Scenes.Count;
+        }*/
 
-        public void AddSceneObjectsToScene(bool next = true)
+        public virtual void AddSceneObjectsToScene(bool next = true)
         {
             //  print("currentSceneId: " + currentSceneId + "    next " + next);
 
@@ -100,11 +109,12 @@ namespace Yaguar.StoryMaker.Editor
             GetActiveScene()?.AddSceneObjects(next);
         }
 
-        public void Restart()
+        public virtual void Restart()
         {
             //currentFDataID = "";
             scenes.Clear();
             Init();
         }
+
     }
 }

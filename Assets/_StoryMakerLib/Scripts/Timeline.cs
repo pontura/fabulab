@@ -11,12 +11,12 @@ namespace Yaguar.StoryMaker.Editor
         public Transform container;
         public List<KeyFrameUI> all;
         public KeyframeMarker keyFrameMarker;
-        private float total_x_marker = 282;
+        protected float total_x_marker = 282;
         public float timer;
         public float totalTimer;
         public float keyframe_duration;
 
-        void Start()
+        protected void Start()
         {
             
 
@@ -28,17 +28,17 @@ namespace Yaguar.StoryMaker.Editor
             //Invoke(nameof(Reset), Time.deltaTime * 3);
         }
 
-        private void OnDestroy()
+        protected void OnDestroy()
         {
             StoryMakerEvents.OnLoadFilm -= Reset;
             StoryMakerEvents.ChangeSpeed -= ChangeSpeed;
         }
-        void ChangeSpeed(int speed)
+        protected virtual void ChangeSpeed(int speed)
         {
             filmMakerUI.OnTimelinePlay(false);
             keyframe_duration = ScenesManager.Instance.Keyframe_duration - (speed);
         }
-        public void Reset()
+        public virtual void Reset()
         {
             if (ScenesManager.Instance.currentFilmData != null)
                 StoryMakerEvents.ChangeSpeed(ScenesManager.Instance.currentFilmData.speed);
@@ -54,9 +54,9 @@ namespace Yaguar.StoryMaker.Editor
             RefreshKeyframes();
             filmMakerUI.JumpTo(1);
         }
-        void RefreshKeyframes()
+        protected virtual void RefreshKeyframes()
         {
-            for (int a = 0; a < ScenesManager.Instance.scenes.Count; a++)
+            for (int a = 0; a < ScenesManager.Instance.Scenes.Count; a++)
                 AddNewKeyframe();
         }
         public void AddNewKeyframe()
@@ -66,7 +66,7 @@ namespace Yaguar.StoryMaker.Editor
             kf.transform.SetParent(container);
             kf.transform.localScale = Vector2.one;
             kf.transform.localPosition = Vector2.zero;
-            Debug.Log(kf.transform.localPosition);
+            //Debug.Log(kf.transform.localPosition);
         }
         public void RemoveKeyframe()
         {

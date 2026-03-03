@@ -10,10 +10,10 @@ using Yaguar.StoryMaker.Editor;
 
 public class CacheData : MonoBehaviour
 {
-    public Dictionary<string, List<SceneData>> filmsCache;
+    public Dictionary<string, List<SceneDataFabulab>> filmsCache;
     public List<UserData> users;
 
-    [SerializeField] List<SceneData> filmData;
+    [SerializeField] List<SceneDataFabulab> filmData;
 
     [Serializable]
     public class ServerMetaData
@@ -44,10 +44,10 @@ public class CacheData : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        filmsCache = new Dictionary<string, List<SceneData>>();
+        filmsCache = new Dictionary<string, List<SceneDataFabulab>>();
     }            
 
-    public void AddToFilmCache(string id, List<SceneData> source) {
+    public void AddToFilmCache(string id, List<SceneDataFabulab> source) {
      //   Debug.Log("AddToFilmCache");
         if(filmsCache.ContainsKey(id))
             filmsCache[id] =  CloneFilmData(source);
@@ -55,14 +55,14 @@ public class CacheData : MonoBehaviour
             filmsCache.Add(id, CloneFilmData(source));
     }
 
-    List<SceneData> CloneFilmData(List<SceneData> source) {
-        List<SceneData> nueva = new List<SceneData>(source.Count);
-        foreach (SceneData item in source)
+    List<SceneDataFabulab> CloneFilmData(List<SceneDataFabulab> source) {
+        List<SceneDataFabulab> nueva = new List<SceneDataFabulab>(source.Count);
+        foreach (SceneDataFabulab item in source)
             nueva.Add(item.Clone());
         return nueva;
     }    
 
-    public List<SceneData> GetCacheFilmData(string id) {
+    public List<SceneDataFabulab> GetCacheFilmData(string id) {
         filmData = filmsCache[id];
         return CloneFilmData(filmsCache[id]);
     }

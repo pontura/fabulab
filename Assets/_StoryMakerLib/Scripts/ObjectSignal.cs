@@ -11,15 +11,15 @@ namespace Yaguar.StoryMaker.Editor
         public void SetField(string text)
         {
             field.text = text;
-            GetData().customizationSerialized = text;
+            GetData().customization = text;
         }
         public override void OnInit()
         {
             SOData soData = GetData();
             if (soData == null)
                 return;
-            if (soData.customizationSerialized != null && soData.customizationSerialized.Length > 0)
-                SetField(GetData().customizationSerialized);
+            if (soData.customization != null && soData.customization.Length > 0)
+                SetField(GetData().customization);
         }
     }
 }

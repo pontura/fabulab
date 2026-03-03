@@ -23,8 +23,6 @@ namespace Yaguar.StoryMaker.Editor
 
         public override void OnInit() {
 
-
-            string customizationSerialized = GetData().customizationSerialized;
                         
             if (asset != null)
                 Destroy(asset.gameObject);

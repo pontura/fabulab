@@ -511,9 +511,10 @@ namespace BoardItems
                 item.SetCollider(isEditMode);
         }
 
-        void LoadBoardItemForStory(BoardItemManager itemManager, CharacterPartData wd) {
+        void LoadBoardItemForStory(BoardItemManager itemManager, string id) {
+            CharacterData cd = Data.Instance.charactersData.SetCurrentID(id);
             boardItem = itemManager;
-            OpenWork(wd);
+            OpenWork(cd);
         }
 
         ItemData CreateItem(SavedIData itemData) {

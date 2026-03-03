@@ -36,9 +36,10 @@ namespace Yaguar.StoryMaker.Editor
                 selectedAvatar = selected;
                 inputsManager.ResetAll();
                 CharacterManager characterManager = selected.GetComponent<AvatarFabulab>().characterManager;
-                Events.LoadBoardItemForStory(characterManager, (data as SOAvatarFabulabData).characterData);
-                characterManager.SetColliderActive(false);
-            }            
+                Events.LoadBoardItemForStory(characterManager, (data as SOAvatarFabulabData).customization);
+            }
+
+            sceneObjects.Add(selected);
         }
 
         override protected void RemoveSceneObject()

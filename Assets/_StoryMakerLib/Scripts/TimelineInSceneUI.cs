@@ -12,8 +12,8 @@ public class TimelineInSceneUI : MonoBehaviour
         RefreshField(0);
     }
 
-    public void RefreshField(int sceneID)
+    public virtual void RefreshField(int sceneID)
     {
-        field.text = sceneID + "/" + ScenesManager.Instance.GetTotalScenes() + " ("+ (ScenesManager.Instance.MaxKeyframes - ScenesManager.Instance.GetTotalScenes()) +")";
+        field.text = sceneID + "/" + ScenesManager.Instance.Scenes.Count + " ("+ (ScenesManager.Instance.MaxKeyframes - ScenesManager.Instance.Scenes.Count) +")";
     }
 }

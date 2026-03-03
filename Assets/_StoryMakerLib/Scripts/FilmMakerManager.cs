@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -16,20 +17,20 @@ namespace Yaguar.StoryMaker.Editor
             STOPPED,
             PLAYING
         }
-        [SerializeField] GameObject panel;
-        [SerializeField] Button nextButton;
-        [SerializeField] Button prevButton;
-        [SerializeField] Button playButton;
-        [SerializeField] Button deleteButton;
+        [SerializeField] protected GameObject panel;
+        [SerializeField] protected Button nextButton;
+        [SerializeField] protected Button prevButton;
+        [SerializeField] protected Button playButton;
+        [SerializeField] protected Button deleteButton;
 
-        [SerializeField] private TimelineInSceneUI timelineInSceneUI;
-        [SerializeField] private Timeline timeline;
-        [SerializeField] bool isEditing;
+        [SerializeField] protected TimelineInSceneUI timelineInSceneUI;
+        [SerializeField] protected Timeline timeline;
+        [SerializeField] protected bool isEditing;
 
         public event Action<Action<bool>> DeleteDialog;
         public event Action OnMaxFrames;
 
-        static FilmMakerManager mInstance = null;
+        protected static FilmMakerManager mInstance = null;
         public static FilmMakerManager Instance
         {
             get
@@ -37,7 +38,7 @@ namespace Yaguar.StoryMaker.Editor
                 return mInstance;
             }
         }
-        void Awake()
+        protected void Awake()
         {
             if (!mInstance)
                 mInstance = this;
@@ -45,7 +46,7 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.OnTimelinePlay += OnTimelinePlay;
             StoryMakerEvents.Restart += Restart;
         }
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             StoryMakerEvents.OnTimelinePlay -= OnTimelinePlay;
             StoryMakerEvents.Restart -= Restart;
@@ -58,7 +59,7 @@ namespace Yaguar.StoryMaker.Editor
             panel.SetActive(enable);
         }
         
-        void Restart()
+        protected void Restart()
         {
             Debug.Log("Restart");
             timeline.Reset();
@@ -81,7 +82,7 @@ namespace Yaguar.StoryMaker.Editor
                 State = states.STOPPED;
             }
         }
-        private void Update()
+        protected void Update()
         {
             if (State == states.STOPPED)
                 return;
@@ -105,9 +106,9 @@ namespace Yaguar.StoryMaker.Editor
             }
 
         }
-        void SetButtons()
+        protected virtual void SetButtons()
         {
-            int total = ScenesManager.Instance.GetTotalScenes();
+            int total = ScenesManager.Instance.Scenes.Count;
             if (ScenesManager.Instance.currentSceneId == 1)
                 prevButton.interactable = false;
             else
@@ -132,11 +133,13 @@ namespace Yaguar.StoryMaker.Editor
 
 
         }
-        public void New()
+        public virtual void New()
         {
+            Debug.Log(ScenesManager.Instance == null);
+
             if (timeline.all.Count >= ScenesManager.Instance.MaxKeyframes)
             {
-                OnMaxFrames();                
+                RunOnMaxFramesEvent();
                 return;
             }
             //Events.OnAddScore(2);
@@ -148,6 +151,12 @@ namespace Yaguar.StoryMaker.Editor
             timeline.AddNewKeyframe();
             timeline.JumpTo(ScenesManager.Instance.currentSceneId);
         }
+
+        protected void RunOnMaxFramesEvent() {
+            if(OnMaxFrames!=null)
+                OnMaxFrames();
+        }
+
         public void Delete()
         {
             if (DeleteDialog != null)
@@ -155,7 +164,7 @@ namespace Yaguar.StoryMaker.Editor
             else
                 OnDelete(true);
         }
-        public void OnDelete(bool doIt)
+        public virtual void OnDelete(bool doIt)
         {
             if (doIt)
             {
@@ -177,7 +186,7 @@ namespace Yaguar.StoryMaker.Editor
                 timeline.JumpTo(ScenesManager.Instance.currentSceneId);
             }
         }
-        public void Next()
+        public virtual void Next()
         {
             StoryMakerEvents.OnSaveScene();
             //ScenesManager.Instance.OnSaveScene();
@@ -185,7 +194,7 @@ namespace Yaguar.StoryMaker.Editor
             SetScene(true);
             timeline.JumpTo(ScenesManager.Instance.currentSceneId);
         }
-        public void Prev()
+        public virtual void Prev()
         {
             StoryMakerEvents.OnSaveScene();
             //ScenesManager.Instance.OnSaveScene();
@@ -193,9 +202,9 @@ namespace Yaguar.StoryMaker.Editor
             SetScene(false);
             timeline.JumpTo(ScenesManager.Instance.currentSceneId);
         }
-        void SetScene(bool next)
+        protected virtual void SetScene(bool next)
         {
-            int total = ScenesManager.Instance.GetTotalScenes();
+            int total = ScenesManager.Instance.Scenes.Count();
             int nextSceneid = ScenesManager.Instance.currentSceneId + 1;
 
             if (State == states.PLAYING && nextSceneid <= total)
@@ -220,13 +229,13 @@ namespace Yaguar.StoryMaker.Editor
             ScenesManager.Instance.AddSceneObjectsToScene(next);
             StoryMakerEvents.ReorderSceneObjectsInZ();
         }
-        IEnumerator MoveAvatarsAfter(float delay)
+        protected virtual IEnumerator MoveAvatarsAfter(float delay)
         {
             yield return new WaitForSeconds(delay);
             if (State == states.PLAYING)
                 ScenesManager.Instance.GetActiveScene().MakeCharactersWalk(timeline.keyframe_duration - delay);
         }
-        public void JumpTo(int keyframeID)
+        public virtual void JumpTo(int keyframeID)
         {
             Debug.Log("#JumpTo");
             ScenesManager.Instance.currentSceneId = keyframeID;

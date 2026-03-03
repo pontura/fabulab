@@ -188,7 +188,6 @@ namespace UI
 
         public void LoadOthersWork(string id) {
             items.DeleteAll();
-            CharacterData cd;
             switch (editingType) {
                 case editingTypes.CHARACTER:
                     Data.Instance.charactersData.LoadOthersCharacter(id, OpenWork);

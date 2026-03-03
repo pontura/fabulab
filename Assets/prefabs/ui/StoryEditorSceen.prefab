@@ -165,7 +165,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6461516695359273252}
   - component: {fileID: 7711161214775164194}
-  - component: {fileID: 8102724252690334293}
+  - component: {fileID: 1971441813255586917}
   - component: {fileID: 988781987286539277}
   - component: {fileID: 5212170361740526878}
   m_Layer: 5
@@ -216,7 +216,7 @@ MonoBehaviour:
   itemListContainer: {fileID: 2944062781038424540}
   characterScreen: {fileID: 988781987286539277}
   objectsScreen: {fileID: 5212170361740526878}
---- !u!114 &8102724252690334293
+--- !u!114 &1971441813255586917
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -225,17 +225,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 629746025469846592}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd460f7978c27db47a54e9e34a31ac78, type: 3}
+  m_Script: {fileID: 11500000, guid: f6c869068cf4f4044b8e9436b06f3910, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: StoryMaker::Yaguar.StoryMaker.Editor.FilmMakerManager
+  m_EditorClassIdentifier: Assembly-CSharp::Yaguar.StoryMaker.Editor.FilmMakerManager
   <State>k__BackingField: 0
   panel: {fileID: 428833887303520037}
   nextButton: {fileID: 8428973954963349281}
   prevButton: {fileID: 2804670328233394513}
   playButton: {fileID: 945239945306234297}
   deleteButton: {fileID: 3110058929449094198}
-  timelineInSceneUI: {fileID: 7738072994496619065}
-  timeline: {fileID: 3385957743872813117}
+  timelineInSceneUI: {fileID: 6789800709196143157}
+  timeline: {fileID: 6113161207474374150}
   isEditing: 0
 --- !u!114 &988781987286539277
 MonoBehaviour:
@@ -3192,7 +3192,7 @@ PrefabInstance:
     - target: {fileID: 2193122279014332434, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 8102724252690334293}
+      objectReference: {fileID: 1971441813255586917}
     - target: {fileID: 2193122279014332434, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -3203,7 +3203,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2193122279014332434, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Yaguar.StoryMaker.Editor.FilmMakerManager, StoryMaker
+      value: Yaguar.StoryMaker.Editor.FilmMakerManagerFabulab, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 2193122279014332434, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -3237,6 +3237,30 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -32.5
       objectReference: {fileID: 0}
+    - target: {fileID: 3315224192638965431, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
+      propertyPath: filmMakerUI
+      value: 
+      objectReference: {fileID: 1971441813255586917}
+    - target: {fileID: 4485723261074514229, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
+      propertyPath: filmMakerUI
+      value: 
+      objectReference: {fileID: 1971441813255586917}
+    - target: {fileID: 4560873896143038359, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4560873896143038359, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4560873896143038359, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 629746025469846592}
+    - target: {fileID: 4560873896143038359, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4737527524230212357, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -3248,7 +3272,7 @@ PrefabInstance:
     - target: {fileID: 4737527524230212357, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 8102724252690334293}
+      objectReference: {fileID: 1971441813255586917}
     - target: {fileID: 4737527524230212357, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -3259,16 +3283,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4737527524230212357, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Yaguar.StoryMaker.Editor.FilmMakerManager, StoryMaker
+      value: Yaguar.StoryMaker.Editor.FilmMakerManagerFabulab, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 4737527524230212357, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    - target: {fileID: 4930144788725714702, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
-      propertyPath: filmMakerUI
-      value: 
-      objectReference: {fileID: 8102724252690334293}
     - target: {fileID: 5510720381055854178, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -3280,7 +3300,7 @@ PrefabInstance:
     - target: {fileID: 5510720381055854178, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 8102724252690334293}
+      objectReference: {fileID: 1971441813255586917}
     - target: {fileID: 5510720381055854178, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -3291,7 +3311,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5510720381055854178, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Yaguar.StoryMaker.Editor.FilmMakerManager, StoryMaker
+      value: Yaguar.StoryMaker.Editor.FilmMakerManagerFabulab, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5510720381055854178, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -3444,7 +3464,7 @@ PrefabInstance:
     - target: {fileID: 7918316447185679731, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 8102724252690334293}
+      objectReference: {fileID: 1971441813255586917}
     - target: {fileID: 7918316447185679731, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -3455,7 +3475,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7918316447185679731, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Yaguar.StoryMaker.Editor.FilmMakerManager, StoryMaker
+      value: Yaguar.StoryMaker.Editor.FilmMakerManagerFabulab, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7918316447185679731, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -3568,33 +3588,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
---- !u!114 &3385957743872813117 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4930144788725714702, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
-  m_PrefabInstance: {fileID: 7680381398736758579}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 185aad921e2a7224f99703901320b0cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: StoryMaker::Yaguar.StoryMaker.Editor.Timeline
 --- !u!224 &4177312946139588452 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6012017213286023255, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
   m_PrefabInstance: {fileID: 7680381398736758579}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7738072994496619065 stripped
+--- !u!114 &6113161207474374150 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 141047908731143434, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4485723261074514229, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
   m_PrefabInstance: {fileID: 7680381398736758579}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8411fb4cfa6bce4ca09ba378d374948, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a8551c1928eab742a7d85a60b6b001f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: StoryMaker::TimelineInSceneUI
+  m_EditorClassIdentifier: Assembly-CSharp::Yaguar.StoryMaker.Editor.Timeline
+--- !u!114 &6789800709196143157 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3795415139892346118, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
+  m_PrefabInstance: {fileID: 7680381398736758579}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bee202865850724a9ba300cfc1f000b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimelineInSceneUI
 --- !u!114 &8428973954963349281 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2193122279014332434, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
