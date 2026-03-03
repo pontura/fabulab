@@ -18,7 +18,8 @@ namespace BoardItems
         public enum types
         {
             COLORS,
-            ACTIONS
+            ACTIONS,
+            BG_COLORS
         }
         private void Start()
         {
@@ -34,6 +35,14 @@ namespace BoardItems
             arrow.transform.position = pos;
             switch (type)
             {
+                case types.BG_COLORS:
+                    foreach (PalettesManager.colorNames colorNames in Data.Instance.palettesManager.backgrounds)
+                    {
+                        Sprite s = Instantiate(colorImage);
+                        print(colorNames);
+                        AddButton(s, Data.Instance.palettesManager.GetColorsByName(colorNames));
+                    }
+                    break;
                 case types.COLORS:
                     foreach (PalettesManager.colorNames colorNames in Data.Instance.palettesManager.GetPaletteData(itemData.paletteName).colors)
                     {
@@ -73,6 +82,10 @@ namespace BoardItems
         {
             switch (type)
             {
+                case types.BG_COLORS:
+                    PalettesManager.colorNames[] colorNames = Data.Instance.palettesManager.backgrounds;
+                    Events.ColorizeBG(colorNames[id]);
+                    break;
                 case types.COLORS:
                     PalettesManager.PaletteData pData = Data.Instance.palettesManager.GetPaletteData(itemData.paletteName);
                     Events.Colorize(pData.colors[id]);

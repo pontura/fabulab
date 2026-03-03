@@ -29,10 +29,12 @@ namespace UI
         private void Start()
         {
             Events.Zoom += OnZoom;
+            Events.OnBGColorizerOpen += OnBGColorizerOpen;
         }
         private void OnDestroy()
         {
             Events.Zoom -= OnZoom;
+            Events.OnBGColorizerOpen -= OnBGColorizerOpen;
         }
         private void OnZoom(CharacterPartsHelper.parts part, bool saving = false)
         {
@@ -225,6 +227,20 @@ namespace UI
             itemSelected = items.GetItemSelected();
             toolsMenu.Init(itemSelected.data, pos, this);
             itemSelected.SetTools(true, clip);
+        }
+        void OnBGColorizerOpen(bool isOn)
+        {
+            if (isOn)
+            {
+                state = states.TOOLS;
+                Vector3 pos = Vector2.zero;
+                toolsMenu.Init(null, pos, this);
+                toolsMenu.SetBGColors();
+            }
+            else
+            {
+                OnCloseTools();
+            }
         }
         public void OnCloseTools(states _state = states.IDLE)
         {

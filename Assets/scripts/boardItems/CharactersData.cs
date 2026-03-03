@@ -121,26 +121,20 @@ namespace BoardItems
             else
                 wd = GetUserCharacter(currentID);
             CharacterManager cm = UIManager.Instance.boardUI.characterManager;
-
+            wd.bg = Data.Instance.palettesManager.bgColorName;
             wd.armsColor = cm.GetArmsColor();
             wd.legsColor = cm.GetLegsColor();
             wd.eyebrowsColor = cm.GetEyebrowsColor();
-
             wd.thumb = tex;
             wd.items = new List<SavedIData>();
-
-
-            List<ItemInScene> mirrors = new List<ItemInScene>();
             foreach (ItemInScene iInScene in UIManager.Instance.boardUI.items.all)
             {
-                bool isMirror = false;
-                foreach (ItemInScene m in mirrors)
+                if (iInScene.data.part == parts.HAND_LEFT || iInScene.data.part == parts.HAND_LEFT)
                 {
-                    isMirror = (iInScene == m);
-                }
-                if (!isMirror)
+                    // los mirrors los ignora:
+                } else
                 {
-                    int newPartID = (int)iInScene.data.part;;
+                    int newPartID = (int)iInScene.data.part;
 
                     SavedIData sd = new SavedIData();
                     sd.part = newPartID;
@@ -152,9 +146,6 @@ namespace BoardItems
                     sd.color = iInScene.data.colorName;
                     sd.galleryID = iInScene.data.galleryID;
                     wd.items.Add(sd);
-                    ItemInScene mirror = iInScene.GetMirror();
-                    if (mirror != null)
-                        mirrors.Add(mirror);
                 }
             }
             currentCharacter = wd;
@@ -263,7 +254,6 @@ namespace BoardItems
                 wd.LoadServerData(e.Value);
                 wd.thumb = userCharactersMetaData.Find(x => x.id == wd.id)?.thumb;
                 userCharacters.Add(wd);
-                
             }
             LoadPartMetadataFromServer();
         }

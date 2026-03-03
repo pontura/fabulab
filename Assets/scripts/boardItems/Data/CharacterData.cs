@@ -21,6 +21,7 @@ namespace BoardItems.BoardData
             csd.armsColor = armsColor;
             csd.legsColor = legsColor;
             csd.eyebrowsColor = eyebrowsColor;
+            csd.bg = bg;
             return csd;
         }
 
@@ -34,6 +35,7 @@ namespace BoardItems.BoardData
             armsColor = serverData.armsColor;
             legsColor = serverData.legsColor;
             eyebrowsColor = serverData.eyebrowsColor;
+            bg = serverData.bg;
         }
        
     }

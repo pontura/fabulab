@@ -10,6 +10,7 @@ using UnityEngine;
 public static class Events
 {
     public static System.Action<bool> OnNewPartSelected = delegate { };
+    public static System.Action<bool> OnBGColorizerOpen = delegate { };
     public static System.Action<BodyPart> OnNewBodyPartSelected = delegate { };
     public static System.Action<ItemInScene, Vector3> OnStartDrag = delegate { };
     public static System.Action<ItemInScene, Vector3> OnStopDrag = delegate { };

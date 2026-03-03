@@ -34,6 +34,11 @@ namespace BoardItems
             gameObject.SetActive(true);
             arrow.transform.position = pos;
         }
+        public void SetBGColors()
+        {
+            subMenu.Init(null, pos, ToolsSubMenu.types.BG_COLORS);
+            gameObject.SetActive(false);
+        }
         public void Close()
         {
             inputManager.OnCloseTools(InputManager.states.IDLE);

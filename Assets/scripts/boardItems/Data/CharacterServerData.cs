@@ -7,6 +7,7 @@ namespace BoardItems.BoardData
     public class SOPartServerData
     {
         public List<ServerIData> items;
+        public PalettesManager.colorNames bg;
     }
 
     [Serializable]

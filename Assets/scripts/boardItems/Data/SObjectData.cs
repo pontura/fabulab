@@ -25,6 +25,7 @@ namespace BoardItems.BoardData
             }
             csd.type = type;
             csd.items = csdItems;
+            csd.bg = bg;
             return csd;
         }
 

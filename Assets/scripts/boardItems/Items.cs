@@ -60,7 +60,6 @@ namespace BoardItems
                         a.Add(i);
                     }
                 }
-                print("::::::ALL " + a.Count);
                 return a;
             }
         }
@@ -580,10 +579,18 @@ namespace BoardItems
         }
         IEnumerator OpenWork_C(SOPartData wd)
         {
+            if (wd is CharacterData characterData)
+            {
+                Events.ColorizeBG(characterData.bg);
+                Events.ColorizeArms(characterData.armsColor);
+                Events.ColorizeLegs(characterData.legsColor);
+                Events.ColorizeEyebrows(characterData.eyebrowsColor);
+            }
             print("open work");
             foreach (SavedIData itemData in wd.items)
             {
-                yield return new WaitForSeconds(0.05f);
+                yield return new WaitForSeconds(0.1f);
+                print("open itemData part: " + itemData.part);
                 ItemData newItem = CreateItem(itemData);
 
                 print("open work newItem part: " + newItem.part);
@@ -595,12 +602,7 @@ namespace BoardItems
                 }
                 newItem.GetComponent<ItemInScene>().Appear();
             }
-            if (wd is CharacterData characterData)
-            {
-                Events.ColorizeArms(characterData.armsColor);
-                Events.ColorizeLegs(characterData.legsColor);
-                Events.ColorizeEyebrows(characterData.eyebrowsColor);
-            }
+            
 
             boardItem = null;
         }

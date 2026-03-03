@@ -8,14 +8,14 @@ public class PalettesManager : MonoBehaviour
     public List<ColorsData> colors;
     public List<PaletteData> palettes;
 
+    public colorNames[] arms; 
+    public colorNames[] legs;
+    public colorNames[] eyebrow;
+    public colorNames[] backgrounds;
 
     public Sprite arm;
     public Sprite leg;
     public Sprite eyebrows;
-
-    public colorNames[] arms; 
-    public colorNames[] legs;
-    public colorNames[] eyebrow;
 
     [Serializable]
     public class ColorsData
@@ -105,6 +105,19 @@ public class PalettesManager : MonoBehaviour
         public paletteNames paletteName;
         public colorNames[] colors;
     }
+    private void Start()
+    {
+        Events.ColorizeBG += OnColorizeBG;
+    }
+    private void OnDestroy()
+    {
+        Events.ColorizeBG -= OnColorizeBG;
+    }
+    public colorNames bgColorName;
+    void OnColorizeBG(colorNames colorName)
+    {
+        this.bgColorName = colorName;
+    }
     public PaletteData GetPaletteData(paletteNames name)
     {
         foreach (PaletteData data in palettes)
@@ -115,13 +128,6 @@ public class PalettesManager : MonoBehaviour
     public int GetId(paletteNames paletteName, Color _color)
     {
         PaletteData pd = palettes.Find(x => x.paletteName == paletteName);
-
-        //for(int i = 0; i < pd.colors.Length; i++) 
-        //{            
-        //    if (GetColorByName(pd.colors[i]) == _color)
-        //            return i;
-        
-        //}
         return 0;
     }
     public List<Color> GetColor(paletteNames paletteName, int id)
@@ -153,7 +159,10 @@ public class PalettesManager : MonoBehaviour
         //print(arr.Count);
         return arr;
     }
-
+    public colorNames GetColorName(colorNames name)
+    {
+        return colors.Find(x => x.name == name).name;
+    }
     public colorNames GetColorName(Color c) {
         return colors.Find(x => x.color == c).name;
     }

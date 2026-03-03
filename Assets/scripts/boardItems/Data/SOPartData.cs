@@ -7,6 +7,7 @@ namespace BoardItems.BoardData
     [Serializable]
     public class SOPartData
     {
+        public PalettesManager.colorNames bg;
         public string id;
         public Texture2D thumb;
         public List<SavedIData> items;

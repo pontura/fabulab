@@ -59,6 +59,7 @@ namespace BoardItems
             else
                 wd = GetSO(currentID);
 
+            wd.bg = Data.Instance.palettesManager.bgColorName;
             wd.type = currentType;
             wd.thumb = tex;
             wd.items = new List<SavedIData>();
