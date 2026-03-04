@@ -192,6 +192,7 @@ namespace BoardItems
         }
         void ColorizeBG(PalettesManager.colorNames name)
         {
+            print("ColorizeBG " + name);
             Color color = Data.Instance.palettesManager.GetColor(name);
             bg.color = color;
         }
@@ -220,7 +221,6 @@ namespace BoardItems
                 print("InitGallery " + gallery.id);
                 //all.Clear();
                 StopAllCoroutines();
-                bg.color = Data.Instance.palettesManager.GetColor(gallery.colorUI);
                 inventary.Init(this, gallery.id, gallery.gallery, editMode, OnAllLoaded);
             }
         }
@@ -588,11 +588,7 @@ namespace BoardItems
             foreach (SavedIData itemData in wd.items)
             {
                 yield return new WaitForSeconds(0.05f);
-                print("open itemData part: " + itemData.part);
                 ItemData newItem = CreateItem(itemData);
-
-                print("open work newItem part: " + newItem.part);
-
                 if (newItem.anim != AnimationsManager.anim.NONE)
                 {
                     AnimationsManager.AnimData animData = Data.Instance.animationsManager.GetAnimByName(newItem.anim);
