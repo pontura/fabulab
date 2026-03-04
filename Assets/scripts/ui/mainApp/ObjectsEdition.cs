@@ -1,17 +1,18 @@
+using BoardItems;
+using Common.UI;
 using UnityEngine;
 
 namespace UI.MainApp
 {
     public class ObjectsEdition : MainScreen
     {
-        [SerializeField] Transform dragAndDropContainer;
+        [SerializeField] SceneObjectsPanel sceneObjectsPanel;
         [SerializeField] DragAndDropUI dragAndDropUI;
         [SerializeField] GameObject savePanel;
         [SerializeField] GameObject saveButton;
         [SerializeField] GameObject replaceButton;
         [SerializeField] GameObject DoneBtn;
         [SerializeField] bool changesMade;
-        [SerializeField] ToggleButton snapToggle;
 
         void OnToggle(bool isOn)
         {
@@ -22,14 +23,13 @@ namespace UI.MainApp
             switch (type)
             {
                 case UIManager.screenType.Creation_Objects:
-                    snapToggle.Init(OnToggle, UIManager.Instance.boardUI.snap);
+                    sceneObjectsPanel.Init();
                     Events.Zoom(BoardItems.Characters.CharacterPartsHelper.parts.BODY, false);
                     changesMade = false;
                     SetButtons();
                     Show(true);
                     savePanel.SetActive(false);
                     dragAndDropUI.SetOn(true);
-                    dragAndDropUI.transform.SetParent(dragAndDropContainer);
                     dragAndDropUI.Init();
                     break;
                 default:

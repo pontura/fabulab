@@ -49,5 +49,14 @@ namespace Common.UI
             foreach (TabButton tabButton in all)
                 tabButton.Reset();
         }
+        public void ShowTab(List<bool> list)
+        {
+            int id = 0;
+            foreach (TabButton tabButton in all)
+            {
+                tabButton.gameObject.SetActive(list[id]);
+                id++;
+            }
+        }
     }
 }

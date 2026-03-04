@@ -10,18 +10,18 @@ namespace UI
     public class PresetButton : MonoBehaviour
     {
         [SerializeField] Image image;
-        PresetsSelector manager;
         public SOPartData workData;
         public colorNames color;
         public int partToColorizeID = 0; //0 = amrs; 1 = legs
+        System.Action<PresetButton> OnClicked;
 
-        public void Init(PresetsSelector manager, SOPartData workData)
+        public void Init(System.Action<PresetButton> OnClicked, SOPartData workData)
         {
             this.workData = workData;
-            this.manager = manager;
+            this.OnClicked = OnClicked;
             image.sprite = workData.GetSprite();
         }
-        public void Init(PresetsSelector manager, colorNames _color, int partToColorizeID)
+        public void Init(System.Action<PresetButton> OnClicked, colorNames _color, int partToColorizeID)
         {
             this.partToColorizeID = partToColorizeID;
 
@@ -33,13 +33,20 @@ namespace UI
                 image.sprite = Data.Instance.palettesManager.eyebrows;
 
             this.color = _color;
-            this.manager = manager;
+            this.OnClicked = OnClicked;
+            List<Color> allColors = Data.Instance.palettesManager.GetColorsByName(_color);
+            image.color = allColors[0];
+        }
+        public void Init(System.Action<PresetButton> OnClicked, colorNames _color)
+        {
+            this.color = _color;
+            this.OnClicked = OnClicked;
             List<Color> allColors = Data.Instance.palettesManager.GetColorsByName(_color);
             image.color = allColors[0];
         }
         public void OnClick()
         {
-            manager.OnClicked(this);
+            OnClicked(this);
         }
     }
 

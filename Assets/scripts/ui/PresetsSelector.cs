@@ -38,7 +38,7 @@ namespace UI
                         if (wd.thumb != null)
                         {
                             PresetButton b = Instantiate(itemButton, container);
-                            b.Init(this, wd);
+                            b.Init(OnClicked, wd);
                         }
                     }
                 }
@@ -49,17 +49,17 @@ namespace UI
             foreach (colorNames s in Data.Instance.palettesManager.arms)
             {
                 PresetButton b = Instantiate(itemButton, container);
-                b.Init(this, s, 0);
+                b.Init(OnClicked, s, 0);
             }
             foreach (colorNames s in Data.Instance.palettesManager.legs)
             {
                 PresetButton b = Instantiate(itemButton, container);
-                b.Init(this, s, 1);
+                b.Init(OnClicked, s, 1);
             }
             foreach (colorNames s in Data.Instance.palettesManager.eyebrow)
             {
                 PresetButton b = Instantiate(itemButton, container);
-                b.Init(this, s, 2);
+                b.Init(OnClicked, s, 2);
             }
         }
         public void Reset()

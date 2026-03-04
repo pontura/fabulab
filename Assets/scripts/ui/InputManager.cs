@@ -219,7 +219,7 @@ namespace UI
             UIManager.Instance.boardUI.items.StartDrag(itemInScene);
         }
         [SerializeField] AnimationClip clip;
-        ItemInScene itemSelected;
+        [SerializeField] ItemInScene itemSelected;
         void OpenTools()
         {
             state = states.TOOLS;

@@ -13,6 +13,7 @@ namespace BoardItems
         public List<SObjectData> data;
         public List<CharacterMetaData> metaData;
 
+        public SObjectData.types Type { get { return this.currentType; } }
         public void SetType(SObjectData.types type) { this.currentType = type; }
         public List<SObjectData> GetDataByType(SObjectData.types type)
         {
