@@ -1,7 +1,9 @@
 using BoardItems;
-using System.Collections.Generic;
-using UnityEngine;
 using BoardItems.BoardData;
+using System.Collections.Generic;
+using UI.MainApp.Home.User;
+using UnityEngine;
+using UnityEngine.UI;
 using static PalettesManager;
 
 namespace UI
@@ -10,6 +12,7 @@ namespace UI
     {
         [SerializeField] Transform container;
         [SerializeField] PresetButton itemButton;
+        [SerializeField] CharacterSelectorBtn workBtn_prefab;
         [SerializeField] Dictionary<ItemData, ItemButton> all;
         private void Awake()
         {
@@ -19,22 +22,30 @@ namespace UI
         {
             int artID = 0;
             gameObject.SetActive(isOn);
-            if (isOn)
+        }
+        public void SetColores()
+        {
+            Utils.RemoveAllChildsIn(container);
+            OpenColors();
+        }
+        public void SetObjects()
+        {
+            Utils.RemoveAllChildsIn(container);
+            List<SObjectData> generics = Data.Instance.sObjectsData.GetDataByType(SObjectData.types.generic);
+            foreach (SObjectData cd in generics)
             {
-                Utils.RemoveAllChildsIn(container);
-               
-                List<SOPartData> all = Data.Instance.charactersData.GetPreset(1);
-                artID++;
-                foreach (SOPartData wd in all)
-                {
-                    if (wd.thumb != null)
-                    {
-                        PresetButton b = Instantiate(itemButton, container);
-                        b.Init(OnClicked, wd);
-                    }
-                }
+                CharacterSelectorBtn go = Instantiate(workBtn_prefab, container);
+                print("go " + go);
+                go.Init(cd);
+                go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
             }
-        }       
+        }
+        public void OpenWork(string id)
+        {
+            print("abre " + id);
+            //UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
+        }
+
         public void Reset()
         {
             all = new Dictionary<ItemData, ItemButton>();
@@ -42,14 +53,14 @@ namespace UI
         }
         public void OnClicked(PresetButton pb)
         {
-            OpenColors();
+            Events.ColorizeBG(pb.color);
         }
         void OpenColors()
         {
             foreach (colorNames s in Data.Instance.palettesManager.backgrounds)
             {
                 PresetButton b = Instantiate(itemButton, container);
-                b.Init(OnClicked, s, 0);
+                b.Init(OnClicked, s);
             }
         }
     }

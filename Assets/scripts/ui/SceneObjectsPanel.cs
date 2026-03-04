@@ -1,3 +1,4 @@
+using BoardItems.BoardData;
 using Common.UI;
 using UnityEngine;
 
@@ -31,14 +32,34 @@ namespace UI
             Events.EditMode(true);
             Events.OnCharacterAnim(characterEditorID, anim);
             tabs.Init(OnTabClicked, 0);
+
+            if(Data.Instance.sObjectsData.Type == SObjectData.types.background)
+            {
+                tabs.ShowTab(new System.Collections.Generic.List<bool> { true, true, true });
+            }
+            else
+            {
+                tabs.ShowTab(new System.Collections.Generic.List<bool> { true, true, false });
+            }
+
         }
         void OnTabClicked(int id)
         {
             dragAndDropContainer.gameObject.SetActive(false);
-            if (id ==0)
+            if (id == 0)
                 DragAndDrop();
             else
+            {
                 soSelector.SetOn(true);
+                if (id == 1)
+                {
+                    soSelector.SetColores();
+                }
+                if (id == 2)
+                {
+                    soSelector.SetObjects();
+                }
+            }
         }
         public void DragAndDrop()
         {

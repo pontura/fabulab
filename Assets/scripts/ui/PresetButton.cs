@@ -37,6 +37,13 @@ namespace UI
             List<Color> allColors = Data.Instance.palettesManager.GetColorsByName(_color);
             image.color = allColors[0];
         }
+        public void Init(System.Action<PresetButton> OnClicked, colorNames _color)
+        {
+            this.color = _color;
+            this.OnClicked = OnClicked;
+            List<Color> allColors = Data.Instance.palettesManager.GetColorsByName(_color);
+            image.color = allColors[0];
+        }
         public void OnClick()
         {
             OnClicked(this);
