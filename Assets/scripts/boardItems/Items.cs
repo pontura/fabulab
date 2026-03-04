@@ -605,7 +605,10 @@ namespace BoardItems
             if(boardItems.Count > 0) 
                 boardItem = boardItems.Peek();
             foreach (SavedIData itemData in wd.items) {
-                yield return new WaitForSeconds(0.05f);
+                if (boardItems.Count == 0)
+                    yield return new WaitForSeconds(0.05f);
+                else
+                    yield return null;
                 print("open itemData part: " + itemData.part);
                 ItemData newItem = CreateItem(itemData);
 
