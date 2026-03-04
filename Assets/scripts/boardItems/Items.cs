@@ -616,7 +616,9 @@ namespace BoardItems
                     AnimationsManager.AnimData animData = Data.Instance.animationsManager.GetAnimByName(newItem.anim);
                     Events.AnimateItem(animData);
                 }
-                newItem.GetComponent<ItemInScene>().Appear();
+
+                if(boardItems.Count==0)
+                    newItem.GetComponent<ItemInScene>().Appear();
             }
 
             boardItems.Dequeue();
