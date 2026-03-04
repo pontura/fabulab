@@ -95,11 +95,6 @@ namespace BoardItems
         void AnimateItem(AnimationsManager.AnimData anim)
         {
             DoAnimate(anim, itemSelected);
-            if (IsInMirrorPart(itemSelected))
-            {
-                ItemInScene mirror = itemSelected.GetMirror();
-                DoAnimate(anim, mirror);
-            }
         }
         void DoAnimate(AnimationsManager.AnimData anim, ItemInScene item)
         {
@@ -207,7 +202,8 @@ namespace BoardItems
 
         public void SetItemSelected(ItemInScene iInScene)
         {
-            itemSelected = iInScene;
+            if(!IsAMirroredPart(iInScene))
+                itemSelected = iInScene;
         }
         bool initialized = false;
         void InitGallery(GaleriasData.GalleryData gallery, bool editMode, System.Action OnAllLoaded)
@@ -299,7 +295,7 @@ namespace BoardItems
                 boardItem.AttachItem(item);
             else
                 board.AttachItem(item);
-            itemSelected = item;
+            SetItemSelected(item);
         }
         public bool snap = true;
         void OnStopDrag(ItemInScene item, Vector3 pos)
@@ -335,31 +331,34 @@ namespace BoardItems
         {
             if (IsInMirrorPart(item))
                 CheckMirror(item);
-            else
-            {
-                ItemInScene mirror = item.GetMirror();
-                if (mirror != null)
-                {
-                    item.SetMirror(null);
-                    mirror.SetMirror(null);
-                    Delete(mirror);
-                }
-            }
+            //else
+            //{
+            //    ItemInScene mirror = item.GetMirror();
+            //    if (mirror != null)
+            //    {
+            //        item.SetMirror(null);
+            //        mirror.SetMirror(null);
+            //        Delete(mirror);
+            //    }
+            //}
         }
         bool IsInMirrorPart(ItemInScene item)
         {
-            //print(" IsInMirrorPart " + item.data.part);
             return item.data.part == CharacterPartsHelper.parts.FOOT
-                || item.data.part == CharacterPartsHelper.parts.FOOT_LEFT
-                || item.data.part == CharacterPartsHelper.parts.HAND
+                || item.data.part == CharacterPartsHelper.parts.HAND;
+        }
+        bool IsAMirroredPart(ItemInScene item)
+        {
+            return item.data.part == CharacterPartsHelper.parts.FOOT_LEFT
                 || item.data.part == CharacterPartsHelper.parts.HAND_LEFT;
         }
         void CheckMirror(ItemInScene item)
         {
+            print("check Mirror " + item.data.part);
             ItemInScene mirror = item.GetMirror();
             if (mirror != null)
                 EditMirror(item, mirror);
-            else
+            else 
                 AddMirror(item);
         }
         void EditMirror(ItemInScene item, ItemInScene mirror)
@@ -367,9 +366,7 @@ namespace BoardItems
             switch (item.data.part)
             {
                 case CharacterPartsHelper.parts.FOOT: mirror.data.part = CharacterPartsHelper.parts.FOOT_LEFT; break;
-                case CharacterPartsHelper.parts.FOOT_LEFT: mirror.data.part = CharacterPartsHelper.parts.FOOT; break;
                 case CharacterPartsHelper.parts.HAND: mirror.data.part = CharacterPartsHelper.parts.HAND_LEFT; break;
-                case CharacterPartsHelper.parts.HAND_LEFT: mirror.data.part = CharacterPartsHelper.parts.HAND; break;
             }
             SetItemInScene(mirror, mirror.data.part);
 
@@ -392,7 +389,8 @@ namespace BoardItems
         }
         public void StartDrag(ItemInScene item)
         {
-            itemSelected = item;
+            SetItemSelected(item);
+
             item.data.position = item.transform.position;
 
 
@@ -409,7 +407,7 @@ namespace BoardItems
         }
         public ItemInScene AddNewItemFromMenu(ItemInScene newItem)
         {
-            this.itemSelected = newItem;
+            SetItemSelected(newItem);
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             pos.z = -0.1f;
             ItemInScene itemInScene = Clonate(pos);
@@ -444,15 +442,15 @@ namespace BoardItems
             }
             itemInScene.SetPos(newItem.transform.position);
             newItem.Init();
-            //all.Add(itemInScene);
-            itemSelected = itemInScene;
+
+            SetItemSelected(itemInScene);
+
             if (newItem.anim != AnimationsManager.anim.NONE)
             {
                 AnimationsManager.AnimData animData = Data.Instance.animationsManager.GetAnimByName(itemSelected.data.anim);
                 Events.AnimateItem(animData);
             }
             return itemInScene;
-            //print("______4");
         }
         float back_z;
         public void MoveBack()
@@ -589,7 +587,7 @@ namespace BoardItems
             print("open work");
             foreach (SavedIData itemData in wd.items)
             {
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.05f);
                 print("open itemData part: " + itemData.part);
                 ItemData newItem = CreateItem(itemData);
 

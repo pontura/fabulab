@@ -1,9 +1,7 @@
 ﻿using BoardItems.Characters;
-using Firebase.Analytics;
 using System.Collections.Generic;
 using UI;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 namespace BoardItems
 {
