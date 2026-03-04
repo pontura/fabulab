@@ -6,7 +6,7 @@ namespace Yaguar.StoryMaker.Editor
 {
     public class MovementManager : MonoBehaviour
     {
-        public void MoveCharacter(int avatarID, Vector3 to, float timeToNextFrame)
+        public void MoveCharacter(string avatarID, Vector3 to, float timeToNextFrame)
         {
             Avatar avatar = Scenario.Instance.sceneObejctsManager.GetAvatarInSceneById(avatarID);
             if (avatar == null)
@@ -22,6 +22,7 @@ namespace Yaguar.StoryMaker.Editor
 
             
             iTween.MoveTo(avatar.gameObject, iTween.Hash(
+                "islocal", true,
                 "position", to,
                 "time", timeToNextFrame,
                 "easetype", "linear",

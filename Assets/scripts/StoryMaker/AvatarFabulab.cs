@@ -33,6 +33,7 @@ namespace Yaguar.StoryMaker.Editor
             asset.transform.localPosition = Vector3.zero;
             asset.SetActive(true);
             characterManager = asset.GetComponent<CharacterManager>();
+            characterManager.Init();
 
             BoxCollider2D collider = GetComponent<BoxCollider2D>();
 
@@ -48,6 +49,14 @@ namespace Yaguar.StoryMaker.Editor
             collider.offset = localCenter;
             collider.size = localSize;
 
+        }
+
+        public override void Run() {
+            characterManager.SetAnim(CharacterAnims.anims.groovyWalk_right);
+        }
+
+        public override void Walk() {
+            characterManager.SetAnim(CharacterAnims.anims.walk_right);
         }
     }
 }

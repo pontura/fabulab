@@ -58,10 +58,10 @@ namespace Yaguar.StoryMaker.Editor
             sd.Init();
             scenes.Add(sd);
         }
-        public virtual int GetBackground(int id)
+        public virtual string GetBackground(int id)
         {
             if (id - 1 >= scenes.Count)
-                return -1;
+                return "";
             return scenes[id - 1].bgID;
         }
         public virtual void DeleteActiveScene()

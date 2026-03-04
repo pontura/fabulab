@@ -23,6 +23,8 @@ namespace BoardItems
         [SerializeField] BoardUI board;
 
         BoardItemManager boardItem;
+        Queue<BoardItemManager> boardItems;
+        Queue<CharacterData> charactersData;
 
         void Start()
         {
@@ -35,6 +37,8 @@ namespace BoardItems
             Events.ResetItems += ResetItems;
             Events.LoadBoardItemForStory += LoadBoardItemForStory;
 
+            boardItems = new Queue<BoardItemManager>();
+            charactersData = new Queue<CharacterData>();
             // Events.EditMode(true);
         }
         void OnDestroy()
@@ -532,8 +536,22 @@ namespace BoardItems
         void LoadBoardItemForStory(BoardItemManager itemManager, string id)
         {
             CharacterData cd = Data.Instance.charactersData.SetCurrentID(id);
-            boardItem = itemManager;
-            OpenWork(cd);
+            bool openWork = false;
+            if(boardItems.Count==0)
+                openWork = true;
+            boardItems.Enqueue(itemManager);
+            charactersData.Enqueue(cd);
+            //boardItem = itemManager;
+            Debug.Log("$ LoadBoardItemForStory " + cd.id + " boardItems: " + boardItems.Count);
+            if (openWork) {
+                Debug.Log("$ CheckOpenWork");
+                CheckOpenWork();
+            }
+        }
+
+        void CheckOpenWork() {
+            if (boardItems.Count > 0)
+                OpenWork(charactersData.Dequeue());
         }
 
         //void LoadBoardItemForStory(BoardItemManager itemManager, SOPartData wd)
@@ -577,34 +595,36 @@ namespace BoardItems
         {
             StartCoroutine(OpenWork_C(wd));
         }
-        IEnumerator OpenWork_C(SOPartData wd)
-        {
-            if (wd is CharacterData characterData)
-            {
+        IEnumerator OpenWork_C(SOPartData wd) {
+            if (wd is CharacterData characterData) {
                 Events.ColorizeBG(characterData.bg);
                 Events.ColorizeArms(characterData.armsColor);
                 Events.ColorizeLegs(characterData.legsColor);
                 Events.ColorizeEyebrows(characterData.eyebrowsColor);
             }
             print("open work");
-            foreach (SavedIData itemData in wd.items)
-            {
+            if(boardItems.Count > 0) 
+                boardItem = boardItems.Peek();
+            foreach (SavedIData itemData in wd.items) {
                 yield return new WaitForSeconds(0.1f);
                 print("open itemData part: " + itemData.part);
                 ItemData newItem = CreateItem(itemData);
 
                 print("open work newItem part: " + newItem.part);
 
-                if (newItem.anim != AnimationsManager.anim.NONE)
-                {
+                /*if (newItem.anim != AnimationsManager.anim.NONE) {
                     AnimationsManager.AnimData animData = Data.Instance.animationsManager.GetAnimByName(newItem.anim);
                     Events.AnimateItem(animData);
                 }
-                newItem.GetComponent<ItemInScene>().Appear();
+                newItem.GetComponent<ItemInScene>().Appear();*/
             }
-            
 
-            boardItem = null;
+            boardItems.Dequeue();
+
+            if (boardItems.Count==0)
+                boardItem = null;
+            else
+                CheckOpenWork();
         }
 
     }

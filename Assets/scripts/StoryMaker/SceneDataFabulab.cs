@@ -93,10 +93,7 @@ namespace Yaguar.StoryMaker.Editor
             }
             if(scenesElements==null)
                 scenesElements = new List<SceneElement>();
-            Debug.Log(soData.pos + " : " + sceneElement.data.pos);
-            Debug.Log(scenesElements.Count);
             scenesElements.Add(sceneElement);
-            Debug.Log(scenesElements.Count);
         }
         
         protected bool IsThisDataDifferentToPreviousFrame(SceneElement data, bool next)
@@ -219,11 +216,13 @@ namespace Yaguar.StoryMaker.Editor
                 //Scenario.Instance.sceneObejctsManager.AddSceneObject(soData);
             }
         }
-        protected void SetBG()
+        protected new void SetBG()
         {
+            /*## IMPLEMENTAR
             SOBGData bgData = new SOBGData();
             bgData.id = bgID;
             StoryMakerEvents.AddSceneObject(bgData);
+            */
         }
         protected void SetSOData(SOData soData, SceneElement sceneElement)
         {
@@ -248,7 +247,7 @@ namespace Yaguar.StoryMaker.Editor
                 }
             }
         }
-        protected new Vector3 CharacterShouldWalkTo(SOData actualData, int avatarID)
+        protected new Vector3 CharacterShouldWalkTo(SOData actualData, string avatarID)
         {
             SceneData nextSD = ScenesManagerFabulab.Instance.GetNextActiveScene();
             if (nextSD == null)
@@ -263,8 +262,10 @@ namespace Yaguar.StoryMaker.Editor
                 {
                     if (actualData.size != soData.size || actualData.pos == soData.pos)
                         return Vector3.zero;
-                    else
+                    else {
+                        Debug.Log("# CharacterShouldWalkTo: " + soData.pos);
                         return soData.pos;
+                    }
                 }
             }
             return Vector3.zero;

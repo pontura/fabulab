@@ -69,9 +69,9 @@ namespace Yaguar.StoryMaker.Editor
             Init();
         }
 
-        public override int GetBackground(int id) {
+        public override string GetBackground(int id) {
             if (id - 1 >= scenes.Count)
-                return -1;
+                return "";
             return scenes[id - 1].bgID;
         }
         public override void DeleteActiveScene() {

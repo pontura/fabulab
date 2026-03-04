@@ -27,6 +27,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         public void Init(SOData data)
         {
+            Debug.Log("$$ "+gameObject.name + ": " + data.id);
             this.data = data;
             BoxCollider2D box = GetComponent<BoxCollider2D>();
             if (box == null)

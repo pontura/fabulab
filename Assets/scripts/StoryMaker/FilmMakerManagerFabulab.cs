@@ -40,7 +40,6 @@ namespace Yaguar.StoryMaker.Editor
         }
         public override void New()
         {
-            Debug.Log(ScenesManagerFabulab.Instance == null);
 
             if (timeline.all.Count >= ScenesManagerFabulab.Instance.MaxKeyframes)
             {
@@ -102,8 +101,8 @@ namespace Yaguar.StoryMaker.Editor
 
             if (State == states.PLAYING && nextSceneid <= total)
             {
-                int backgroundID = ScenesManagerFabulab.Instance.GetBackground(ScenesManagerFabulab.Instance.currentSceneId);
-                int nextBackgroundID = ScenesManagerFabulab.Instance.GetBackground(nextSceneid);
+                string backgroundID = ScenesManagerFabulab.Instance.GetBackground(ScenesManagerFabulab.Instance.currentSceneId);
+                string nextBackgroundID = ScenesManagerFabulab.Instance.GetBackground(nextSceneid);
                 print(ScenesManagerFabulab.Instance.currentSceneId + " nextSceneid : " + nextSceneid + " backgroundID: " + backgroundID + " : " + nextBackgroundID);
                 if (backgroundID == nextBackgroundID)
                 {

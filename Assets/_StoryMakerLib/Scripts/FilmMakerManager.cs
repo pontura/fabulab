@@ -209,8 +209,8 @@ namespace Yaguar.StoryMaker.Editor
 
             if (State == states.PLAYING && nextSceneid <= total)
             {
-                int backgroundID = ScenesManager.Instance.GetBackground(ScenesManager.Instance.currentSceneId);
-                int nextBackgroundID = ScenesManager.Instance.GetBackground(nextSceneid);
+                string backgroundID = ScenesManager.Instance.GetBackground(ScenesManager.Instance.currentSceneId);
+                string nextBackgroundID = ScenesManager.Instance.GetBackground(nextSceneid);
                 print(ScenesManager.Instance.currentSceneId + " nextSceneid : " + nextSceneid + " backgroundID: " + backgroundID + " : " + nextBackgroundID);
                 if (backgroundID == nextBackgroundID)
                 {

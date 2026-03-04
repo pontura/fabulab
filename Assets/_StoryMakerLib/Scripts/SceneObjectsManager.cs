@@ -18,10 +18,10 @@ namespace Yaguar.StoryMaker.Editor
 
         [SerializeField] protected SpriteRenderer background;
 
-        [HideInInspector]
+        
         public SceneObject selected;
 
-        [HideInInspector]
+        
         public SceneObject selectedAvatar;
 
         [HideInInspector]
@@ -95,12 +95,12 @@ namespace Yaguar.StoryMaker.Editor
 
         protected void AddToContainer(SceneObject newSO, SOData data)
         {
-            selected.transform.SetParent(container);
-            selected.transform.localPosition = data.pos;
-            selected.transform.localEulerAngles = new Vector3(0, 0, data.rot);
+            newSO.transform.SetParent(container);
+            newSO.transform.localPosition = data.pos;
+            newSO.transform.localEulerAngles = new Vector3(0, 0, data.rot);
             if (data.size == 0)
                 data.size = 1;
-            selected.transform.localScale = new Vector3(data.size, data.size, data.size);
+            newSO.transform.localScale = new Vector3(data.size, data.size, data.size);
         }
         public SceneObject GetSceneObjectInScene(SOData soData)
         {
@@ -130,7 +130,7 @@ namespace Yaguar.StoryMaker.Editor
             return avatars;
         }
 
-        public Avatar GetAvatarInSceneById(int id)
+        public Avatar GetAvatarInSceneById(string id)
         {
             foreach (SceneObject a in sceneObjects)
             {

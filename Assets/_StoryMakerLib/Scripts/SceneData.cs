@@ -9,7 +9,7 @@ namespace Yaguar.StoryMaker.Editor
     [Serializable]
     public class SceneData
     {
-        public int bgID;
+        public string bgID;
         protected List<string> scenesElements;
         string stringSeparator = "|";
         string stringCustomizerSeparator = "*";
@@ -194,7 +194,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         protected void SetSOData(SOData soData, string[] arr)
         {
-            soData.id = int.Parse(arr[0]);
+            soData.id = arr[0];
             soData.pos = new Vector3(float.Parse(arr[1], CultureInfo.InvariantCulture.NumberFormat), float.Parse(arr[2], CultureInfo.InvariantCulture.NumberFormat), float.Parse(arr[3], CultureInfo.InvariantCulture.NumberFormat));
             soData.rot = float.Parse(arr[4], CultureInfo.InvariantCulture.NumberFormat);
             soData.size = float.Parse(arr[5], CultureInfo.InvariantCulture.NumberFormat);
@@ -222,7 +222,7 @@ namespace Yaguar.StoryMaker.Editor
         {
             scenesElements = new List<string>();
             string[] arr = s.Split(serialSeparator[0]);
-            bgID = int.Parse(arr[0]);
+            bgID = arr[0];
             string[] arr2 = arr[1].Split(soSeparator[0]);
             for (int i = 0; i < arr2.Length; i++)
             {
@@ -244,7 +244,7 @@ namespace Yaguar.StoryMaker.Editor
                 }
             }
         }
-        protected Vector3 CharacterShouldWalkTo(SOData actualData, int avatarID)
+        protected Vector3 CharacterShouldWalkTo(SOData actualData, string avatarID)
         {
             SceneData nextSD = ScenesManager.Instance.GetNextActiveScene();
             if (nextSD == null)

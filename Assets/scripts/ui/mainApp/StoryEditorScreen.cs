@@ -86,6 +86,9 @@ namespace UI.MainApp
                     customizerData += "ex_" + expID + "*";*/
                 }
 
+                Debug.Log("# Adding Id: " + soData.id);
+
+
                 sdf.AddSO(soData);
 
                 /*if (customizerData != "" && Data.Instance.scenesData.currentFilmData.IsMyStory())
