@@ -535,7 +535,7 @@ namespace BoardItems
         ItemData CreateItem(SavedIData itemData, BoardItemManager target)
         {
             ItemData originalGO = Data.Instance.galeriasData.GetItem(itemData.galleryID, itemData.id);
-            print("____________" + originalGO.name);
+          //  print("____________" + originalGO.name);
             ItemData newItem = Instantiate(
                 originalGO
             );

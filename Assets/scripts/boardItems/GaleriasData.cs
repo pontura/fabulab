@@ -36,7 +36,7 @@ namespace BoardItems
         }
         public ItemData GetItem(int galleryID, int itemID)
         {
-            Debug.Log(galleryID + "_" + itemID);
+          //  Debug.Log(galleryID + "_" + itemID);
             if (!itemsPerGallery.ContainsKey(galleryID))
             {
                 GalleryData gData = all.Find(x => x.id == galleryID);

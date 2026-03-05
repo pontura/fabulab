@@ -13,6 +13,35 @@ namespace UI.MainApp
 
         public void SetInteractableObject()
         {
+            Invoke("SetCollidersOff", 0.1f);
+        }
+        void SetCollidersOff()
+        {
+            foreach (ItemData comp in transform.GetComponentsInChildren<ItemData>())
+                Destroy(((Component)comp));
+            foreach (ItemInScene comp in transform.GetComponentsInChildren<ItemInScene>())
+                Destroy(((Component)comp));
+            foreach (Collider2D comp in transform.GetComponentsInChildren<Collider2D>())
+                Destroy(((Component)comp));
+            foreach (Rigidbody2D comp in transform.GetComponentsInChildren<Rigidbody2D>())
+                Destroy(((Component)comp));
+
+            SetCollidersOn();
+            AddItemData();
+        }
+        void AddItemData()
+        {
+            ItemData itemData = gameObject.AddComponent<ItemData>();
+            itemData.Init();
+            itemData.part = BoardItems.Characters.CharacterPartsHelper.parts.BODY;
+            ItemInScene iInScene = gameObject.AddComponent<ItemInScene>();
+            iInScene.data = itemData;
+            print("BoardItemManager AddItemData " + gameObject.name);
+            gameObject.tag = "DragItem";
+        }
+       
+        void SetCollidersOn()
+        { 
             BoxCollider2D box = GetComponent<BoxCollider2D>();
             if (box == null)
                 box = gameObject.AddComponent<BoxCollider2D>();
@@ -40,18 +69,7 @@ namespace UI.MainApp
                 if (change)
                     box.size = new Vector2(x, y);
             }
-            Invoke("SetCollidersOff", 0.1f);
         }
-        void SetCollidersOff()
-        {
-            foreach (ItemData comp in transform.GetComponentsInChildren<ItemData>())
-                Destroy(((Component)comp));
-            foreach (ItemInScene comp in transform.GetComponentsInChildren<ItemInScene>())
-                Destroy(((Component)comp));
-            foreach (Collider2D comp in transform.GetComponentsInChildren<Collider2D>())
-                Destroy(((Component)comp));
-            foreach (Rigidbody2D comp in transform.GetComponentsInChildren<Rigidbody2D>())
-                Destroy(((Component)comp));
-        }
+       
     }
 }

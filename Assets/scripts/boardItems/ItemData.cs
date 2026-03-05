@@ -42,6 +42,7 @@ namespace BoardItems
 
         public void Init()
         {
+            this.position = transform.localPosition;
             this.rotation = transform.localEulerAngles;
             this.scale = transform.localScale;
             originalScale = scale;

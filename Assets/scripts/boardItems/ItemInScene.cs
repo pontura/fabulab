@@ -11,9 +11,8 @@ namespace BoardItems
         public ItemData data;
         public Rigidbody2D rb;
         [SerializeField] Collider2D collider;
-        [SerializeField] List<Collider2D> colliders;
+       // [SerializeField] List<Collider2D> colliders;
         List<SpriteRenderer> sprites;
-        AudioSource audioSource;
         ItemInSceneAnims anims;
 
         private void Start()
@@ -29,19 +28,15 @@ namespace BoardItems
                 collider = GetComponent<Collider2D>();
 
             sprites = new List<SpriteRenderer>();
-            audioSource = gameObject.AddComponent<AudioSource>();
-            audioSource.playOnAwake = false;
-            audioSource.outputAudioMixerGroup = AudioManager.Instance.sfx;
-            AudioClip clip = Resources.Load<AudioClip>("hit");
-            audioSource.clip = clip;
-            audioSource.volume = 0.1f;
-            colliders = new List<Collider2D>();
+        
+            collider = GetComponent<Collider2D>();
+            //colliders = new List<Collider2D>();
             foreach (SpriteRenderer sr in GetComponentsInChildren<SpriteRenderer>())
             {
-                Component c = CopyComponent(collider, sr.gameObject);
-                Collider2D c2d = c.GetComponent<Collider2D>();
-                c2d.enabled = true;
-                colliders.Add(c2d);
+                //Component c = CopyComponent(collider, sr.gameObject);
+                //Collider2D c2d = c.GetComponent<Collider2D>();
+                //c2d.enabled = true;
+                //colliders.Add(c2d);
                 sprites.Add(sr);
             }
 
@@ -85,7 +80,7 @@ namespace BoardItems
             float newAngle = transform.localEulerAngles.z + v;
             data.rotation = new Vector3(0, 0, newAngle);
             transform.localEulerAngles = data.rotation;
-            AudioManager.Instance.sfxManager.SetPitch((newAngle % 360) * 0.0056f);
+            //AudioManager.Instance.sfxManager.SetPitch((newAngle % 360) * 0.0056f);
         }
 
         public void ScaleSetValue(float v)
@@ -106,7 +101,7 @@ namespace BoardItems
 
             data.scale = new Vector3(nenewValue, nenewValue, 1);
             transform.localScale = data.scale;
-            AudioManager.Instance.sfxManager.SetPitch(Data.Instance.settings.maxScale - Mathf.Abs(nenewValue));
+           // AudioManager.Instance.sfxManager.SetPitch(Data.Instance.settings.maxScale - Mathf.Abs(nenewValue));
         }
         float timer;
         public void StartBeingDrag()
@@ -121,9 +116,8 @@ namespace BoardItems
                 rb.constraints = RigidbodyConstraints2D.FreezeAll;
             rb.isKinematic = true;
 
-            if(colliders != null)
-                foreach (Collider2D c in colliders)
-                    c.enabled = false;
+            if(collider != null)
+                collider.enabled = false;
             SetCollider(true);
 
             if(bpOver != null)
@@ -132,8 +126,7 @@ namespace BoardItems
         public void StopBeingDrag()
         {
             rb.isKinematic = false;
-            foreach (Collider2D c in colliders)
-                c.enabled = true;
+            collider.enabled = true;
             Events.OnNewBodyPartSelected(null);
         }
         public void StartFalling()
@@ -141,8 +134,7 @@ namespace BoardItems
             rb.constraints = RigidbodyConstraints2D.None;
             rb.AddTorque(Random.Range(-5, 5) * 500);
             rb.isKinematic = false;
-            foreach (Collider2D c in colliders)
-                c.enabled = true;
+            collider.enabled = true;
             SetCollider(true);
         }
         public void SetPos(Vector3 pos, bool snap = false)
@@ -258,7 +250,10 @@ namespace BoardItems
             {
                 if (anim == null)
                 {
-                    anim = colliders[0].gameObject.AddComponent<Animation>();
+                    anim = collider.GetComponent<Animation>();
+                    if (anim == null) 
+                        anim = collider.gameObject.AddComponent<Animation>();
+
                     anim.AddClip(clip, clip.name);
                     anim.clip = clip;
                     anim.Play();
@@ -266,7 +261,7 @@ namespace BoardItems
             }
             else if(anim != null)
             {
-                colliders[0].gameObject.transform.localScale = Vector3.one;
+              //  collider.gameObject.transform.localScale = Vector3.one;
                 Destroy(anim);
             }
         }
