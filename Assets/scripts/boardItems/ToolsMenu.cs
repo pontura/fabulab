@@ -10,7 +10,10 @@ namespace BoardItems
         [SerializeField] private ToolsSubMenu subMenu;
         ItemData itemData;
         InputManager inputManager;
-        public GameObject[] webGL;
+        public Button rotate;
+        public Button scale;
+        public Button clonate;
+        public Button colorize;
         public GameObject arrow;
         public Image bg;
         Vector3 pos;
@@ -18,10 +21,9 @@ namespace BoardItems
         private void Start()
         {
 #if UNITY_EDITOR
-
-#elif UNITY_ANDROID || UNITY_IOS
-            foreach(GameObject go in webGL)
-                go.SetActive(false);
+#elif UNITY_ANDROID || UNITY_IOS           
+            rotate.gameObject.SetActive(false);
+            scale.gameObject.SetActive(false);
 #endif
 
         }
@@ -33,6 +35,10 @@ namespace BoardItems
             this.inputManager = inputManager;
             gameObject.SetActive(true);
             arrow.transform.position = pos;
+            bool isBoardingItemManager = itemData.IsBoardingItemManager();
+
+            clonate.gameObject.SetActive(!isBoardingItemManager);
+            colorize.gameObject.SetActive(!isBoardingItemManager);
         }
         public void SetBGColors()
         {

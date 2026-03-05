@@ -27,16 +27,9 @@ namespace BoardItems
             if(collider == null)
                 collider = GetComponent<Collider2D>();
 
-            sprites = new List<SpriteRenderer>();
-        
-            collider = GetComponent<Collider2D>();
-            //colliders = new List<Collider2D>();
+            sprites = new List<SpriteRenderer>();  
             foreach (SpriteRenderer sr in GetComponentsInChildren<SpriteRenderer>())
             {
-                //Component c = CopyComponent(collider, sr.gameObject);
-                //Collider2D c2d = c.GetComponent<Collider2D>();
-                //c2d.enabled = true;
-                //colliders.Add(c2d);
                 sprites.Add(sr);
             }
 
@@ -62,18 +55,6 @@ namespace BoardItems
                 collider = GetComponent<Collider2D>();
             if(collider != null)
                 collider.enabled = isOn;
-        }
-        Component CopyComponent(Component original, GameObject destination)
-        {
-            System.Type type = original.GetType();
-            Component copy = destination.AddComponent(type);
-            // Copied fields can be restricted with BindingFlags
-            System.Reflection.FieldInfo[] fields = type.GetFields();
-            foreach (System.Reflection.FieldInfo field in fields)
-            {
-                field.SetValue(copy, field.GetValue(original));
-            }
-            return copy;
         }
         public void RotateSetValue(float v)
         {
