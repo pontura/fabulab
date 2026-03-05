@@ -11,6 +11,8 @@ namespace UI.MainApp
         public virtual void MoveBack(ItemInScene itemSelected)  {  }
         public virtual void MoveUp(ItemInScene itemSelected) {  }
 
+        Bounds bounds;
+
         public void SetInteractableObject()
         {
             Invoke("SetCollidersOff", 0.1f);
@@ -28,6 +30,15 @@ namespace UI.MainApp
             foreach (Rigidbody2D comp in transform.GetComponentsInChildren<Rigidbody2D>())
                 Destroy(((Component)comp));
 
+            BoxCollider2D parentCollider = GetComponent<BoxCollider2D>();
+            if (parentCollider == null)
+                parentCollider = gameObject.AddComponent<BoxCollider2D>();
+            // convertir centro a espacio local
+            Vector2 localCenter = transform.InverseTransformPoint(bounds.center);
+
+            parentCollider.offset = localCenter;
+            parentCollider.size = bounds.size/6;
+
             AddItemData();
         }
         void AddItemData()
@@ -41,30 +52,20 @@ namespace UI.MainApp
             print("BoardItemManager AddItemData " + gameObject.name);
             gameObject.tag = "DragItem";
         }
-       
         void SetCollidersOn()
         { 
-            BoxCollider2D parentCollider = GetComponent<BoxCollider2D>();
-            if (parentCollider == null)
-                parentCollider = gameObject.AddComponent<BoxCollider2D>();
-
             Collider2D[] childColliders = GetComponentsInChildren<Collider2D>();
 
             if (childColliders.Length == 0) return;
 
-            Bounds bounds = childColliders[0].bounds;
+            bounds = childColliders[0].bounds;
 
             foreach (Collider2D col in childColliders)
             {
                 if (col.transform == transform) continue; // evitar el collider del parent
                 bounds.Encapsulate(col.bounds);
             }
-
-            // convertir centro a espacio local
-            Vector2 localCenter = transform.InverseTransformPoint(bounds.center);
-
-            parentCollider.offset = localCenter;
-            parentCollider.size = bounds.size;
+           
         }
 
     }

@@ -39,7 +39,7 @@ namespace BoardItems
 
         public bool IsBoardingItemManager() // si no es una pieza y es un objeto:
         {
-            return BoardItemManager != null;
+            return GetComponent<BoardItemManager>();
         }
 
         public void Init()
