@@ -624,7 +624,8 @@ namespace BoardItems
                     newItem.GetComponent<ItemInScene>().Appear();
             }
 
-            boardItems.Dequeue();
+            if(boardItems.Count>0)
+                boardItems.Dequeue();
 
             if (boardItems.Count==0)
                 boardItem = null;
