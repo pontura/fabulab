@@ -88,7 +88,7 @@ namespace UI.MainApp
         public void Done()
         {
             CharacterAnims.anims anim = CharacterAnims.anims.edit;
-            Events.OnCharacterAnim(0, anim);
+            Events.OnCharacterAnim("", anim);
             savePanel.SetActive(true);
             //UIManager.Instance.boardUI.SaveWork();
             UIManager.Instance.boardUI.toolsMenu.SetOff();
@@ -139,7 +139,7 @@ namespace UI.MainApp
         public void Save()
         {
             savingPart = false;
-            Events.SetCharacterIdle(0);
+            Events.SetCharacterIdle("");
             savePanel.SetActive(false);
             Data.Instance.charactersData.SetCurrentID("");// Resetea si hay un character elegido.
             Invoke("SaveWork", 0.1f);
@@ -147,7 +147,7 @@ namespace UI.MainApp
         public void Replace()// Guarda la version editada del personaje.
         {
             savingPart = false;
-            Events.SetCharacterIdle(0);
+            Events.SetCharacterIdle("");
             savePanel.SetActive(false);
             SaveWork();
         }

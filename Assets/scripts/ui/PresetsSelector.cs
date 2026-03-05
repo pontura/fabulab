@@ -25,7 +25,7 @@ namespace UI
             {
                 Utils.RemoveAllChildsIn(container);
                 CharacterAnims.anims anim = CharacterAnims.anims.edit;
-                Events.OnCharacterAnim(0, anim);
+                Events.OnCharacterAnim("", anim);
                 print("set on " + partID);
                 if (partID == 9) 
                     OpenColors();

@@ -80,7 +80,7 @@ namespace UI
         {
 
             CharacterAnims.anims anim = CharacterAnims.anims.edit;
-            Events.OnCharacterAnim(0, anim);
+            Events.OnCharacterAnim("", anim);
 
             Events.GalleryDone += GalleryDone;
             //Events.EmptySceneItems += EmptySceneItems;

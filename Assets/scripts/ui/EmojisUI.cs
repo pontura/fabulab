@@ -6,7 +6,7 @@ namespace UI
 {
     public class EmojisUI : MonoBehaviour
     {
-        [SerializeField] int characterEditorID = 0;
+        [SerializeField] string characterId = "";
         [SerializeField] Button button;
         [SerializeField] Transform container;
 
@@ -36,7 +36,11 @@ namespace UI
         {
             print(id);
             CharacterExpressions.expressions e = (CharacterExpressions.expressions)id;
-            Events.OnCharacterExpression(characterEditorID, e);
+            Events.OnCharacterExpression(characterId, e);
+        }
+
+        public void SetCharacterId(string id) {
+            characterId = id;
         }
     }
 }

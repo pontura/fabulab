@@ -31,7 +31,7 @@ namespace UI
             if (isOn)
             {
                 CharacterAnims.anims anim = CharacterAnims.anims.edit;
-                Events.OnCharacterAnim(0, anim);
+                Events.OnCharacterAnim("", anim);
             }
         }
         public void Reset()

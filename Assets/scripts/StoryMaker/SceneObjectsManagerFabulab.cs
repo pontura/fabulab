@@ -33,6 +33,7 @@ namespace Yaguar.StoryMaker.Editor
                 avatar.Init(data);
                 inputsManager.ResetAll();
                 CharacterManager characterManager = avatar.GetComponent<AvatarFabulab>().characterManager;
+                characterManager.characterID = data.id;
                 Events.LoadBoardItemForStory(characterManager, data.id);
                 selected = avatar;
                 selectedAvatar = avatar;

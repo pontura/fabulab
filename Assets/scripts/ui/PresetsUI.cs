@@ -25,7 +25,7 @@ namespace UI
             snapToggle.Show(false);
             gameObject.SetActive(false);
         }
-        int characterEditorID = 0;
+        string characterEditorID = "";
         public void Init()
         {
             snapToggle.Init(OnToggle, UIManager.Instance.boardUI.snap);

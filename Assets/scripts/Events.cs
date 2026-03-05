@@ -37,10 +37,10 @@ public static class Events
     public static System.Action<string, System.Action> CaptureGif = delegate { };
     public static System.Action<bool> OnCanvasDragger = delegate { };
     public static System.Action<System.Action<bool>> OnParentalGate = delegate { };
-    public static System.Action<int, CharacterAnims.anims> OnCharacterAnim = delegate { };
-    public static System.Action<int> SetCharacterIdle = delegate { };
-    public static System.Action<int, CharacterPartsHelper.parts> OnCharacterPartAnim = delegate { };
-    public static System.Action<int, CharacterExpressions.expressions> OnCharacterExpression = delegate { };
+    public static System.Action<string, CharacterAnims.anims> OnCharacterAnim = delegate { };
+    public static System.Action<string> SetCharacterIdle = delegate { };
+    public static System.Action<string, CharacterPartsHelper.parts> OnCharacterPartAnim = delegate { };
+    public static System.Action<string, CharacterExpressions.expressions> OnCharacterExpression = delegate { };
     public static System.Action<bool> EditMode = delegate { };
     public static System.Action<CharacterPartsHelper.parts, bool> Zoom = delegate { };
 

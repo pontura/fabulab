@@ -13,6 +13,8 @@ public class SOButtons : MonoBehaviour {
 
     public float buttonsTimeout = 2f;
 
+    string selectedId;
+
     void Start() {
         container.SetActive(false);
         StoryMakerEvents.ShowSoButtons += ShowSoButtons;
@@ -32,6 +34,8 @@ public class SOButtons : MonoBehaviour {
         customizer.SetActive(false);
         actions.SetActive(false);
         expresions.SetActive(false);
+
+        selectedId = data.id;
 
         if (data is SOAvatarData) {
             //customizer.SetActive(true);
@@ -64,13 +68,13 @@ public class SOButtons : MonoBehaviour {
     }
 
     public void EditActions() {
-        StoryMakerEvents.EditActions();
+        StoryMakerEvents.EditActions(selectedId);
         HideSoButtons();
         //Scenario.Instance.sceneObejctsManager.selected.StopDrag();
     }
     public void EditExpressions()
     {
-        StoryMakerEvents.EditExpressions();
+        StoryMakerEvents.EditExpressions(selectedId);
         HideSoButtons();
         //Scenario.Instance.sceneObejctsManager.selected.StopDrag();
     }

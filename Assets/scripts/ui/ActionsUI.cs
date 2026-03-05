@@ -11,6 +11,8 @@ namespace UI
         [SerializeField] List<Button> buttons;
         [SerializeField] Transform container;
         int lastActionSelected = 1;
+
+        [SerializeField] string characterId = "";
         public void SetOn(bool isOn)
         {
             gameObject.SetActive(isOn);
@@ -43,7 +45,7 @@ namespace UI
         //{
         //    Clicked(lastActionSelected);
         //}
-        int characterEditorID = 0;
+        
         void Clicked(int id)
         {
             if (buttons.Count == 0) return;
@@ -56,7 +58,10 @@ namespace UI
             lastActionSelected = id;
             CharacterAnims.anims anim = (CharacterAnims.anims)id;
             Events.EditMode(false);
-            Events.OnCharacterAnim(characterEditorID, anim);
+            Events.OnCharacterAnim(characterId, anim);
+        }
+        public void SetCharacterId(string id) {
+            characterId = id;
         }
     }
 }

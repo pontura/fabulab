@@ -7,7 +7,7 @@ namespace BoardItems.Characters
 {
     public class CharacterManager : BoardItemManager
     {
-        public int characterID = 0;
+        public string characterID = "";
         CharacterAnims anims;
         CharacterExpressions expressions;
         [SerializeField] BodyPart[] bodyParts;
@@ -45,7 +45,7 @@ namespace BoardItems.Characters
             Events.Zoom -= Zoom;
             Events.SetCharacterIdle -= SetCharacterIdle;
         }
-        void SetCharacterIdle(int _characterID)
+        void SetCharacterIdle(string _characterID)
         {
             if (characterID != _characterID) return;
             anims.Idle();
@@ -91,18 +91,18 @@ namespace BoardItems.Characters
             }
         }
 
-        private void OnCharacterExpression(int _characterID, CharacterExpressions.expressions exp)
+        private void OnCharacterExpression(string _characterID, CharacterExpressions.expressions exp)
         {
             if (characterID != _characterID) return;
             expressions.Play(exp);
         }
 
-        void OnCharacterAnim(int _characterID, CharacterAnims.anims anim)
+        void OnCharacterAnim(string _characterID, CharacterAnims.anims anim)
         {
             if (_characterID != this.characterID) return;
             SetAnim(anim);
         }
-        void OnCharacterPartAnim(int _characterID, CharacterPartsHelper.parts part)
+        void OnCharacterPartAnim(string _characterID, CharacterPartsHelper.parts part)
         {
             if (_characterID != this.characterID) return;
             print("OnCharacter Part Anim " + part);
