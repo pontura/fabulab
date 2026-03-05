@@ -23,7 +23,7 @@ namespace BoardItems
         public AnimationsManager.anim anim;
         public Vector3 originalScale;
 
-        BoardItemManager boardItemManager;
+        [SerializeField] BoardItemManager boardItemManager;
 
         public BoardItemManager BoardItemManager { 
             get {
@@ -32,8 +32,13 @@ namespace BoardItems
                     boardItemManager = GetComponentInParent<BoardItemManager>();
                 }
                 return boardItemManager;
-            } 
+            }
+            set
+            {
+                boardItemManager = value;
+            }
         }
+       
 
         public void Init()
         {
@@ -45,7 +50,14 @@ namespace BoardItems
         {
             this.scale = originalScale;
         }
-       
+       public void SetContainer(BodyPart overBodyPart)
+        {
+            if (BoardItemManager == null)
+            {
+                print("Set new container " + overBodyPart.name);
+                BoardItemManager = overBodyPart.GetComponentInParent<BoardItemManager>();
+            }
+        }
         public void SetCharacterPart(CharacterPartsHelper.parts part)
         {
             this.part = part;

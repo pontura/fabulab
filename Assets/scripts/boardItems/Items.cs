@@ -539,8 +539,8 @@ namespace BoardItems
             ItemData newItem = Instantiate(
                 originalGO
             );
-            if(target != null)
-                newItem.transform.SetParent(target.transform);
+            //if(target != null)
+            //    newItem.transform.SetParent(target.transform);
 
             newItem.galleryID = itemData.galleryID;
             newItem.part = (CharacterPartsHelper.parts)itemData.part;
@@ -567,23 +567,14 @@ namespace BoardItems
             boardItemManager.transform.SetParent(container);
             boardItemManager.transform.localPosition = Vector3.zero;
             ItemData newItem;
+
             foreach (SavedIData itemData in wd.items)
             {
                 newItem = CreateItem(itemData, newBoardItemManager);
-                newItem.GetComponent<ItemInScene>().Appear();
+                newItem.transform.SetParent(boardItemManager.GetComponentInChildren<BodyPart>().transform);
             }
-        }
-        void AddObjectTo(SOPartData wd, BoardItemManager boardItemManager)
-        {
-            GameObject go = Instantiate(new GameObject(), container);
-            go.name = "Object " + wd.id;
-            go.transform.localPosition = Vector3.zero;
-            ItemData newItem;
-            foreach (SavedIData itemData in wd.items)
-            {
-                newItem = CreateItem(itemData, boardItemManager);
-                newItem.GetComponent<ItemInScene>().Appear();
-            }
+
+            boardItemManager.SetInteractableObject();
         }
         public void OpenWork(BoardItemManager boardItemManager, SOPartData wd, bool cascade = false)
         {

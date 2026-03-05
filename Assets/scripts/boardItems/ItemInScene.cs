@@ -219,6 +219,7 @@ namespace BoardItems
             if (bpEnter.part != data.part)  return;
             if (bpOver == null)
             {
+                data.SetContainer(bpEnter);
                 data.SetCharacterPart(bpEnter.part);
                 Events.OnNewBodyPartSelected(bpEnter);
                 bpOver = bpEnter;
