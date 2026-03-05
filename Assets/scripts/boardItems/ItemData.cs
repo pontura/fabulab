@@ -1,8 +1,6 @@
 ﻿using BoardItems.Characters;
 using BoardItems.SceneObjects;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UI.MainApp;
 using UnityEngine;
 
@@ -38,7 +36,11 @@ namespace BoardItems
                 boardItemManager = value;
             }
         }
-       
+
+        public bool IsBoardingItemManager() // si no es una pieza y es un objeto:
+        {
+            return BoardItemManager != null;
+        }
 
         public void Init()
         {
@@ -55,7 +57,6 @@ namespace BoardItems
         {
             if (BoardItemManager == null)
             {
-                print("Set new container " + overBodyPart.name);
                 BoardItemManager = overBodyPart.GetComponentInParent<BoardItemManager>();
             }
         }

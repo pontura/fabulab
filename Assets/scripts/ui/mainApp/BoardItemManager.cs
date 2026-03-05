@@ -17,6 +17,8 @@ namespace UI.MainApp
         }
         void SetCollidersOff()
         {
+            SetCollidersOn();
+
             foreach (ItemData comp in transform.GetComponentsInChildren<ItemData>())
                 Destroy(((Component)comp));
             foreach (ItemInScene comp in transform.GetComponentsInChildren<ItemInScene>())
@@ -26,12 +28,12 @@ namespace UI.MainApp
             foreach (Rigidbody2D comp in transform.GetComponentsInChildren<Rigidbody2D>())
                 Destroy(((Component)comp));
 
-            SetCollidersOn();
             AddItemData();
         }
         void AddItemData()
         {
             ItemData itemData = gameObject.AddComponent<ItemData>();
+           // itemData.transform.localScale = new Vector3(8, 8, 1);
             itemData.Init();
             itemData.part = BoardItems.Characters.CharacterPartsHelper.parts.BODY;
             ItemInScene iInScene = gameObject.AddComponent<ItemInScene>();
@@ -42,34 +44,28 @@ namespace UI.MainApp
        
         void SetCollidersOn()
         { 
-            BoxCollider2D box = GetComponent<BoxCollider2D>();
-            if (box == null)
-                box = gameObject.AddComponent<BoxCollider2D>();
+            BoxCollider2D parentCollider = GetComponent<BoxCollider2D>();
+            if (parentCollider == null)
+                parentCollider = gameObject.AddComponent<BoxCollider2D>();
 
-            foreach (Renderer r in GetComponentsInChildren<Renderer>())
+            Collider2D[] childColliders = GetComponentsInChildren<Collider2D>();
+
+            if (childColliders.Length == 0) return;
+
+            Bounds bounds = childColliders[0].bounds;
+
+            foreach (Collider2D col in childColliders)
             {
-                Vector3 scale = r.transform.localScale;
-                //Debug.Log(scale);
-                float x = box.size.x;
-                float y = box.size.y;
-                bool change = false;
-                if (box.size.x < r.bounds.size.x)
-                {
-                    x = r.bounds.size.x / scale.x;
-                    //Debug.Log(r.name + " X: " + x);
-                    change = true;
-                }
-                if (box.size.y < r.bounds.size.y)
-                {
-                    y = r.bounds.size.y / scale.y;
-                    //Debug.Log(r.name + " Y: " + y);
-                    change = true;
-                }
-
-                if (change)
-                    box.size = new Vector2(x, y);
+                if (col.transform == transform) continue; // evitar el collider del parent
+                bounds.Encapsulate(col.bounds);
             }
+
+            // convertir centro a espacio local
+            Vector2 localCenter = transform.InverseTransformPoint(bounds.center);
+
+            parentCollider.offset = localCenter;
+            parentCollider.size = bounds.size;
         }
-       
+
     }
 }
