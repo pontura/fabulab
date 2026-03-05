@@ -13,10 +13,6 @@ namespace UI.MainApp
 
         public void SetInteractableObject()
         {
-            foreach (Collider2D cr in GetComponentsInChildren<Collider2D>())
-            {
-                cr.enabled = false;
-            }
             BoxCollider2D box = GetComponent<BoxCollider2D>();
             if (box == null)
                 box = gameObject.AddComponent<BoxCollider2D>();
@@ -44,6 +40,18 @@ namespace UI.MainApp
                 if (change)
                     box.size = new Vector2(x, y);
             }
+            Invoke("SetCollidersOff", 0.1f);
+        }
+        void SetCollidersOff()
+        {
+            foreach (ItemData comp in transform.GetComponentsInChildren<ItemData>())
+                Destroy(((Component)comp));
+            foreach (ItemInScene comp in transform.GetComponentsInChildren<ItemInScene>())
+                Destroy(((Component)comp));
+            foreach (Collider2D comp in transform.GetComponentsInChildren<Collider2D>())
+                Destroy(((Component)comp));
+            foreach (Rigidbody2D comp in transform.GetComponentsInChildren<Rigidbody2D>())
+                Destroy(((Component)comp));
         }
     }
 }
