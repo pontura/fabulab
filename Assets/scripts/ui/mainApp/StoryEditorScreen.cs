@@ -2,6 +2,7 @@ using BoardItems;
 using Common.UI;
 using System.Collections.Generic;
 using UI.MainApp.Home.User;
+using UnityEditor.Actions;
 using UnityEngine;
 using Yaguar.StoryMaker.Editor;
 
@@ -15,18 +16,39 @@ namespace UI.MainApp
         [SerializeField] Transform itemListContainer;
         [SerializeField] AvatarSelectionScreen characterScreen;
         [SerializeField] ObjectSelectionScreen objectsScreen;
+        [SerializeField] ActionsUI actionUI;
+        [SerializeField] EmojisUI emojisUI;
 
         private void Start() {
             tabs.Init(OnTabClicked);
             StoryMakerEvents.OnSaveScene += OnSaveScene;
+            StoryMakerEvents.EditActions += EditorActions;
+            StoryMakerEvents.EditExpressions += EditExpressions;
         }
 
         void OnDestroy() {
             StoryMakerEvents.OnSaveScene -= OnSaveScene;
+            StoryMakerEvents.EditActions -= EditorActions;
+            StoryMakerEvents.EditExpressions -= EditExpressions;
+        }
+
+        void EditorActions() {
+            timeline.SetActive(false);
+            itemList.SetActive(false);
+            actionUI.SetOn(true);
+            emojisUI.SetOn(false);
+        }
+
+        void EditExpressions() {
+            timeline.SetActive(false);
+            itemList.SetActive(false);
+            actionUI.SetOn(false);
+            emojisUI.SetOn(true);
         }
 
         void OnTabClicked(int id) {
-
+            actionUI.SetOn(false);
+            emojisUI.SetOn(false);
             switch (id) {
                 case 0:
                     timeline.SetActive(false);

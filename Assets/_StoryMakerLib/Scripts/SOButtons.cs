@@ -34,7 +34,7 @@ public class SOButtons : MonoBehaviour {
         expresions.SetActive(false);
 
         if (data is SOAvatarData) {
-            customizer.SetActive(true);
+            //customizer.SetActive(true);
             actions.SetActive(true);
             expresions.SetActive(true);
         } else  if (data is SOInputData)
