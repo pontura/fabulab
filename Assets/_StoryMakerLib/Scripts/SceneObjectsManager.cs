@@ -95,12 +95,19 @@ namespace Yaguar.StoryMaker.Editor
         protected void AddToContainer(SceneObject newSO, SOData data)
         {
             newSO.transform.SetParent(container);
-            newSO.transform.localPosition = data.pos;
-            newSO.transform.localEulerAngles = new Vector3(0, 0, data.rot);
+            ApplyData(newSO, data);
+        }
+
+        public void ApplyData(SceneObject so, SOData data = null) {
+            if (data == null)
+                data = so.GetData();
+            so.transform.localPosition = data.pos;
+            so.transform.localEulerAngles = new Vector3(0, 0, data.rot);
             if (data.size == 0)
                 data.size = 1;
-            newSO.transform.localScale = new Vector3(data.size, data.size, data.size);
+            so.transform.localScale = new Vector3(data.size, data.size, data.size);
         }
+
         public SceneObject GetSceneObjectInScene(SOData soData)
         {
             foreach (SceneObject so in sceneObjects)
@@ -129,7 +136,7 @@ namespace Yaguar.StoryMaker.Editor
             return avatars;
         }
 
-        public Avatar GetAvatarInSceneById(string id)
+        public virtual Avatar GetAvatarInSceneById(string id)
         {
             foreach (SceneObject a in sceneObjects)
             {

@@ -108,6 +108,21 @@ namespace Yaguar.StoryMaker.Editor
             }
             return true;
         }
+
+        protected bool HasSameAvatar(SceneElement data, bool next) {
+            if(data.type!=SceneElementType.AVATAR)
+                return false;
+
+            List<SceneElement> lastAll = GetLastKeyframeAllData(next);
+            if (lastAll == null)
+                return false;
+
+            foreach (SceneElement s in lastAll) {
+                if (s.type==SceneElementType.AVATAR && s.data.id == data.data.id)
+                    return true;
+            }
+            return false;
+        }
         protected void DeleteItemsNoLongerExists(SceneElement data)
         {
             if (scenesElements == null)
@@ -115,7 +130,7 @@ namespace Yaguar.StoryMaker.Editor
             bool itemShowContinue = false;
             foreach (SceneElement s in scenesElements)
             {
-                if (s.Equals(data))
+                if (s.Equals(data) || (data.type==SceneElementType.AVATAR && s.data.id == data.data.id))
                     itemShowContinue = true;
             }
             if (!itemShowContinue)
@@ -156,8 +171,15 @@ namespace Yaguar.StoryMaker.Editor
                 Debug.Log("# DataDiferent: " + DataDiferent);
                 if (DataDiferent)
                 {
-                    DeleteSO(data);
-                    AddSOToScene(data);
+                    if (HasSameAvatar(data, next)) {
+                        AvatarFabulab avatar = Scenario.Instance.sceneObejctsManager.GetAvatarInSceneById(data.data.id) as AvatarFabulab;
+                        SOData sOData = avatar.GetData();
+                        SetSOData(sOData, data);
+                        Scenario.Instance.sceneObejctsManager.ApplyData(avatar);
+                    } else {
+                        DeleteSO(data);
+                        AddSOToScene(data);
+                    }
                 }
 
             }

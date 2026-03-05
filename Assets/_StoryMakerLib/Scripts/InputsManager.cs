@@ -111,7 +111,8 @@ namespace Yaguar.StoryMaker.Editor
                     if (sceneObjectsManager.avatar != null)
                     {
                         sceneObjectsManager.selectedAvatar = sceneObjectsManager.avatar;
-                        StoryMakerEvents.SetAvatarData(sceneObjectsManager.selectedAvatar.GetData());
+                        
+                        //StoryMakerEvents.SetAvatarData(sceneObjectsManager.selectedAvatar.GetData());
                         //Debug.Log("ID: " + sceneObjectsManager.selectedAvatar.GetData().id);
                     }
                     else

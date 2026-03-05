@@ -46,5 +46,14 @@ namespace Yaguar.StoryMaker.Editor
             base.RemoveSceneObject();
             //UIManager.Instance.mainMenu.CloseAll();
         }
+        public override Avatar GetAvatarInSceneById(string id) {
+            foreach (SceneObject a in sceneObjects) {
+                if (a is AvatarFabulab) {
+                    if (a.GetData().id == id)
+                        return a as AvatarFabulab;
+                }
+            }
+            return null;
+        }
     }
 }
