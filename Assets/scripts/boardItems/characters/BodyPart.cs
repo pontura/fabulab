@@ -16,15 +16,21 @@ namespace BoardItems
 
         void Start()
         {
-            Events.OnNewBodyPartSelected += OnNewBodyPartSelected;
-            Events.Zoom += Zoom;
             col2D = GetComponentInChildren<Collider2D>();
             SetSelection(false);
         }
-        void OnDestroy()
+        void OnEnable()
+        {
+            Events.OnNewBodyPartSelected += OnNewBodyPartSelected;
+            Events.Zoom += Zoom;
+        }
+        void OnDisable()
         {
             Events.OnNewBodyPartSelected -= OnNewBodyPartSelected;
             Events.Zoom -= Zoom;
+        }
+        private void OnDestroy()
+        {
             col2D = GetComponentInChildren<Collider2D>();
         }
 
@@ -32,8 +38,11 @@ namespace BoardItems
         {
             ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
             bool canInteract = parts == part;
-            foreach (ItemInScene i in all) 
-                i.rb.simulated = canInteract;
+            foreach (ItemInScene i in all)
+            {
+                if(i != null && i.rb != null)
+                    i.rb.simulated = canInteract;
+            }
         }
 
         void OnNewBodyPartSelected(BodyPart bp)

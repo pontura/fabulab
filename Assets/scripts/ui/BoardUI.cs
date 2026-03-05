@@ -216,7 +216,7 @@ namespace UI
 
         void OpenWork(SOPartData wd)
         {
-            items.OpenWork(wd);
+            items.OpenWork(activeBoardItem, wd, true);
         }
 
         public void AttachItem(ItemInScene item)

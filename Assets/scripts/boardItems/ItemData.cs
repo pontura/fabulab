@@ -1,9 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
-using BoardItems.Characters;
+﻿using BoardItems.Characters;
 using BoardItems.SceneObjects;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UI.MainApp;
+using UnityEngine;
 
 namespace BoardItems
 {
@@ -21,6 +22,18 @@ namespace BoardItems
         public AnimationsManager.anim[] anims;
         public AnimationsManager.anim anim;
         public Vector3 originalScale;
+
+        BoardItemManager boardItemManager;
+
+        public BoardItemManager BoardItemManager { 
+            get {
+                if (boardItemManager == null)
+                {
+                    boardItemManager = GetComponentInParent<BoardItemManager>();
+                }
+                return boardItemManager;
+            } 
+        }
 
         public void Init()
         {

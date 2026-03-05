@@ -16,15 +16,13 @@ namespace BoardItems
         float _z;
         float _z_value = 0.001f;
         ItemInScene itemSelected;
-        //public List<ItemInScene> all;
+
         public Inventary inventary;
         public SpriteRenderer bg;
         public Transform container;
-        [SerializeField] BoardUI board;
+        //[SerializeField] BoardUI board;
 
-        BoardItemManager boardItem;
-        Queue<BoardItemManager> boardItems;
-        Queue<CharacterData> charactersData;
+       // BoardItemManager boardItem;
 
         void Start()
         {
@@ -37,8 +35,6 @@ namespace BoardItems
             Events.ResetItems += ResetItems;
             Events.LoadBoardItemForStory += LoadBoardItemForStory;
 
-            boardItems = new Queue<BoardItemManager>();
-            charactersData = new Queue<CharacterData>();
             // Events.EditMode(true);
         }
         void OnDestroy()
@@ -293,12 +289,9 @@ namespace BoardItems
         {
             Delete(itemSelected);
         }
-        public void SetItemInScene(ItemInScene item, CharacterPartsHelper.parts part)
+        public void SetItemInScene(BoardItemManager target, ItemInScene item, CharacterPartsHelper.parts part)
         {
-            if (boardItem != null)
-                boardItem.AttachItem(item);
-            else
-                board.AttachItem(item);
+            target.AttachItem(item);
             SetItemSelected(item);
         }
         public bool snap = true;
@@ -315,7 +308,7 @@ namespace BoardItems
             }
             else
             {
-                SetItemInScene(item, item.data.part);
+                SetItemInScene(item.data.BoardItemManager, item, item.data.part);
                 item.data.position = item.transform.localPosition;
                 item.data.rotation = item.transform.localEulerAngles;
                 item.data.scale = item.transform.localScale;
@@ -327,7 +320,7 @@ namespace BoardItems
                 Events.ActivateUIButtons(true);
                 Events.SetChangesMade(true);
 
-                board.OnStopDrag(item);
+                item.data.BoardItemManager.OnStopDrag(item);
             }
         }
 
@@ -372,7 +365,8 @@ namespace BoardItems
                 case CharacterPartsHelper.parts.FOOT: mirror.data.part = CharacterPartsHelper.parts.FOOT_LEFT; break;
                 case CharacterPartsHelper.parts.HAND: mirror.data.part = CharacterPartsHelper.parts.HAND_LEFT; break;
             }
-            SetItemInScene(mirror, mirror.data.part);
+            SetItemInScene(item.data.BoardItemManager, mirror, mirror.data.part);
+
 
             mirror.transform.localPosition = item.transform.localPosition;
             mirror.transform.localEulerAngles = item.transform.localEulerAngles;
@@ -459,12 +453,13 @@ namespace BoardItems
         float back_z;
         public void MoveBack()
         {
-            board.MoveBack(itemSelected);
+            itemSelected.data.BoardItemManager.MoveBack(itemSelected);
+            //board.MoveBack(itemSelected);
             FinishEditingItem(itemSelected);
         }
         public void MoveUp()
         {
-            board.MoveUp(itemSelected);
+            itemSelected.data.BoardItemManager.MoveUp(itemSelected);
             FinishEditingItem(itemSelected);
         }
         public void ResetItemTransform()
@@ -534,42 +529,19 @@ namespace BoardItems
         void LoadBoardItemForStory(BoardItemManager itemManager, string id)
         {
             CharacterData cd = Data.Instance.charactersData.SetCurrentID(id);
-            bool openWork = false;
-            if(boardItems.Count==0)
-                openWork = true;
-            boardItems.Enqueue(itemManager);
-            charactersData.Enqueue(cd);
-            //boardItem = itemManager;
-            Debug.Log("$ LoadBoardItemForStory " + cd.id + " boardItems: " + boardItems.Count);
-            if (openWork) {
-                Debug.Log("$ CheckOpenWork");
-                CheckOpenWork();
-            }
+            OpenWork(itemManager, cd);
         }
 
-        void CheckOpenWork() {
-            if (boardItems.Count > 0)
-                OpenWork(charactersData.Dequeue());
-        }
-
-        //void LoadBoardItemForStory(BoardItemManager itemManager, SOPartData wd)
-        //{
-        //    boardItem = itemManager;
-        //    OpenWork(wd);
-        //}
-
-        ItemData CreateItem(SavedIData itemData)
+        ItemData CreateItem(SavedIData itemData, BoardItemManager target)
         {
             ItemData originalGO = Data.Instance.galeriasData.GetItem(itemData.galleryID, itemData.id);
             print("____________" + originalGO.name);
             ItemData newItem = Instantiate(
-                originalGO,
-                originalGO.transform.position,
-                Quaternion.identity
+                originalGO
             );
-            //return newGO;
-            //ItemData newItem = Instantiate(Resources.Load<ItemData>("galerias/" + itemData.galleryID + "/item_" + itemData.id));
-            // Debug.Log("ID" + itemData.id + ":" + itemData.position);
+            if(target != null)
+                newItem.transform.SetParent(target.transform);
+
             newItem.galleryID = itemData.galleryID;
             newItem.part = (CharacterPartsHelper.parts)itemData.part;
             newItem.position = itemData.position;
@@ -581,56 +553,73 @@ namespace BoardItems
             ItemInScene itemInScene = newItem.gameObject.AddComponent<ItemInScene>();
             itemInScene.SetCollider(false);
             itemInScene.data = newItem;
-            //all.Add(itemInScene);
-            SetItemInScene(itemInScene, newItem.part);
+
+            SetItemInScene(target, itemInScene, newItem.part);
             itemInScene.data.SetTransformByData();
 
             FinishEditingItem(itemInScene);
             return newItem;
         }
-
-        public void OpenWork(SOPartData wd)
+        public void AddSceneObjectTo(SOPartData wd, BoardItemManager newBoardItemManager, Transform container)
         {
-            StartCoroutine(OpenWork_C(wd));
+            BoardItemManager boardItemManager = Instantiate(newBoardItemManager, container);
+            boardItemManager.name = "Object " + wd.id;
+            boardItemManager.transform.SetParent(container);
+            boardItemManager.transform.localPosition = Vector3.zero;
+            ItemData newItem;
+            foreach (SavedIData itemData in wd.items)
+            {
+                newItem = CreateItem(itemData, newBoardItemManager);
+                newItem.GetComponent<ItemInScene>().Appear();
+            }
         }
-        IEnumerator OpenWork_C(SOPartData wd) {
+        void AddObjectTo(SOPartData wd, BoardItemManager boardItemManager)
+        {
+            GameObject go = Instantiate(new GameObject(), container);
+            go.name = "Object " + wd.id;
+            go.transform.localPosition = Vector3.zero;
+            ItemData newItem;
+            foreach (SavedIData itemData in wd.items)
+            {
+                newItem = CreateItem(itemData, boardItemManager);
+                newItem.GetComponent<ItemInScene>().Appear();
+            }
+        }
+        public void OpenWork(BoardItemManager boardItemManager, SOPartData wd, bool cascade = false)
+        {
             if (wd is CharacterData characterData) {
                 Events.ColorizeBG(characterData.bg);
                 Events.ColorizeArms(characterData.armsColor);
                 Events.ColorizeLegs(characterData.legsColor);
                 Events.ColorizeEyebrows(characterData.eyebrowsColor);
             }
-            print("open work");
+            print("open work boardItemManager: " + boardItemManager.name + " id: " + wd.id + " cascade: " + cascade);
 
-            if(boardItems.Count > 0) 
-                boardItem = boardItems.Peek();
             foreach (SavedIData itemData in wd.items) {
-                if (boardItems.Count == 0)
-                    yield return new WaitForSeconds(0.05f);
-                else
-                    yield return null;
-                print("open itemData part: " + itemData.part);
-                ItemData newItem = CreateItem(itemData);
-
+                ItemData newItem = CreateItem(itemData, boardItemManager);
                 print("open work newItem part: " + newItem.part);
-
-                if (newItem.anim != AnimationsManager.anim.NONE)
-                {
-                    AnimationsManager.AnimData animData = Data.Instance.animationsManager.GetAnimByName(newItem.anim);
-                    Events.AnimateItem(animData);
-                }
-
-                if(boardItems.Count==0)
-                    newItem.GetComponent<ItemInScene>().Appear();
+                //if (newItem.anim != AnimationsManager.anim.NONE)
+                //{
+                //    AnimationsManager.AnimData animData = Data.Instance.animationsManager.GetAnimByName(newItem.anim);
+                //    Events.AnimateItem(animData);
+                //}
+                //newItem.GetComponent<ItemInScene>().Appear();
             }
-
-            if(boardItems.Count>0)
-                boardItems.Dequeue();
-
-            if (boardItems.Count==0)
-                boardItem = null;
-            else
-                CheckOpenWork();
+            if(cascade)
+                StartCoroutine(Cascade(boardItemManager, wd));
+        }
+        IEnumerator Cascade(BoardItemManager boardItemManager, SOPartData wd)
+        {
+            foreach (ItemInScene i in boardItemManager.GetComponentsInChildren<ItemInScene>())
+            {
+                i.Appear();
+            }
+            yield return new WaitForSeconds(0.05f);
+            foreach (ItemInScene i in boardItemManager.GetComponentsInChildren<ItemInScene>())
+            {
+                i.AppearAction();
+                yield return new WaitForSeconds(0.05f);
+            }
         }
 
     }

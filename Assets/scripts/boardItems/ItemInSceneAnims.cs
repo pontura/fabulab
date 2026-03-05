@@ -22,10 +22,6 @@ namespace BoardItems
             this.finalPos = to;
             this.finalRot = itemData.rotation;
 
-            Vector3 from = itemData.position;
-            from.y -= 2;
-            transform.localPosition = from;
-
             Vector3 rotateFrom = itemData.position;
 
             if(Random.Range(0,10)<5)

@@ -1,6 +1,7 @@
 using BoardItems;
 using BoardItems.BoardData;
 using System.Collections.Generic;
+using UI.MainApp;
 using UI.MainApp.Home.User;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,8 @@ namespace UI
 {
     public class SOSelector : MonoBehaviour
     {
+        [SerializeField] BoardItemManager boardItemManager_to_add;
+        [SerializeField] Transform target;
         [SerializeField] Transform container;
         [SerializeField] PresetButton itemButton;
         [SerializeField] CharacterSelectorBtn workBtn_prefab;
@@ -43,7 +46,8 @@ namespace UI
         public void OpenWork(string id)
         {
             print("abre " + id);
-            //UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
+            SOPartData o = Data.Instance.sObjectsData.GetSO(id);
+            UIManager.Instance.boardUI.items.AddSceneObjectTo(o, boardItemManager_to_add, target);
         }
 
         public void Reset()

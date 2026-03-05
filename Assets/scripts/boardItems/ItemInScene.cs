@@ -50,7 +50,12 @@ namespace BoardItems
         }
         public void Appear()
         {
-            
+            Vector3 from = data.position;
+            from.y -= 8;
+            transform.localPosition = from;
+        }
+        public void AppearAction()
+        {            
             if (anims == null)
                  anims = gameObject.AddComponent<ItemInSceneAnims>();
 
