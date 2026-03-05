@@ -35,11 +35,14 @@ namespace Yaguar.StoryMaker.Editor
             characterManager = asset.GetComponent<CharacterManager>();
             characterManager.Init();
 
+            Invoke("Delayed", 0.1f);            
+        }
+        void Delayed()
+        {
             BoxCollider2D collider = GetComponent<BoxCollider2D>();
-
             Bounds bounds = new Bounds(transform.position, Vector3.zero);
-
-            foreach (SpriteRenderer sr in GetComponentsInChildren<SpriteRenderer>()) {
+            foreach (SpriteRenderer sr in GetComponentsInChildren<SpriteRenderer>())
+            {
                 bounds.Encapsulate(sr.bounds);
             }
 
@@ -48,7 +51,6 @@ namespace Yaguar.StoryMaker.Editor
 
             collider.offset = localCenter;
             collider.size = localSize;
-
         }
 
         public override void Run() {
