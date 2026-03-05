@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UIElements;
+using static CharacterExpressions;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -15,10 +17,14 @@ namespace Yaguar.StoryMaker.Editor
         private void Start()
         {
             StoryMakerEvents.SetAvatarData += SetData;
+            Events.OnCharacterAnim += OnCharacterAnim;
+            Events.OnCharacterExpression += OnCharacterExpression;
         }
         private void OnDestroy()
         {
             StoryMakerEvents.SetAvatarData -= SetData;
+            Events.OnCharacterAnim -= OnCharacterAnim;
+            Events.OnCharacterExpression -= OnCharacterExpression;
         }
 
         public override void OnInit() {
@@ -59,6 +65,16 @@ namespace Yaguar.StoryMaker.Editor
 
         public override void Walk() {
             characterManager.SetAnim(CharacterAnims.anims.walk_right);
+        }
+
+        void OnCharacterExpression(string _characterID, CharacterExpressions.expressions exp) {
+            if (data.id != _characterID) return;
+            (data as SOAvatarFabulabData).emoji = exp;
+        }
+
+        void OnCharacterAnim(string _characterID, CharacterAnims.anims anim) {
+            if(data.id != _characterID) return;
+            (data as SOAvatarFabulabData).anim = anim;
         }
     }
 }

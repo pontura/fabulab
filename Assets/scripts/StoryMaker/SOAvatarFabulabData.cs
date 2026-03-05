@@ -7,5 +7,6 @@ using BoardItems.BoardData;
 [Serializable]
 public class SOAvatarFabulabData : SOAvatarData
 {
-
+    public CharacterAnims.anims anim;
+    public CharacterExpressions.expressions emoji;
 }

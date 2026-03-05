@@ -16,7 +16,6 @@ namespace Yaguar.StoryMaker.Editor
     public class SceneElement
     {
         public SOData data;
-        public string customizationData;
         public SceneElementType type;
 
         public override bool Equals(object obj) {
@@ -25,8 +24,8 @@ namespace Yaguar.StoryMaker.Editor
                 if (this.type != other.type)
                     return false;
 
-                if (!string.Equals(this.customizationData, other.customizationData))
-                    return false;
+                /*if (!string.Equals(this.customizationData, other.customizationData))
+                    return false;*/
 
                 if (this.data == null && other.data == null)
                     return true;
@@ -41,11 +40,18 @@ namespace Yaguar.StoryMaker.Editor
         public override int GetHashCode() {
             int hash = 17;
             hash = hash * 31 + type.GetHashCode();
-            hash = hash * 31 + (customizationData?.GetHashCode() ?? 0);
+            //hash = hash * 31 + (customizationData?.GetHashCode() ?? 0);
             hash = hash * 31 + (data?.GetHashCode() ?? 0);
             return hash;
         }
 
+    }
+
+    [Serializable]
+    public class SceneElementAvatar : SceneElement
+    {
+        public CharacterAnims.anims anim;
+        public CharacterExpressions.expressions emoji;
     }
 
     [Serializable]
@@ -67,6 +73,13 @@ namespace Yaguar.StoryMaker.Editor
         public void AddSO(SOData soData)
         {
             SceneElement sceneElement = new SceneElement();
+            if (soData is SOAvatarFabulabData sOAvatar) {
+                Debug.Log("$ is SOAvatarFabulabData");
+                sceneElement = new SceneElementAvatar();
+                (sceneElement as SceneElementAvatar).anim = sOAvatar.anim;
+                (sceneElement as SceneElementAvatar).emoji = sOAvatar.emoji;
+                Debug.Log("$ "+sOAvatar.anim.ToString() + " " + sOAvatar.emoji.ToString());
+            }
             sceneElement.data = new SOData();
             sceneElement.data.id = soData.id;
             sceneElement.data.pos = soData.pos;
@@ -74,13 +87,13 @@ namespace Yaguar.StoryMaker.Editor
             sceneElement.data.size = soData.size;
             sceneElement.data.goLeft = soData.goLeft;
             
-            if (soData is SOAvatarFabulabData avatarFabulabData)
+            /*if (soData is SOAvatarFabulabData avatarFabulabData)
             {
                 sceneElement.customizationData = avatarFabulabData.customization;
             }
             else
             {
-                /*
+                
                 data += "o" + stringSeparator;
                 data += soData.itemName;
                 if (soData is SOInputData)
@@ -89,10 +102,15 @@ namespace Yaguar.StoryMaker.Editor
                     data += "*" + soData.customizationSerialized;
                 }
                 (soData as SOIconData).SetIcon();
-                */
-            }
+                
+            }*/
+
             if(scenesElements==null)
                 scenesElements = new List<SceneElement>();
+            
+            if(sceneElement is SceneElementAvatar)
+                Debug.Log("$ sceneElement is SceneElementAvatar");
+
             scenesElements.Add(sceneElement);
         }
         
@@ -173,9 +191,13 @@ namespace Yaguar.StoryMaker.Editor
                 {
                     if (HasSameAvatar(data, next)) {
                         AvatarFabulab avatar = Scenario.Instance.sceneObejctsManager.GetAvatarInSceneById(data.data.id) as AvatarFabulab;
-                        SOData sOData = avatar.GetData();
+                        SOAvatarFabulabData sOData = avatar.GetData() as SOAvatarFabulabData;
                         SetSOData(sOData, data);
                         Scenario.Instance.sceneObejctsManager.ApplyData(avatar);
+                        
+                        Debug.Log("$$ " + (data as SceneElementAvatar).anim.ToString() + " " + (data as SceneElementAvatar).emoji.ToString());
+                        Events.OnCharacterAnim(sOData.id, (data as SceneElementAvatar).anim);
+                        Events.OnCharacterExpression(sOData.id, (data as SceneElementAvatar).emoji);
                     } else {
                         DeleteSO(data);
                         AddSOToScene(data);
@@ -203,6 +225,9 @@ namespace Yaguar.StoryMaker.Editor
         }
         protected virtual void AddSOToScene(SceneElement data)
         {
+            if (data is SceneElementAvatar)
+                Debug.Log("$ data is SceneElementAvatar");
+
             SOData soData = null;
             if (data.type==SceneElementType.AVATAR)
             {
@@ -210,8 +235,11 @@ namespace Yaguar.StoryMaker.Editor
 
                 soData.goLeft = data.data.goLeft;
 
-                if (soData is SOAvatarFabulabData avatarFabulabData)
-                    avatarFabulabData.customization = data.customizationData;
+                (soData as SOAvatarFabulabData).anim = (data as SceneElementAvatar).anim;
+                (soData as SOAvatarFabulabData).emoji = (data as SceneElementAvatar).emoji;
+
+                /*if (soData is SOAvatarFabulabData avatarFabulabData)
+                    avatarFabulabData.customization = data.customizationData;*/
 
                 //StoryMakerEvents.SetNewAvatarCustomization(data);
 
@@ -298,7 +326,7 @@ namespace Yaguar.StoryMaker.Editor
             if (data.type == SceneElementType.AVATAR)
             {
                 soData = new SOAvatarFabulabData();
-                soData.customization = data.customizationData;
+                //soData.customization = data.customizationData;
                 soData.goLeft = data.data.goLeft;
                 SetSOData(soData, data);
             }

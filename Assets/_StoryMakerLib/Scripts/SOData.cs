@@ -11,6 +11,15 @@ public class SOData
     public string id;
     public string customization;
 
+    public void Clone(SOData source) {
+        this.itemName = source.itemName;
+        this.pos = new Vector3(source.pos.x, source.pos.y, source.pos.z);
+        this.size = source.size;
+        this.rot = source.rot;
+        this.id = source.id;
+        this.customization = source.customization;
+    }
+
     public override bool Equals(object obj) {
         if (obj is SOData other) {
             return string.Equals(this.itemName, other.itemName)

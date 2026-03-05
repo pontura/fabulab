@@ -33,7 +33,6 @@ namespace UI.MainApp
         }
 
         void EditorActions(string id) {
-            Debug.Log("$ " + id);
             actionUI.SetCharacterId(id);
             timeline.SetActive(false);
             itemList.SetActive(false);
@@ -42,7 +41,6 @@ namespace UI.MainApp
         }
 
         void EditExpressions(string id) {
-            Debug.Log("$ " + id);
             emojisUI.SetCharacterId(id);
             timeline.SetActive(false);
             itemList.SetActive(false);
@@ -87,9 +85,15 @@ namespace UI.MainApp
                 if (so == null)
                     continue;
 
-                SOData soData = so.GetData();
+                SOData soData = null;
 
                 if (so is AvatarFabulab) {
+
+                    soData = new SOAvatarFabulabData();
+                    soData.Clone(so.GetData());
+
+                    (soData as SOAvatarFabulabData).anim = (so.GetData() as SOAvatarFabulabData).anim;
+                    (soData as SOAvatarFabulabData).emoji = (so.GetData() as SOAvatarFabulabData).emoji;
                     /*AvatarFabulab avatar = so as AvatarFabulab;
 
                     soData = new SOAvatarFabulabData();
@@ -112,7 +116,7 @@ namespace UI.MainApp
                     customizerData += "ex_" + expID + "*";*/
                 }
 
-                Debug.Log("# Adding Id: " + soData.id);
+                Debug.Log("# Adding Id: " + soData.id + " " + soData );
 
 
                 sdf.AddSO(soData);

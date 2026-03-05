@@ -23,20 +23,23 @@ namespace Yaguar.StoryMaker.Editor
         public override void AddSceneObject(SOData data)
         {
             Debug.Log("AddSceneObject: " + data.id + " " + data);
-            if (data is SOAvatarFabulabData)
+            if (data is SOAvatarFabulabData avatarData)
             {
                 Debug.Log("ACA1");
                 SceneObject avatar = Instantiate(avatar_to_instantiate);
-                AddToContainer(avatar, data);
+                AddToContainer(avatar, avatarData);
 
-                avatar.gameObject.name = "Avatar_" + data.id;
-                avatar.Init(data);
+                avatar.gameObject.name = "Avatar_" + avatarData.id;
+                avatar.Init(avatarData);
                 inputsManager.ResetAll();
                 CharacterManager characterManager = avatar.GetComponent<AvatarFabulab>().characterManager;
-                characterManager.characterID = data.id;
-                Events.LoadBoardItemForStory(characterManager, data.id);
+                characterManager.characterID = avatarData.id;
+                Events.LoadBoardItemForStory(characterManager, avatarData.id);
                 selected = avatar;
                 selectedAvatar = avatar;
+
+                Events.OnCharacterAnim(avatarData.id,avatarData.anim);
+                Events.OnCharacterExpression(avatarData.id, avatarData.emoji);
             }
 
             sceneObjects.Add(selected);

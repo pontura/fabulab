@@ -5,7 +5,7 @@ namespace Yaguar.StoryMaker.Editor
     public class SceneObject : MonoBehaviour
     {
 
-        [SerializeField] private SOData data;
+        [SerializeField] protected SOData data;
 
         private float startPosX, startPosY;
         private bool isBeingHeld;
