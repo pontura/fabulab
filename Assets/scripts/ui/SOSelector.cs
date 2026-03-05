@@ -11,7 +11,6 @@ namespace UI
 {
     public class SOSelector : MonoBehaviour
     {
-        [SerializeField] BoardItemManager boardItemManager_to_add;
         [SerializeField] Transform target;
         [SerializeField] Transform container;
         [SerializeField] PresetButton itemButton;
@@ -47,6 +46,8 @@ namespace UI
         {
             print("abre " + id);
             SOPartData o = Data.Instance.sObjectsData.GetSO(id);
+            GameObject go = new GameObject();
+            BoardItemManager boardItemManager_to_add = go.AddComponent<BoardItemManager>();
             UIManager.Instance.boardUI.items.AddSceneObjectTo(o, boardItemManager_to_add, target);
         }
 

@@ -571,7 +571,7 @@ namespace BoardItems
             foreach (SavedIData itemData in wd.items)
             {
                 newItem = CreateItem(itemData, newBoardItemManager);
-                newItem.transform.SetParent(boardItemManager.GetComponentInChildren<BodyPart>().transform);
+                newItem.transform.SetParent(boardItemManager.transform);
             }
 
             boardItemManager.SetInteractableObject();
