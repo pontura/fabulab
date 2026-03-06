@@ -28,6 +28,12 @@ namespace Yaguar.StoryMaker.Editor
             //Invoke(nameof(Reset), Time.deltaTime * 3);
         }
 
+        private void OnEnable() {
+            if (all.Count == 0)
+                Reset();
+        }
+
+
         protected void OnDestroy()
         {
             StoryMakerEvents.OnLoadFilm -= Reset;
