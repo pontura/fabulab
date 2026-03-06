@@ -134,6 +134,7 @@ namespace UI
         }
         public void NewObject(SObjectData.types type)
         {
+            boardUI.items.DeleteAll();
             Data.Instance.sObjectsData.SetType(type);
             boardUI.SetEditingType(editingTypes.OBJECT);
             Events.OnCharacterReset();

@@ -30,6 +30,7 @@ namespace UI.MainApp.Home
             switch (type)
             {
                 case UIManager.screenType.Home:
+                    UIManager.Instance.boardUI.ResetBoardConfirmed();
                     profilePicture.InitOwner();
                     userUI.SetActive(true);
                     string username = Data.Instance.userData.userDataInDatabase.username;

@@ -35,7 +35,9 @@ namespace BoardItems
             this.inputManager = inputManager;
             gameObject.SetActive(true);
             arrow.transform.position = pos;
-            bool isBoardingItemManager = itemData.IsBoardingItemManager();
+            bool isBoardingItemManager = false;
+            if (itemData != null)
+                isBoardingItemManager = itemData.IsBoardingItemManager();
 
             clonate.gameObject.SetActive(!isBoardingItemManager);
             colorize.gameObject.SetActive(!isBoardingItemManager);

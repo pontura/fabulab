@@ -53,6 +53,7 @@ namespace BoardItems
             get
             {
                 List<ItemInScene> a = new List<ItemInScene>();
+                if (UIManager.Instance.boardUI.AllBodyParts == null) return a;
                 foreach (BodyPart bp in UIManager.Instance.boardUI.AllBodyParts)
                 {
                     foreach (ItemInScene i in bp.GetComponentsInChildren<ItemInScene>())
