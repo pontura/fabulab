@@ -1,5 +1,6 @@
 using BoardItems.BoardData;
 using Common.UI;
+using Google.MiniJSON;
 using UnityEngine;
 
 namespace UI
@@ -23,6 +24,7 @@ namespace UI
         }
         public void SetOff()
         {
+            Events.SetGroupToolsOn(false);
             snapToggle.Show(false);
             groupToggle.Show(false);
             gameObject.SetActive(false);

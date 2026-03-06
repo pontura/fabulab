@@ -156,11 +156,19 @@ namespace UI
                     if (Input.GetMouseButtonUp(0))
                     {
                         state = states.IDLE;
-                        itemDragHandler.StopDragging(Input.mousePosition);
+
+                       
                         if (Vector3.Distance(clickPosition, Input.mousePosition) < 4 && !IsPointerOverUIObject())
                             OpenTools();
-                       // else
-                        //    AudioManager.Instance.sfxManager.PlayTransp("drop", -2);
+                        else
+                        {
+                            if (container != null)
+                                container.OnStopTransformModify();
+                            else
+                            {
+                                itemDragHandler.StopDragging(Input.mousePosition);
+                            }
+                        }
                     }
                     else
                         itemDragHandler.UpdateDrag(Input.mousePosition);

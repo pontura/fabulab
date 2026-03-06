@@ -625,6 +625,8 @@ namespace BoardItems
                     i.AppearAction();
                     yield return new WaitForSeconds(0.05f);
                 }
+                if(i.data.part == partActive)
+                    i.SetCollider(true);
             }
         }
 
