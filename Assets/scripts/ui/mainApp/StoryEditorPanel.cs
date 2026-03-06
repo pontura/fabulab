@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp
@@ -9,11 +10,13 @@ namespace UI.MainApp
             switch(type)
             {
                 case UIManager.screenType.StoryMaker:
+                    Events.Zoom(0, false);
                     Show(true);
                     StoryMakerEvents.EnableInputManager(true);
                     break;
                 default:
-                    Show(false);
+                    StoryMakerEvents.Restart();
+                    Show(false);                    
                     StoryMakerEvents.EnableInputManager(false);
                     break;
             }
