@@ -123,9 +123,13 @@ namespace BoardItems
             print("OnStopTransformModify " + all.Length);
             foreach (ItemInScene i in all) i.transform.SetParent(transform.parent);
             transform.position = Vector3.zero;
-            foreach (ItemInScene i in all) i.transform.SetParent(transform);
+            foreach (ItemInScene i in all)
+            {
+                i.data.position = i.transform.localPosition;
+                i.transform.SetParent(transform);
+            }
 
-            SetArrengedItems();
+            //SetArrengedItems();
         }
     }
 }
