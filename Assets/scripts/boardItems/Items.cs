@@ -601,20 +601,25 @@ namespace BoardItems
                 //}
                 //newItem.GetComponent<ItemInScene>().Appear();
             }
-            if(cascade)
+            if (cascade)
                 StartCoroutine(Cascade(boardItemManager, wd));
         }
         IEnumerator Cascade(BoardItemManager boardItemManager, SOPartData wd)
         {
+            CharacterPartsHelper.parts partActive = UIManager.Instance.zoomManager.part;
             foreach (ItemInScene i in boardItemManager.GetComponentsInChildren<ItemInScene>())
             {
-                i.Appear();
+                if(i.data.part == partActive || partActive == CharacterPartsHelper.parts.none)
+                    i.Appear();
             }
             yield return new WaitForSeconds(0.05f);
             foreach (ItemInScene i in boardItemManager.GetComponentsInChildren<ItemInScene>())
             {
-                i.AppearAction();
-                yield return new WaitForSeconds(0.05f);
+                if (i.data.part == partActive || partActive == CharacterPartsHelper.parts.none)
+                {
+                    i.AppearAction();
+                    yield return new WaitForSeconds(0.05f);
+                }
             }
         }
 
