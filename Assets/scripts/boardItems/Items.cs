@@ -298,6 +298,7 @@ namespace BoardItems
         public bool snap = true;
         void OnStopDrag(ItemInScene item, Vector3 pos)
         {
+            if(item == null) return;
             item.StopBeingDrag();
             float posX = Camera.main.WorldToScreenPoint(pos).x;
             bool isOverBodyPart = item.IsOverBodyPart();

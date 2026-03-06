@@ -42,6 +42,15 @@ namespace BoardItems
             clonate.gameObject.SetActive(!isBoardingItemManager);
             colorize.gameObject.SetActive(!isBoardingItemManager);
         }
+        public void InitGroupTools(InputManager inputManager)
+        {
+            print("Init group tools");
+            this.inputManager = inputManager;
+            gameObject.SetActive(true);
+            arrow.transform.position = Vector3.zero;
+            clonate.gameObject.SetActive(false);
+            colorize.gameObject.SetActive(false);
+        }
         public void SetBGColors()
         {
             subMenu.Init(null, pos, ToolsSubMenu.types.BG_COLORS);

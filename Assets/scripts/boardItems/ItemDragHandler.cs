@@ -11,6 +11,7 @@ namespace BoardItems
         public float menuPositionX = 520;
         public Image image;
         ItemInScene item;
+        GameObject target;
         Vector3 offset;
 
         private void Start()
@@ -20,6 +21,14 @@ namespace BoardItems
         public void OnStartDrag(ItemInScene item, Vector3 originalPosition)
         {
             this.item = item;
+            gameObject.SetActive(true);
+            offset = Input.mousePosition - originalPosition;
+            transform.position = Input.mousePosition - offset;
+        }
+        public void OnStartDragContainer(GameObject target, Vector3 originalPosition)
+        {
+            item = null;
+            this.target = target;
             gameObject.SetActive(true);
             offset = Input.mousePosition - originalPosition;
             transform.position = Input.mousePosition - offset;
@@ -39,11 +48,20 @@ namespace BoardItems
         }
         public void UpdateDrag(Vector3 posInput)
         {
-            if (item == null)
+            if (item == null && target == null)
                 return;
-            Vector3 pos = Camera.main.ScreenToWorldPoint(posInput - offset);
-            pos.z = item.data.position.z;
-            item.SetPos(pos, UIManager.Instance.boardUI.snap);
+            if (item != null)
+            {
+                Vector3 pos = Camera.main.ScreenToWorldPoint(posInput - offset);
+                pos.z = item.data.position.z;
+                item.SetPos(pos, UIManager.Instance.boardUI.snap);
+            }
+            else if (target != null)
+            {
+                Vector3 pos = Camera.main.ScreenToWorldPoint(posInput - offset);
+                pos.z = -1;
+                target.transform.position = pos;
+            }
 
         }
         public static bool IsPointerOverUIObject()

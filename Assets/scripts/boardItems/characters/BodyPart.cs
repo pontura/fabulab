@@ -111,5 +111,15 @@ namespace BoardItems
                 return 0;
             return z - z_displacement;
         }
+        public void OnStopTransformModify()
+        {
+            ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
+
+            foreach (ItemInScene i in all) i.transform.SetParent(transform.parent);
+            transform.position = Vector3.zero;
+            foreach (ItemInScene i in all) i.transform.SetParent(transform);
+
+            SetArrengedItems();
+        }
     }
 }
