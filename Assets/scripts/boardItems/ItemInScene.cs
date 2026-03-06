@@ -101,14 +101,14 @@ namespace BoardItems
                 collider.enabled = false;
             SetCollider(true);
 
-            if(bpOver != null)
-                Events.OnNewBodyPartSelected(bpOver);
+            //if(bpOver != null)
+            //    Events.OnNewBodyPartSelected(bpOver);
         }
         public void StopBeingDrag()
         {
             rb.isKinematic = false;
             collider.enabled = true;
-            Events.OnNewBodyPartSelected(null);
+          //  Events.OnNewBodyPartSelected(null);
         }
         public void StartFalling()
         {
@@ -194,7 +194,7 @@ namespace BoardItems
             {
                 data.SetContainer(bpEnter);
                 data.SetCharacterPart(bpEnter.part);
-                Events.OnNewBodyPartSelected(bpEnter);
+               // Events.OnNewBodyPartSelected(bpEnter);
                 bpOver = bpEnter;
                 ArrengeZPos(bpOver);
             }
@@ -206,7 +206,7 @@ namespace BoardItems
             BodyPart bpExit = collision.GetComponent<BodyPart>();
             if (bpExit.part != data.part) return;
 
-            Events.OnNewBodyPartSelected(null);
+          //  Events.OnNewBodyPartSelected(null);
             bpOver = null;
         }
         public ItemInScene GetMirror() {  return mirror;  }

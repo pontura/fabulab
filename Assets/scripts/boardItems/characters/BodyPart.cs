@@ -17,7 +17,7 @@ namespace BoardItems
         void Start()
         {
             col2D = GetComponentInChildren<Collider2D>();
-            SetSelection(false);
+            //SetSelection(false);
         }
         void OnEnable()
         {
