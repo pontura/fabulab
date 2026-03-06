@@ -38,6 +38,8 @@ namespace Yaguar.StoryMaker.Editor
                 selected = avatar;
                 selectedAvatar = avatar;
 
+                if (avatarData.anim == CharacterAnims.anims.edit)
+                    avatarData.anim = CharacterAnims.anims.idle;
                 Events.OnCharacterAnim(avatarData.id,avatarData.anim);
                 Events.OnCharacterExpression(avatarData.id, avatarData.emoji);
             }
