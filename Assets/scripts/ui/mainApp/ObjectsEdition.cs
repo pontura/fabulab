@@ -95,7 +95,8 @@ namespace UI.MainApp
         }
         void SaveWork()
         {
-           UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, OnTakeShotDone);
+            Events.OnNewBodyPartSelected(null);
+            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, OnTakeShotDone);
         }
         public void OnTakeShotDone(Texture2D tex)
         {

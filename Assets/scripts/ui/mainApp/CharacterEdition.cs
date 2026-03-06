@@ -174,6 +174,7 @@ namespace UI.MainApp
         }
         void SaveWork()
         {
+            Events.OnNewBodyPartSelected(null);
             UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, OnTakeShotDone);
         }
         bool savingPart = false;
