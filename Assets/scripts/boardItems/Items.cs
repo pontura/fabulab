@@ -583,12 +583,15 @@ namespace BoardItems
         }
         public void OpenWork(BoardItemManager boardItemManager, SOPartData wd, bool cascade = false)
         {
-            if (wd is CharacterData characterData) {
-                Events.ColorizeBG(characterData.bg);
+
+            Events.ColorizeBG(wd.bg);
+            if (wd is CharacterData characterData)
+            {
                 Events.ColorizeArms(characterData.armsColor);
                 Events.ColorizeLegs(characterData.legsColor);
                 Events.ColorizeEyebrows(characterData.eyebrowsColor);
             }
+
             print("open work boardItemManager: " + boardItemManager.name + " id: " + wd.id + " cascade: " + cascade);
 
             foreach (SavedIData itemData in wd.items) {

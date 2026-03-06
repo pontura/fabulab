@@ -39,6 +39,7 @@ namespace BoardItems.BoardData
                 items.Add(savedData);
             }
             type = serverData.type;
+            bg = serverData.bg;
         }
 
     }
