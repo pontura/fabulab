@@ -1,4 +1,5 @@
 ﻿using BoardItems;
+using System.Collections;
 using UnityEngine;
 
 namespace UI.MainApp
@@ -12,13 +13,15 @@ namespace UI.MainApp
         public virtual void MoveUp(ItemInScene itemSelected) {  }
 
         Bounds bounds;
-
-        public void SetInteractableObject()
+        System.Action<BoardItemManager> OnDone;
+        public void SetInteractableObject(System.Action<BoardItemManager> OnDone)
         {
-            Invoke("SetCollidersOff", 0.1f);
+            this.OnDone = OnDone;             
+            StartCoroutine(SetCollidersOff());
         }
-        void SetCollidersOff()
+        IEnumerator SetCollidersOff()
         {
+            yield return new WaitForSeconds(0.1f);
             SetCollidersOn();
 
             foreach (ItemData comp in transform.GetComponentsInChildren<ItemData>())
@@ -40,11 +43,12 @@ namespace UI.MainApp
             parentCollider.size = bounds.size/6;
 
             AddItemData();
+            yield return new WaitForSeconds(0.1f);
+            OnDone(this);
         }
         void AddItemData()
         {
             ItemData itemData = gameObject.AddComponent<ItemData>();
-           // itemData.transform.localScale = new Vector3(8, 8, 1);
             itemData.Init();
             itemData.part = BoardItems.Characters.CharacterPartsHelper.parts.BODY;
             ItemInScene iInScene = gameObject.AddComponent<ItemInScene>();
