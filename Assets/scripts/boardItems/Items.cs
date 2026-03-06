@@ -535,13 +535,9 @@ namespace BoardItems
         ItemData CreateItem(SavedIData itemData, BoardItemManager target)
         {
             ItemData originalGO = Data.Instance.galeriasData.GetItem(itemData.galleryID, itemData.id);
-          //  print("____________" + originalGO.name);
             ItemData newItem = Instantiate(
                 originalGO
             );
-            //if(target != null)
-            //    newItem.transform.SetParent(target.transform);
-
             newItem.galleryID = itemData.galleryID;
             newItem.part = (CharacterPartsHelper.parts)itemData.part;
             newItem.position = itemData.position;
@@ -572,9 +568,18 @@ namespace BoardItems
             {
                 newItem = CreateItem(itemData, newBoardItemManager);
                 newItem.transform.SetParent(boardItemManager.transform);
+                Vector3 pos = newItem.transform.transform.localPosition;
+                pos.z /= 200;
+                newItem.transform.transform.localPosition = pos;
             }
-
-            boardItemManager.SetInteractableObject();
+            boardItemManager.SetInteractableObject( OnObjectMerged);
+           
+        }
+        void OnObjectMerged(BoardItemManager boardItemManager)
+        {
+            BodyPart bodyPart = boardItemManager.GetComponentInParent<BodyPart>();
+            if (bodyPart != null)
+                bodyPart.SetArrengedItems();
         }
         public void OpenWork(BoardItemManager boardItemManager, SOPartData wd, bool cascade = false)
         {

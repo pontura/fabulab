@@ -69,6 +69,7 @@ namespace BoardItems
         {
             item.transform.SetParent(t.parent);
             ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
+            foreach (ItemInScene i in all) print(i.gameObject.name);
             if (back)
             {
                 foreach (ItemInScene i in all) i.transform.SetParent(t.parent);
