@@ -44,14 +44,19 @@ namespace BoardItems
             //Events.OnThemesLoadedComplete += LoadThemeFilmMetadataFromServer;
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
             StoryMakerEvents.ChangeSpeed += ChangeSpeed;
-            StoryMakerEvents.Restart += Init;
+            StoryMakerEvents.Restart += Restart;
 
             if (!Data.Instance.userData.IsLogged())
                 LoadFilmMetadataLocal();
+
             Init();
         }
 
-        private void Init() {
+        void Init() {
+            Restart();
+        }
+
+        private void Restart() {
             ScenesManagerFabulab.Instance.Init();
             if (Data.Instance.userData.IsLogged())
                 ScenesManagerFabulab.Instance.currentFDataID = "";
@@ -64,7 +69,7 @@ namespace BoardItems
             //Events.OnThemesLoadedComplete -= LoadUserFilmMetadataFromServer;
             FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
             StoryMakerEvents.ChangeSpeed -= ChangeSpeed;
-            StoryMakerEvents.Restart -= Init;
+            StoryMakerEvents.Restart -= Restart;
         }
         void ChangeSpeed(int speed) {
             if (currentFilmData != null) {
@@ -75,7 +80,7 @@ namespace BoardItems
 
         public void StartNewStory(string storyName) {
             Debug.Log("#StartNewStory");
-            Init();
+            Restart();
             ScenesManagerFabulab.Instance.Restart();
             //hace un nuevo id unico:
             ScenesManagerFabulab.Instance.currentFDataID = UnityEngine.Random.Range(0, 1000).ToString();
