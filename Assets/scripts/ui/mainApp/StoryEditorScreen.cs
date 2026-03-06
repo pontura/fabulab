@@ -32,18 +32,19 @@ namespace UI.MainApp
             StoryMakerEvents.EditExpressions -= EditExpressions;
         }
 
+        public void CloseActionsAndEmojis() {
+            actionUI.SetOn(false);
+            emojisUI.SetOn(false);
+        }
+
         void EditorActions(string id) {
             actionUI.SetCharacterId(id);
-            timeline.SetActive(false);
-            itemList.SetActive(false);
             actionUI.SetOn(true);
             emojisUI.SetOn(false);
         }
 
         void EditExpressions(string id) {
             emojisUI.SetCharacterId(id);
-            timeline.SetActive(false);
-            itemList.SetActive(false);
             actionUI.SetOn(false);
             emojisUI.SetOn(true);
         }
