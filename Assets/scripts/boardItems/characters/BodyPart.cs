@@ -118,6 +118,7 @@ namespace BoardItems
         }
         public void OnStopTransformModify()
         {
+            print("OnStopTransformModify");
             ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
             foreach (ItemInScene i in all) i.transform.SetParent(transform.parent);
             transform.position = Vector3.zero;

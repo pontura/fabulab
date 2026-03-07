@@ -30,7 +30,7 @@ namespace BoardItems
         public void Init(ItemData itemData, Vector3 pos, InputManager inputManager)
         {
             this.pos = pos;
-            print("Init tools");
+            print("Init tools" + itemData.position);
             this.itemData = itemData;
             this.inputManager = inputManager;
             gameObject.SetActive(true);

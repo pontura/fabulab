@@ -391,7 +391,7 @@ namespace BoardItems
         {
             SetItemSelected(item);
 
-            item.data.position = item.transform.position;
+            item.data.position = item.transform.localPosition;
 
 
             if (!item.IsBeingUse())
@@ -400,7 +400,7 @@ namespace BoardItems
                 item.data.position.z = _z;
             }
 
-            item.transform.position = item.data.position;
+            item.transform.localPosition = item.data.position;
 
             item.StartBeingDrag();
             AnimateItemDragDrop(true);

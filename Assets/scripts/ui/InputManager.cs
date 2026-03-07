@@ -233,7 +233,7 @@ namespace UI
             Vector3 _offset = cam.ScreenToWorldPoint(Input.mousePosition);
             _offset.z = 0;
             itemInScene.transform.position = _offset;
-            itemInScene.GetComponent<ItemData>().position = _offset;
+          //  itemInScene.GetComponent<ItemData>().position = _offset;
 
             OnStartDrag(itemInScene, Input.mousePosition);
             UIManager.Instance.boardUI.items.StartDrag(itemInScene);
