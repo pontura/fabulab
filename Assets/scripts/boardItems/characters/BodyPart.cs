@@ -118,9 +118,7 @@ namespace BoardItems
         }
         public void OnStopTransformModify()
         {
-
             ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
-            print("OnStopTransformModify " + all.Length);
             foreach (ItemInScene i in all) i.transform.SetParent(transform.parent);
             transform.position = Vector3.zero;
             foreach (ItemInScene i in all)
@@ -128,8 +126,6 @@ namespace BoardItems
                 i.data.position = i.transform.localPosition;
                 i.transform.SetParent(transform);
             }
-
-            //SetArrengedItems();
         }
     }
 }

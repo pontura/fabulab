@@ -54,15 +54,41 @@ namespace BoardItems
             {
                 Vector3 pos = Camera.main.ScreenToWorldPoint(posInput - offset);
                 pos.z = item.data.position.z;
-                item.SetPos(pos, UIManager.Instance.boardUI.snap);
+                SetPos(item.gameObject, pos, UIManager.Instance.boardUI.snap);
             }
             else if (target != null)
             {
                 Vector3 pos = Camera.main.ScreenToWorldPoint(posInput - offset);
                 pos.z = -1;
-                target.transform.position = pos;
+                SetPos(target, pos, UIManager.Instance.boardUI.snap);
             }
 
+        }
+        public void SetPos(GameObject item, Vector3 pos, bool snap = false)
+        {
+            float snapGride = Data.Instance.settings.snapGride;
+            if (snap)
+            {
+                SpriteRenderer sr = item.GetComponentInChildren<SpriteRenderer>();
+
+                Vector3 size = sr.bounds.size;
+
+                // calcular borde inferior izquierdo
+                float left = pos.x - size.x / 2f;
+                float bottom = pos.y - size.y / 2f;
+
+                // snapear ese borde
+                float snappedLeft = Mathf.Round(left / snapGride) * snapGride;
+                float snappedBottom = Mathf.Round(bottom / snapGride) * snapGride;
+
+                // reconstruir posición
+                pos.x = snappedLeft + size.x / 2f;
+                pos.y = snappedBottom + size.y / 2f;
+
+                pos.x = (float)System.Math.Round(pos.x, 4);
+                pos.y = (float)System.Math.Round(pos.y, 4);
+            }
+            item.transform.position = new Vector3(pos.x, pos.y, item.transform.position.z);
         }
         public static bool IsPointerOverUIObject()
         {
