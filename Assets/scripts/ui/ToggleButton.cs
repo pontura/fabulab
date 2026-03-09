@@ -31,5 +31,11 @@ namespace UI
             off.SetActive(!this.isOn);
             OnToggle(this.isOn);
         }
+        public void Force(bool isOn)
+        {
+            this.isOn = isOn;
+            on.SetActive(this.isOn);
+            off.SetActive(!this.isOn);
+        }
     }
 }

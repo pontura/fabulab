@@ -4,14 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UI;
+using System.ComponentModel;
 namespace BoardItems
 {
     public class ItemDragHandler : MonoBehaviour
     {
         public float menuPositionX = 520;
         public Image image;
-        ItemInScene item;
-        GameObject target;
+        [SerializeField] ItemInScene item;
+        [SerializeField] GameObject target;
         Vector3 offset;
 
         private void Start()
@@ -35,11 +36,12 @@ namespace BoardItems
         }
         public void StopDragging(Vector3 posInput)
         {
-            bool overSomething = IsPointerOverUIObject();
+            // bool overSomething = IsPointerOverUIObject();
             //if (overSomething)
             //    Events.ItemBackToMenu(item);
             //else
             //{
+            target = null;
             Vector3 pos = Camera.main.ScreenToWorldPoint(posInput - offset);
             Events.OnStopDrag(item, pos);
             //}

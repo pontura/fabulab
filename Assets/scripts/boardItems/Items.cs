@@ -15,7 +15,7 @@ namespace BoardItems
         public ItemInScene itemInScene_to_instantiate;
         float _z;
         float _z_value = 0.001f;
-        ItemInScene itemSelected;
+        [SerializeField] ItemInScene itemSelected;
 
         public Inventary inventary;
         public SpriteRenderer bg;
@@ -389,6 +389,7 @@ namespace BoardItems
         }
         public void StartDrag(ItemInScene item)
         {
+
             SetItemSelected(item);
 
             item.data.position = item.transform.localPosition;

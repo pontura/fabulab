@@ -1,6 +1,8 @@
 using BoardItems.BoardData;
 using Common.UI;
 using Google.MiniJSON;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace UI
@@ -13,6 +15,20 @@ namespace UI
         [SerializeField] TabController tabs;
         [SerializeField] ToggleButton snapToggle;
         [SerializeField] ToggleButton groupToggle;
+
+        private void Start()
+        {
+            Events.SetGroupToolsOn += SetGroupToolsOn;
+        }
+        private void OnDestroy()
+        {
+            Events.SetGroupToolsOn -= SetGroupToolsOn;
+        }
+
+        private void SetGroupToolsOn(bool isOn)
+        {
+            groupToggle.Force(isOn);
+        }
 
         void OnToggle(bool isOn)
         {

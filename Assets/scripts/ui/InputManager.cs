@@ -1,6 +1,8 @@
 ﻿using BoardItems;
 using BoardItems.Characters;
+using System;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -42,7 +44,7 @@ namespace UI
         {
             this.partActive = part;
         }
-        BodyPart container;
+        [SerializeField] BodyPart container;
 
         void OnStartDrag(ItemInScene item, Vector3 originalPosition)
         {
@@ -51,7 +53,13 @@ namespace UI
             if(groupOn)
             {
                 container = item.GetComponentInParent<BodyPart>();
-                itemDragHandler.OnStartDragContainer(container.gameObject, originalPosition);
+                if(container != null)
+                    itemDragHandler.OnStartDragContainer(container.gameObject, originalPosition);
+                else
+                {
+                    Events.SetGroupToolsOn(false);
+                    itemDragHandler.OnStartDrag(item, originalPosition);
+                }
             } else
                 itemDragHandler.OnStartDrag(item, originalPosition);
         }
@@ -163,11 +171,11 @@ namespace UI
                         else
                         {
                             if (container != null)
-                                container.OnStopTransformModify();
-                            else
                             {
-                                itemDragHandler.StopDragging(Input.mousePosition);
+                                container.OnStopTransformModify();
+                                container = null;
                             }
+                            itemDragHandler.StopDragging(Input.mousePosition);
                         }
                     }
                     else
@@ -184,6 +192,7 @@ namespace UI
                 OnPress();
             lastMouseX = Input.mousePosition.x;
         }
+
         void OnPress()
         {
             if (IsPointerOverUIObject()) return;
@@ -233,7 +242,7 @@ namespace UI
             Vector3 _offset = cam.ScreenToWorldPoint(Input.mousePosition);
             _offset.z = 0;
             itemInScene.transform.position = _offset;
-          //  itemInScene.GetComponent<ItemData>().position = _offset;
+            itemInScene.GetComponent<ItemData>().position = _offset;
 
             OnStartDrag(itemInScene, Input.mousePosition);
             UIManager.Instance.boardUI.items.StartDrag(itemInScene);
@@ -264,7 +273,10 @@ namespace UI
         }
         void SetGroupToolsOn(bool isOn)
         {
+            print("SetGroupToolsOn " + isOn);
             groupOn = isOn;
+            if (!isOn)
+                container = null;
         }
         public void OnCloseTools(states _state = states.IDLE)
         {
