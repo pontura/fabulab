@@ -1,4 +1,5 @@
 ﻿using BoardItems.Characters;
+using BoardItems.SceneObjects;
 using UnityEngine;
 
 
@@ -25,7 +26,6 @@ namespace Yaguar.StoryMaker.Editor
             Debug.Log("AddSceneObject: " + data.id + " " + data);
             if (data is SOAvatarFabulabData avatarData)
             {
-                Debug.Log("ACA1");
                 SceneObject avatar = Instantiate(avatar_to_instantiate);
                 AddToContainer(avatar, avatarData);
 
@@ -42,6 +42,17 @@ namespace Yaguar.StoryMaker.Editor
                     avatarData.anim = CharacterAnims.anims.idle;
                 Events.OnCharacterAnim(avatarData.id,avatarData.anim);
                 Events.OnCharacterExpression(avatarData.id, avatarData.emoji);
+            }else if (data is SODataFabulab soData) {
+                SceneObject prop = Instantiate(object_to_instantiate);
+                AddToContainer(prop, soData);
+
+                prop.gameObject.name = "Prop_" + soData.id;
+                prop.Init(soData);
+                inputsManager.ResetAll();
+                SceneObjectManager objectManager = prop.GetComponent<Prop>().objectManager;
+                objectManager.id = soData.id;
+                Events.LoadBoardItemForStory(objectManager, soData.id);
+                selected = prop;                
             }
 
             sceneObjects.Add(selected);
@@ -59,6 +70,22 @@ namespace Yaguar.StoryMaker.Editor
                         return a as AvatarFabulab;
                 }
             }
+            return null;
+        }
+
+        public override SceneObject GetSceneObjectInScene(SOData soData) {
+            foreach (SceneObject so in sceneObjects) {
+                if (so != null &&
+                    (so.GetData().id == soData.id && soData is SOAvatarData && so.GetData() is SOAvatarData)
+                    ||
+                    (
+                    //si es un objeto chequea por posicion! quizas haya que mejorar esto...
+                    //so.GetData().itemName == soData.itemName && 
+                    soData is SODataFabulab && so.GetData() is SODataFabulab && so.GetData().pos == soData.pos)
+                    )
+                    return so;
+            }
+
             return null;
         }
     }

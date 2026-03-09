@@ -11,8 +11,8 @@ namespace Yaguar.StoryMaker.Editor
     public class AvatarFabulab : Avatar
     {
 
-        public GameObject character_to_instantiate;
-        public CharacterManager characterManager;
+        [SerializeField] GameObject character_to_instantiate;
+        [field:SerializeField] public CharacterManager characterManager { private set; get; }
 
         private void Start()
         {

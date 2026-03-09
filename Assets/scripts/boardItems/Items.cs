@@ -1,5 +1,6 @@
 ﻿using BoardItems.BoardData;
 using BoardItems.Characters;
+using BoardItems.SceneObjects;
 using System.Collections;
 using System.Collections.Generic;
 using UI;
@@ -531,8 +532,13 @@ namespace BoardItems
 
         void LoadBoardItemForStory(BoardItemManager itemManager, string id)
         {
-            CharacterData cd = Data.Instance.charactersData.SetCurrentID(id);
-            OpenWork(itemManager, cd);
+            SOPartData pd = null;
+            if (itemManager is CharacterManager)
+                pd = Data.Instance.charactersData.SetCurrentID(id);
+            else if (itemManager is SceneObjectManager)
+                pd = Data.Instance.sObjectsData.SetCurrentID(id);
+
+            OpenWork(itemManager, pd);
         }
 
         ItemData CreateItem(SavedIData itemData, BoardItemManager target)

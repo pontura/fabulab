@@ -17,10 +17,10 @@ namespace Yaguar.StoryMaker.Editor
 
         [SerializeField] protected SpriteRenderer background;
 
-        
+        [HideInInspector]
         public SceneObject selected;
 
-        
+        [HideInInspector]
         public SceneObject selectedAvatar;
 
         [HideInInspector]
@@ -59,6 +59,7 @@ namespace Yaguar.StoryMaker.Editor
         public void DeleteSceneObject(SOData data)
         {
             SceneObject soToRemove = GetSceneObjectInScene(data);
+            Debug.Log("$$$ soToRemove " + (soToRemove == null));
             if (soToRemove == null)
                 return;
 
@@ -108,7 +109,7 @@ namespace Yaguar.StoryMaker.Editor
             so.transform.localScale = new Vector3(data.size, data.size, data.size);
         }
 
-        public SceneObject GetSceneObjectInScene(SOData soData)
+        public virtual SceneObject GetSceneObjectInScene(SOData soData)
         {
             foreach (SceneObject so in sceneObjects)
             {

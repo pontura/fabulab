@@ -95,29 +95,12 @@ namespace UI.MainApp
 
                     (soData as SOAvatarFabulabData).anim = (so.GetData() as SOAvatarFabulabData).anim;
                     (soData as SOAvatarFabulabData).emoji = (so.GetData() as SOAvatarFabulabData).emoji;
-                    /*AvatarFabulab avatar = so as AvatarFabulab;
-
-                    soData = new SOAvatarFabulabData();
-                    soData.customization = avatar.characterManager.characterID;
-
-                    customizerData += avatar.GetData().id + "*";
-                    int actionID = avatar.avatarActionsManager.currentAction.id;
-                    customizerData += actionID + "*";
-
-                    if (avatar.avatarCustomizer.data.sex == CustomizationData.sexs.BOY)
-                        customizerData += "b*";
-                    else
-                        customizerData += "g*";
-
-                    List<CustomizationData> allStyles = avatar.avatarCustomizer.allStyles;
-                    foreach (CustomizationData data in allStyles)
-                        customizerData += data.cloth + ":" + data.id + ":" + data.colorID + "*";
-
-                    int expID = avatar.avatarExpresionsManager.currentExpresion.id;
-                    customizerData += "ex_" + expID + "*";*/
+                } else if (so is Prop) {
+                    soData = new SODataFabulab();
+                    soData.Clone(so.GetData());
                 }
 
-                Debug.Log("# Adding Id: " + soData.id + " " + soData );
+                Debug.Log("# Adding Id: " + soData.id + " " + soData);
 
 
                 sdf.AddSO(soData);

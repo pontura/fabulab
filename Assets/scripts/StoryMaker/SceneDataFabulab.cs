@@ -9,7 +9,7 @@ namespace Yaguar.StoryMaker.Editor
 {
     public enum SceneElementType {
         AVATAR,
-        OBJECT
+        PROP
     }
 
     [Serializable]
@@ -76,10 +76,14 @@ namespace Yaguar.StoryMaker.Editor
             if (soData is SOAvatarFabulabData sOAvatar) {
                 Debug.Log("$ is SOAvatarFabulabData");
                 sceneElement = new SceneElementAvatar();
+                sceneElement.type = SceneElementType.AVATAR;
                 (sceneElement as SceneElementAvatar).anim = sOAvatar.anim;
                 (sceneElement as SceneElementAvatar).emoji = sOAvatar.emoji;
-                Debug.Log("$ "+sOAvatar.anim.ToString() + " " + sOAvatar.emoji.ToString());
+                Debug.Log("$ " + sOAvatar.anim.ToString() + " " + sOAvatar.emoji.ToString());
+            } else if (soData is SODataFabulab) {
+                sceneElement.type = SceneElementType.PROP;
             }
+                
             sceneElement.data = new SOData();
             sceneElement.data.id = soData.id;
             sceneElement.data.pos = soData.pos;
@@ -216,9 +220,10 @@ namespace Yaguar.StoryMaker.Editor
                 soData = new SOAvatarFabulabData();
                 SetSOData(soData, data);
             }
-            else if (data.type == SceneElementType.OBJECT)
+            else if (data.type == SceneElementType.PROP)
             {
-                
+                soData = new SODataFabulab();
+                SetSOData(soData, data);
             }
             Scenario.Instance.sceneObejctsManager.DeleteSceneObject(soData);
             // Events.DeleteSceneObject(soData);
@@ -245,18 +250,9 @@ namespace Yaguar.StoryMaker.Editor
 
                 SetSOData(soData, data);
             }
-            else if (data.type == SceneElementType.OBJECT) {
-                /*soData = new SOIconData();
-                SetSOData(soData, arr);
-                string itemName = arr[8];
-                string[] serializedValueArr = itemName.Split("*"[0]);
-                if (serializedValueArr.Length > 1)
-                {
-                    soData.customizationSerialized = serializedValueArr[1];
-                    itemName = serializedValueArr[0];
-                }
-                soData.itemName = itemName;
-                (soData as SOIconData).SetIcon();*/
+            else if (data.type == SceneElementType.PROP) {
+                soData = new SODataFabulab();
+                SetSOData(soData, data);                
             }
             
             if (soData != null)

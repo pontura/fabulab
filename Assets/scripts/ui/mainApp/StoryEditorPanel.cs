@@ -5,6 +5,8 @@ namespace UI.MainApp
 {
     public class StoryEditorPanel : MainScreen
     {
+
+        UIManager.screenType last;
         protected override void ShowScreen(UIManager.screenType type) 
         {
             switch(type)
@@ -15,11 +17,14 @@ namespace UI.MainApp
                     StoryMakerEvents.EnableInputManager(true);
                     break;
                 default:
-                    StoryMakerEvents.Restart();
-                    Show(false);                    
-                    StoryMakerEvents.EnableInputManager(false);
+                    if (last == UIManager.screenType.StoryMaker) {
+                        StoryMakerEvents.Restart();
+                        Show(false);
+                        StoryMakerEvents.EnableInputManager(false);
+                    }
                     break;
             }
+            last = type;
         }        
     }
 }
