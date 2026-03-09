@@ -1,10 +1,10 @@
-﻿using System.Collections;
+﻿
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UI;
-using System.ComponentModel;
+
 namespace BoardItems
 {
     public class ItemDragHandler : MonoBehaviour

@@ -54,7 +54,10 @@ namespace UI
             {
                 container = item.GetComponentInParent<BodyPart>();
                 if(container != null)
-                    itemDragHandler.OnStartDragContainer(container.gameObject, originalPosition);
+                {
+                    Vector3 containerOriginalPosition = cam.WorldToScreenPoint(container.transform.position);
+                    itemDragHandler.OnStartDragContainer(container.gameObject, containerOriginalPosition);
+                }
                 else
                 {
                     Events.SetGroupToolsOn(false);
