@@ -197,11 +197,13 @@ namespace UI
         public void LoadOthersWork(string id)
         {
             items.DeleteAll();
-            CharacterData cd;
             switch (editingType)
             {
                 case editingTypes.CHARACTER:
                     Data.Instance.charactersData.LoadOthersCharacter(id, OpenWork);
+                    break;
+                case editingTypes.OBJECT:
+                    Data.Instance.sObjectsData.LoadOthersObject(id, OpenWork);
                     break;
                 default:
                     break;

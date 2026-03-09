@@ -4,6 +4,24 @@ using UnityEngine;
 
 namespace BoardItems.BoardData
 {
+    public enum MetadataTypes {
+        characters,
+        presets,
+        so
+    }
+
+    [Serializable]
+    public class PropMetaData : CharacterMetaData
+    {
+        public SObjectData.types type;
+    }
+
+    [Serializable]
+    public class ServerPropMetaData : ServerCharacterMetaData
+    {
+        public SObjectData.types type;   
+    }
+
     [Serializable]
     public class CharacterMetaData
     {

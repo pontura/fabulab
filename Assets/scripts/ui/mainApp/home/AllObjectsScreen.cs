@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace UI.MainApp.Home.User
 {
-    public class UserObjectsScreen : MonoBehaviour
+    public class AllObjectsScreen : MonoBehaviour
     {
         public CharacterSelectorBtn workBtn_prefab;
         public Transform container;
@@ -32,8 +32,8 @@ namespace UI.MainApp.Home.User
             Utils.RemoveAllChildsIn(backgroundsContainer);
             Utils.RemoveAllChildsIn(objectsContainer);
 
-            List<PropMetaData> generics = Data.Instance.sObjectsData.GetUserMetadataByType(SObjectData.types.generic);
-            List<PropMetaData> backgrounds  = Data.Instance.sObjectsData.GetUserMetadataByType(SObjectData.types.background);
+            List<PropMetaData> generics = Data.Instance.sObjectsData.GetMetadataByType(SObjectData.types.generic);
+            List<PropMetaData> backgrounds  = Data.Instance.sObjectsData.GetMetadataByType(SObjectData.types.background);
 
             AddTitle(0, "Generic Objects (" + generics.Count + ")");
             foreach (PropMetaData cd in generics)

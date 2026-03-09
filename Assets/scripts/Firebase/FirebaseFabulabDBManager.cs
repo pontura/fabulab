@@ -238,6 +238,33 @@ namespace Yaguar.StoryMaker.DB
             //print("LoadCharacterFromServer url : " + url);
         }
 
+        public void LoadAssetFromServer(string assetId, System.Action<bool, string, SObjectServerData> callback, string userId = null) {
+            string uid = _uid;
+            if (userId != null) {
+                uid = userId;
+            }
+
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("so/" + uid + "/" + assetId);
+            reference.GetValueAsync().ContinueWithOnMainThread(task => {
+                if (task.IsFaulted || task.IsCanceled) {
+                    Debug.Log("#LoadCharacterFromServer FAIL");
+                    callback(false, "", null);
+                    Debug.Log(task.Exception);
+                } else if (task.IsCompleted) {
+                    try {
+                        //SceneDataFabulabLyna[] sds = JsonConvert.DeserializeObject<SceneDataFabulabLyna[]>(task.Result.GetRawJsonValue());
+                        string data = task.Result.GetRawJsonValue();
+                        Debug.Log("# " + data);
+                        callback(true, task.Result.Key, JsonConvert.DeserializeObject<SObjectServerData>(data));
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
+                }
+            });
+            Debug.Log("Server: LoadCharacterFromServer");
+            //print("LoadCharacterFromServer url : " + url);
+        }
+
 
         public void SaveMetadataToServer(string type, string characterId, ServerCharacterMetaData swmd)
         {
@@ -254,22 +281,28 @@ namespace Yaguar.StoryMaker.DB
             reference.GetValueAsync().ContinueWithOnMainThread(task => {
 
                 if (task.IsFaulted || task.IsCanceled) {
-                    Debug.Log("#Load" + type + "MetadataFromServer FAIL");
+                    Debug.Log("#Load " + type + " MetadataFromServer FAIL");
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
-                    Debug.Log("#Load" + type + "MetadataFromServer IsCompleted");
+                    Debug.Log("#Load " + type + " MetadataFromServer IsCompleted");
                     try {
                         Debug.Log(task.Result.GetRawJsonValue());
                         DataSnapshot snapshot = task.Result;
 
                         if (snapshot.Exists) {
-                            Debug.Log("#Load" + type + "MetadataFromServer exists");
+                            Debug.Log("#Load " + type + " MetadataFromServer exists");
                             List<CharacterMetaData> metas = new List<CharacterMetaData>();
-                            Debug.Log("#Load" + type + "MetadataFromServer snapshot Count: " + snapshot.Children.Count<DataSnapshot>());
+                            Debug.Log("#Load " + type + " MetadataFromServer snapshot Count: " + snapshot.Children.Count<DataSnapshot>());
 
                             foreach (var child in snapshot.Children) {
                                 Debug.Log(child.Key + ": " + child.Value.ToString());
                                 CharacterMetaData fd = new CharacterMetaData();
+                                if (type == "so") {
+                                    fd = new PropMetaData();
+                                    Debug.Log(child.Key+" $$$: " + (int)(long)child.Child("type").Value);
+                                    Debug.Log(child.Key+" $$$: " +child.Child("type").Value);
+                                    (fd as PropMetaData).type = (SObjectData.types)((int)(long)child.Child("type").Value);
+                                }
                                 fd.id = child.Key;
                                 fd.userID = child.Child("userID").Value as string;
                                 fd.creators = new List<string>();
@@ -288,7 +321,7 @@ namespace Yaguar.StoryMaker.DB
                             Debug.LogWarning("snapshot not exist");
                         }
                     } catch (Exception ex) {
-                        Debug.LogError($"Error en callback: {ex}");
+                        Debug.LogError(type+" "+$"Error en callback: {ex}");
                     }
                 }
             });

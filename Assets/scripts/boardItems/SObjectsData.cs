@@ -11,13 +11,23 @@ namespace BoardItems
         public Vector2Int thumbSize;
 
         public List<SObjectData> data;
-        public List<CharacterMetaData> metaData;
+        public List<SObjectData> othersData;
+        public List<PropMetaData> metaData;
+        public List<PropMetaData> userMetaData;
 
         public SObjectData.types Type { get { return this.currentType; } }
         public void SetType(SObjectData.types type) { this.currentType = type; }
         public List<SObjectData> GetDataByType(SObjectData.types type)
         {
            return data.FindAll(x => x.type == type);
+        }
+
+        public List<PropMetaData> GetMetadataByType(SObjectData.types type) {
+            return metaData.FindAll(x => x.type == type);
+        }
+
+        public List<PropMetaData> GetUserMetadataByType(SObjectData.types type) {
+            return userMetaData.FindAll(x => x.type == type);
         }
 
         [SerializeField] string currentID;
@@ -45,8 +55,8 @@ namespace BoardItems
         }
         void LoadSOMetadataFromServer() {
             Debug.Log("#Load SO MetadataFromServer");
-            metaData = new List<CharacterMetaData>();
-            FirebaseStoryMakerDBManager.Instance.LoadMetadataFromServer("so", OnLoadSODataFromServer);
+            metaData = new List<PropMetaData>();
+            FirebaseStoryMakerDBManager.Instance.LoadMetadataFromServer(MetadataTypes.so.ToString(), OnLoadSODataFromServer);
         }        
 
         public void SaveSO(Texture2D tex)
@@ -95,13 +105,12 @@ namespace BoardItems
             }
             currentSO = wd;
 
-            string type = "so";
             if (wd.id == "") {
                 data.Add(wd);
-                FirebaseStoryMakerDBManager.Instance.SaveToServer("so", wd.GetServerData(), OnSavedToServer);
+                FirebaseStoryMakerDBManager.Instance.SaveToServer(MetadataTypes.so.ToString(), wd.GetServerData(), OnSavedToServer);
             } 
             else {
-                FirebaseStoryMakerDBManager.Instance.UpdateDataToServer("so", wd.id, wd.GetServerData(), OnSavedToServer);
+                FirebaseStoryMakerDBManager.Instance.UpdateDataToServer(MetadataTypes.so.ToString(), wd.id, wd.GetServerData(), OnSavedToServer);
             } 
         }
         void OnSavedToServer(bool succes, string id)
@@ -113,7 +122,7 @@ namespace BoardItems
             swmd.thumb = System.Convert.ToBase64String(currentSO.thumb.EncodeToPNG());
             swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
             swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid); 
-            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer("so", currentID, swmd);
+            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), currentID, swmd);
 
             OpenSODetail(currentSO);
         }
@@ -124,9 +133,11 @@ namespace BoardItems
         public void OnLoadSODataFromServer(List<CharacterMetaData> sfds)
         {
             Debug.Log("OnLoadSODataFromServer !!");
-            metaData = sfds;
+            foreach (CharacterMetaData sfd in sfds)
+                metaData.Add(sfd as PropMetaData);
+            userMetaData = metaData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid);
             data = new();
-            FirebaseStoryMakerDBManager.Instance.LoadUserAssetsFromServer("so", LoadAssetsFromServer);
+            FirebaseStoryMakerDBManager.Instance.LoadUserAssetsFromServer(MetadataTypes.so.ToString(), LoadAssetsFromServer);
         }
 
         void LoadAssetsFromServer(Dictionary<string, SObjectServerData> d)
@@ -160,6 +171,41 @@ namespace BoardItems
             if(o != null)
                 currentType = o.type;
             return o;
+        }
+
+        public void LoadOthersObject(string id, System.Action<SObjectData> OnDone) {
+            currentID = "";
+            //  Debug.Log(currentID);
+            if (othersData == null)
+                othersData = new List<SObjectData>();
+            SObjectData chd = othersData.Find(x => x.id == id);
+            if (chd != null)
+                OnDone(chd);
+            else {
+                PropMetaData chmd = metaData.Find(x => x.id == id);
+                if (chmd == null) {
+                    Debug.Log("Fail getting Prop Meta Data");
+                    return;
+                }
+
+                FirebaseStoryMakerDBManager.Instance.LoadAssetFromServer(id, (success, key, data) => {
+                    if (success) {
+                        SObjectData chD = new SObjectData();
+                        chD.id = key;
+                        chD.LoadServerData(data);
+                        chD.thumb = metaData.Find(x => x.id == chD.id)?.thumb;
+                        othersData.Add(chD);
+                        OnDone(chD);
+                    } else {
+                        Debug.Log("Fail getting Character Data");
+                        return;
+                    }
+
+                }, chmd.userID);
+                //Debug.Log("#LoadCharactersFromServer " + e.Key + ": " + e.Value);
+
+            }
+
         }
 
         public void ResetCurrentID()

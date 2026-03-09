@@ -72,7 +72,7 @@ namespace BoardItems
             //if (Data.Instance.userData.IsLogged()) {
                 Debug.Log("#is Logged");
                 charactersMetaData = new List<CharacterMetaData>();
-                FirebaseStoryMakerDBManager.Instance.LoadMetadataFromServer("characters", OnLoadCharacterDataFromServer);
+                FirebaseStoryMakerDBManager.Instance.LoadMetadataFromServer(MetadataTypes.characters.ToString(), OnLoadCharacterDataFromServer);
             //}
         }
 
@@ -152,11 +152,11 @@ namespace BoardItems
             if (wd.id == "")
             {
                 userCharacters.Add(wd);
-                FirebaseStoryMakerDBManager.Instance.SaveToServer("characters", wd.GetServerData(), OnCharacterSavedToServer);
+                FirebaseStoryMakerDBManager.Instance.SaveToServer(MetadataTypes.characters.ToString(), wd.GetServerData(), OnCharacterSavedToServer);
             }
             else
             {
-                FirebaseStoryMakerDBManager.Instance.UpdateDataToServer("characters", wd.id, wd.GetServerData(), OnCharacterSavedToServer);
+                FirebaseStoryMakerDBManager.Instance.UpdateDataToServer(MetadataTypes.characters.ToString(), wd.id, wd.GetServerData(), OnCharacterSavedToServer);
             }
             
         }
@@ -212,7 +212,7 @@ namespace BoardItems
             swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
             swmd.thumb = System.Convert.ToBase64String(currentCharacter.thumb.EncodeToPNG());
             swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
-            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer("characters", currentID, swmd);
+            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.characters.ToString(), currentID, swmd);
 
             OpenCharacterDetail(currentCharacter);
         }
@@ -241,7 +241,7 @@ namespace BoardItems
             charactersMetaData = sfds;
             userCharactersMetaData = charactersMetaData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid);
             userCharacters = new();
-            FirebaseStoryMakerDBManager.Instance.LoadUserAssetsFromServer("characters", LoadCharactersFromServer);
+            FirebaseStoryMakerDBManager.Instance.LoadUserAssetsFromServer(MetadataTypes.characters.ToString(), LoadCharactersFromServer);
         }
 
         void LoadCharactersFromServer(Dictionary<string, CharacterServerData> data)
