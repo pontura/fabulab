@@ -1,6 +1,5 @@
 ﻿using BoardItems;
 using BoardItems.Characters;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -16,6 +15,7 @@ namespace UI
         Vector3 clickPosition;
         public Items items;
         CharacterPartsHelper.parts partActive;
+        public bool groupOn = false;
 
         public enum states
         {
@@ -30,22 +30,30 @@ namespace UI
         {
             Events.Zoom += OnZoom;
             Events.OnBGColorizerOpen += OnBGColorizerOpen;
+            Events.SetGroupToolsOn += SetGroupToolsOn;
         }
         private void OnDestroy()
         {
             Events.Zoom -= OnZoom;
             Events.OnBGColorizerOpen -= OnBGColorizerOpen;
+            Events.SetGroupToolsOn -= SetGroupToolsOn;
         }
         private void OnZoom(CharacterPartsHelper.parts part, bool saving = false)
         {
             this.partActive = part;
         }
+        BodyPart container;
 
         void OnStartDrag(ItemInScene item, Vector3 originalPosition)
         {
             AudioManager.Instance.sfxManager.PlayTransp("get", -2);
             state = states.DRAGGING;
-            itemDragHandler.OnStartDrag(item, originalPosition);
+            if(groupOn)
+            {
+                container = item.GetComponentInParent<BodyPart>();
+                itemDragHandler.OnStartDragContainer(container.gameObject, originalPosition);
+            } else
+                itemDragHandler.OnStartDrag(item, originalPosition);
         }
         float lastMouseX;
         void LateUpdate()
@@ -108,6 +116,10 @@ namespace UI
                         if (Input.touches[0].phase == TouchPhase.Ended)
                         {
                             state = states.IDLE;
+
+                            if(container!= null)
+                                container.OnStopTransformModify();
+
                             itemDragHandler.StopDragging(centerPos);
                             if (Vector3.Distance(clickPosition, centerPos) < 4 && !IsPointerOverUIObject())
                                 OpenTools();
@@ -144,11 +156,19 @@ namespace UI
                     if (Input.GetMouseButtonUp(0))
                     {
                         state = states.IDLE;
-                        itemDragHandler.StopDragging(Input.mousePosition);
+
+                       
                         if (Vector3.Distance(clickPosition, Input.mousePosition) < 4 && !IsPointerOverUIObject())
                             OpenTools();
-                       // else
-                        //    AudioManager.Instance.sfxManager.PlayTransp("drop", -2);
+                        else
+                        {
+                            if (container != null)
+                                container.OnStopTransformModify();
+                            else
+                            {
+                                itemDragHandler.StopDragging(Input.mousePosition);
+                            }
+                        }
                     }
                     else
                         itemDragHandler.UpdateDrag(Input.mousePosition);
@@ -213,7 +233,7 @@ namespace UI
             Vector3 _offset = cam.ScreenToWorldPoint(Input.mousePosition);
             _offset.z = 0;
             itemInScene.transform.position = _offset;
-            itemInScene.GetComponent<ItemData>().position = _offset;
+          //  itemInScene.GetComponent<ItemData>().position = _offset;
 
             OnStartDrag(itemInScene, Input.mousePosition);
             UIManager.Instance.boardUI.items.StartDrag(itemInScene);
@@ -241,6 +261,10 @@ namespace UI
             {
                 OnCloseTools();
             }
+        }
+        void SetGroupToolsOn(bool isOn)
+        {
+            groupOn = isOn;
         }
         public void OnCloseTools(states _state = states.IDLE)
         {

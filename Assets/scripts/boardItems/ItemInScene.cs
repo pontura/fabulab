@@ -120,32 +120,6 @@ namespace BoardItems
         }
         public void SetPos(Vector3 pos, bool snap = false)
         {
-            float snapGride = Data.Instance.settings.snapGride;
-            if (snap)
-            {
-                SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
-
-                Vector3 size = sr.bounds.size;
-
-                // calcular borde inferior izquierdo
-                float left = pos.x - size.x / 2f;
-                float bottom = pos.y - size.y / 2f;
-
-                // snapear ese borde
-                float snappedLeft = Mathf.Round(left / snapGride) * snapGride;
-                float snappedBottom = Mathf.Round(bottom / snapGride) * snapGride;
-
-                // reconstruir posición
-                pos.x = snappedLeft + size.x / 2f;
-                pos.y = snappedBottom + size.y / 2f;
-
-                pos.x = (float)System.Math.Round(pos.x, 4);
-                pos.y = (float)System.Math.Round(pos.y, 4);
-
-
-                transform.position = pos;
-
-            }
             transform.position = new Vector3(pos.x, pos.y, transform.position.z);
         }
         void Snap()

@@ -52,6 +52,11 @@ namespace BoardItems
         public void SetSelection(bool isOn)
         {           
             selectedBodySignal.gameObject.SetActive(isOn);
+            ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
+            foreach (ItemInScene i in all)
+            {
+                i.SetCollider(isOn);
+            }
         }
         public void SendToBack(ItemInScene item)
         {
@@ -110,6 +115,18 @@ namespace BoardItems
             if(z==0)
                 return 0;
             return z - z_displacement;
+        }
+        public void OnStopTransformModify()
+        {
+            print("OnStopTransformModify");
+            ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
+            foreach (ItemInScene i in all) i.transform.SetParent(transform.parent);
+            transform.position = Vector3.zero;
+            foreach (ItemInScene i in all)
+            {
+                i.data.position = i.transform.localPosition;
+                i.transform.SetParent(transform);
+            }
         }
     }
 }

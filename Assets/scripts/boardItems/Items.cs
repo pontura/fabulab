@@ -299,6 +299,7 @@ namespace BoardItems
         public bool snap = true;
         void OnStopDrag(ItemInScene item, Vector3 pos)
         {
+            if(item == null) return;
             item.StopBeingDrag();
             float posX = Camera.main.WorldToScreenPoint(pos).x;
             bool isOverBodyPart = item.IsOverBodyPart();
@@ -391,7 +392,7 @@ namespace BoardItems
         {
             SetItemSelected(item);
 
-            item.data.position = item.transform.position;
+            item.data.position = item.transform.localPosition;
 
 
             if (!item.IsBeingUse())
@@ -400,7 +401,7 @@ namespace BoardItems
                 item.data.position.z = _z;
             }
 
-            item.transform.position = item.data.position;
+            item.transform.localPosition = item.data.position;
 
             item.StartBeingDrag();
             AnimateItemDragDrop(true);
@@ -630,6 +631,8 @@ namespace BoardItems
                     i.AppearAction();
                     yield return new WaitForSeconds(0.05f);
                 }
+                if(i.data.part == partActive)
+                    i.SetCollider(true);
             }
         }
 
