@@ -269,8 +269,10 @@ namespace Yaguar.StoryMaker.DB
         public void SaveMetadataToServer(string type, string characterId, ServerCharacterMetaData swmd)
         {
             Debug.Log("#Save Metadata To Server" + type);
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/" + type  + "/" + characterId);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/" + type  + "/" + characterId);            
             string s = JsonConvert.SerializeObject(swmd);
+            if (type == "so")
+                s = JsonConvert.SerializeObject(swmd as ServerPropMetaData);
             reference.SetRawJsonValueAsync(s);
             Debug.Log("Server: SaveCharacterMetadataToServer "+ characterId);           
         }

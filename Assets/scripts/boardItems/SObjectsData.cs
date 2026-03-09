@@ -118,10 +118,11 @@ namespace BoardItems
             currentSO.id = id;
             currentID = id;
 
-            ServerCharacterMetaData swmd = new ServerCharacterMetaData();
+            ServerPropMetaData swmd = new ServerPropMetaData();
             swmd.thumb = System.Convert.ToBase64String(currentSO.thumb.EncodeToPNG());
             swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
-            swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid); 
+            swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
+            swmd.type = currentSO.type;
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), currentID, swmd);
 
             OpenSODetail(currentSO);
