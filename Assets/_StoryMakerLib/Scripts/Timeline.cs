@@ -11,12 +11,12 @@ namespace Yaguar.StoryMaker.Editor
         public Transform container;
         public List<KeyFrameUI> all;
         public KeyframeMarker keyFrameMarker;
-        protected float total_x_marker = 282;
+        [SerializeField] protected float total_x_marker = 282;
         public float timer;
         public float totalTimer;
         public float keyframe_duration;
 
-        protected void Start()
+        protected virtual void Start()
         {
             
 
