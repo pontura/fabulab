@@ -25,7 +25,8 @@ namespace UI
         {
             this.lastZoom = part;
             this.part = _part;
-            if(UIManager.Instance.boardUI.editingType == BoardUI.editingTypes.OBJECT)
+            animator.enabled = true;
+            if (UIManager.Instance.boardUI.editingType == BoardUI.editingTypes.OBJECT)
                 animator.SetInteger("zoom", 0);
             else
                 animator.SetInteger("zoom", (int)part);

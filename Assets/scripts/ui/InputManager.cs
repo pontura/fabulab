@@ -1,8 +1,6 @@
 ﻿using BoardItems;
 using BoardItems.Characters;
-using System;
 using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,11 +8,13 @@ namespace UI
 {
     public class InputManager : MonoBehaviour
     {
+        [SerializeField] GameObject dragContainer;
         [SerializeField] Camera cam;
         public ItemDragHandler itemDragHandler;
         public ToolsMenu toolsMenu;
         public states state;
         Vector3 clickPosition;
+        Vector3 dragOrigin;
         public Items items;
         CharacterPartsHelper.parts partActive;
         public bool groupOn = false;
@@ -55,6 +55,7 @@ namespace UI
                 container = item.GetComponentInParent<BodyPart>();
                 if(container != null)
                 {
+                    cam.gameObject.GetComponent<Animator>().enabled = false;
                     Vector3 containerOriginalPosition = cam.WorldToScreenPoint(container.transform.position);
                     itemDragHandler.OnStartDragContainer(container.gameObject, containerOriginalPosition);
                 }
@@ -93,10 +94,19 @@ namespace UI
                 switch (state)
                 {
                     case states.CANVAS_DRAGGING:
-                        if (Input.touchCount == 1 && Input.touches[0].phase == TouchPhase.Ended)
+                        if (Input.touchCount == 1)
                         {
-                            Events.OnCanvasDragger(false);
-                            state = states.IDLE;
+                            if (Input.touches[0].phase == TouchPhase.Moved)
+                            {
+                                cam.gameObject.GetComponent<Animator>().enabled = false;
+                                Vector3 difference = dragOrigin - cam.ScreenToWorldPoint(Input.touches[0].position);
+                                cam.transform.position += new Vector3(difference.x, difference.y, 0f);
+                            }
+                            else if (Input.touches[0].phase == TouchPhase.Ended)
+                            {
+                               // Events.OnCanvasDragger(false);
+                                state = states.IDLE;
+                            }
                         }
                         break;
                     case states.DRAGGING:
@@ -159,8 +169,14 @@ namespace UI
                 case states.CANVAS_DRAGGING:
                     if (Input.GetMouseButtonUp(0))
                     {
-                        Events.OnCanvasDragger(false);
+                       // Events.OnCanvasDragger(false);
                         state = states.IDLE;
+                    }
+                    else if (Input.GetMouseButton(0))
+                    {
+                        cam.gameObject.GetComponent<Animator>().enabled = false;
+                        Vector3 difference = dragOrigin - cam.ScreenToWorldPoint(Input.mousePosition);
+                        cam.transform.position += new Vector3(difference.x, difference.y, 0f);
                     }
                     break;
                 case states.DRAGGING:
@@ -210,18 +226,8 @@ namespace UI
                 case states.IDLE:
                     Vector3 pos = cam.ScreenToWorldPoint(Input.mousePosition);
                     RaycastHit2D hit = Physics2D.Raycast(pos, Vector3.forward);
-                    if (hit.collider == null)
-                    {
-                        //if (Input.mousePosition.x < Screen.width * 0.6f)
-                        //{
-                        //    if (!IsPointerOverUIObject())
-                        //    {
-                        //        Events.OnCanvasDragger(true);
-                        //        state = states.CANVAS_DRAGGING;
-                        //    }
-                        //}
-                    }
-                    else if (hit.transform.gameObject.tag == "DragItem")
+                   
+                    if (hit.transform.gameObject.tag == "DragItem")
                     {
                         if (state == states.TOOLS)
                             OnCloseTools(states.IDLE);
@@ -234,6 +240,15 @@ namespace UI
 
                         OnStartDrag(itemInScene, _offset);
                         UIManager.Instance.boardUI.items.StartDrag(itemInScene);
+                    }
+                    else
+                    {
+                        if (!IsPointerOverUIObject())
+                        {
+                            //  Events.OnCanvasDragger(true);
+                            state = states.CANVAS_DRAGGING;
+                            dragOrigin = cam.ScreenToWorldPoint(Input.mousePosition);
+                        }
                     }
                     break;
             }

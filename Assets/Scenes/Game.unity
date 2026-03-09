@@ -2462,6 +2462,7 @@ MonoBehaviour:
   GetItemAnim: {fileID: 7400000, guid: 3c33a4c92509f9945a619df720ddf21b, type: 2}
   ReleaseItemAnim: {fileID: 7400000, guid: 6d0dd85326a2a4d43a16bc80d6124b9e, type: 2}
   itemInScene_to_instantiate: {fileID: 2820553304643308677, guid: 9f5ad04abe1a87c4096aa106f96b6bf0, type: 3}
+  itemSelected: {fileID: 0}
   inventary: {fileID: 568409366}
   bg: {fileID: 1305945104}
   container: {fileID: 122229277}
@@ -3447,6 +3448,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menuPositionX: 520
   image: {fileID: 1674277825}
+  item: {fileID: 0}
+  target: {fileID: 0}
 --- !u!225 &872602179
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -7776,7 +7779,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4545900914222318569, guid: aefa9e3a53762814ebedcda11ddad63e, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 268.74
+      value: 303.92493
       objectReference: {fileID: 0}
     - target: {fileID: 4545900914222318569, guid: aefa9e3a53762814ebedcda11ddad63e, type: 3}
       propertyPath: m_SizeDelta.y
@@ -7904,7 +7907,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5844940950215898538, guid: aefa9e3a53762814ebedcda11ddad63e, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 268.74
+      value: 303.92493
       objectReference: {fileID: 0}
     - target: {fileID: 5844940950215898538, guid: aefa9e3a53762814ebedcda11ddad63e, type: 3}
       propertyPath: m_SizeDelta.y
@@ -8558,6 +8561,8 @@ MonoBehaviour:
   toolsMenu: {fileID: 1675629964}
   state: 0
   items: {fileID: 568409367}
+  groupOn: 0
+  container: {fileID: 0}
   clip: {fileID: 7400000, guid: 1307d98a8053bd24aa161d68e469b5e8, type: 2}
   itemSelected: {fileID: 0}
 --- !u!114 &1786578273
@@ -8604,7 +8609,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0f311e0408e38e4ea19120eee231878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groupOn: 0
   snap: 1
   zoomBar: {fileID: 983683652}
   items: {fileID: 568409367}
@@ -10764,6 +10768,10 @@ PrefabInstance:
     - target: {fileID: 14200723337754966, guid: d2c892f10b9514c4689c267db465ac38, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 14200723337754966, guid: d2c892f10b9514c4689c267db465ac38, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.000052817748
       objectReference: {fileID: 0}
     - target: {fileID: 51022969831219129, guid: d2c892f10b9514c4689c267db465ac38, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
