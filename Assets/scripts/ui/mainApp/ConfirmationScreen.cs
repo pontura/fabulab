@@ -1,6 +1,5 @@
 using System;
 using UI;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 public class ConfirmationScreen : MonoBehaviour

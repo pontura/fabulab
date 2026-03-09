@@ -62,7 +62,7 @@ namespace BoardItems
         }
         public void SetOff()
         {
-            AudioManager.Instance.uiSfxManager.PlayTransp("pop", -2, 0.5f);
+            //AudioManager.Instance.uiSfxManager.PlayTransp("pop", -2, 0.5f);
             gameObject.SetActive(false);
         }
         public void Delete()
