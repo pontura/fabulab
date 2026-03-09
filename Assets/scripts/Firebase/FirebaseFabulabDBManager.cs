@@ -301,8 +301,6 @@ namespace Yaguar.StoryMaker.DB
                                 CharacterMetaData fd = new CharacterMetaData();
                                 if (type == "so") {
                                     fd = new PropMetaData();
-                                    Debug.Log(child.Key+" $$$: " + (int)(long)child.Child("type").Value);
-                                    Debug.Log(child.Key+" $$$: " +child.Child("type").Value);
                                     (fd as PropMetaData).type = (SObjectData.types)((int)(long)child.Child("type").Value);
                                 }
                                 fd.id = child.Key;
