@@ -5,7 +5,7 @@ namespace BoardItems.SceneObjects
 {
     public class SceneObjectManager : BoardItemManager
     {
-        public int id = 0;
+        public string id = "";
         [SerializeField] BodyPart bp;
 
         private void Awake()

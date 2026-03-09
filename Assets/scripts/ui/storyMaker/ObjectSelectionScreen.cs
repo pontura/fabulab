@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using BoardItems.BoardData;
+using UnityEngine;
 using UnityEngine.UI;
+using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
 {
@@ -25,10 +27,7 @@ namespace UI.MainApp.Home.User
         
         void LoadNext()
         {
-            print("SO LoadNext " + artID);
-            print("SO count:  " + Data.Instance.sObjectsData.data.Count);
-            // if (artID >= Data.Instance.characters.Count) return;
-            foreach (BoardItems.BoardData.SObjectData cd in Data.Instance.sObjectsData.data)
+            foreach (SObjectData cd in Data.Instance.sObjectsData.data)
             {
                 CharacterSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
@@ -38,8 +37,10 @@ namespace UI.MainApp.Home.User
         }        
 
         public void OpenWork(string id)
-        {            
-            UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
+        {
+            SODataFabulab data = new SODataFabulab();
+            data.id = id;
+            StoryMakerEvents.AddSceneObject(data);
         }        
     }
 }
