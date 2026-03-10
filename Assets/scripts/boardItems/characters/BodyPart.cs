@@ -18,20 +18,13 @@ namespace BoardItems
         void Start()
         {
             col2D = GetComponentInChildren<Collider2D>();
-            //SetSelection(false);
-        }
-        void OnEnable()
-        {
             Events.OnNewBodyPartSelected += OnNewBodyPartSelected;
             Events.OnBodyPartActive += OnBodyPartActive;
         }
-        void OnDisable()
+        void OnDestroy()
         {
             Events.OnNewBodyPartSelected -= OnNewBodyPartSelected;
             Events.OnBodyPartActive -= OnBodyPartActive;
-        }
-        private void OnDestroy()
-        {
             col2D = GetComponentInChildren<Collider2D>();
         }
 
