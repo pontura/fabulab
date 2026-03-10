@@ -41,7 +41,6 @@ namespace BoardItems
 
         void OnNewBodyPartSelected(BodyPart bp)
         {
-            print("OnNewBodyPartSelected " + bp.part + " GO: " + gameObject.name);
             SetSelection(bp == this);          
         }
         public void SetSelection(bool isOn)
