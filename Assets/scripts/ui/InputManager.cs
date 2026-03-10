@@ -74,8 +74,8 @@ namespace UI
                 return;
 
 #if UNITY_EDITOR
-            UpdateTouch();
-            //UpdateMouseInput();
+            //UpdateTouch();
+            UpdateMouseInput();
 #elif UNITY_ANDROID || UNITY_IOS
             UpdateTouch();   
 #else
