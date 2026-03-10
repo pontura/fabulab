@@ -160,6 +160,7 @@ namespace UI.MainApp
         public void SaveProfilePic()
         {
             print("SaveProfilePic");
+            Events.OnBodyPartActive(CharacterPartsHelper.parts.HEAD);
             Events.Zoom(ZoomStates.HEAD, true);
             savePanel.SetActive(false);
             Invoke("SaveProfilePicDelayed", 1);

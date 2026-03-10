@@ -1,3 +1,4 @@
+using BoardItems.Characters;
 using BoardItems.UI;
 using Common.UI;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace UI
         }
         public void Init()
         {
+            Events.OnBodyPartActive(CharacterPartsHelper.parts.none);
             Events.Zoom(0, false);
             gameObject.SetActive(true);
             tabs.Init(OnTabClicked);

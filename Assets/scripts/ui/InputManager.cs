@@ -30,19 +30,19 @@ namespace UI
         }
         private void Start()
         {
-            Events.Zoom += OnZoom;
+            Events.OnBodyPartActive += OnBodyPartActive;
             Events.OnBGColorizerOpen += OnBGColorizerOpen;
             Events.SetGroupToolsOn += SetGroupToolsOn;
         }
         private void OnDestroy()
         {
-            Events.Zoom -= OnZoom;
+            Events.OnBodyPartActive -= OnBodyPartActive;
             Events.OnBGColorizerOpen -= OnBGColorizerOpen;
             Events.SetGroupToolsOn -= SetGroupToolsOn;
         }
-        private void OnZoom(ZoomStates zoom, bool saving = false)
+        private void OnBodyPartActive(CharacterPartsHelper.parts p)
         {
-            this.partActive = (CharacterPartsHelper.parts)(int)zoom;
+            this.partActive = (CharacterPartsHelper.parts)(int)p;
         }
         [SerializeField] BodyPart container;
 
