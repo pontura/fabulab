@@ -28,6 +28,8 @@ namespace UI
         public CharacterManager characterManager;
         public SceneObjectManager sceneobjectsManager;
 
+        [SerializeField] float backgroundColorFactor = 12;
+
         public editingTypes editingType;
         public enum editingTypes
         {
@@ -98,8 +100,8 @@ namespace UI
 
         void ColorizeBG(PalettesManager.colorNames name) {
             print("ColorizeBG " + name);
-            Color color = Data.Instance.palettesManager.GetColor(name);
-            cam.backgroundColor = color;
+            Color.RGBToHSV(Data.Instance.palettesManager.GetColor(name), out float hue, out float sat, out float val);
+            cam.backgroundColor = Color.HSVToRGB(hue,sat, 0.01f*(100-backgroundColorFactor)*val);
         }
         void EmptySceneItems()
         {
