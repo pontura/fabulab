@@ -1,4 +1,5 @@
 using BoardItems;
+using BoardItems.Characters;
 using Common.UI;
 using UnityEngine;
 
@@ -24,6 +25,7 @@ namespace UI.MainApp
             {
                 case UIManager.screenType.Creation_Objects:
                     sceneObjectsPanel.Init();
+                    Events.OnBodyPartActive(CharacterPartsHelper.parts.BODY);
                     Events.Zoom(ZoomStates.NONE, false);
                     changesMade = false;
                     SetButtons();

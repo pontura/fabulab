@@ -18,27 +18,20 @@ namespace BoardItems
         void Start()
         {
             col2D = GetComponentInChildren<Collider2D>();
-            //SetSelection(false);
-        }
-        void OnEnable()
-        {
             Events.OnNewBodyPartSelected += OnNewBodyPartSelected;
-            Events.Zoom += Zoom;
+            Events.OnBodyPartActive += OnBodyPartActive;
         }
-        void OnDisable()
+        void OnDestroy()
         {
             Events.OnNewBodyPartSelected -= OnNewBodyPartSelected;
-            Events.Zoom -= Zoom;
-        }
-        private void OnDestroy()
-        {
+            Events.OnBodyPartActive -= OnBodyPartActive;
             col2D = GetComponentInChildren<Collider2D>();
         }
 
-        private void Zoom(ZoomStates zoom, bool save)
+        private void OnBodyPartActive(CharacterPartsHelper.parts part)
         {
             ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
-            bool canInteract = (int)zoom == (int)part;
+            bool canInteract = this.part == part;
             foreach (ItemInScene i in all)
             {
                 if(i != null && i.rb != null)
@@ -48,10 +41,12 @@ namespace BoardItems
 
         void OnNewBodyPartSelected(BodyPart bp)
         {
+            print("OnNewBodyPartSelected " + bp.part + " GO: " + gameObject.name);
             SetSelection(bp == this);          
         }
         public void SetSelection(bool isOn)
-        {           
+        {
+            print("SetSelection " + isOn + " part: " + part + " GO: " + gameObject.name);
             selectedBodySignal.gameObject.SetActive(isOn);
             ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
             foreach (ItemInScene i in all)

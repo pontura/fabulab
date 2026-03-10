@@ -1,5 +1,6 @@
 ﻿using BoardItems;
 using BoardItems.BoardData;
+using BoardItems.Characters;
 using System.Collections.Generic;
 using UI.MainApp;
 using UnityEngine;
@@ -50,13 +51,20 @@ namespace UI
         }
         private void Start()
         {
+            Events.OnBodyPartActive += OnBodyPartActive;
             Events.ShowScreen += OnShowScreen;
             Init();
             Invoke("InitGalleryDelayed", 0.1f);
         }
         private void OnDestroy()
         {
+            Events.OnBodyPartActive -= OnBodyPartActive;
             Events.ShowScreen -= OnShowScreen;
+        }
+        public CharacterPartsHelper.parts part;
+        void OnBodyPartActive(CharacterPartsHelper.parts part)
+        {
+            this.part = part;
         }
         private void OnShowScreen(screenType type)
         {

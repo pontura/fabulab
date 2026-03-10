@@ -14,7 +14,8 @@ namespace UI
         HAND_LEFT = 6,
         HAIR = 7,
         FACE = 8,
-        STORY = 9
+        STORY = 9,
+        OBJECTS = 10
     }
 
     public class ZoomsManager : MonoBehaviour

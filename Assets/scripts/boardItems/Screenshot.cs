@@ -1,5 +1,4 @@
-﻿using BoardItems.Characters;
-using System.Collections;
+﻿using System.Collections;
 using UI;
 using UnityEngine;
 

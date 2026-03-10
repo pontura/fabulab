@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UI;
 using UI.MainApp;
 using UnityEngine;
+using UnityEngine.UIElements.Experimental;
 
 namespace BoardItems.Characters
 {
@@ -51,11 +52,11 @@ namespace BoardItems.Characters
             if (characterID != _characterID) return;
             anims.Idle();
         }
-        private void Zoom(ZoomStates part, bool saving = false)
+        private void Zoom(ZoomStates pa , bool saving)
         {
             foreach (BodyPart p in bodyParts)
             {
-                bool showBorders = (int)p.part == (int)part;
+                bool showBorders = (int)p.part == (int)pa;
                 if (saving)
                     showBorders = false;
 

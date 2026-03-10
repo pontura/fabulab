@@ -55,11 +55,13 @@ namespace UI
                 isPreset = true;
                 presetsDragAndDropToggleGO.SetActive(false);
                 Events.Zoom(0, false);
+                Events.OnBodyPartActive(CharacterPartsHelper.parts.none);
                 presetsSelector.SetOn(true, 9);
             }
             else
             {
                 ZoomStates part = (ZoomStates)id;
+                Events.OnBodyPartActive((CharacterPartsHelper.parts) id);
                 Events.Zoom(part, false);
                 if (isPreset)
                     presetsSelector.SetOn(true, id);
