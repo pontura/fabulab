@@ -2,6 +2,7 @@ using BoardItems.Characters;
 using BoardItems.SceneObjects;
 using Google.MiniJSON;
 using System;
+using UI;
 using UnityEngine;
 
 namespace BoardItems
@@ -34,10 +35,10 @@ namespace BoardItems
             col2D = GetComponentInChildren<Collider2D>();
         }
 
-        private void Zoom(CharacterPartsHelper.parts parts, bool save)
+        private void Zoom(ZoomStates zoom, bool save)
         {
             ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
-            bool canInteract = parts == part;
+            bool canInteract = (int)zoom == (int)part;
             foreach (ItemInScene i in all)
             {
                 if(i != null && i.rb != null)

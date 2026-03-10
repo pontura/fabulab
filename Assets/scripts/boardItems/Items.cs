@@ -618,7 +618,7 @@ namespace BoardItems
         }
         IEnumerator Cascade(BoardItemManager boardItemManager, SOPartData wd)
         {
-            CharacterPartsHelper.parts partActive = UIManager.Instance.zoomManager.part;
+            CharacterPartsHelper.parts partActive = (CharacterPartsHelper.parts)(int)UIManager.Instance.zoomManager.currentZoom;
             foreach (ItemInScene i in boardItemManager.GetComponentsInChildren<ItemInScene>())
             {
                 if(i.data.part == partActive || partActive == CharacterPartsHelper.parts.none)

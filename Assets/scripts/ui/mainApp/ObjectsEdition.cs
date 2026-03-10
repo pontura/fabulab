@@ -24,7 +24,7 @@ namespace UI.MainApp
             {
                 case UIManager.screenType.Creation_Objects:
                     sceneObjectsPanel.Init();
-                    Events.Zoom(BoardItems.Characters.CharacterPartsHelper.parts.BODY, false);
+                    Events.Zoom(ZoomStates.NONE, false);
                     changesMade = false;
                     SetButtons();
                     Show(true);

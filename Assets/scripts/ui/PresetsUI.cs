@@ -59,7 +59,7 @@ namespace UI
             }
             else
             {
-                CharacterPartsHelper.parts part = (CharacterPartsHelper.parts)id;
+                ZoomStates part = (ZoomStates)id;
                 Events.Zoom(part, false);
                 if (isPreset)
                     presetsSelector.SetOn(true, id);

@@ -1,4 +1,5 @@
 using BoardItems;
+using BoardItems.Characters;
 using UnityEngine;
 using Yaguar.StoryMaker.DB;
 
@@ -100,7 +101,7 @@ namespace UI.MainApp
         public void SavePart()
         {
             savingPart = true;
-            Events.EmptyCharacterItemsButExlude(UIManager.Instance.zoomManager.lastZoom);
+            Events.EmptyCharacterItemsButExlude((CharacterPartsHelper.parts)(int)UIManager.Instance.zoomManager.lastZoom);
             UIManager.Instance.zoomManager.ZoomToLastPart();
             savePanel.SetActive(false);
             Invoke("SavePartDelayed", 1);
@@ -159,7 +160,7 @@ namespace UI.MainApp
         public void SaveProfilePic()
         {
             print("SaveProfilePic");
-            Events.Zoom(BoardItems.Characters.CharacterPartsHelper.parts.HEAD, true);
+            Events.Zoom(ZoomStates.HEAD, true);
             savePanel.SetActive(false);
             Invoke("SaveProfilePicDelayed", 1);
         }
@@ -181,7 +182,7 @@ namespace UI.MainApp
         public void OnTakeShotDone(Texture2D tex)
         {
             if(savingPart)
-                Data.Instance.charactersData.SavePartCharacter(tex, UIManager.Instance.zoomManager.part);
+                Data.Instance.charactersData.SavePartCharacter(tex, (CharacterPartsHelper.parts)(int)UIManager.Instance.zoomManager.currentZoom);
             else
                 Data.Instance.charactersData.SaveCharacter(tex);
         }

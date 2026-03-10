@@ -40,9 +40,9 @@ namespace UI
             Events.OnBGColorizerOpen -= OnBGColorizerOpen;
             Events.SetGroupToolsOn -= SetGroupToolsOn;
         }
-        private void OnZoom(CharacterPartsHelper.parts part, bool saving = false)
+        private void OnZoom(ZoomStates zoom, bool saving = false)
         {
-            this.partActive = part;
+            this.partActive = (CharacterPartsHelper.parts)(int)zoom;
         }
         [SerializeField] BodyPart container;
 

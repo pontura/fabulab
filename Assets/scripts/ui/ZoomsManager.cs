@@ -3,11 +3,25 @@ using UnityEngine;
 
 namespace UI
 {
+    public enum ZoomStates
+    {
+        NONE,
+        HEAD = 1,
+        BODY = 2,
+        HAND = 3,
+        FOOT = 4,
+        FOOT_LEFT = 5,
+        HAND_LEFT = 6,
+        HAIR = 7,
+        FACE = 8,
+        STORY = 9
+    }
+
     public class ZoomsManager : MonoBehaviour
     {
         [SerializeField] Animator animator;
-        public CharacterPartsHelper.parts part;
-        public CharacterPartsHelper.parts lastZoom;
+        public ZoomStates currentZoom;
+        public ZoomStates lastZoom;
 
         private void Awake()
         {
@@ -21,15 +35,12 @@ namespace UI
         {
             Events.Zoom(lastZoom, true);
         }
-        public void Zoom(CharacterPartsHelper.parts _part, bool saving = false)
+        public void Zoom(ZoomStates _part, bool saving = false)
         {
-            this.lastZoom = part;
-            this.part = _part;
+            this.lastZoom = currentZoom;
+            this.currentZoom = _part;
             animator.enabled = true;
-            if (UIManager.Instance.boardUI.editingType == BoardUI.editingTypes.OBJECT)
-                animator.SetInteger("zoom", 0);
-            else
-                animator.SetInteger("zoom", (int)part);
+            animator.SetInteger("zoom", (int)currentZoom);
         }
     }
 }

@@ -148,7 +148,7 @@ namespace BoardItems
         }
         public bool IsInActiveBodyPart(BodyPart bodyPart)
         {
-            if (bodyPart.part == UIManager.Instance.zoomManager.part)
+            if ((int)bodyPart.part == (int)UIManager.Instance.zoomManager.currentZoom)
                 return true;
             return false;
         }

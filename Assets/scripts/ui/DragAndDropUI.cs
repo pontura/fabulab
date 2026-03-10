@@ -1,4 +1,5 @@
 using BoardItems;
+using BoardItems.Characters;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -63,7 +64,7 @@ namespace UI
         {
             ItemInScene i = b.itemData.GetComponent<ItemInScene>();
             ItemInScene newItem = items.AddNewItemFromMenu(i);
-            newItem.data.part = UIManager.Instance.zoomManager.part;
+            newItem.data.part = (CharacterPartsHelper.parts)(int)UIManager.Instance.zoomManager.currentZoom;
             inputManager.OnInitDragging(newItem);
             canvasGroup.alpha = 0.2f;
         }

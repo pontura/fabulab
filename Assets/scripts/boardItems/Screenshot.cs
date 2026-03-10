@@ -20,12 +20,9 @@ namespace BoardItems
         {
             Events.Zoom -= Zoom;
         }
-        public void Zoom(CharacterPartsHelper.parts part, bool saving = false)
+        public void Zoom(ZoomStates zoom, bool saving = false)
         {
-            if (UIManager.Instance.boardUI.editingType == BoardUI.editingTypes.OBJECT)
-                animator.SetInteger("zoom", 0);
-            else
-                animator.SetInteger("zoom", (int)part);
+            animator.SetInteger("zoom", (int)zoom);
         }
 
         IEnumerator CaptureRoutine(System.Action<Texture2D> OnDone)
