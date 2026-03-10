@@ -85,6 +85,7 @@ namespace UI
             Events.GalleryDone += GalleryDone;
             //Events.EmptySceneItems += EmptySceneItems;
             Events.EmptyCharacterItemsButExlude += EmptyCharacterItemsButExlude;
+            Events.ColorizeBG += ColorizeBG;
         }
 
         private void OnDestroy()
@@ -92,6 +93,13 @@ namespace UI
             Events.GalleryDone -= GalleryDone;
             //Events.EmptySceneItems -= EmptySceneItems;
             Events.EmptyCharacterItemsButExlude -= EmptyCharacterItemsButExlude;
+            Events.ColorizeBG -= ColorizeBG;
+        }
+
+        void ColorizeBG(PalettesManager.colorNames name) {
+            print("ColorizeBG " + name);
+            Color color = Data.Instance.palettesManager.GetColor(name);
+            cam.backgroundColor = color;
         }
         void EmptySceneItems()
         {

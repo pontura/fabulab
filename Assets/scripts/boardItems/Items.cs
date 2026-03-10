@@ -19,7 +19,6 @@ namespace BoardItems
         [SerializeField] ItemInScene itemSelected;
 
         public Inventary inventary;
-        public SpriteRenderer bg;
         public Transform container;
         //[SerializeField] BoardUI board;
 
@@ -29,8 +28,7 @@ namespace BoardItems
         {
             Events.EditMode += EditMode;
             Events.OnStopDrag += OnStopDrag;
-            Events.InitGallery += InitGallery;
-            Events.ColorizeBG += ColorizeBG;
+            Events.InitGallery += InitGallery;            
             Events.Colorize += Colorize;
             Events.AnimateItem += AnimateItem;
             Events.ResetItems += ResetItems;
@@ -43,7 +41,6 @@ namespace BoardItems
             Events.EditMode -= EditMode;
             Events.OnStopDrag -= OnStopDrag;
             Events.InitGallery -= InitGallery;
-            Events.ColorizeBG -= ColorizeBG;
             Events.Colorize -= Colorize;
             Events.AnimateItem -= AnimateItem;
             Events.ResetItems -= ResetItems;
@@ -192,12 +189,7 @@ namespace BoardItems
             ItemInScene mirror = itemSelected.GetMirror();
             if (mirror != null) mirror.SetColor(name);
         }
-        void ColorizeBG(PalettesManager.colorNames name)
-        {
-            print("ColorizeBG " + name);
-            Color color = Data.Instance.palettesManager.GetColor(name);
-            bg.color = color;
-        }
+        
         public ItemInScene GetItemSelected()
         {
             return itemSelected;
