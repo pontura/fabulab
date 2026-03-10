@@ -6,6 +6,7 @@ namespace Yaguar.StoryMaker.Editor
 {
     public class SceneObjectsOrderer : MonoBehaviour
     {
+        [SerializeField] float zFactor = 0.5f;
         SceneObjectsManager sceneObjectsManager;
 
         void Start()
@@ -28,7 +29,7 @@ namespace Yaguar.StoryMaker.Editor
             foreach (SceneObject so in sceneObjectsManager.sceneObjects)
             {
                 Vector3 pos = so.transform.localPosition;
-                pos.z = so.transform.localPosition.y / 2;
+                pos.z = so.transform.localPosition.y * zFactor;
                 so.transform.localPosition = pos;
             }
         }
