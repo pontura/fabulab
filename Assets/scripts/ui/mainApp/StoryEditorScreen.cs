@@ -13,6 +13,7 @@ namespace UI.MainApp
         [SerializeField] Transform itemListContainer;
         [SerializeField] AvatarSelectionScreen characterScreen;
         [SerializeField] ObjectSelectionScreen objectsScreen;
+        [SerializeField] BackgroundSelectionScreen backgroundScreen;
         [SerializeField] ActionsUI actionUI;
         [SerializeField] EmojisUI emojisUI;
 
@@ -53,7 +54,7 @@ namespace UI.MainApp
                 case 0:
                     timeline.SetActive(false);
                     itemList.SetActive(true);
-                    characterScreen.Init();
+                    backgroundScreen.Init();
                     break;
                 case 1:
                     timeline.SetActive(false);

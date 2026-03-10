@@ -199,7 +199,6 @@ namespace Yaguar.StoryMaker.Editor
                         SetSOData(sOData, data);
                         Scenario.Instance.sceneObejctsManager.ApplyData(avatar);
                         
-                        Debug.Log("$$ " + (data as SceneElementAvatar).anim.ToString() + " " + (data as SceneElementAvatar).emoji.ToString());
                         Events.OnCharacterAnim(sOData.id, (data as SceneElementAvatar).anim);
                         Events.OnCharacterExpression(sOData.id, (data as SceneElementAvatar).emoji);
                     } else {
@@ -262,14 +261,7 @@ namespace Yaguar.StoryMaker.Editor
                 //Scenario.Instance.sceneObejctsManager.AddSceneObject(soData);
             }
         }
-        protected new void SetBG()
-        {
-            /*## IMPLEMENTAR
-            SOBGData bgData = new SOBGData();
-            bgData.id = bgID;
-            StoryMakerEvents.AddSceneObject(bgData);
-            */
-        }
+        
         protected void SetSOData(SOData soData, SceneElement sceneElement)
         {
             soData.id = sceneElement.data.id;

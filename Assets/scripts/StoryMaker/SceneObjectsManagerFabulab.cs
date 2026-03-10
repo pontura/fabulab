@@ -1,5 +1,7 @@
 ﻿using BoardItems.Characters;
 using BoardItems.SceneObjects;
+using System;
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 
@@ -7,6 +9,10 @@ namespace Yaguar.StoryMaker.Editor
 {
     public class SceneObjectsManagerFabulab : SceneObjectsManager
     {
+        [SerializeField] protected Objeto background_to_instantiate;
+
+        [SerializeField] public Transform bgContainer;
+
         void Start()
         {
             StoryMakerEvents.AddSceneObject += AddSceneObject;
@@ -53,9 +59,21 @@ namespace Yaguar.StoryMaker.Editor
                 objectManager.id = soData.id;
                 Events.LoadBoardItemForStory(objectManager, soData.id);
                 selected = prop;                
+            } else if (data is SOBGData soBgData) {
+                bgData = soBgData;
+                SceneObject bg = Instantiate(background_to_instantiate);
+                SetBackground(bg);
+
+                bg.gameObject.name = "BG_" + soBgData.id;
+                bg.Init(soBgData);
+                inputsManager.ResetAll();
+                SceneObjectManager objectManager = bg.GetComponent<Background>().objectManager;
+                objectManager.id = soBgData.id;
+                Events.LoadBoardItemForStory(objectManager, soBgData.id);
             }
 
-            sceneObjects.Add(selected);
+            if(selected != null) 
+                sceneObjects.Add(selected);
         }
 
         override protected void RemoveSceneObject()
@@ -88,5 +106,13 @@ namespace Yaguar.StoryMaker.Editor
 
             return null;
         }
+
+        protected void SetBackground(SceneObject newSO) {
+            Utils.RemoveAllChildsIn(bgContainer);
+            newSO.transform.SetParent(bgContainer);
+            newSO.transform.localPosition = Vector3.zero;
+            newSO.transform.localEulerAngles = Vector3.zero;
+            newSO.transform.localScale = Vector3.one;
+        }                
     }
 }

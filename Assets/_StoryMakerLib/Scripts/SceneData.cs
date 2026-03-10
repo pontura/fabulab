@@ -187,7 +187,8 @@ namespace Yaguar.StoryMaker.Editor
             }
         }
         protected void SetBG()
-        {
+        {   if (bgID == null || bgID.Length == 0)
+                return;
             SOBGData bgData = new SOBGData();
             bgData.id = bgID;
             StoryMakerEvents.AddSceneObject(bgData);

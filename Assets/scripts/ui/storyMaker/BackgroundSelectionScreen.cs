@@ -5,7 +5,7 @@ using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
 {
-    public class ObjectSelectionScreen : MonoBehaviour
+    public class BackgroundSelectionScreen : MonoBehaviour
     {
         public CharacterSelectorBtn workBtn_prefab;
         public Transform worksContainer;
@@ -29,7 +29,8 @@ namespace UI.MainApp.Home.User
         {
             foreach (SObjectData cd in Data.Instance.sObjectsData.data)
             {
-                if (cd.type != SObjectData.types.background) {
+                Debug.Log("== Type: " + cd.type);
+                if (cd.type == SObjectData.types.background) {
                     CharacterSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                     print("go " + go);
                     go.Init(cd);
@@ -40,7 +41,7 @@ namespace UI.MainApp.Home.User
 
         public void OpenWork(string id)
         {
-            SODataFabulab data = new SODataFabulab();
+            SOBGData data = new SOBGData();
             data.id = id;
             StoryMakerEvents.AddSceneObject(data);
         }        
