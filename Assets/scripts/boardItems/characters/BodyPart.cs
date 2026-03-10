@@ -116,11 +116,11 @@ namespace BoardItems
             print("OnStopTransformModify");
             ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
             foreach (ItemInScene i in all) i.transform.SetParent(transform.parent);
-            transform.position = Vector3.zero;
+            transform.localPosition = Vector3.zero;
             foreach (ItemInScene i in all)
             {
-                i.data.position = i.transform.localPosition;
                 i.transform.SetParent(transform);
+                i.data.position = i.transform.localPosition;
             }
         }
     }

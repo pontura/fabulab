@@ -262,15 +262,15 @@ namespace UI
                 case states.ROTATING:
                     state = states.IDLE;
                     break;
+                case states.TOOLS:
+                    OnCloseTools(states.IDLE);
+                    goto case states.IDLE;
                 case states.IDLE:
                     Vector3 pos = cam.ScreenToWorldPoint(Input.mousePosition);
                     RaycastHit2D hit = Physics2D.Raycast(pos, Vector3.forward);
                    
                     if (hit && hit.transform.gameObject.tag == "DragItem")
                     {
-                        if (state == states.TOOLS)
-                            OnCloseTools(states.IDLE);
-
                         ItemInScene itemInScene = hit.transform.gameObject.GetComponent<ItemInScene>();
                         itemInScene.SetTools(false);
                         if (itemInScene.IsBeingUse() && itemInScene.data.part != partActive) return;
