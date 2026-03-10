@@ -129,7 +129,7 @@ namespace BoardItems
             wd.items = new List<SavedIData>();
             foreach (ItemInScene iInScene in UIManager.Instance.boardUI.items.all)
             {
-                if (iInScene.data.part == parts.HAND_LEFT || iInScene.data.part == parts.HAND_LEFT)
+                if (iInScene.data.part == parts.FOOT_LEFT || iInScene.data.part == parts.HAND_LEFT)
                 {
                     // los mirrors los ignora:
                 } else

@@ -72,9 +72,10 @@ namespace UI
         {
             if(partActive == CharacterPartsHelper.parts.none)
                 return;
-            
+
 #if UNITY_EDITOR
-            UpdateMouseInput();
+            UpdateTouch();
+            //UpdateMouseInput();
 #elif UNITY_ANDROID || UNITY_IOS
             UpdateTouch();   
 #else
@@ -94,7 +95,45 @@ namespace UI
                 switch (state)
                 {
                     case states.CANVAS_DRAGGING:
-                        if (Input.touchCount == 1)
+                        if (Input.touchCount == 2)
+                        {
+                            Touch touch1 = Input.GetTouch(0);
+                            Touch touch2 = Input.GetTouch(1);
+
+                            if (touch2.phase == TouchPhase.Began)
+                            {
+                                originalDistanceInTouches = Vector2.Distance(touch1.position, touch2.position);
+                            }
+                            else if (touch1.phase == TouchPhase.Moved || touch2.phase == TouchPhase.Moved)
+                            {
+                                cam.gameObject.GetComponent<Animator>().enabled = false;
+                                
+                                float currentDistance = Vector2.Distance(touch1.position, touch2.position);
+                                float distanceDifference = originalDistanceInTouches - currentDistance;
+                                if (groupOn)
+                                {
+                                    GameObject target = container != null ? container.gameObject : dragContainer;
+                                    if (target != null)
+                                    {
+                                        float scaleDiff = distanceDifference * -0.01f;
+                                        Vector3 newScale = target.transform.localScale + new Vector3(scaleDiff, scaleDiff, scaleDiff);
+                                        if (newScale.x < 0.1f) newScale = new Vector3(0.1f, 0.1f, 0.1f);
+                                        target.transform.localScale = newScale;
+                                    }
+                                }
+                                else
+                                {
+                                    // Adjust orthographic size based on pinch distance (multiplier controls zoom speed)
+                                    cam.orthographicSize += distanceDifference * 0.1f;
+
+                                    // Clamp the camera size so it doesn't zoom infinitely or flip upside down
+                                    cam.orthographicSize = Mathf.Clamp(cam.orthographicSize, 10f, 128f); 
+                                }
+
+                                originalDistanceInTouches = currentDistance;
+                            }
+                        }
+                        else if (Input.touchCount == 1)
                         {
                             if (Input.touches[0].phase == TouchPhase.Moved)
                             {
@@ -227,7 +266,7 @@ namespace UI
                     Vector3 pos = cam.ScreenToWorldPoint(Input.mousePosition);
                     RaycastHit2D hit = Physics2D.Raycast(pos, Vector3.forward);
                    
-                    if (hit.transform.gameObject.tag == "DragItem")
+                    if (hit && hit.transform.gameObject.tag == "DragItem")
                     {
                         if (state == states.TOOLS)
                             OnCloseTools(states.IDLE);
