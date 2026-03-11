@@ -97,7 +97,7 @@ namespace uGIF
                 Directory.CreateDirectory(folder);
             filename = Path.Combine(folder, "gif_" + id + ".gif");
             capture = true;
-            UIManager.Instance.boardUI.items.ResetAllAnims();
+           // UIManager.Instance.boardUI.items.ResetAllAnims();
         }
 
         private void Update() {

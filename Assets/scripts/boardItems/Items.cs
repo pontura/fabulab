@@ -81,23 +81,14 @@ namespace BoardItems
             }
             inventary.Reset();
         }
-        public void ResetAllAnims()
-        {
-            foreach (ItemInScene itemInScene in all)
-            {
-                Animation anim = itemInScene.GetComponent<Animation>();
-                if (anim != null && anim.GetClipCount() > 0)
-                    if (anim.GetClip("myAnim") != null)
-                        anim["myAnim"].normalizedTime = 0;
-            }
-        }
+
         void AnimateItem(AnimationsManager.AnimData anim)
         {
             DoAnimate(anim, itemSelected);
         }
         void DoAnimate(AnimationsManager.AnimData anim, ItemInScene item)
         {
-            ResetAllAnims();
+          //  ResetAllAnims();
             item.data.anim = anim.animName;
             Animation animComponent = item.GetComponent<Animation>();
             if (animComponent == null)
@@ -133,41 +124,41 @@ namespace BoardItems
                 }
             }
 
-            AnimSfx aSfx = item.GetComponent<AnimSfx>();
-            if (aSfx == null)
-            {
-                if (anim.animName != AnimationsManager.anim.NONE)
-                {
-                    aSfx = item.gameObject.AddComponent<AnimSfx>();
-                    aSfx.animName = hasAnimSfx ? AnimationsManager.anim.NONE : anim.animName;
-                }
-            }
-            else
-            {
-                aSfx.Init();
-                aSfx.animName = hasAnimSfx ? AnimationsManager.anim.NONE : anim.animName;
-            }
+            //AnimSfx aSfx = item.GetComponent<AnimSfx>();
+            //if (aSfx == null)
+            //{
+            //    if (anim.animName != AnimationsManager.anim.NONE)
+            //    {
+            //        aSfx = item.gameObject.AddComponent<AnimSfx>();
+            //        aSfx.animName = hasAnimSfx ? AnimationsManager.anim.NONE : anim.animName;
+            //    }
+            //}
+            //else
+            //{
+            //    aSfx.Init();
+            //    aSfx.animName = hasAnimSfx ? AnimationsManager.anim.NONE : anim.animName;
+            //}
 
 
-            animComponent.AddClip(anim.clip, "myAnim");
-            animComponent.Play("myAnim");
+            //animComponent.AddClip(anim.clip, "myAnim");
+            //animComponent.Play("myAnim");
         }
 
         public void NextStepAnims(int frameN, int frameRate)
         {
-            float timeStep = 1f / frameRate;
-            foreach (ItemInScene iis in all)
-            {
-                Animation anim = iis.GetComponent<Animation>();
-                if (anim != null)
-                {
-                    if (anim["myAnim"] != null)
-                    {
-                        anim["myAnim"].time = frameN * timeStep;
-                        anim["myAnim"].speed = 0;
-                    }
-                }
-            }
+            //float timeStep = 1f / frameRate;
+            //foreach (ItemInScene iis in all)
+            //{
+            //    Animation anim = iis.GetComponent<Animation>();
+            //    if (anim != null)
+            //    {
+            //        if (anim["myAnim"] != null)
+            //        {
+            //            anim["myAnim"].time = frameN * timeStep;
+            //            anim["myAnim"].speed = 0;
+            //        }
+            //    }
+            //}
         }
 
         void AnimateItemDragDrop(bool drag)
@@ -176,12 +167,12 @@ namespace BoardItems
             if (animComponent == null)
                 animComponent = itemSelected.gameObject.AddComponent<Animation>();
 
-            if (animComponent.isPlaying) return;
-            if (drag)
-                animComponent.AddClip(GetItemAnim, "myAnim");
-            else
-                animComponent.AddClip(ReleaseItemAnim, "myAnim");
-            animComponent.Play("myAnim");
+            //if (animComponent.isPlaying) return;
+            //if (drag)
+            //    animComponent.AddClip(GetItemAnim, "myAnim");
+            //else
+            //    animComponent.AddClip(ReleaseItemAnim, "myAnim");
+            //animComponent.Play("myAnim");
         }
         void Colorize(PalettesManager.colorNames name)
         {
