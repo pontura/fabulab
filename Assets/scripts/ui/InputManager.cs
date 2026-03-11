@@ -34,12 +34,28 @@ namespace UI
             Events.OnBodyPartActive += OnBodyPartActive;
             Events.OnBGColorizerOpen += OnBGColorizerOpen;
             Events.SetGroupToolsOn += SetGroupToolsOn;
+            Events.ShowScreen += ShowScreen;
         }
         private void OnDestroy()
         {
             Events.OnBodyPartActive -= OnBodyPartActive;
             Events.OnBGColorizerOpen -= OnBGColorizerOpen;
             Events.SetGroupToolsOn -= SetGroupToolsOn;
+            Events.ShowScreen -= ShowScreen;
+        }
+
+        bool storyMode;
+        private void ShowScreen(UIManager.screenType type)
+        {
+            switch (type)
+            {
+                case UIManager.screenType.StoryMaker:
+                    storyMode = true;
+                    break;
+                default:
+                    storyMode = false;
+                    break;
+            }
         }
         private void OnBodyPartActive(CharacterPartsHelper.parts p)
         {
@@ -138,9 +154,12 @@ namespace UI
                         {
                             if (Input.touches[0].phase == TouchPhase.Moved)
                             {
-                                cam.gameObject.GetComponent<Animator>().enabled = false;
-                                Vector3 difference = dragOrigin - cam.ScreenToWorldPoint(Input.touches[0].position);
-                                cam.transform.position += new Vector3(difference.x, difference.y, 0f);
+                                if (!storyMode)
+                                {
+                                    cam.gameObject.GetComponent<Animator>().enabled = false;
+                                    Vector3 difference = dragOrigin - cam.ScreenToWorldPoint(Input.touches[0].position);
+                                    cam.transform.position += new Vector3(difference.x, difference.y, 0f);
+                                }
                             }
                             else if (Input.touches[0].phase == TouchPhase.Ended)
                             {
@@ -220,9 +239,12 @@ namespace UI
                     }
                     else if (Input.GetMouseButton(0))
                     {
-                        cam.gameObject.GetComponent<Animator>().enabled = false;
-                        Vector3 difference = dragOrigin - cam.ScreenToWorldPoint(Input.mousePosition);
-                        cam.transform.position += new Vector3(difference.x, difference.y, 0f);
+                        if (!storyMode)
+                        {
+                            cam.gameObject.GetComponent<Animator>().enabled = false;
+                            Vector3 difference = dragOrigin - cam.ScreenToWorldPoint(Input.mousePosition);                        
+                            cam.transform.position += new Vector3(difference.x, difference.y, 0f);
+                        }
                     }
                     break;
                 case states.DRAGGING:

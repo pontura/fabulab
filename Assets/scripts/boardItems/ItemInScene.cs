@@ -170,7 +170,7 @@ namespace BoardItems
                 data.SetCharacterPart(bpEnter.part);
                // Events.OnNewBodyPartSelected(bpEnter);
                 bpOver = bpEnter;
-                ArrengeZPos(bpOver);
+                //ArrengeZPos(bpOver);
             }
         }
         void OnTriggerExit2D(Collider2D collision)
@@ -190,7 +190,7 @@ namespace BoardItems
         }
         void ArrengeZPos(BodyPart bp)
         {
-            if (rb.bodyType != RigidbodyType2D.Kinematic) return;
+           // if (rb.bodyType != RigidbodyType2D.Kinematic) return;
             float z = bp.GetLastZ();
             if (z == 0) return; //no objects in bodypart;
             print("Arrenge Z" + z);

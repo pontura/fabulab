@@ -102,14 +102,15 @@ namespace BoardItems
         {
             float z = 0;
             ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
-            foreach (ItemInScene i in all)
-            {
-                if (i.transform.position.z < z)
-                    z = i.transform.position.z;
-            }
-            if(z==0)
-                return 0;
-            return z - z_displacement;
+            return (all.Length +1) * -z_displacement;
+            //foreach (ItemInScene i in all)
+            //{
+            //    if (i.transform.position.z < z)
+            //        z = i.transform.position.z;
+            //}
+            //if(z==0)
+            //    return 0;
+            //return z - z_displacement;
         }
         public void OnStopTransformModify()
         {

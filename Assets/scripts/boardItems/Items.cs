@@ -16,13 +16,12 @@ namespace BoardItems
         public ItemInScene itemInScene_to_instantiate;
         float _z;
         float _z_value = 0.001f;
+
         [SerializeField] ItemInScene itemSelected;
+        [SerializeField] ItemInScene newItemFromMenu;
 
         public Inventary inventary;
         public Transform container;
-        //[SerializeField] BoardUI board;
-
-       // BoardItemManager boardItem;
 
         void Start()
         {
@@ -282,7 +281,8 @@ namespace BoardItems
         public bool snap = true;
         void OnStopDrag(ItemInScene item, Vector3 pos)
         {
-            if(item == null) return;
+            newItemFromMenu = null;
+            if (item == null) return;
             item.StopBeingDrag();
             float posX = Camera.main.WorldToScreenPoint(pos).x;
             bool isOverBodyPart = item.IsOverBodyPart();
@@ -379,9 +379,9 @@ namespace BoardItems
             item.data.position = item.transform.localPosition;
 
 
-            if (!item.IsBeingUse())
+            if (item == newItemFromMenu)
             {
-                _z -= _z_value;
+                _z = -1;
                 item.data.position.z = _z;
             }
 
@@ -396,6 +396,7 @@ namespace BoardItems
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             pos.z = -0.1f;
             ItemInScene itemInScene = Clonate(pos);
+            newItemFromMenu = itemInScene;
             return itemInScene;
         }
         public ItemInScene Clonate(Vector3 pos)
