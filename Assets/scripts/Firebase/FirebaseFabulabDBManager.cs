@@ -492,29 +492,37 @@ namespace Yaguar.StoryMaker.DB
             //Debug.Log(url);
         }
 
-        public void SaveFilmDataToServer(string filmId, ScenesData.ServerFilmData fd) {
+        public void SaveFilmDataToServer(string filmId, ServerFilmData fd) {
             Debug.Log("#SaveFilmDataToServer");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/" + filmId);
             string s = JsonConvert.SerializeObject(fd);
             reference.SetRawJsonValueAsync(s);
-            Debug.Log("Server: SaveFilmDataToServer");
+            Debug.Log("Server: SaveFilmDataToServer: "+s);
+
         }
 
-        public void LoadUserFilmDataFromServer(System.Action<Dictionary<string, ScenesData.ServerFilmData>> callback) {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+        public void LoadUserFilmDataFromServer(System.Action<Dictionary<string, ServerFilmData>> callback) {
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/");
-            reference.OrderByChild("userID").EqualTo(_uid).GetValueAsync().ContinueWith(task => {
+            reference.OrderByChild("userID").EqualTo(_uid).GetValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#LoadUserFilmDataFromServer FAIL");
                     if (Data.Instance.scenesData.userFilmsData.Count > 0)
                         Data.Instance.scenesData.OnFilmDataFromServerCompleted();
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
-                    Dictionary<string, ScenesData.ServerFilmData> d = JsonConvert.DeserializeObject<Dictionary<string, ScenesData.ServerFilmData>>(task.Result.GetRawJsonValue());
-                    callback(d);
-                    // Do something with snapshot...
+                    try {
+                        string data = task.Result.GetRawJsonValue();
+                        if (data != null) {
+                            Dictionary<string, ServerFilmData> d = JsonConvert.DeserializeObject<Dictionary<string, ServerFilmData>>(task.Result.GetRawJsonValue());
+                            callback(d);
+                        } else {
+                            callback(null);
+                        }
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
                 }
-            }, taskScheduler);
+            });
 
             Debug.Log("Server: LoadUserFilmDataFromServer ");
             //Debug.Log(url);
@@ -533,59 +541,68 @@ namespace Yaguar.StoryMaker.DB
             //Debug.Log(url);
         }
 
-        public void UpdateFilmToServer(string filmId, List<SceneDataFabulab> sd, System.Action<bool, string> callback) {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+        public void UpdateFilmToServer(string filmId, string jsonScenes, System.Action<bool, string> callback) {
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("stories/" + _uid + "/" + filmId);
-            string s = JsonConvert.SerializeObject(sd);
-            reference.SetRawJsonValueAsync(s).ContinueWith(task => {
+            //string s = JsonConvert.SerializeObject(sd);
+            reference.SetRawJsonValueAsync(jsonScenes).ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#UpdateFilmToServer FAIL");
                     Debug.Log(task.Exception);
                 } else {
-                    callback(true, filmId);
+                    try { 
+                        callback(true, filmId);
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
                 }
-            }, taskScheduler);
+            });
             Debug.Log("Server: UpdateFilmToServer");
             //print("UpdateFilmToServer url : " + url);
         }
 
-        public void SaveFilmToServer(List<SceneDataFabulab> sd, System.Action<bool, string> callback) {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+        public void SaveFilmToServer(string jsonScenes, System.Action<bool, string> callback) {
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("stories/" + _uid);
-            string s = JsonConvert.SerializeObject(sd);
+            //string s = JsonConvert.SerializeObject(sd);
+            Debug.Log("& SaveFilmToServer: " + jsonScenes);
             string key = reference.Push().Key;
-            reference.Child(key).SetRawJsonValueAsync(s).ContinueWith(task => {
+            reference.Child(key).SetRawJsonValueAsync(jsonScenes).ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#SaveFilmToServer FAIL");
                     Debug.Log(task.Exception);
                 } else {
+                    try { 
                     callback(true, key);
                     Debug.Log("Response: " + key);
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
                 }
-            }, taskScheduler);
+            });
             Debug.Log("Server: SaveFilmToServer");
             //print("SaveFilmToServer url : " + url);
         }
 
-        public void DeleteFilm(ScenesData.FilmDataFabulab fd, System.Action<string> callback) {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+        public void DeleteFilm(FilmDataFabulab fd, System.Action<string> callback) {
 
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("stories/" + _uid + "/" + fd.id);
-            reference.RemoveValueAsync().ContinueWith(task => {
+            reference.RemoveValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#DeleteFilm FAIL");
                     Debug.Log(task.Exception);
                 } else {
-                    DeleteFilmData(fd.id);
-                    callback(fd.id);
+                    try { 
+                        DeleteFilmData(fd.id);
+                        callback(fd.id);
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
                 }
-            }, taskScheduler);
+            });
             Debug.Log("Server: DeleteFilm");
             //Debug.Log(url);
         }
 
-        public void LoadFilmFromServer(ScenesData.FilmDataFabulab fd, System.Action<bool, SceneDataFabulab[]> callback) {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+        public void LoadFilmFromServer(FilmDataFabulab fd, System.Action<bool, List<SceneDataFabulab>> callback) {
 
             string uid = _uid;
             if (fd.userID != null) {
@@ -593,18 +610,41 @@ namespace Yaguar.StoryMaker.DB
             }
 
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("stories/" + uid + "/" + fd.id);
-            reference.GetValueAsync().ContinueWith(task => {
+            reference.GetValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#LoadFilmFromServer FAIL");
                     callback(false, null);
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
-                    SceneDataFabulab[] sds = JsonConvert.DeserializeObject<SceneDataFabulab[]>(task.Result.GetRawJsonValue());
-                    Debug.Log("# " + sds.Length);
-                    callback(true, sds);
-                    // Do something with snapshot...
+                    try {
+                        DataSnapshot snapshot = task.Result;
+                        List<SceneDataFabulab> scene = new List<SceneDataFabulab>();
+                        foreach (var child in snapshot.Children) {
+                            //Debug.Log(child.Key + " => " + child.Child("name").Value);
+                            //SceneDataFabulab sdf = JsonUtility.FromJson<SceneDataFabulab>(child.GetRawJsonValue());
+                            SceneDataFabulab sdf = new SceneDataFabulab();
+                            sdf.bgID = child.Child("bgID").Value as string;
+                            List<SceneElement> elements = new List<SceneElement>();
+                            foreach (var se in child.Child("scenesElements").Children) {
+                                SceneElement sceneElement = null;
+                                if((long)se.Child("type").Value == (long)SceneElementType.AVATAR) {
+                                    sceneElement = JsonUtility.FromJson<SceneElementAvatar>(se.GetRawJsonValue());
+                                } else {
+                                    sceneElement = JsonUtility.FromJson<SceneElement>(se.GetRawJsonValue());
+                                }
+                                elements.Add(sceneElement);
+                            }
+                            sdf.CopyScenesElements(elements);
+                            scene.Add(sdf);
+                        }
+                        //SceneDataFabulab[] sdf = JsonConvert.DeserializeObject<SceneDataFabulab[]>(task.Result.GetRawJsonValue());
+                        Debug.Log("# " + scene.Count);
+                        callback(true, scene);
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
                 }
-            }, taskScheduler);
+            });
             Debug.Log("Server: LoadFilmFromServer");
             //print("LoadFilmFromServer url : " + url);
         }
@@ -685,7 +725,11 @@ namespace Yaguar.StoryMaker.DB
                 }
                 else if (task.IsCompleted)
                 {
-                    callback(uid, task.Result.GetRawJsonValue());
+                    try {
+                        callback(uid, task.Result.GetRawJsonValue());
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
                 }
             });
             Debug.Log("Server: GetUsernameFromServer " + uid);

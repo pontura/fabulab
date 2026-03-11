@@ -1,11 +1,11 @@
-﻿using BoardItems.BoardData;
+﻿using BoardItems;
 using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
 {
-    public class AvatarSelectionScreen : MonoBehaviour
+    public class UserStoriesScreen : MonoBehaviour
     {
         public ItemSelectorBtn workBtn_prefab;
         public Transform worksContainer;
@@ -35,20 +35,18 @@ namespace UI.MainApp.Home.User
         
         void LoadNext()
         {
-            foreach(CharacterData cd in Data.Instance.charactersData.userCharacters)
+            foreach(FilmDataFabulab cd in Data.Instance.scenesData.userFilmsData)
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
-                go.Init(cd);
+                go.Init(cd.GetSprite());
                 go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
-            }           
-        }
+            }            
+        }        
 
         public void OpenWork(string id) {
-            SOAvatarFabulabData data = new SOAvatarFabulabData();
-            data.id = id;
-            StoryMakerEvents.AddSceneObject(data);
-            //UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);    
+            Data.Instance.scenesData.LoadUserFilm(id);
+            Events.ShowScreen(UIManager.screenType.StoryMaker);
         }        
     }
 

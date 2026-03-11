@@ -30,6 +30,9 @@ namespace Yaguar.StoryMaker.Editor
         public override void AddSceneObject(SOData data)
         {
             Debug.Log("AddSceneObject: " + data.id + " " + data);
+            
+            selected = null;
+
             if (data is SOAvatarFabulabData avatarData)
             {
                 SceneObject avatar = Instantiate(avatar_to_instantiate);
@@ -99,7 +102,7 @@ namespace Yaguar.StoryMaker.Editor
                     (
                     //si es un objeto chequea por posicion! quizas haya que mejorar esto...
                     //so.GetData().itemName == soData.itemName && 
-                    soData is SODataFabulab && so.GetData() is SODataFabulab && so.GetData().pos == soData.pos)
+                    soData is SODataFabulab && so.GetData() is SODataFabulab && so.GetData().pos.Equals(soData.pos))
                     )
                     return so;
             }

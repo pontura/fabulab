@@ -9,7 +9,7 @@ namespace UI.MainApp.Home
     {
         [SerializeField] TabController tabs;
         [SerializeField] UserDataScreen userDataScreen;
-        [SerializeField] GameObject stories;
+        [SerializeField] UserStoriesScreen storiesScreen;
         [SerializeField] UserCharactersScreen charactersScreen;
         [SerializeField] UserObjectsScreen objects;
         [SerializeField] ProfilePicture profilePicture;
@@ -33,7 +33,7 @@ namespace UI.MainApp.Home
             userDataScreen.Show(false);
             charactersScreen.Show(false);
 
-            stories.SetActive(false);
+            storiesScreen.Show(false);
             objects.Show(false);
 
             switch (id)
@@ -42,7 +42,7 @@ namespace UI.MainApp.Home
                     userDataScreen.Show(true);
                     break;
                 case 1:
-                    stories.SetActive(true);
+                    storiesScreen.Show(true);
                     break;
                 case 2:
                     charactersScreen.Show(true);

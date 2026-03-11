@@ -15,5 +15,13 @@ namespace Yaguar.StoryMaker.Editor
         public string name;
         public string userID;
         public string username;
+
+        public Sprite GetSprite() {
+            if (thumb == null) {
+                Debug.LogError("No thumb for film id: " + id);
+                return null;
+            }
+            return Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), Vector2.zero);
+        }
     }
 }

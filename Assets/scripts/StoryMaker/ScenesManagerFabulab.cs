@@ -96,6 +96,31 @@ namespace Yaguar.StoryMaker.Editor
 
             GetActiveScene()?.DeleteChangedSO(next);
             GetActiveScene()?.AddSceneObjects(next);
-        }        
+        }      
+        
+        public string GetSerialized() {
+            string json = "[";
+            for(int i = 0; i < scenes.Count; i++) {
+                json += "{\"" + nameof(SceneData.bgID) + "\":\"" + scenes[i].bgID + "\",";
+                List<SceneElement> elements = scenes[i].GetScenesElements();
+                if (elements.Count > 0)
+                    json += "\"scenesElements\":[";
+                for(int j = 0; j < elements.Count; j++) {
+                    if (elements[j].type == SceneElementType.AVATAR) {
+                        SceneElementAvatar sea = (SceneElementAvatar)elements[j];
+                        json += JsonUtility.ToJson(sea);
+                    } else {
+                        json += JsonUtility.ToJson(elements[j]);
+                    }
+                    if (j < elements.Count - 1) json += ",";
+                }
+                if (elements.Count > 0)
+                    json += "]";
+                json += "}";
+                if (i < scenes.Count-1) json += ",";
+            }
+            json += "]";
+            return json;
+        }
     }
 }

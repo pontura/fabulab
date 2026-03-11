@@ -7,7 +7,7 @@ namespace UI.MainApp.Home.User
 {
     public class ObjectSelectionScreen : MonoBehaviour
     {
-        public CharacterSelectorBtn workBtn_prefab;
+        public ItemSelectorBtn workBtn_prefab;
         public Transform worksContainer;
 
         int artID = 0;        
@@ -30,7 +30,7 @@ namespace UI.MainApp.Home.User
             foreach (SObjectData cd in Data.Instance.sObjectsData.data)
             {
                 if (cd.type != SObjectData.types.background) {
-                    CharacterSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
+                    ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                     print("go " + go);
                     go.Init(cd);
                     go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));

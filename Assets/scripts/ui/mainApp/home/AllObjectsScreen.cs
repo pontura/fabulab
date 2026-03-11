@@ -7,7 +7,7 @@ namespace UI.MainApp.Home.User
 {
     public class AllObjectsScreen : MonoBehaviour
     {
-        public CharacterSelectorBtn workBtn_prefab;
+        public ItemSelectorBtn workBtn_prefab;
         public Transform container;
         public Transform backgroundsContainer;
         public Transform objectsContainer;
@@ -38,7 +38,7 @@ namespace UI.MainApp.Home.User
             AddTitle(0, "Generic Objects (" + generics.Count + ")");
             foreach (PropMetaData cd in generics)
             {
-                CharacterSelectorBtn go = Instantiate(workBtn_prefab, objectsContainer);
+                ItemSelectorBtn go = Instantiate(workBtn_prefab, objectsContainer);
                 print("go " + go);
                 go.Init(cd);
                 go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
@@ -46,7 +46,7 @@ namespace UI.MainApp.Home.User
             AddTitle(1, "Backgrounds (" + backgrounds.Count + ")");
             foreach (PropMetaData cd in backgrounds)
             {
-                CharacterSelectorBtn go = Instantiate(workBtn_prefab, backgroundsContainer);
+                ItemSelectorBtn go = Instantiate(workBtn_prefab, backgroundsContainer);
                 print("go " + go);
                 go.Init(cd);
                 go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));

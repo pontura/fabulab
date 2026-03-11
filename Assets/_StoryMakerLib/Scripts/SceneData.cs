@@ -16,7 +16,7 @@ namespace Yaguar.StoryMaker.Editor
         string serialSeparator = "#";
         string soSeparator = "&";
 
-        public void Init()
+        public virtual void Init()
         {
             scenesElements = new List<string>();
         }
@@ -196,7 +196,7 @@ namespace Yaguar.StoryMaker.Editor
         protected void SetSOData(SOData soData, string[] arr)
         {
             soData.id = arr[0];
-            soData.pos = new Vector3(float.Parse(arr[1], CultureInfo.InvariantCulture.NumberFormat), float.Parse(arr[2], CultureInfo.InvariantCulture.NumberFormat), float.Parse(arr[3], CultureInfo.InvariantCulture.NumberFormat));
+            soData.pos = new V3(float.Parse(arr[1], CultureInfo.InvariantCulture.NumberFormat), float.Parse(arr[2], CultureInfo.InvariantCulture.NumberFormat), float.Parse(arr[3], CultureInfo.InvariantCulture.NumberFormat));
             soData.rot = float.Parse(arr[4], CultureInfo.InvariantCulture.NumberFormat);
             soData.size = float.Parse(arr[5], CultureInfo.InvariantCulture.NumberFormat);
             soData.itemName = arr[8];
@@ -258,10 +258,10 @@ namespace Yaguar.StoryMaker.Editor
                 SOData soData = GetAvatarFromSring(s);
                 if (soData != null && soData.id == avatarID)
                 {
-                    if (actualData.size != soData.size || actualData.pos == soData.pos)
+                    if (actualData.size != soData.size || actualData.pos.Equals(soData.pos))
                         return Vector3.zero;
                     else
-                        return soData.pos;
+                        return soData.pos.ToVector3();
                 }
             }
             return Vector3.zero;

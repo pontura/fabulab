@@ -38,7 +38,6 @@ namespace Yaguar.StoryMaker.Editor
         void Start()
         {
 
-            StoryMakerEvents.OnSaveScene += OnSaveScene;
             StoryMakerEvents.Restart += Restart;
             //sceneObjects = GetComponentsInChildren<SceneObject>();
             //WaitTillScenesLoaded();
@@ -46,7 +45,6 @@ namespace Yaguar.StoryMaker.Editor
 
         void OnDestroy()
         {
-            StoryMakerEvents.OnSaveScene -= OnSaveScene;
             StoryMakerEvents.Restart -= Restart;
         }        
 
@@ -58,65 +56,6 @@ namespace Yaguar.StoryMaker.Editor
         void Restart()
         {
             sceneObejctsManager.ResetScene();
-        }
-
-        public void OnSaveScene()
-        {
-            CreateThumb();
-            // Data.Instance.scenesData.GetActiveScene().Reset(); ##
-            SOData bgData = Scenario.Instance.sceneObejctsManager.bgData;
-            // Data.Instance.scenesData.GetActiveScene().bgID = bgData.id; ##
-            foreach (SceneObject so in Scenario.Instance.sceneObejctsManager.sceneObjects)
-            {
-                string customizerData = "";
-                /* if (so is Avatar)##
-                {
-                    Avatar avatar = so as Avatar;
-                    customizerData += avatar.GetData().id + "*";
-                    int actionID = avatar.avatarActionsManager.currentAction.id;
-                    customizerData += actionID + "*";
-
-                    if (avatar.avatarCustomizer.data.sex == CustomizationData.sexs.BOY)
-                        customizerData += "b*";
-                    else
-                        customizerData += "g*";
-
-                    List<CustomizationData> allStyles = avatar.avatarCustomizer.allStyles;
-                    foreach (CustomizationData data in allStyles)
-                        customizerData += data.cloth + ":" + data.id + ":" + data.colorID + "*";
-
-                    int expID = avatar.avatarExpresionsManager.currentExpresion.id;
-                    customizerData += "ex_" + expID + "*";
-                }
-
-                if (so != null)
-                {
-                    SOData soData = so.GetData();
-                    if (soData != null)
-                        Data.Instance.scenesData.GetActiveScene().AddSO(soData, customizerData);
-                }
-
-                if (customizerData != "" && Data.Instance.scenesData.currentFilmData.IsMyStory())
-                    Events.SetNewCustomization(customizerData);## */
-
-            }
-        }
-
-        public void CreateThumb()
-        {
-          /*  if (Data.Instance.scenesData.currentSceneId == 1) ##
-            {
-                //Debug.Log("Create Thumb");
-                screenshot = Scenario.Instance.cam.GetComponent<Screenshot>();
-                screenshot.TakeShot(CopyTexture);
-            } ##
-          */
-        }
-
-        void CopyTexture(Texture2D tex)
-        {
-            // Data.Instance.scenesData.currentFilmData.thumb = tex; ##
-            //Debug.Log("Copy thumb");
-        }
+        }        
     }
 }

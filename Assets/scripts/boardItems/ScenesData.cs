@@ -9,6 +9,27 @@ using Yaguar.StoryMaker.Editor;
 
 namespace BoardItems
 {
+    [Serializable]
+    public class FilmDataFabulab : Yaguar.StoryMaker.Editor.FilmData
+    {
+        public int likes;
+        public bool IsMyStory() {
+            if (userID == null || (Data.Instance.userData.userDataInDatabase != null && userID == Data.Instance.userData.userDataInDatabase.uid))
+                return true;
+            return false;
+        }
+    }
+
+    [Serializable]
+    public class ServerFilmData
+    {
+        public string thumb;
+        public string name;
+        public string userID;
+        public int likes;
+        public int speed;
+    }
+
     public class ScenesData : MonoBehaviour {
         string sdSeparator = "|";
         string fieldSeparator = "#";
@@ -19,26 +40,7 @@ namespace BoardItems
 
         public bool loadedDone;
 
-        [Serializable]
-        public class FilmDataFabulab : Yaguar.StoryMaker.Editor.FilmData
-        {
-            public int likes;
-            public bool IsMyStory() {
-                if (userID == null || (Data.Instance.userData.userDataInDatabase != null && userID == Data.Instance.userData.userDataInDatabase.uid))
-                    return true;
-                return false;
-            }
-        }
-
-        [Serializable]
-        public class ServerFilmData
-        {
-            public string thumb;
-            public string name;
-            public string userID;
-            public int likes;
-            public int speed;
-        }
+        
 
         private void Start() {
             //Events.OnThemesLoadedComplete += LoadThemeFilmMetadataFromServer;
@@ -154,6 +156,8 @@ namespace BoardItems
         }
 
         public void OnUserAddFilmDataFromServer(Dictionary<string, ServerFilmData> sfds) {
+            if(sfds==null) return;
+
             foreach (KeyValuePair<string, ServerFilmData> e in sfds) {
                 if (userFilmsData.Find(x => x.id == e.Key) == null) {
                     FilmDataFabulab fd = new FilmDataFabulab();
@@ -226,29 +230,22 @@ namespace BoardItems
             //Data.Instance.firebaseAuthManager.SaveFilmToServer(ScenesManagerFabulab.Instance.currentFDataID, scenes);
             if (Data.Instance.userData.IsLogged()) {
                 if (!FilmExists()) {
-                    FirebaseStoryMakerDBManager.Instance.SaveFilmToServer(ScenesManagerFabulab.Instance.Scenes, OnFilmSavedToServer);
+                    //Debug.Log(ScenesManagerFabulab.Instance.GetSerialized());
+                    FirebaseStoryMakerDBManager.Instance.SaveFilmToServer(ScenesManagerFabulab.Instance.GetSerialized(), OnFilmSavedToServer);
                 } else
-                    FirebaseStoryMakerDBManager.Instance.UpdateFilmToServer(ScenesManagerFabulab.Instance.currentFDataID, ScenesManagerFabulab.Instance.Scenes, OnFilmSavedToServer);
-            } else {
-                for (int i = 0; i < ScenesManagerFabulab.Instance.Scenes.Count; i++) {
-
-                    PlayerPrefs.SetString("FilmId_" + ScenesManagerFabulab.Instance.currentFDataID + "_" + i, ScenesManagerFabulab.Instance.Scenes[i].Serialize());
-
-                    if (ScenesManagerFabulab.Instance.currentSceneId == 1)
-                        Invoke("SaveTexture", 3 * Time.deltaTime);
-                    else
-                        SaveTexture();
-                }
+                    FirebaseStoryMakerDBManager.Instance.UpdateFilmToServer(ScenesManagerFabulab.Instance.currentFDataID, ScenesManagerFabulab.Instance.GetSerialized(), OnFilmSavedToServer);
             }
         }
 
         void OnFilmSavedToServer(bool succes, string id) {
+            Debug.Log("& OnFilmSavedToServer");
             ScenesManagerFabulab.Instance.currentFDataID = id;
-            //Data.Instance.cache.AddToFilmCache(ScenesManagerFabulab.Instance.currentFDataID, ScenesManagerFabulab.Instance.scenes);
+            Data.Instance.cacheData.AddToFilmCache(ScenesManagerFabulab.Instance.currentFDataID, ScenesManagerFabulab.Instance.Scenes);
             SaveTexture();
         }
 
         void SaveTexture() {
+            Debug.Log("& SaveTexture");
             FilmDataFabulab fd = userFilmsData.Find(x => x.id == ScenesManagerFabulab.Instance.currentFDataID);
             if (fd == null) {
                 fd = new FilmDataFabulab();
@@ -279,33 +276,14 @@ namespace BoardItems
 
                 ServerFilmData sfd = new ServerFilmData();
                 sfd.thumb = System.Convert.ToBase64String(bytes);
+                Debug.Log("& Length: " + sfd.thumb.Length);
                 sfd.name = fd.name;
                 sfd.speed = fd.speed;
                 sfd.userID = Data.Instance.userData.userDataInDatabase.uid;
                 FirebaseStoryMakerDBManager.Instance.SaveFilmDataToServer(fd.id, sfd);
-            } else {
-                UpdateLocalFilmData();
-
-                string folder = Path.Combine(Application.persistentDataPath, "Thumbs");
-                if (!Directory.Exists(folder))
-                    Directory.CreateDirectory(folder);
-                string filename = Path.Combine(folder, "movie_thumb_" + fd.id + ".png");
-
-                System.IO.File.WriteAllBytes(filename, bytes);
-                Debug.Log(string.Format("thumb to: {0}", filename));
             }
             //Events.OnUpdateFilmIcon();
-        }
-
-        void UpdateLocalFilmData() {
-            string filmData = "";
-            foreach (FilmDataFabulab fid in userFilmsData)
-                filmData += fid.id + fieldSeparator + fid.speed + fieldSeparator + fid.name + fieldSeparator + fid.framecount + sdSeparator;
-            if (filmData != "")
-                PlayerPrefs.SetString("Films_ids", filmData);
-            else
-                PlayerPrefs.DeleteKey("Films_ids");
-        }
+        }        
 
         public void LoadUserFilm(string _id) {
             print("____________LoadUserFilm" + loadedDone);
@@ -347,9 +325,10 @@ namespace BoardItems
             loadedDone = true;
         }
 
-        void OnFilmLoadedFromServer(bool succes, SceneDataFabulab[] sds) {
+        void OnFilmLoadedFromServer(bool succes, List<SceneDataFabulab> sds) {
             if (succes) {
-                ScenesManagerFabulab.Instance.Scenes = sds.OfType<SceneDataFabulab>().ToList();
+                //ScenesManagerFabulab.Instance.Scenes = sds.OfType<SceneDataFabulab>().ToList();
+                ScenesManagerFabulab.Instance.Scenes = sds;
                 Data.Instance.cacheData.AddToFilmCache(ScenesManagerFabulab.Instance.currentFDataID, ScenesManagerFabulab.Instance.Scenes);
                 LoadSucces();
             }

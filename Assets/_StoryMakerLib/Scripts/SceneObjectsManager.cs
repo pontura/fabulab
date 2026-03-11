@@ -102,7 +102,7 @@ namespace Yaguar.StoryMaker.Editor
         public void ApplyData(SceneObject so, SOData data = null) {
             if (data == null)
                 data = so.GetData();
-            so.transform.localPosition = data.pos;
+            so.transform.localPosition = data.pos.ToVector3();
             so.transform.localEulerAngles = new Vector3(0, 0, data.rot);
             if (data.size == 0)
                 data.size = 1;
@@ -119,7 +119,7 @@ namespace Yaguar.StoryMaker.Editor
                     (
                     //si es un objeto chequea por posicion! quizas haya que mejorar esto...
                     //so.GetData().itemName == soData.itemName && 
-                    soData is SOIconData && so.GetData() is SOIconData && so.GetData().pos == soData.pos)
+                    soData is SOIconData && so.GetData() is SOIconData && so.GetData().pos.Equals(soData.pos))
                     )
                     return so;
             }

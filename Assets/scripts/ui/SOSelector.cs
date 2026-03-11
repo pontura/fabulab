@@ -14,7 +14,7 @@ namespace UI
         [SerializeField] Transform target;
         [SerializeField] Transform container;
         [SerializeField] PresetButton itemButton;
-        [SerializeField] CharacterSelectorBtn workBtn_prefab;
+        [SerializeField] ItemSelectorBtn workBtn_prefab;
         [SerializeField] Dictionary<ItemData, ItemButton> all;
         private void Awake()
         {
@@ -36,7 +36,7 @@ namespace UI
             List<SObjectData> generics = Data.Instance.sObjectsData.GetDataByType(SObjectData.types.generic);
             foreach (SObjectData cd in generics)
             {
-                CharacterSelectorBtn go = Instantiate(workBtn_prefab, container);
+                ItemSelectorBtn go = Instantiate(workBtn_prefab, container);
                 print("go " + go);
                 go.Init(cd);
                 go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));

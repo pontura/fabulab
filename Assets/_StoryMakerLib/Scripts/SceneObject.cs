@@ -88,7 +88,7 @@ namespace Yaguar.StoryMaker.Editor
             {
                 float lastPosX = data.pos.x;
                 UpdatePos();
-                gameObject.transform.localPosition = data.pos;
+                gameObject.transform.localPosition = data.pos.ToVector3();
 
                 if (data is SOAvatarData)
                 {
@@ -109,8 +109,8 @@ namespace Yaguar.StoryMaker.Editor
         void UpdatePos()
         {
             Vector3 mousePos = Input.mousePosition + Scenario.Instance.Offset;
-            data.pos = Scenario.Instance.Cam.ScreenToWorldPoint(mousePos);
-            data.pos = new Vector3(data.pos.x - startPosX, data.pos.y - startPosY, 0);
+            Vector3 pos = Scenario.Instance.Cam.ScreenToWorldPoint(mousePos);
+            data.pos = new V3(pos.x - startPosX, pos.y - startPosY, 0);
         }
 
         public void Resize(float factor)

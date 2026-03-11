@@ -6,7 +6,7 @@ namespace UI.MainApp.Home.User
 {
     public class UserCharactersScreen : MonoBehaviour
     {
-        public CharacterSelectorBtn workBtn_prefab;
+        public ItemSelectorBtn workBtn_prefab;
         public Transform worksContainer;
 
         int artID = 0;
@@ -38,7 +38,7 @@ namespace UI.MainApp.Home.User
            // if (artID >= Data.Instance.characters.Count) return;
             foreach(CharacterData cd in Data.Instance.charactersData.userCharacters)
             {
-                CharacterSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
+                ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
                 go.Init(cd);
                 //RawImage rm = go.GetComponentInChildren<RawImage>();

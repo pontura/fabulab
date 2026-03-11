@@ -5,7 +5,7 @@ using UnityEngine;
 public class SOData
 {
     public string itemName;
-    public Vector3 pos;
+    public V3 pos;
     public bool goLeft;
     public float size, rot;
     public string id;
@@ -13,7 +13,7 @@ public class SOData
 
     public void Clone(SOData source) {
         this.itemName = source.itemName;
-        this.pos = new Vector3(source.pos.x, source.pos.y, source.pos.z);
+        this.pos = new V3(source.pos.x, source.pos.y, source.pos.z);
         this.size = source.size;
         this.rot = source.rot;
         this.id = source.id;

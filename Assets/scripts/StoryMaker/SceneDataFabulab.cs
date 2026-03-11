@@ -55,9 +55,13 @@ namespace Yaguar.StoryMaker.Editor
     }
 
     [Serializable]
-    public class SceneDataFabulab : SceneData
+    public class    SceneDataFabulab : SceneData
     {
         [SerializeField] protected new List<SceneElement> scenesElements;
+
+        public override void Init() {
+            scenesElements = new List<SceneElement>();
+        }
 
         public new SceneDataFabulab Clone() {
             SceneDataFabulab nuevo = new SceneDataFabulab();
@@ -66,6 +70,10 @@ namespace Yaguar.StoryMaker.Editor
                 nuevo.scenesElements.Add(item);
             nuevo.bgID = bgID;
             return nuevo;
+        }
+
+        public void CopyScenesElements(List<SceneElement> se) { 
+            scenesElements = se;
         }
         public override void Reset() {
             scenesElements = new List<SceneElement>();
@@ -298,11 +306,11 @@ namespace Yaguar.StoryMaker.Editor
                 SOData soData = GetAvatarFromData(s);
                 if (soData != null && soData.id == avatarID)
                 {
-                    if (actualData.size != soData.size || actualData.pos == soData.pos)
+                    if (actualData.size != soData.size || actualData.pos.Equals(soData.pos))
                         return Vector3.zero;
                     else {
                         Debug.Log("# CharacterShouldWalkTo: " + soData.pos);
-                        return soData.pos;
+                        return soData.pos.ToVector3();
                     }
                 }
             }

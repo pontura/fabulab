@@ -1,3 +1,4 @@
+using BoardItems.Characters;
 using Common.UI;
 using UI.MainApp.Home.User;
 using UnityEngine;
@@ -16,6 +17,13 @@ namespace UI.MainApp
         [SerializeField] BackgroundSelectionScreen backgroundScreen;
         [SerializeField] ActionsUI actionUI;
         [SerializeField] EmojisUI emojisUI;
+
+        [SerializeField] GameObject savePanel;
+        [SerializeField] GameObject deleteStoryButton;
+        [SerializeField] GameObject saveNewStoryButton;
+        [SerializeField] GameObject saveStoryButton;
+        [SerializeField] GameObject DoneBtn;
+        [SerializeField] bool changesMade;
 
         private void Start() {
             tabs.Init(OnTabClicked);
@@ -74,8 +82,8 @@ namespace UI.MainApp
         }
 
         public void OnSaveScene() {
-            Debug.Log("ACA");
-            CreateThumb();
+            
+            //CreateThumb();
             SceneDataFabulab sdf = ScenesManagerFabulab.Instance.GetActiveScene();
             sdf.Reset();
             SOData bgData = Scenario.Instance.sceneObejctsManager.bgData;
@@ -107,15 +115,36 @@ namespace UI.MainApp
                     StoryMakerEvents.SetNewAvatarCustomization(customizerData);*/
 
             }
+            if (!changesMade)
+                OnChangesMade();
         }
 
-        public void CreateThumb() {
-            if (ScenesManagerFabulab.Instance.currentSceneId == 1) {
-                //Debug.Log("Create Thumb");
-                
-                /*screenshot = Scenario.Instance.Cam.GetComponent<Screenshot>();
-                screenshot.TakeShot(CopyTexture);*/
-            }
+        void OnChangesMade() {
+            changesMade = true;
+            DoneBtn.gameObject.SetActive(true);
+        }
+
+        public void Save() {
+            DoneBtn.gameObject.SetActive(false);
+            savePanel.SetActive(false);
+            Invoke(nameof(SaveWork), Time.deltaTime*2);
+        }
+        public void Replace()// Guarda la version editada del personaje.
+        {
+            Events.SetCharacterIdle("");
+            savePanel.SetActive(false);
+            SaveWork();
+        }
+        public void Cancel() {
+            DoneBtn.SetActive(true);
+            savePanel.SetActive(false);
+        }
+
+        void SaveWork() {
+            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, (tex) => {
+                Data.Instance.scenesData.currentFilmData.thumb = tex;
+                Data.Instance.scenesData.SaveFilm();
+            });            
         }
     }
 }

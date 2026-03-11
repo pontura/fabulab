@@ -35,7 +35,7 @@ public class CacheData : MonoBehaviour
     [Serializable]
     public class FilmDataCachePage {
         public int id;
-        public List<ScenesData.FilmDataFabulab> filmsData;
+        public List<FilmDataFabulab> filmsData;
     }
 
     // Start is called before the first frame update
