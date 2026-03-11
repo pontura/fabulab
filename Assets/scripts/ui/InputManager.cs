@@ -14,6 +14,7 @@ namespace UI
         public ToolsMenu toolsMenu;
         public states state;
         Vector3 clickPosition;
+        bool hasDragged = false;
         Vector3 dragOrigin;
         public Items items;
         CharacterPartsHelper.parts partActive;
@@ -181,13 +182,19 @@ namespace UI
                                 container.OnStopTransformModify();
 
                             itemDragHandler.StopDragging(centerPos);
-                            if (Vector3.Distance(clickPosition, centerPos) < 4 && !IsPointerOverUIObject())
+                            if (!hasDragged && Vector3.Distance(clickPosition, centerPos) < 4 && !IsPointerOverUIObject())
                                 OpenTools();
                             else
                                 AudioManager.Instance.sfxManager.PlayTransp("drop", -2);
                         }
                         else
-                            itemDragHandler.UpdateDrag(centerPos);
+                        {
+                            if (Vector3.Distance(clickPosition, centerPos) >= 4)
+                                hasDragged = true;
+
+                            if (hasDragged)
+                                itemDragHandler.UpdateDrag(centerPos);
+                        }
                         break;
                         //case states.SCALING:
                         //    UIManager.Instance.boardUI.items.Scale(lastMouseX - Input.touches[0].position.x);
@@ -224,7 +231,7 @@ namespace UI
                         state = states.IDLE;
 
                        
-                        if (Vector3.Distance(clickPosition, Input.mousePosition) < 4 && !IsPointerOverUIObject())
+                        if (!hasDragged && Vector3.Distance(clickPosition, Input.mousePosition) < 4 && !IsPointerOverUIObject())
                             OpenTools();
                         else
                         {
@@ -237,7 +244,13 @@ namespace UI
                         }
                     }
                     else
-                        itemDragHandler.UpdateDrag(Input.mousePosition);
+                    {
+                        if (Vector3.Distance(clickPosition, Input.mousePosition) >= 4)
+                            hasDragged = true;
+
+                        if (hasDragged)
+                            itemDragHandler.UpdateDrag(Input.mousePosition);
+                    }
                     break;
                 case states.SCALING:
                     UIManager.Instance.boardUI.items.Scale(lastMouseX - Input.mousePosition.x);
@@ -256,6 +269,7 @@ namespace UI
             if (IsPointerOverUIObject()) return;
             AudioManager.Instance.sfxManager.StopLoop();
             clickPosition = Input.mousePosition;
+            hasDragged = false;
             switch (state)
             {
                 case states.SCALING:
