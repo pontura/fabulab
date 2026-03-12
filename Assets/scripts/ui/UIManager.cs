@@ -4,6 +4,7 @@ using BoardItems.Characters;
 using System.Collections.Generic;
 using UI.MainApp;
 using UnityEngine;
+using Yaguar.StoryMaker.Editor;
 using static UI.BoardUI;
 
 namespace UI
@@ -71,8 +72,12 @@ namespace UI
             backToScreen.Add(type);
             switch(type)
             {
+                case screenType.StoryMaker:
+                    Scenario.Instance.gameObject.SetActive(true);
+                    break;
                 case screenType.Home:
                     backBtn.SetActive(false);
+                    Scenario.Instance.gameObject.SetActive(false);
                     break;
                 default:
                     backBtn.SetActive(true);

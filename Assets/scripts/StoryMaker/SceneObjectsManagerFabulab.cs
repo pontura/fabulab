@@ -1,7 +1,5 @@
 ﻿using BoardItems.Characters;
 using BoardItems.SceneObjects;
-using System;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 
