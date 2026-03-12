@@ -32,8 +32,20 @@ namespace BoardItems
             Events.AnimateItem += AnimateItem;
             Events.ResetItems += ResetItems;
             Events.LoadBoardItemForStory += LoadBoardItemForStory;
-
-            // Events.EditMode(true);
+            Events.ShowScreen += ShowScreen;
+        }
+        public bool storyMode;
+        private void ShowScreen(UIManager.screenType type)
+        {
+            switch (type)
+            {
+                case UIManager.screenType.StoryMaker:
+                    storyMode = true;
+                    break;
+                default:
+                    storyMode = false;
+                    break;
+            }
         }
         void OnDestroy()
         {
@@ -44,6 +56,7 @@ namespace BoardItems
             Events.AnimateItem -= AnimateItem;
             Events.ResetItems -= ResetItems;
             Events.LoadBoardItemForStory -= LoadBoardItemForStory;
+            Events.ShowScreen -= ShowScreen;
         }
         public List<ItemInScene> all
         {

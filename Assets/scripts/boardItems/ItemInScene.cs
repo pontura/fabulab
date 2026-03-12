@@ -110,14 +110,6 @@ namespace BoardItems
             collider.enabled = true;
           //  Events.OnNewBodyPartSelected(null);
         }
-        public void StartFalling()
-        {
-            rb.constraints = RigidbodyConstraints2D.None;
-            rb.AddTorque(Random.Range(-5, 5) * 500);
-            rb.isKinematic = false;
-            collider.enabled = true;
-            SetCollider(true);
-        }
         public void SetPos(Vector3 pos, bool snap = false)
         {
             transform.position = new Vector3(pos.x, pos.y, transform.position.z);
@@ -155,7 +147,6 @@ namespace BoardItems
             return false;
         }
         [SerializeField] BodyPart bpOver;
-       // [SerializeField] BodyPart bpEnter;
         void OnTriggerEnter2D(Collider2D collision)
         {
             BodyPart bpEnter = collision.gameObject.GetComponent<BodyPart>();
@@ -164,19 +155,14 @@ namespace BoardItems
             {
                 data.SetContainer(bpEnter);
                 data.SetCharacterPart(bpEnter.part);
-               // Events.OnNewBodyPartSelected(bpEnter);
                 bpOver = bpEnter;
-                //ArrengeZPos(bpOver);
             }
         }
         void OnTriggerExit2D(Collider2D collision)
         {
-           // print("coll OnTriggerExit2D: " + (timer + 0.1f) + "     Timer " + Time.time);
             if (timer+0.01f > Time.time) return;
             BodyPart bpExit = collision.GetComponent<BodyPart>();
             if (bpExit.part != data.part) return;
-
-          //  Events.OnNewBodyPartSelected(null);
             bpOver = null;
         }
         public ItemInScene GetMirror() {  return mirror;  }
@@ -186,7 +172,6 @@ namespace BoardItems
         }
         void ArrengeZPos(BodyPart bp)
         {
-           // if (rb.bodyType != RigidbodyType2D.Kinematic) return;
             float z = bp.GetLastZ();
             if (z == 0) return; //no objects in bodypart;
             print("Arrenge Z" + z);

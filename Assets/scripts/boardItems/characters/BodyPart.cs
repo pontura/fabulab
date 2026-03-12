@@ -20,6 +20,8 @@ namespace BoardItems
             col2D = GetComponentInChildren<Collider2D>();
             Events.OnNewBodyPartSelected += OnNewBodyPartSelected;
             Events.OnBodyPartActive += OnBodyPartActive;
+            if (UIManager.Instance.boardUI.items.storyMode)
+                selectedBodySignal.gameObject.SetActive(false);
         }
         void OnDestroy()
         {
