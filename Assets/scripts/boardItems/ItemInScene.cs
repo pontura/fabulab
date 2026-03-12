@@ -87,6 +87,7 @@ namespace BoardItems
         float timer;
         public void StartBeingDrag()
         {
+            SetBorders(true);
             timer = Time.time;
             print("StartBeingDrag");
             rb = gameObject.GetComponent<Rigidbody2D>();
@@ -106,6 +107,7 @@ namespace BoardItems
         }
         public void StopBeingDrag()
         {
+            SetBorders(false);
             rb.isKinematic = false;
             collider.enabled = true;
           //  Events.OnNewBodyPartSelected(null);
@@ -183,20 +185,17 @@ namespace BoardItems
         BordersCreator borders;
         public void SetTools(bool isOn, AnimationClip clip = null)
         {
-            if (isOn)
+            SetBorders(isOn);
+        }
+        void SetBorders(bool isOn)
+        {
+            if (borders == null)
             {
-                if (borders == null)
-                {
-                    borders = gameObject.AddComponent<BordersCreator>();
-                    borders.Init(sprites[0]);
-                }
-                borders.Show(true);
+                borders = gameObject.AddComponent<BordersCreator>();
+                borders.Init(sprites[0]);
             }
-            else
-            {
-                if (borders != null)
-                    borders.Show(false);
-            }
+
+            borders.Show(isOn);
         }
     }
 }
