@@ -5,9 +5,7 @@ using System.Security.Cryptography;
 [RequireComponent(typeof(SpriteRenderer))]
 public class BordersCreator : MonoBehaviour
 {
-    public float lineWidth = 0.5f;
-    public float radius = 0.2f;
-    public int cornerSegments = 6;
+    public float lineWidth = 3f;
 
     LineRenderer lr;
     SpriteRenderer sr;
@@ -22,6 +20,8 @@ public class BordersCreator : MonoBehaviour
         bottom.enabled = isOn;
         left.enabled = isOn;
         right.enabled = isOn;
+
+      
     }
     public void Init (SpriteRenderer sr)
     {
@@ -58,16 +58,25 @@ public class BordersCreator : MonoBehaviour
         GameObject go = new GameObject(name);
         go.transform.SetParent(sr.transform);
 
+        Camera cam = Camera.main;
+
+        float worldHeight = cam.orthographicSize * 2f;
+        float worldPerPixel = worldHeight / Screen.height;
+
+        float worldWidth = lineWidth * worldPerPixel;
+
+        // compensar el scale del objeto
+        float compensatedWidth = worldWidth / go.transform.lossyScale.x;
+
         LineRenderer lr = go.AddComponent<LineRenderer>();
         lr.positionCount = 2;
-        lr.startWidth = lineWidth;
-        lr.endWidth = lineWidth;
+        lr.startWidth = compensatedWidth;
+        lr.endWidth = compensatedWidth;
         lr.material = new Material(Shader.Find("Sprites/Default"));
         lr.startColor = color;
         lr.endColor = color;
         lr.useWorldSpace = false;
         lr.sortingOrder = 100;
-
         return lr;
     }
 }
