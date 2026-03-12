@@ -114,6 +114,11 @@ namespace Yaguar.StoryMaker.Editor
             newSO.transform.localPosition = Vector3.zero;
             newSO.transform.localEulerAngles = Vector3.zero;
             newSO.transform.localScale = Vector3.one;
-        }                
+        }   
+        
+        public override void ResetScene() {
+            base.ResetScene();
+            Utils.RemoveAllChildsIn(bgContainer);
+        }
     }
 }

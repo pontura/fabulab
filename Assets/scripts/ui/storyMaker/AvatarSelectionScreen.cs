@@ -5,35 +5,9 @@ using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
 {
-    public class AvatarSelectionScreen : MonoBehaviour
+    public class AvatarSelectionScreen : ItemSelectionScreen
     {
-        public ItemSelectorBtn workBtn_prefab;
-        public Transform worksContainer;
-
-        int artID = 0;
-        public void Show(bool isOn)
-        {
-            gameObject.SetActive(isOn);
-            if(isOn)
-            {
-                Init();
-            }
-        }
-
-        public void Init()
-        {
-            artID = 0;
-
-            foreach (Transform child in worksContainer)
-            {
-                if (child.tag != "Persistent")
-                    Destroy(child.gameObject);
-            }
-
-            LoadNext();
-        }
-        
-        void LoadNext()
+        protected override void LoadNext()
         {
             foreach(CharacterData cd in Data.Instance.charactersData.userCharacters)
             {
@@ -44,11 +18,10 @@ namespace UI.MainApp.Home.User
             }           
         }
 
-        public void OpenWork(string id) {
+        public override void OpenWork(string id) {
             SOAvatarFabulabData data = new SOAvatarFabulabData();
             data.id = id;
             StoryMakerEvents.AddSceneObject(data);
-            //UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);    
         }        
     }
 

@@ -12,8 +12,8 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] protected Avatar avatar_to_instantiate;
         [SerializeField] protected Objeto object_to_instantiate;
 
-        [SerializeField] protected ObjectSignal[] objectSignal_to_instantiate;
-        [SerializeField] protected ObjectFinalSignal[] finalSignal_to_instantiate;
+        [SerializeField] protected Objeto[] objectSignal_to_instantiate;
+        [SerializeField] protected Objeto[] finalSignal_to_instantiate;
 
         [SerializeField] protected SpriteRenderer background;
 
@@ -42,7 +42,7 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.DeleteSceneObject -= DeleteSceneObject;
             StoryMakerEvents.RemoveSceneObject -= RemoveSceneObject;
         }
-        public void ResetScene()
+        public virtual void ResetScene()
         {
             foreach(Transform child in container)
             {
