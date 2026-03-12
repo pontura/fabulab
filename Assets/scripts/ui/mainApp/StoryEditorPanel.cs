@@ -12,7 +12,7 @@ namespace UI.MainApp
             switch(type)
             {
                 case UIManager.screenType.StoryMaker:
-                    Events.Zoom(0, false);
+                    Events.Zoom(ZoomStates.STORY, false);
                     Show(true);
                     StoryMakerEvents.EnableInputManager(true);
                     break;
