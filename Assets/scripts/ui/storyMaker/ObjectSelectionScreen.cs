@@ -5,27 +5,9 @@ using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
 {
-    public class ObjectSelectionScreen : MonoBehaviour
+    public class ObjectSelectionScreen : ItemSelectionScreen
     {
-        public ItemSelectorBtn workBtn_prefab;
-        public Transform worksContainer;
-
-        int artID = 0;        
-
-        public void Init()
-        {
-            artID = 0;
-
-            foreach (Transform child in worksContainer)
-            {
-                if (child.tag != "Persistent")
-                    Destroy(child.gameObject);
-            }
-
-            LoadNext();
-        }
-        
-        void LoadNext()
+        protected override void LoadNext()
         {
             foreach (SObjectData cd in Data.Instance.sObjectsData.data)
             {
@@ -38,7 +20,7 @@ namespace UI.MainApp.Home.User
             }            
         }        
 
-        public void OpenWork(string id)
+        public override void OpenWork(string id)
         {
             SODataFabulab data = new SODataFabulab();
             data.id = id;
