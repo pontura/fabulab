@@ -122,10 +122,6 @@ namespace BoardItems
         {
             transform.position = new Vector3(pos.x, pos.y, transform.position.z);
         }
-        void Snap()
-        {
-
-        }
         public void SetPosByData()
         {
             transform.localPosition = data.position;
@@ -199,25 +195,22 @@ namespace BoardItems
             transform.position = pos;
         }
         Animation anim;
+        BordersCreator borders;
         public void SetTools(bool isOn, AnimationClip clip = null)
         {
             if (isOn)
             {
-                if (anim == null)
+                if (borders == null)
                 {
-                    anim = collider.GetComponent<Animation>();
-                    if (anim == null) 
-                        anim = collider.gameObject.AddComponent<Animation>();
-
-                    anim.AddClip(clip, clip.name);
-                    anim.clip = clip;
-                    anim.Play();
+                    borders = gameObject.AddComponent<BordersCreator>();
+                    borders.Init(sprites[0]);
                 }
+                borders.Show(true);
             }
-            else if(anim != null)
+            else
             {
-              //  collider.gameObject.transform.localScale = Vector3.one;
-                Destroy(anim);
+                if (borders != null)
+                    borders.Show(false);
             }
         }
     }
