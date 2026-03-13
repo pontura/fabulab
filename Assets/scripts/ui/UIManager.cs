@@ -19,6 +19,7 @@ namespace UI
         public ZoomsManager zoomManager;
         CharacterEdition characterEdition;
         [SerializeField] ConfirmationScreen confirmationScreen;
+        public UndoManager undoManager;
 
         public enum screenType
         {
@@ -47,6 +48,7 @@ namespace UI
             backToScreen = new List<screenType>();
             zoomManager = GetComponent<ZoomsManager>();
             characterEdition = GetComponent<CharacterEdition>();
+            undoManager = GetComponent<UndoManager>();
             if (!mInstance)
                 mInstance = this;
         }
@@ -69,6 +71,7 @@ namespace UI
         }
         private void OnShowScreen(screenType type)
         {
+            undoManager.Reset();
             backToScreen.Add(type);
             switch(type)
             {

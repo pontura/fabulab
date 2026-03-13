@@ -87,6 +87,7 @@ namespace BoardItems
                     Events.ColorizeBG(colorNames[id]);
                     break;
                 case types.COLORS:
+                    UIManager.Instance.undoManager.OnNewStep();
                     PalettesManager.PaletteData pData = Data.Instance.palettesManager.GetPaletteData(itemData.paletteName);
                     Events.Colorize(pData.colors[id]);
                     break;

@@ -111,7 +111,7 @@ namespace BoardItems
             SetBorders(false);
             rb.isKinematic = false;
             collider.enabled = true;
-          //  Events.OnNewBodyPartSelected(null);
+            print("StopBeingDrag"); 
         }
         public void SetPos(Vector3 pos, bool snap = false)
         {

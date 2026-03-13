@@ -21,7 +21,7 @@ namespace UI
         public Camera cam;
         public Screenshot screenshot;
 
-        BoardItemManager activeBoardItem;
+        public BoardItemManager activeBoardItem;
         BodyPart[] allBodyParts;
         public BodyPart[] AllBodyParts { get { return allBodyParts; } }
 
@@ -226,7 +226,7 @@ namespace UI
             OpenWork(wd);
         }
 
-        void OpenWork(SOPartData wd)
+        public void OpenWork(SOPartData wd)
         {
             items.OpenWork(activeBoardItem, wd, true);
         }

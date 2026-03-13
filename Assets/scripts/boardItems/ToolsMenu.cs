@@ -100,6 +100,7 @@ namespace BoardItems
             newItem.transform.rotation = itemToClonate.transform.rotation;
             newItem.transform.localScale = itemToClonate.transform.localScale;
             inputManager.OnCloseTools(InputManager.states.IDLE);
+            UIManager.Instance.undoManager.OnNewStep();
         }
         public void MoveBack()
         {

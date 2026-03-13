@@ -410,13 +410,15 @@ namespace BoardItems
         void OnPresetLoaded(string presetId) {
             Debug.Log("# OnPresetLoaded");
             loadedPresetId = presetId;
+
+            UIManager.Instance.undoManager.OnNewStep();
         }
 
         void OnCharacterReset() {
             Debug.Log("# OnNewCharacter");
             loadedPresetId = "";
         }
-        private void OnPresetReset()
+        public void OnPresetReset()
         {
             Debug.Log("# On Preset Reseted");
             loadedPresetId = "";

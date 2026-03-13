@@ -17,7 +17,7 @@ namespace UI
         bool hasDragged = false;
         Vector3 dragOrigin;
         public Items items;
-        CharacterPartsHelper.parts partActive;
+        [SerializeField] CharacterPartsHelper.parts partActive;
         public bool groupOn = false;
 
         public enum states

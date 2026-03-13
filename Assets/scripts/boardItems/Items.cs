@@ -297,6 +297,7 @@ namespace BoardItems
             newItemFromMenu = null;
             if (item == null) return;
             item.StopBeingDrag();
+            UIManager.Instance.undoManager.OnNewStep();
             float posX = Camera.main.WorldToScreenPoint(pos).x;
             bool isOverBodyPart = item.IsOverBodyPart();
             if (!isOverBodyPart)
@@ -327,16 +328,6 @@ namespace BoardItems
         {
             if (IsInMirrorPart(item))
                 CheckMirror(item);
-            //else
-            //{
-            //    ItemInScene mirror = item.GetMirror();
-            //    if (mirror != null)
-            //    {
-            //        item.SetMirror(null);
-            //        mirror.SetMirror(null);
-            //        Delete(mirror);
-            //    }
-            //}
         }
         bool IsInMirrorPart(ItemInScene item)
         {
@@ -350,7 +341,6 @@ namespace BoardItems
         }
         void CheckMirror(ItemInScene item)
         {
-            print("check Mirror " + item.data.part);
             ItemInScene mirror = item.GetMirror();
             if (mirror != null)
                 EditMirror(item, mirror);
@@ -589,7 +579,7 @@ namespace BoardItems
         }
         public void OpenWork(BoardItemManager boardItemManager, SOPartData wd, bool cascade = false)
         {
-            if(Data.Instance.charactersData.PresetID == "")
+            if(Data.Instance.charactersData.PresetID == "" && cascade)
                 Events.ColorizeBG(wd.bg);
             if (wd is CharacterData characterData)
             {
@@ -631,6 +621,13 @@ namespace BoardItems
                 }
                 if(i.data.part == partActive)
                     i.SetCollider(true);
+            }
+        }
+        public void SetColliders(BoardItemManager boardItemManager, bool isOn)
+        {
+            foreach (ItemInScene i in boardItemManager.GetComponentsInChildren<ItemInScene>())
+            {
+                i.SetCollider(isOn);
             }
         }
 

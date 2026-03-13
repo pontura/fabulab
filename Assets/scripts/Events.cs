@@ -1,15 +1,12 @@
 ﻿using BoardItems;
-using BoardItems.BoardData;
 using BoardItems.Characters;
-using BoardItems.SceneObjects;
-using BoardItems.UI;
 using UI;
 using UI.MainApp;
 using UnityEngine;
 
 public static class Events
-{
-    public static System.Action<bool> OnNewPartSelected = delegate { };
+{    
+    public static System.Action OnUndoAdded = delegate { };
     public static System.Action<bool> OnBGColorizerOpen = delegate { };
     public static System.Action<bool> SetGroupToolsOn = delegate { };
     public static System.Action<BodyPart> OnNewBodyPartSelected = delegate { };
