@@ -15,6 +15,7 @@ namespace UI.MainApp
         [SerializeField] AvatarSelectionScreen characterScreen;
         [SerializeField] ObjectSelectionScreen objectsScreen;
         [SerializeField] BackgroundSelectionScreen backgroundScreen;
+        [SerializeField] TextSelectionScreen textsScreen;
         [SerializeField] ActionsUI actionUI;
         [SerializeField] EmojisUI emojisUI;
 
@@ -26,16 +27,20 @@ namespace UI.MainApp
         [SerializeField] bool changesMade;
 
         private void Start() {
-            tabs.Init(OnTabClicked);
             StoryMakerEvents.OnSaveScene += OnSaveScene;
             StoryMakerEvents.EditActions += EditorActions;
             StoryMakerEvents.EditExpressions += EditExpressions;
+            Invoke(nameof(Init), Time.deltaTime * 4);
         }
 
         void OnDestroy() {
             StoryMakerEvents.OnSaveScene -= OnSaveScene;
             StoryMakerEvents.EditActions -= EditorActions;
             StoryMakerEvents.EditExpressions -= EditExpressions;
+        }
+
+        void Init() {
+            tabs.Init(OnTabClicked);
         }
 
         public void CloseActionsAndEmojis() {
@@ -75,10 +80,15 @@ namespace UI.MainApp
                     objectsScreen.Init();
                     break;
                 case 3:
+                    timeline.SetActive(false);
+                    itemList.SetActive(true);
+                    textsScreen.Init();
+                    break;
+                case 4:
                     timeline.SetActive(true);
                     itemList.SetActive(false);
-                    break;
-            }
+                    break;                    
+            }   
         }
 
         public void OnSaveScene() {

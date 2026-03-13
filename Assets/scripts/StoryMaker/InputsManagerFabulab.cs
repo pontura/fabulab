@@ -90,14 +90,15 @@ namespace Yaguar.StoryMaker.Editor
             RaycastHit2D[] hits = Physics2D.RaycastAll(ray.origin, ray.direction, Mathf.Infinity, layerMask:layer_mask);
             if (hits.Length > 0)
                 hit = hits[0];
-            foreach (RaycastHit2D h in hits)
+            
+            /*foreach (RaycastHit2D h in hits)
             {
-                if (h.collider.gameObject.GetComponent<SceneObject>().GetData() is SOIconData)
+                if (h.collider.gameObject.GetComponent<SceneObject>().GetData() is SOInputDataFabulab)
                 {
                     hit = h;
                     break;
                 }
-            }
+            }*/
 
             if (hit.collider != null)
             {

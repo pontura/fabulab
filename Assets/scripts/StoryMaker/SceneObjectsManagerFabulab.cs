@@ -31,8 +31,7 @@ namespace Yaguar.StoryMaker.Editor
             
             selected = null;
 
-            if (data is SOAvatarFabulabData avatarData)
-            {
+            if (data is SOAvatarFabulabData avatarData) {
                 SceneObject avatar = Instantiate(avatar_to_instantiate);
                 AddToContainer(avatar, avatarData);
 
@@ -47,9 +46,9 @@ namespace Yaguar.StoryMaker.Editor
 
                 if (avatarData.anim == CharacterAnims.anims.edit)
                     avatarData.anim = CharacterAnims.anims.idle;
-                Events.OnCharacterAnim(avatarData.id,avatarData.anim);
+                Events.OnCharacterAnim(avatarData.id, avatarData.anim);
                 Events.OnCharacterExpression(avatarData.id, avatarData.emoji);
-            }else if (data is SODataFabulab soData) {
+            } else if (data is SODataFabulab soData) {
                 SceneObject prop = Instantiate(object_to_instantiate);
                 AddToContainer(prop, soData);
 
@@ -59,7 +58,7 @@ namespace Yaguar.StoryMaker.Editor
                 SceneObjectManager objectManager = prop.GetComponent<Prop>().objectManager;
                 objectManager.id = soData.id;
                 Events.LoadBoardItemForStory(objectManager, soData.id);
-                selected = prop;                
+                selected = prop;
             } else if (data is SOBGData soBgData) {
                 bgData = soBgData;
                 SceneObject bg = Instantiate(background_to_instantiate);
@@ -71,9 +70,17 @@ namespace Yaguar.StoryMaker.Editor
                 SceneObjectManager objectManager = bg.GetComponent<Background>().objectManager;
                 objectManager.id = soBgData.id;
                 Events.LoadBoardItemForStory(objectManager, soBgData.id);
+            } else if (data is SOWordBalloonData soWBD) {
+                SceneObject wordBalloon = Instantiate(objectSignal_to_instantiate[0]);
+                AddToContainer(wordBalloon, soWBD);
+
+                wordBalloon.gameObject.name = "WordBalloon_" + soWBD.id;
+                wordBalloon.Init(soWBD);
+                inputsManager.ResetAll();
+                selected = wordBalloon;
             }
 
-            if(selected != null) 
+            if (selected != null)
                 sceneObjects.Add(selected);
         }
 
