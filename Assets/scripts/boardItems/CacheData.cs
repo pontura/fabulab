@@ -71,25 +71,20 @@ public class CacheData : MonoBehaviour
             if (u.uid == uid)
             {
                 OnReady( u);
+                return;
             }
         }
         FirebaseStoryMakerDBManager.Instance.GetUser(uid, (uid, rawjson) =>
         {
+            Debug.Log("# " + uid + " " + rawjson);
             ServerMetaData s = JsonUtility.FromJson<ServerMetaData>(rawjson);
+            Debug.Log("# " + uid + " " + rawjson + " " + s.thumb);
             UserData ud = new UserData();
             ud.uid = uid;
             ud.username = s.username;
             ud.thumb = new Texture2D(1, 1);
-            if(s.thumb != "")
-                ud.thumb.LoadImage(System.Convert.FromBase64String(s.thumb));
-            foreach (UserData u in users)
-            {
-                if (u.uid == uid)
-                {
-                    OnReady(u);
-                    return;
-                }
-            }
+            if(s.thumb != "" && s.thumb != null)
+                ud.thumb.LoadImage(System.Convert.FromBase64String(s.thumb));            
             users.Add(ud);
             OnReady(ud);
         });

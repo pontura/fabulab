@@ -148,9 +148,7 @@ namespace BoardItems
                 Debug.Log("#LoadCharactersFromServer " + e.Key + ": " + e.Value);
                 SObjectData wd = new SObjectData();
                 wd.id = e.Key;
-                Debug.Log("#Aca1: " + e.Value.items.Count);
                 wd.LoadServerData(e.Value);
-                Debug.Log("#Aca2");
                 wd.thumb = metaData.Find(x => x.id == wd.id)?.thumb;
                 data.Add(wd);
             }

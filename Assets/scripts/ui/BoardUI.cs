@@ -58,7 +58,6 @@ namespace UI
                     SetActiveBoard(sceneobjectsManager);
                     break;
                 default:
-                    Debug.Log("# default");
                     characterManager.gameObject.SetActive(false);
                     sceneobjectsManager.gameObject.SetActive(false);
                     activeBoardItem.gameObject.SetActive(false);
