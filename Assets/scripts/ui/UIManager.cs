@@ -167,9 +167,11 @@ namespace UI
             switch(type)
             {
                 case editingTypes.CHARACTER:
+                    Events.OnCharacterReset();
                     Events.ShowScreen(UIManager.screenType.Creation_Character);
                     break;
                 case editingTypes.OBJECT:
+                    Events.OnCharacterReset();
                     Events.ShowScreen(UIManager.screenType.Creation_Objects);
                     break;
             }

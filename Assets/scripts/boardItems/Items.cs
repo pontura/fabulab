@@ -589,8 +589,8 @@ namespace BoardItems
         }
         public void OpenWork(BoardItemManager boardItemManager, SOPartData wd, bool cascade = false)
         {
-
-            Events.ColorizeBG(wd.bg);
+            if(Data.Instance.charactersData.PresetID == "")
+                Events.ColorizeBG(wd.bg);
             if (wd is CharacterData characterData)
             {
                 Events.ColorizeArms(characterData.armsColor);
