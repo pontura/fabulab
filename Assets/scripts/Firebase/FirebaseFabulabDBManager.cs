@@ -373,6 +373,12 @@ namespace Yaguar.StoryMaker.DB
         }
 
         public void UpdateBodypartPresetToServer(string presetId, string type, SOPartServerData presetData, string partId, System.Action<bool, string, string> callback) {
+
+            if (presetId == null || presetId == "") {
+                Debug.LogError("Preset Id cannot be null or empty");
+                return;
+            }
+
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/" + type + "/" + partId + "/"  + presetId);
             string s = JsonConvert.SerializeObject(presetData);
             reference.SetRawJsonValueAsync(s).ContinueWithOnMainThread(task => {
@@ -412,7 +418,10 @@ namespace Yaguar.StoryMaker.DB
         }
 
         public void DeleteBodypartPreset(string presetId, string partId, System.Action<string> callback) {
-
+            if (presetId == null || presetId == "") {
+                Debug.LogError("Preset Id cannot be null or empty");
+                return;
+            }
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/bodypart/" + partId + "/" + presetId);
             Debug.Log("#DeleteBodypartPreset presets / bodypart / " + partId + " / " + presetId);
             reference.RemoveValueAsync().ContinueWithOnMainThread((Action<Task>)(task => {
