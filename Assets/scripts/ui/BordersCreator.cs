@@ -1,8 +1,5 @@
 using UnityEngine;
-using System.Collections.Generic;
-using System.Security.Cryptography;
 
-[RequireComponent(typeof(SpriteRenderer))]
 public class BordersCreator : MonoBehaviour
 {
     public float lineWidth = 3f;

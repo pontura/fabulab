@@ -11,11 +11,11 @@ namespace BoardItems
         public ItemData data;
         public Rigidbody2D rb;
         [SerializeField] Collider2D collider;
-       // [SerializeField] List<Collider2D> colliders;
-        List<SpriteRenderer> sprites;
+        // [SerializeField] List<Collider2D> colliders;
+        [SerializeField] SpriteRenderer sprite;
         ItemInSceneAnims anims;
 
-        private void Start()
+        private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
 
@@ -27,12 +27,13 @@ namespace BoardItems
             if(collider == null)
                 collider = GetComponent<Collider2D>();
 
-            sprites = new List<SpriteRenderer>();  
-            foreach (SpriteRenderer sr in GetComponentsInChildren<SpriteRenderer>())
-            {
-                sprites.Add(sr);
-            }
+            if(sprite == null)
+                sprite = GetComponentInChildren<SpriteRenderer>();
 
+            print("ItemInScene Init " + gameObject.name);
+        }
+        private void Start()
+        {
             if (data != null)
                 SetColor(data.colorName);
         }
@@ -122,15 +123,11 @@ namespace BoardItems
         }
         public void SetColor(PalettesManager.colorNames name)
         {
+            print("SetColor item in scene " + name + " sprite: " + sprite + " data.colorName " + data.colorName);
             data.colorName = name;
             List<Color> allColors = Data.Instance.palettesManager.GetColorsByName(name);
-            int id = 0;
-            foreach (SpriteRenderer sr in sprites)
-            {
-                if (id <= allColors.Count - 1)
-                    sr.color = allColors[id];
-                id++;
-            }
+            
+            sprite.color = allColors[0];
         }
         public bool IsBeingUse()
         {
@@ -192,7 +189,7 @@ namespace BoardItems
             if (borders == null)
             {
                 borders = gameObject.AddComponent<BordersCreator>();
-                borders.Init(sprites[0]);
+                borders.Init(sprite);
             }
 
             borders.Show(isOn);
