@@ -22,7 +22,9 @@ namespace UI.MainApp
         protected override void ShowScreen(UIManager.screenType type)
         {
             switch (type)
-            {                
+            {
+                case UIManager.screenType.WorkDetail:
+                    break;
                 case UIManager.screenType.Creation_Character:
                     changesMade = false;
                     SetButtons();
@@ -125,7 +127,7 @@ namespace UI.MainApp
         {
             if (Data.Instance.userData.isAdmin)
             {
-                savePartButton.SetActive(true);
+                savePartButton.SetActive(Data.Instance.charactersData.PresetID != "");
                 deletePartButton.SetActive(Data.Instance.charactersData.PresetID != "");
 
                 savePartButton.GetComponentInChildren<TMPro.TMP_Text>().text = "Save " + UIManager.Instance.zoomManager.lastZoom.ToString();
