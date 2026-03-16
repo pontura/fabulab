@@ -25,7 +25,6 @@ namespace BoardItems.BoardData
     [Serializable]
     public class CharacterMetaData
     {
-        public string soID;
         public string id;
         public Texture2D thumb;
         public string userID;

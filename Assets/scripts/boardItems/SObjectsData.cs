@@ -158,8 +158,6 @@ namespace BoardItems
                 wd.LoadServerData(e.Value);
                 PropMetaData p = metaData.Find(x => x.id == wd.id);
                 wd.thumb = p?.thumb;
-                if(p != null)
-                    Debug.Log("soID " + p?.soID);
                 data.Add(wd);
             }
         }
