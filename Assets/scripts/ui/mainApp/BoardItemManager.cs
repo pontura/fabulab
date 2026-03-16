@@ -1,4 +1,6 @@
 ﻿using BoardItems;
+using BoardItems.BoardData;
+using BoardItems.Characters;
 using System.Collections;
 using UnityEngine;
 
@@ -137,6 +139,15 @@ namespace UI.MainApp
                 Vector3 size = new Vector3(maxX - minX, maxY - minY, 0.1f);
                 bounds = new Bounds(center, size);
             }
+        }
+        public BodyPart GetBodyPart(CharacterPartsHelper.parts part)
+        {
+            BoardItems.BodyPart[] all = UIManager.Instance.boardUI.activeBoardItem.GetComponentsInChildren<BoardItems.BodyPart>();
+            foreach (BoardItems.BodyPart b in all)
+            {
+                if (b.part == part) return b;
+            }
+            return null;
         }
 
     }

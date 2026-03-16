@@ -37,10 +37,10 @@ namespace BoardItems
             if (data != null)
                 SetColor(data.colorName);
         }
-        public void Appear()
+        public void Appear(float offsetY = 8)
         {
             Vector3 from = data.position;
-            from.y -= 8;
+            from.y -= offsetY;
             transform.localPosition = from;
         }
         public void AppearAction()
@@ -145,6 +145,12 @@ namespace BoardItems
                 return true;
             return false;
         }
+        public void InitItemInPart(BodyPart bpEnter)
+        {
+            data.SetContainer(bpEnter);
+            data.SetCharacterPart(bpEnter.part);
+            bpOver = bpEnter;
+        }
         [SerializeField] BodyPart bpOver;
         void OnTriggerEnter2D(Collider2D collision)
         {
@@ -152,9 +158,7 @@ namespace BoardItems
             if (bpEnter.part != data.part)  return;
             if (bpOver == null)
             {
-                data.SetContainer(bpEnter);
-                data.SetCharacterPart(bpEnter.part);
-                bpOver = bpEnter;
+                InitItemInPart( bpEnter);
             }
         }
         void OnTriggerExit2D(Collider2D collision)

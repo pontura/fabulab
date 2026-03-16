@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UI;
 using UI.MainApp;
 using UnityEngine;
-using UnityEngine.UIElements.Experimental;
 
 namespace BoardItems.Characters
 {

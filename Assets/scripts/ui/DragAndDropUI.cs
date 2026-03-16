@@ -1,8 +1,13 @@
 using BoardItems;
+using BoardItems.BoardData;
 using BoardItems.Characters;
+using System.Collections;
 using System.Collections.Generic;
+using UI.MainApp;
 using UnityEditor;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
+using static UnityEditor.Progress;
 
 namespace UI
 {
@@ -64,9 +69,22 @@ namespace UI
         {
             ItemInScene i = b.itemData.GetComponent<ItemInScene>();
             ItemInScene newItem = items.AddNewItemFromMenu(i);
+            CharacterPartsHelper.parts part = UIManager.Instance.part;
+            BoardItems.BodyPart bp = UIManager.Instance.boardUI.activeBoardItem.GetBodyPart(part);
+            Vector3 dest = bp.transform.position;
+            newItem.transform.position = dest;
             newItem.data.part = (CharacterPartsHelper.parts)(int)UIManager.Instance.part;
-            inputManager.OnInitDragging(newItem);
-            canvasGroup.alpha = 0.2f;
+            newItem.InitItemInPart(bp);
+            Events.OnStopDrag(newItem, dest);
+            StartCoroutine(Cascade(newItem));
+        }
+        IEnumerator Cascade(ItemInScene i)
+        {
+            i.Appear(2);
+            yield return new WaitForSeconds(0.05f);
+            i.AppearAction();
+            yield return new WaitForSeconds(0.05f);
+            i.SetCollider(true);
         }
     }
 }
