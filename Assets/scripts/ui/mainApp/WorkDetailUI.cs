@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BoardItems;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,6 +40,8 @@ namespace UI.MainApp
         }
         public void ContinueEditing()
         {
+            BodyPart bp = UIManager.Instance.boardUI.activeBoardItem.GetBodyPart(UIManager.Instance.part);
+            Events.OnNewBodyPartSelected(bp);
             Show(false);
         }
 
