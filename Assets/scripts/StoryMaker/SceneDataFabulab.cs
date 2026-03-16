@@ -9,7 +9,9 @@ namespace Yaguar.StoryMaker.Editor
 {
     public enum SceneElementType {
         AVATAR,
-        PROP
+        PROP,
+        WORD_BALLOON,
+        WORD_BOX
     }
 
     [Serializable]
@@ -55,6 +57,12 @@ namespace Yaguar.StoryMaker.Editor
     }
 
     [Serializable]
+    public class SceneElementTextInput : SceneElement
+    {
+        public string input;
+    }
+
+    [Serializable]
     public class    SceneDataFabulab : SceneData
     {
         [SerializeField] protected new List<SceneElement> scenesElements;
@@ -88,6 +96,14 @@ namespace Yaguar.StoryMaker.Editor
                 (sceneElement as SceneElementAvatar).anim = sOAvatar.anim;
                 (sceneElement as SceneElementAvatar).emoji = sOAvatar.emoji;
                 Debug.Log("$ " + sOAvatar.anim.ToString() + " " + sOAvatar.emoji.ToString());
+            } else if (soData is SOWordBalloonData soWBD) {
+                sceneElement = new SceneElementTextInput();
+                sceneElement.type = SceneElementType.WORD_BALLOON;
+                (sceneElement as SceneElementTextInput).input = soWBD.inputValue;
+            } else if (soData is SOWordBoxData soWBox) {
+                sceneElement = new SceneElementTextInput();
+                sceneElement.type = SceneElementType.WORD_BOX;
+                (sceneElement as SceneElementTextInput).input = soWBox.inputValue;
             } else if (soData is SODataFabulab) {
                 sceneElement.type = SceneElementType.PROP;
             }
@@ -231,6 +247,12 @@ namespace Yaguar.StoryMaker.Editor
             {
                 soData = new SODataFabulab();
                 SetSOData(soData, data);
+            } else if (data.type == SceneElementType.WORD_BALLOON) {
+                soData = new SOWordBalloonData();
+                SetSOData(soData, data);
+            } else if (data.type == SceneElementType.WORD_BOX) {
+                soData = new SOWordBoxData();
+                SetSOData(soData, data);
             }
             Scenario.Instance.sceneObejctsManager.DeleteSceneObject(soData);
             // Events.DeleteSceneObject(soData);
@@ -256,8 +278,15 @@ namespace Yaguar.StoryMaker.Editor
                 //StoryMakerEvents.SetNewAvatarCustomization(data);
 
                 SetSOData(soData, data);
-            }
-            else if (data.type == SceneElementType.PROP) {
+            } else if (data.type == SceneElementType.WORD_BALLOON) {
+                soData = new SOWordBalloonData();
+                (soData as SOWordBalloonData).inputValue = (data as SceneElementTextInput).input;
+                SetSOData(soData, data);
+            } else if (data.type == SceneElementType.WORD_BOX) {
+                soData = new SOWordBoxData();
+                (soData as SOWordBoxData).inputValue = (data as SceneElementTextInput).input;
+                SetSOData(soData, data);
+            } else if (data.type == SceneElementType.PROP) {
                 soData = new SODataFabulab();
                 SetSOData(soData, data);                
             }

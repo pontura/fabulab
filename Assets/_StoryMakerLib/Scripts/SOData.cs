@@ -11,7 +11,7 @@ public class SOData
     public string id;
     public string customization;
 
-    public void Clone(SOData source) {
+    public virtual void Clone(SOData source) {
         this.itemName = source.itemName;
         this.pos = new V3(source.pos.x, source.pos.y, source.pos.z);
         this.size = source.size;

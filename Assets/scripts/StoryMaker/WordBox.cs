@@ -19,12 +19,20 @@ namespace Yaguar.StoryMaker.Editor
 
         [field: SerializeField] public Sprite[] boxIcons { get; private set; }
 
+        public override void SetField(string text) {
+            Debug.Log("&& SetField: " + text);
+            field.text = text;
+            (GetData() as SOWordBoxData).inputValue = text;
+        }
+
         public override void OnInit() {
             SOData soData = GetData();
             if (soData == null)
                 return;
-            if (soData.customization != null && soData.customization.Length > 0)
-                SetField(GetData().customization);        
+            /*if (soData.customization != null && soData.customization.Length > 0)
+                SetField(GetData().customization);*/
+
+            SetField((soData as SOWordBoxData).inputValue);
 
             BoxCollider2D collider = GetComponent<BoxCollider2D>();
             collider.size = new Vector2(10, 10);

@@ -39,7 +39,9 @@ public class EditFieldUI : MonoBehaviour
             if (OnDone != null)
                 OnDone(text);
         } else*/
-            objectSignal.SetField(text);
+
+        Debug.Log("&& : "+text);
+        objectSignal.SetField(text);
         Close();
     }
 

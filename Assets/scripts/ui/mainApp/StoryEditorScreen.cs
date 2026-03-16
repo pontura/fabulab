@@ -114,6 +114,14 @@ namespace UI.MainApp
                 } else if (so is Prop) {
                     soData = new SODataFabulab();
                     soData.Clone(so.GetData());
+                } else if (so is WordBalloon) {
+                    soData = new SOWordBalloonData();
+                    soData.Clone(so.GetData());
+                    (soData as SOWordBalloonData).inputValue = (so.GetData() as SOWordBalloonData).inputValue;
+                } else if (so is WordBox) {
+                    soData = new SOWordBoxData();
+                    soData.Clone(so.GetData());
+                    (soData as SOWordBoxData).inputValue = (so.GetData() as SOWordBoxData).inputValue;
                 }
 
                 Debug.Log("# Adding Id: " + soData.id + " " + soData);
