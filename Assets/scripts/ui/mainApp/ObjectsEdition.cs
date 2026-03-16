@@ -23,6 +23,8 @@ namespace UI.MainApp
         {
             switch (type)
             {
+                case UIManager.screenType.WorkDetail:
+                    break;
                 case UIManager.screenType.Creation_Objects:
                     sceneObjectsPanel.Init();
                     Events.OnBodyPartActive(CharacterPartsHelper.parts.BODY);

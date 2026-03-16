@@ -181,10 +181,15 @@ namespace UI
         }
         public void Back()
         {
-            if (backToScreen[backToScreen.Count - 1] == screenType.Creation_Character && characterEdition.ChangesMade())
+            if (backToScreen[backToScreen.Count - 1] == screenType.WorkDetail)
+            {
+                Home();
+            } else if (backToScreen[backToScreen.Count - 1] == screenType.Creation_Character && characterEdition.ChangesMade())
             {
                 Events.OnConfirm("All changes will be lost", "Confirm and exit", "Cancel", ExitConfirmed);
-            } else {
+            }
+            else
+            {
                 SetBack();
             }
         }
@@ -202,7 +207,7 @@ namespace UI
             if(exit)
                 SetBack();
         }
-        public void ShowWorkDetail(CharacterData wd)
+        public void ShowWorkDetail(SOPartData wd)
         {
             Sprite sprite = Sprite.Create(wd.thumb, new Rect(0, 0, wd.thumb.width, wd.thumb.height), Vector2.zero);
             Events.ShowScreen(UIManager.screenType.WorkDetail);

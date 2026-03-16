@@ -124,12 +124,7 @@ namespace BoardItems
             swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
             swmd.type = currentSO.type;
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), currentID, swmd);
-
-            OpenSODetail(currentSO);
-        }
-        void OpenSODetail(SObjectData wd)
-        {
-            Debug.Log("Open SO Detal !!");         
+            UIManager.Instance.ShowWorkDetail(currentSO);
         }
         public void OnLoadSODataFromServer(List<CharacterMetaData> sfds)
         {

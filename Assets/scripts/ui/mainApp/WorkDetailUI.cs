@@ -37,10 +37,6 @@ namespace UI.MainApp
             savedSignal.SetActive(isNew);
             Events.OnLoading(false);
         }
-        public void Back()
-        {
-            UIManager.Instance.Home();
-        }
         public void ContinueEditing()
         {
             Show(false);
