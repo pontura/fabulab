@@ -207,7 +207,7 @@ namespace UI
             Sprite sprite = Sprite.Create(wd.thumb, new Rect(0, 0, wd.thumb.width, wd.thumb.height), Vector2.zero);
             Events.ShowScreen(UIManager.screenType.WorkDetail);
             workDetailUI.ShowWorkDetail(wd.id, sprite, true);
-            Events.ResetItems();
+            //Events.ResetItems();
         }
     }
 
