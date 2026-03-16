@@ -84,7 +84,7 @@ namespace Yaguar.StoryMaker.Editor
 
         public void Move()
         {
-            if (isBeingHeld)
+            if (isBeingHeld && !(data is SODataFixed))
             {
                 float lastPosX = data.pos.x;
                 UpdatePos();
@@ -116,6 +116,9 @@ namespace Yaguar.StoryMaker.Editor
         public void Resize(float factor)
         {
 
+            if (data is SODataFixed)
+                return;
+
             data.goLeft = false;
 
             data.size = Mathf.Lerp(data.size, data.size * factor, 0.001f);
@@ -129,6 +132,9 @@ namespace Yaguar.StoryMaker.Editor
 
         public void Rotate(float z)
         {
+            if (data is SODataFixed)
+                return;
+
             transform.localRotation = Quaternion.Euler(0, 0, z);
             data.rot = z;
         }

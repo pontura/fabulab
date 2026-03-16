@@ -8,22 +8,35 @@ namespace UI.MainApp.Home.User
 {
     public class TextSelectionScreen : ItemSelectionScreen
     {
-        [SerializeField] WordBalloon wb_prefab;
+        [SerializeField] WordBalloon wballon_prefab;
+        [SerializeField] WordBox wbox_prefab;
         protected override void LoadNext()
         {
             foreach (WordBalloon.balloonTypes balloonType in Enum.GetValues(typeof(WordBalloon.balloonTypes)))
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-                go.Init(wb_prefab.balloonSprites[(int)balloonType]);
-                go.GetComponent<Button>().onClick.AddListener(() => OpenWork(balloonType.ToString()));                
-            }            
+                go.Init(wballon_prefab.balloonSprites[(int)balloonType]);
+                go.GetComponent<Button>().onClick.AddListener(() => OpenWordBalloon(balloonType.ToString()));                
+            }
+
+            foreach (WordBox.boxTypes boxType in Enum.GetValues(typeof(WordBox.boxTypes))) {
+                ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
+                go.Init(wbox_prefab.boxIcons[(int)boxType]);
+                go.GetComponent<Button>().onClick.AddListener(() => OpenWordBox(boxType.ToString()));
+            }
         }        
 
-        public override void OpenWork(string id)
+        void OpenWordBalloon(string id)
         {
             SOWordBalloonData data = new SOWordBalloonData();
             data.id = id;
             StoryMakerEvents.AddSceneObject(data);
-        }        
+        }
+
+        void OpenWordBox(string id) {
+            SOWordBoxData data = new SOWordBoxData();
+            data.id = id;
+            StoryMakerEvents.AddSceneObject(data);
+        }
     }
 }

@@ -78,6 +78,14 @@ namespace Yaguar.StoryMaker.Editor
                 wordBalloon.Init(soWBD);
                 inputsManager.ResetAll();
                 selected = wordBalloon;
+            } else if (data is SOWordBoxData soWBoxD) {
+                SceneObject wordBox = Instantiate(objectSignal_to_instantiate[1]);
+                wordBox.transform.SetParent(container);                
+                wordBox.gameObject.name = "WordBox_" + soWBoxD.id;
+                wordBox.Init(soWBoxD);
+                SetWordBox(wordBox);
+                inputsManager.ResetAll();
+                selected = wordBox;
             }
 
             if (selected != null)
@@ -121,8 +129,17 @@ namespace Yaguar.StoryMaker.Editor
             newSO.transform.localPosition = Vector3.zero;
             newSO.transform.localEulerAngles = Vector3.zero;
             newSO.transform.localScale = Vector3.one;
-        }   
-        
+        }
+        protected void SetWordBox(SceneObject newSO) {
+            float yPos = 0f;
+            if(newSO.GetData() is SOWordBoxData soWBD) {
+                yPos = soWBD.id == WordBox.boxTypes.top.ToString() ? 41.5f : -8.35f;
+            }
+            newSO.transform.localPosition = new Vector3(0, yPos, 0);
+            newSO.transform.localEulerAngles = Vector3.zero;
+            newSO.transform.localScale = Vector3.one*2.7f;
+        }
+
         public override void ResetScene() {
             base.ResetScene();
             Utils.RemoveAllChildsIn(bgContainer);

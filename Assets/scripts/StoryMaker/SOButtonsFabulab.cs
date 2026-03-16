@@ -41,7 +41,7 @@ public class SOButtonsFabulab : MonoBehaviour {
             //customizer.SetActive(true);
             actions.SetActive(true);
             expresions.SetActive(true);
-        } else  if (data is SOInputDataFabulab)
+        } else  if (data is SOInputDataFabulab || data is SOInputDataFixedFabulab)
             edit.SetActive(true);
 
         container.SetActive(true);
