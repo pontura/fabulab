@@ -11,7 +11,7 @@ namespace Yaguar.StoryMaker.Editor
 
         [SerializeField] bool isEnabled;
 
-        private void Start() {
+        private void Awake() {
             StoryMakerEvents.EnableInputManager += EnableInputManager;
         }
 
