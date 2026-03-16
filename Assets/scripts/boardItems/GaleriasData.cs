@@ -36,7 +36,8 @@ namespace BoardItems
         }
         public ItemData GetItem(int galleryID, int itemID)
         {
-          //  Debug.Log(galleryID + "_" + itemID);
+            Debug.Log("GetItem " + galleryID + "_" + itemID);
+            if (galleryID == 0 && itemID == 0) { galleryID = 1; itemID = 1; } // HACK para que no se rompa el fondo al cargar un SO sin items
             if (!itemsPerGallery.ContainsKey(galleryID))
             {
                 GalleryData gData = all.Find(x => x.id == galleryID);

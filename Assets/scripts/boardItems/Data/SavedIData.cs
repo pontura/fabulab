@@ -6,6 +6,7 @@ namespace BoardItems.BoardData
     [Serializable]
     public class SavedIData
     {
+        public string soID;
         public int galleryID;
         public int part;
         public int id;
@@ -25,6 +26,7 @@ namespace BoardItems.BoardData
             sid.scale = new V3(scale);
             sid.anim = anim;
             sid.color = color;
+            sid.soID = soID;
             return sid;
         }
 
@@ -37,6 +39,7 @@ namespace BoardItems.BoardData
             scale = new Vector3(serverData.scale.x, serverData.scale.y, serverData.scale.z);
             anim = serverData.anim;
             color = serverData.color;
+            soID = serverData.soID;
             //Debug.Log(galleryID + ", " + part + ", " + position + ", " + rotation + ", " + scale + ", " + anim + ", " + color);
         }
     }

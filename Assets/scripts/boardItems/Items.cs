@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using UI;
 using UI.MainApp;
 using UnityEngine;
+using Yaguar.StoryMaker.Editor;
+using static UnityEngine.GraphicsBuffer;
 
 namespace BoardItems
 {
@@ -568,7 +570,7 @@ namespace BoardItems
                 pos.z /= 200;
                 newItem.transform.transform.localPosition = pos;
             }
-            boardItemManager.SetInteractableObject( OnObjectMerged);
+            boardItemManager.SetInteractableObject(wd.id,  OnObjectMerged);
            
         }
         void OnObjectMerged(BoardItemManager boardItemManager)
@@ -577,9 +579,11 @@ namespace BoardItems
             if (bodyPart != null)
                 bodyPart.SetArrengedItems();
         }
+        List<SavedIData> soIDs;
         public void OpenWork(BoardItemManager boardItemManager, SOPartData wd, bool cascade = false)
         {
-            if(Data.Instance.charactersData.PresetID == "" && cascade)
+            soIDs = new List<SavedIData>();
+            if (Data.Instance.charactersData.PresetID == "" && cascade)
                 Events.ColorizeBG(wd.bg);
             if (wd is CharacterData characterData)
             {
@@ -590,9 +594,17 @@ namespace BoardItems
 
             print("open work boardItemManager: " + boardItemManager.name + " id: " + wd.id + " cascade: " + cascade);
 
-            foreach (SavedIData itemData in wd.items) {
-                ItemData newItem = CreateItem(itemData, boardItemManager);
-                print("open work newItem part: " + newItem.part);
+            foreach (SavedIData itemData in wd.items)
+            {
+                if (itemData.soID != "" && itemData.soID != null)
+                {
+                    soIDs.Add(itemData);                   
+                }
+                else
+                {
+                    ItemData newItem = CreateItem(itemData, boardItemManager);
+                    print("open work newItem part: " + newItem.part);
+                }
                 //if (newItem.anim != AnimationsManager.anim.NONE)
                 //{
                 //    AnimationsManager.AnimData animData = Data.Instance.animationsManager.GetAnimByName(newItem.anim);
@@ -603,6 +615,7 @@ namespace BoardItems
             if (cascade)
                 StartCoroutine(Cascade(boardItemManager, wd));
         }
+
         IEnumerator Cascade(BoardItemManager boardItemManager, SOPartData wd)
         {
             CharacterPartsHelper.parts partActive = UIManager.Instance.part;
@@ -621,6 +634,22 @@ namespace BoardItems
                 }
                 if(i.data.part == partActive)
                     i.SetCollider(true);
+            }
+            yield return new WaitForSeconds(0.05f);
+            foreach (SavedIData soID in soIDs)
+            {
+                print("open SO in background soID: " + soID.soID);
+                SOPartData soPartData = Data.Instance.sObjectsData.GetSO(soID.soID);
+                if (soPartData != null)
+                {
+                    SOPartData o = Data.Instance.sObjectsData.GetSO(soID.soID);
+                    GameObject go = new GameObject();
+                    BoardItemManager boardItemManager_to_add = go.AddComponent<BoardItemManager>();
+
+                    AddSceneObjectTo(o, boardItemManager_to_add, boardItemManager.GetBodyPart((CharacterPartsHelper.parts)soID.part).transform);
+                    yield return new WaitForSeconds(0.05f);
+                }
+                else   print("open work itemData.soID not found: " + soID);
             }
         }
         public void SetColliders(BoardItemManager boardItemManager, bool isOn)

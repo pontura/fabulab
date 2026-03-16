@@ -15,6 +15,7 @@ namespace BoardItems
         public Vector3 position;
         public Vector3 scale;
         public int id;
+        public string soID;// si es un objeto compuesto solo guarda el id:
         public PalettesManager.paletteNames paletteName;
         public PalettesManager.colorNames colorName;
         public AnimationsManager.anim[] anims;

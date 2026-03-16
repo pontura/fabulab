@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 namespace BoardItems.BoardData
 {
@@ -9,6 +8,7 @@ namespace BoardItems.BoardData
         public int galleryID;
         public int part;
         public int id;
+        public string soID;
 
         public V3 position;
         public V3 rotation;

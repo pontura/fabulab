@@ -4,6 +4,7 @@ using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
 using BoardItems.BoardData;
+using UI.MainApp;
 
 namespace BoardItems
 {
@@ -87,19 +88,29 @@ namespace BoardItems
                 {
                     int newPartID = (int)iInScene.data.part;
 
+
                     SavedIData sd = new SavedIData();
+
+                    if (iInScene.data.soID != "")
+                        sd.soID = iInScene.data.soID;
+                    else
+                    {
+                        sd.id = iInScene.data.id;
+                        sd.galleryID = iInScene.data.galleryID;
+
+                        ItemInScene mirror = iInScene.GetMirror();
+                        if (mirror != null)
+                            mirrors.Add(mirror);
+                    }
+
                     sd.part = newPartID;
-                    sd.id = iInScene.data.id;
                     sd.position = iInScene.data.position;
                     sd.rotation = iInScene.data.rotation;
                     sd.scale = iInScene.data.scale;
                     sd.anim = iInScene.data.anim;
                     sd.color = iInScene.data.colorName;
-                    sd.galleryID = iInScene.data.galleryID;
                     wd.items.Add(sd);
-                    ItemInScene mirror = iInScene.GetMirror();
-                    if (mirror != null)
-                        mirrors.Add(mirror);
+                  
                 }
                 // UIManager.Instance.boardUI.items.Delete(iInScene);
             }
@@ -141,11 +152,14 @@ namespace BoardItems
         {
             foreach (KeyValuePair<string, SObjectServerData> e in d)
             {
-                Debug.Log("#LoadCharactersFromServer " + e.Key + ": " + e.Value);
+                Debug.Log("#Load SO FromServer " + e.Key + ": " + e.Value);
                 SObjectData wd = new SObjectData();
                 wd.id = e.Key;
                 wd.LoadServerData(e.Value);
-                wd.thumb = metaData.Find(x => x.id == wd.id)?.thumb;
+                PropMetaData p = metaData.Find(x => x.id == wd.id);
+                wd.thumb = p?.thumb;
+                if(p != null)
+                    Debug.Log("soID " + p?.soID);
                 data.Add(wd);
             }
         }

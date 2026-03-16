@@ -183,6 +183,7 @@ namespace UI
         {
             if (backToScreen[backToScreen.Count - 1] == screenType.WorkDetail)
             {
+                Events.OnNewBodyPartSelected(null);
                 Home();
             } else if (backToScreen[backToScreen.Count - 1] == screenType.Creation_Character && characterEdition.ChangesMade())
             {

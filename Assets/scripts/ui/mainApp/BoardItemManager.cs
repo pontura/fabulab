@@ -16,12 +16,12 @@ namespace UI.MainApp
 
         Bounds bounds;
         System.Action<BoardItemManager> OnDone;
-        public void SetInteractableObject(System.Action<BoardItemManager> OnDone)
+        public void SetInteractableObject(string soID, System.Action<BoardItemManager> OnDone)
         {
             this.OnDone = OnDone;             
-            StartCoroutine(SetCollidersOff());
+            StartCoroutine(SetCollidersOff(soID));
         }
-        IEnumerator SetCollidersOff()
+        IEnumerator SetCollidersOff(string soID)
         {
             yield return new WaitForSeconds(0.2f);
             SetCollidersOn();
@@ -54,14 +54,15 @@ namespace UI.MainApp
             
             parentCollider.size = localSize;
 
-            AddItemData();
+            AddItemData(soID);
             yield return new WaitForSeconds(0.1f);
             OnDone(this);
         }
-        void AddItemData()
+        void AddItemData(string soID)
         {
             ItemData itemData = gameObject.AddComponent<ItemData>();
             itemData.Init();
+            itemData.soID = soID;
             itemData.part = BoardItems.Characters.CharacterPartsHelper.parts.BODY;
             ItemInScene iInScene = gameObject.AddComponent<ItemInScene>();
             iInScene.data = itemData;
