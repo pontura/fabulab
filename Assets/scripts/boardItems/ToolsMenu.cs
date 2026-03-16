@@ -106,11 +106,13 @@ namespace BoardItems
         {
             UIManager.Instance.boardUI.items.MoveBack();
             inputManager.OnCloseTools(InputManager.states.IDLE);
+            UIManager.Instance.undoManager.OnNewStep();
         }
         public void MoveUp()
         {
             UIManager.Instance.boardUI.items.MoveUp();
             inputManager.OnCloseTools(InputManager.states.IDLE);
+            UIManager.Instance.undoManager.OnNewStep();
         }
         public void ResetBtn()
         {
@@ -120,6 +122,7 @@ namespace BoardItems
         public void ScaleSnaped(bool up)
         {
             UIManager.Instance.boardUI.items.ScaleSnaped(up);
+            UIManager.Instance.undoManager.OnNewStep();
             //inputManager.OnCloseTools(InputManager.states.IDLE);
         }
 
