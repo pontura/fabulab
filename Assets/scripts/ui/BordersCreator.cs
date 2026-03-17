@@ -4,9 +4,7 @@ public class BordersCreator : MonoBehaviour
 {
     public float lineWidth = 3f;
 
-    LineRenderer lr;
-    SpriteRenderer sr;
-
+    Transform container;
 
     public Color color = Color.white;
 
@@ -16,14 +14,22 @@ public class BordersCreator : MonoBehaviour
         top.enabled = isOn;
         bottom.enabled = isOn;
         left.enabled = isOn;
-        right.enabled = isOn;
-
-      
+        right.enabled = isOn;      
     }
-    public void Init (SpriteRenderer sr)
+    public void Init(BoxCollider2D sr)
     {
-        this.sr = sr;
-        Bounds b = sr.bounds;
+        print("BordersCreator init BoxCollider2D");
+        this.container = sr.transform;
+        InitBounds(sr.bounds);
+    }
+    public void Init(SpriteRenderer sr)
+    {
+        print("BordersCreatorinit sprite");
+        this.container = sr.transform;
+        InitBounds( sr.bounds);
+    }
+    public void InitBounds(Bounds b)
+    {
 
         top = CreateLine("Top");
         bottom = CreateLine("Bottom");
@@ -49,11 +55,12 @@ public class BordersCreator : MonoBehaviour
         right.SetPosition(0, new Vector3(max.x, min.y, 0));
         right.SetPosition(1, new Vector3(max.x, max.y, 0));
     }
+   
 
     LineRenderer CreateLine(string name)
     {
         GameObject go = new GameObject(name);
-        go.transform.SetParent(sr.transform);
+        go.transform.SetParent(container);
 
         Camera cam = Camera.main;
 

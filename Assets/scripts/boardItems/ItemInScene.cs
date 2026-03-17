@@ -1,6 +1,7 @@
 ﻿using BoardItems.Characters;
 using System.Collections.Generic;
 using UI;
+using UI.MainApp;
 using UnityEngine;
 
 namespace BoardItems
@@ -186,6 +187,7 @@ namespace BoardItems
         BordersCreator borders;
         public void SetTools(bool isOn, AnimationClip clip = null)
         {
+            print("SetTools " + gameObject.name);
             SetBorders(isOn);
         }
         void SetBorders(bool isOn)
@@ -193,7 +195,10 @@ namespace BoardItems
             if (borders == null)
             {
                 borders = gameObject.AddComponent<BordersCreator>();
-                borders.Init(sprite);
+                if(GetComponent<BoardItemManager>())
+                    borders.Init(GetComponent<BoxCollider2D>());
+                else
+                    borders.Init(sprite);
             }
 
             borders.Show(isOn);

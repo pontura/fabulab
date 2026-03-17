@@ -583,6 +583,7 @@ namespace BoardItems
             boardItemManager.transform.localScale = new Vector3(1, 1, 1);
             foreach (GameObject go in childs)
                 go.transform.SetParent(boardItemManager.transform);
+
             boardItemManager.SetInteractableObject(wd.id,  OnObjectMerged);
            
         }
