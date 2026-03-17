@@ -15,6 +15,7 @@ namespace UI.MainApp
                     Events.Zoom(ZoomStates.STORY, false);
                     Show(true);
                     StoryMakerEvents.EnableInputManager(true);
+                    Events.ColorizeBG(PalettesManager.colorNames.BG_CELESTE);
                     break;
                 default:
                     if (last == UIManager.screenType.StoryMaker) {
