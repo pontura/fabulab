@@ -283,18 +283,18 @@ namespace Yaguar.StoryMaker.DB
             reference.GetValueAsync().ContinueWithOnMainThread(task => {
 
                 if (task.IsFaulted || task.IsCanceled) {
-                    Debug.Log("#Load " + type + " MetadataFromServer FAIL");
+                    //Debug.Log("#Load " + type + " MetadataFromServer FAIL");
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
-                    Debug.Log("#Load " + type + " MetadataFromServer IsCompleted");
+                    //Debug.Log("#Load " + type + " MetadataFromServer IsCompleted");
                     try {
                         Debug.Log(task.Result.GetRawJsonValue());
                         DataSnapshot snapshot = task.Result;
 
                         if (snapshot.Exists) {
-                            Debug.Log("#Load " + type + " MetadataFromServer exists");
+                            //Debug.Log("#Load " + type + " MetadataFromServer exists");
                             List<CharacterMetaData> metas = new List<CharacterMetaData>();
-                            Debug.Log("#Load " + type + " MetadataFromServer snapshot Count: " + snapshot.Children.Count<DataSnapshot>());
+                            //Debug.Log("#Load " + type + " MetadataFromServer snapshot Count: " + snapshot.Children.Count<DataSnapshot>());
 
                             foreach (var child in snapshot.Children) {
                                 Debug.Log(child.Key + ": " + child.Value.ToString());

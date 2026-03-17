@@ -76,7 +76,7 @@ public class CacheData : MonoBehaviour
         }
         FirebaseStoryMakerDBManager.Instance.GetUser(uid, (uid, rawjson) =>
         {
-            Debug.Log("# " + uid + " " + rawjson);
+            //Debug.Log("# " + uid + " " + rawjson);
             ServerMetaData s = JsonUtility.FromJson<ServerMetaData>(rawjson);
             Debug.Log("# " + uid + " " + rawjson + " " + s.thumb);
             UserData ud = new UserData();

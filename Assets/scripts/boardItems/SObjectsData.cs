@@ -154,7 +154,7 @@ namespace BoardItems
         }
         public void OnLoadSODataFromServer(List<CharacterMetaData> sfds)
         {
-            Debug.Log("OnLoadSODataFromServer !!");
+            //Debug.Log("OnLoadSODataFromServer !!");
             foreach (CharacterMetaData sfd in sfds)
                 metaData.Add(sfd as PropMetaData);
             userMetaData = metaData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid);
@@ -166,7 +166,7 @@ namespace BoardItems
         {
             foreach (KeyValuePair<string, SObjectServerData> e in d)
             {
-                Debug.Log("#Load SO FromServer " + e.Key + ": " + e.Value);
+                //Debug.Log("#Load SO FromServer " + e.Key + ": " + e.Value);
                 SObjectData wd = new SObjectData();
                 wd.id = e.Key;
                 wd.LoadServerData(e.Value);
