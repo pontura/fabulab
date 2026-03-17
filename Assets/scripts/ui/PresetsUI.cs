@@ -13,6 +13,8 @@ namespace UI
         [SerializeField] GameObject[] togglesGO;
         [SerializeField] GameObject presetsDragAndDropToggleGO;
         [SerializeField] ToggleButton snapToggle;
+        [SerializeField] GameObject deleteAll;
+        [SerializeField] GameObject undo;
 
         bool isPreset;
         int lastPartID;
@@ -22,12 +24,16 @@ namespace UI
         }
         public void SetOff()
         {
+            deleteAll.gameObject.SetActive(false);
+            undo.gameObject.SetActive(false);
             snapToggle.Show(false);
             gameObject.SetActive(false);
         }
         string characterEditorID = "";
         public void Init()
         {
+            deleteAll.gameObject.SetActive(true);
+            undo.gameObject.SetActive(true);
             snapToggle.Init(OnToggle, UIManager.Instance.boardUI.snap);
             dragAndDropUI.transform.SetParent(dragAndDropContainer);
             dragAndDropUI.Init();

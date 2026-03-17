@@ -1,7 +1,9 @@
 using BoardItems;
 using BoardItems.Characters;
 using Common.UI;
+using System;
 using UnityEngine;
+using static BoardItems.Characters.CharacterPartsHelper;
 
 namespace UI.MainApp
 {
@@ -106,7 +108,7 @@ namespace UI.MainApp
         {
             Data.Instance.sObjectsData.SaveSO(tex);
         }
-
+       
     }
 
 }

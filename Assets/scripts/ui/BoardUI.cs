@@ -246,6 +246,19 @@ namespace UI
         {
             activeBoardItem.MoveUp(item);
         }
+        public void DeleteAllFromUI()
+        {
+            CharacterPartsHelper.parts part = UIManager.Instance.part;
+            Events.OnConfirm("Delete all objects in " + part + "?", "Yes", "No", OnDeleteAllConfirmed);
+        }
+        private void OnDeleteAllConfirmed(bool doIt)
+        {
+            if (doIt)
+            {
+                CharacterPartsHelper.parts part = UIManager.Instance.part;
+                UIManager.Instance.boardUI.items.DeleteInPart((int)part);
+            }
+        }
 
     }
 
