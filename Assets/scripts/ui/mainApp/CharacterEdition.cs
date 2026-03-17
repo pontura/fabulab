@@ -127,7 +127,7 @@ namespace UI.MainApp
         {
             if (Data.Instance.userData.isAdmin)
             {
-                savePartButton.SetActive(Data.Instance.charactersData.PresetID != "");
+                savePartButton.SetActive(true);
                 deletePartButton.SetActive(Data.Instance.charactersData.PresetID != "");
 
                 savePartButton.GetComponentInChildren<TMPro.TMP_Text>().text = "Save " + UIManager.Instance.zoomManager.lastZoom.ToString();
