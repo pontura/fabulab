@@ -137,12 +137,15 @@ namespace UI
         }
         public void NewCharacter()
         {
-            boardUI.SetEditingType(editingTypes.CHARACTER);
-            Data.Instance.charactersData.ResetCurrentID();
-            Events.OnPresetReset();
-            GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(1);
-            Events.InitGallery(gd, true, InitCharacterScreen);
-            Events.EmptySceneItems();
+            string newCharacterID = "-On3wQ6Vy9jnpMtTTgWb";
+            LoadWork(editingTypes.CHARACTER, newCharacterID);
+
+            //boardUI.SetEditingType(editingTypes.CHARACTER);
+            //Data.Instance.charactersData.ResetCurrentID();
+            //Events.OnPresetReset();
+            //GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(1);
+            //Events.InitGallery(gd, true, InitCharacterScreen);
+            //Events.EmptySceneItems();
         }
         void InitCharacterScreen()
         {
