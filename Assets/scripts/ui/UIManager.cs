@@ -139,6 +139,8 @@ namespace UI
         {
             string newCharacterID = "-On3wQ6Vy9jnpMtTTgWb";
             LoadWork(editingTypes.CHARACTER, newCharacterID);
+            Data.Instance.charactersData.SetCurrentID("");
+            Events.OnPresetReset();
 
             //boardUI.SetEditingType(editingTypes.CHARACTER);
             //Data.Instance.charactersData.ResetCurrentID();

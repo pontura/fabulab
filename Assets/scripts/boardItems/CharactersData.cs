@@ -1,5 +1,6 @@
 ﻿using BoardItems.BoardData;
 using BoardItems.Characters;
+using Firebase.Auth;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -149,7 +150,7 @@ namespace BoardItems
                 }
             }
             currentCharacter = wd;
-            if (wd.id == "")
+            if (currentID == "")
             {
                 userCharacters.Add(wd);
                 FirebaseStoryMakerDBManager.Instance.SaveToServer(MetadataTypes.characters.ToString(), wd.GetServerData(), OnCharacterSavedToServer);
@@ -204,6 +205,15 @@ namespace BoardItems
         }
         void OnCharacterSavedToServer(bool succes, string id)
         {
+            if (currentID == "") // is new character
+            {
+                userCharactersMetaData.Add(new CharacterMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentCharacter.thumb  });
+            }
+            else
+            {
+                userCharactersMetaData.Find(x => x.id == currentID).thumb = currentCharacter.thumb;
+            }
+
             currentCharacter.id = id;
             currentID = id;
 
@@ -281,6 +291,11 @@ namespace BoardItems
 
         public CharacterData SetCurrentID(string id)
         {
+            if(id == "")
+            {
+                currentID = "";
+                return null;
+            }
             CharacterData chd = userCharacters.Find(x => x.id == id);
             if(chd != null)
                 currentID = id;

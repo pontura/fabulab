@@ -13,7 +13,6 @@ namespace UI.MainApp.Home.User
         public Transform objectsContainer;
         [SerializeField] TitleScrollView[] titleScrollView;
 
-        int artID = 0;
         public void Show(bool isOn)
         {
             gameObject.SetActive(isOn);
@@ -23,11 +22,6 @@ namespace UI.MainApp.Home.User
             }
         }
         public void Init()
-        {
-            artID = 0;
-            LoadNext();
-        }        
-        void LoadNext()
         {
             Utils.RemoveAllChildsIn(backgroundsContainer);
             Utils.RemoveAllChildsIn(objectsContainer);

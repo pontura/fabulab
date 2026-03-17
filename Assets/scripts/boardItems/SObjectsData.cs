@@ -126,6 +126,19 @@ namespace BoardItems
         }
         void OnSavedToServer(bool succes, string id)
         {
+            if (currentSO.id == "") // is new
+            {
+                if (Data.Instance.userData.isAdmin)
+                    metaData.Add(new PropMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentSO.thumb, type = currentSO.type });
+                userMetaData.Add(new PropMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentSO.thumb, type = currentSO.type });
+
+            }
+            else
+            {
+                if (Data.Instance.userData.isAdmin)
+                    metaData.Find(x => x.id == currentSO.id).thumb = currentSO.thumb;
+                userMetaData.Find(x => x.id == currentSO.id).thumb = currentSO.thumb;
+            }
             currentSO.id = id;
             currentID = id;
 
@@ -134,6 +147,7 @@ namespace BoardItems
             swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
             swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
             swmd.type = currentSO.type;
+
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), currentID, swmd);
             UIManager.Instance.ShowWorkDetail(currentSO);
            
