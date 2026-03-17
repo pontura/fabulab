@@ -636,8 +636,10 @@ namespace Yaguar.StoryMaker.DB
                             List<SceneElement> elements = new List<SceneElement>();
                             foreach (var se in child.Child("scenesElements").Children) {
                                 SceneElement sceneElement = null;
-                                if((long)se.Child("type").Value == (long)SceneElementType.AVATAR) {
+                                if ((long)se.Child("type").Value == (long)SceneElementType.AVATAR) {
                                     sceneElement = JsonUtility.FromJson<SceneElementAvatar>(se.GetRawJsonValue());
+                                } else if ((long)se.Child("type").Value == (long)SceneElementType.WORD_BALLOON || (long)se.Child("type").Value == (long)SceneElementType.WORD_BOX) {
+                                    sceneElement = JsonUtility.FromJson<SceneElementTextInput>(se.GetRawJsonValue());
                                 } else {
                                     sceneElement = JsonUtility.FromJson<SceneElement>(se.GetRawJsonValue());
                                 }

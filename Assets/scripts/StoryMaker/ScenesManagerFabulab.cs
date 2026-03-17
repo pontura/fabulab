@@ -109,7 +109,10 @@ namespace Yaguar.StoryMaker.Editor
                     if (elements[j].type == SceneElementType.AVATAR) {
                         SceneElementAvatar sea = (SceneElementAvatar)elements[j];
                         json += JsonUtility.ToJson(sea);
-                    } else {
+                    } else if (elements[j].type == SceneElementType.WORD_BALLOON || elements[j].type == SceneElementType.WORD_BOX) {
+                        SceneElementTextInput sea = (SceneElementTextInput)elements[j];
+                        json += JsonUtility.ToJson(sea);
+                    } else { 
                         json += JsonUtility.ToJson(elements[j]);
                     }
                     if (j < elements.Count - 1) json += ",";
