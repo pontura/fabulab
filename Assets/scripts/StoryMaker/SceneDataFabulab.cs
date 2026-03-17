@@ -60,6 +60,35 @@ namespace Yaguar.StoryMaker.Editor
     public class SceneElementTextInput : SceneElement
     {
         public string input;
+
+        public override bool Equals(object obj) {
+            if (obj is SceneElementTextInput other) {
+
+                if (this.type != other.type)
+                    return false;
+
+                /*if (!string.Equals(this.customizationData, other.customizationData))
+                    return false;*/
+
+                if (this.data == null && other.data == null)
+                    return true;
+                if (this.data == null || other.data == null)
+                    return false;
+
+                return this.data.Equals(other.data)
+                    && string.Equals(this.input, other.input);
+            }
+            return false;
+        }
+
+        public override int GetHashCode() {
+            int hash = 17;
+            hash = hash * 31 + type.GetHashCode();
+            //hash = hash * 31 + (customizationData?.GetHashCode() ?? 0);
+            hash = hash * 31 + (data?.GetHashCode() ?? 0);
+            hash = hash * 31 + (input?.GetHashCode() ?? 0);
+            return hash;
+        }
     }
 
     [Serializable]
