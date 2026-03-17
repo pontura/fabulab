@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UI;
 using UI.MainApp;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using Yaguar.StoryMaker.Editor;
 using static UnityEngine.GraphicsBuffer;
 
@@ -566,7 +567,7 @@ namespace BoardItems
             boardItemManager.transform.SetParent(container);
             boardItemManager.transform.localPosition = Vector3.zero;
             ItemData newItem;
-
+            List<GameObject> childs = new List<GameObject>();
             foreach (SavedIData itemData in wd.items)
             {
                 newItem = CreateItem(itemData, newBoardItemManager);
@@ -574,7 +575,14 @@ namespace BoardItems
                 Vector3 pos = newItem.transform.transform.localPosition;
                 pos.z /= 200;
                 newItem.transform.transform.localPosition = pos;
+                childs.Add(newItem.gameObject);
             }
+            boardItemManager.transform.localScale = new Vector3(4,4,1);
+            foreach(GameObject go in childs)
+                go.transform.SetParent(transform);
+            boardItemManager.transform.localScale = new Vector3(1, 1, 1);
+            foreach (GameObject go in childs)
+                go.transform.SetParent(boardItemManager.transform);
             boardItemManager.SetInteractableObject(wd.id,  OnObjectMerged);
            
         }
