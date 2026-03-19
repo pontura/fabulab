@@ -39,6 +39,7 @@ namespace Yaguar.StoryMaker.Editor
         {
 
             StoryMakerEvents.Restart += Restart;
+            StoryMakerEvents.ResetScene += ResetScenario;
             //sceneObjects = GetComponentsInChildren<SceneObject>();
             //WaitTillScenesLoaded();
         }
@@ -46,6 +47,7 @@ namespace Yaguar.StoryMaker.Editor
         void OnDestroy()
         {
             StoryMakerEvents.Restart -= Restart;
+            StoryMakerEvents.ResetScene -= ResetScenario;
         }        
 
         public void ResetScenario()

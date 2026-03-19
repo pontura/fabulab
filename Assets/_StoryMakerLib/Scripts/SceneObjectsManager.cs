@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-
 namespace Yaguar.StoryMaker.Editor
 {
     public class SceneObjectsManager : MonoBehaviour
@@ -48,7 +47,6 @@ namespace Yaguar.StoryMaker.Editor
             {
                 Destroy(child.gameObject);
             }
-            //YaguarUtils.RemoveAllChildsIn(container);
             sceneObjects.Clear();
         }
         public virtual void SetAvatarData(Avatar avatar, SOAvatarData data)

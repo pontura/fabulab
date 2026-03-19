@@ -13,13 +13,14 @@ namespace UI.MainApp
             {
                 case UIManager.screenType.StoryMaker:
                     Events.Zoom(ZoomStates.STORY, false);
+                    StoryMakerEvents.Restart();
                     Show(true);
                     StoryMakerEvents.EnableInputManager(true);
                     Events.ColorizeBG(PalettesManager.colorNames.BG_CELESTE);
                     break;
                 default:
                     if (last == UIManager.screenType.StoryMaker) {
-                        StoryMakerEvents.Restart();
+                        StoryMakerEvents.ResetScene();
                         Show(false);
                         StoryMakerEvents.EnableInputManager(false);
                     }
