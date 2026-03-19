@@ -1,5 +1,6 @@
 using BoardItems.Characters;
 using Common.UI;
+using System.Security.Cryptography.X509Certificates;
 using UI.MainApp.Home.User;
 using UnityEngine;
 using Yaguar.StoryMaker.Editor;
@@ -24,12 +25,14 @@ namespace UI.MainApp
         [SerializeField] GameObject saveNewStoryButton;
         [SerializeField] GameObject saveStoryButton;
         [SerializeField] GameObject DoneBtn;
+        [SerializeField] TMPro.TMP_InputField storyName;
         [SerializeField] bool changesMade;
 
         private void Start() {
             StoryMakerEvents.OnSaveScene += OnSaveScene;
             StoryMakerEvents.EditActions += EditorActions;
             StoryMakerEvents.EditExpressions += EditExpressions;
+            StoryMakerEvents.OnLoadFilm += OnLoadFilm;
             Invoke(nameof(Init), Time.deltaTime * 4);
         }
 
@@ -37,6 +40,11 @@ namespace UI.MainApp
             StoryMakerEvents.OnSaveScene -= OnSaveScene;
             StoryMakerEvents.EditActions -= EditorActions;
             StoryMakerEvents.EditExpressions -= EditExpressions;
+            StoryMakerEvents.OnLoadFilm -= OnLoadFilm;
+        }
+
+        void OnLoadFilm() {
+            storyName.text = Data.Instance.scenesData.currentFilmData.name;
         }
 
         void Init() {
@@ -161,6 +169,7 @@ namespace UI.MainApp
         void SaveWork() {
             UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, (tex) => {
                 Data.Instance.scenesData.currentFilmData.thumb = tex;
+                Data.Instance.scenesData.currentFilmData.name = storyName.text;
                 Data.Instance.scenesData.SaveFilm();
             });            
         }

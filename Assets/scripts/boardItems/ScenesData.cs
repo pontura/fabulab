@@ -46,10 +46,7 @@ namespace BoardItems
             //Events.OnThemesLoadedComplete += LoadThemeFilmMetadataFromServer;
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
             StoryMakerEvents.ChangeSpeed += ChangeSpeed;
-            StoryMakerEvents.Restart += Restart;
-
-            if (!Data.Instance.userData.IsLogged())
-                LoadFilmMetadataLocal();
+            StoryMakerEvents.Restart += Restart;            
 
             Init();
         }
@@ -60,12 +57,11 @@ namespace BoardItems
 
         private void Restart() {
             ScenesManagerFabulab.Instance.Init();
-            if (Data.Instance.userData.IsLogged())
+            /*if (Data.Instance.userData.IsLogged())
                 ScenesManagerFabulab.Instance.currentFDataID = "";
             else if (userFilmsData.Count > 1) {
                 ScenesManagerFabulab.Instance.currentFDataID = "" + (int.Parse(userFilmsData.Max(t => t.id)) + 1);
-            }
-
+            }*/
         }
         private void OnDestroy() {
             //Events.OnThemesLoadedComplete -= LoadUserFilmMetadataFromServer;
@@ -94,6 +90,7 @@ namespace BoardItems
             currentFilmData = new FilmDataFabulab();
             currentFilmData.name = storyName;
             ScenesManagerFabulab.Instance.currentFilmData = currentFilmData;
+            ScenesManagerFabulab.Instance.currentFDataID = "";
             if (idExists) {
                 Debug.Log("#StartNewStory idExists");
                 StartNewStory(storyName);
@@ -116,31 +113,7 @@ namespace BoardItems
                 FirebaseStoryMakerDBManager.Instance.LoadUserFilmDataFromServer(OnUserAddFilmDataFromServer);
             }
             SortUserFilmsDataByLikes();
-        }
-
-        void LoadFilmMetadataLocal() {
-            ScenesManagerFabulab.Instance.currentFDataID = "0";
-            userFilmsData = new List<FilmDataFabulab>();
-            string fIds = PlayerPrefs.GetString("Films_ids");
-            if (fIds.Length > 0) {
-                string[] arr = fIds.Split(sdSeparator[0]);
-                for (int i = 0; i < arr.Length - 1; i++) {
-                    string[] arr2 = arr[i].Split(fieldSeparator[0]);
-                    //filmData += fid.id + fieldSeparator + fid.speed + fieldSeparator + fid.name + fid.framecount + sdSeparator;
-                    FilmDataFabulab fd = new FilmDataFabulab();
-                    fd.id = arr2[0];
-                    fd.speed = int.Parse(arr2[1]);
-                    fd.name = arr2[2];
-                    fd.framecount = int.Parse(arr2[3]);
-                    string folder = Path.Combine(Application.persistentDataPath, "Thumbs");
-                    if (!Directory.Exists(folder))
-                        Directory.CreateDirectory(folder);
-                    string filename = Path.Combine(folder, "movie_thumb_" + fd.id + ".png");
-                    fd.thumb = TextureUtils.LoadLocal(filename);
-                    userFilmsData.Add(fd);
-                }
-            }
-        }
+        }        
 
         int lynaLikeCount = 0;
         int pageLimitFactor = 1;
@@ -304,19 +277,10 @@ namespace BoardItems
                     } else
                         FirebaseStoryMakerDBManager.Instance.LoadFilmFromServer(currentFilmData, OnFilmLoadedFromServer);
                 } else {
-                    LoadScenesFromLocal(currentFilmData);
-                    loadedDone = true;
+                    Debug.Log("User not logged");
                 }
             }
-        }
-
-        void LoadScenesFromLocal(FilmDataFabulab fd) {
-            for (int i = 0; i < fd.framecount; i++) {
-                SceneDataFabulab sd = new SceneDataFabulab();
-                sd.Deserialize(PlayerPrefs.GetString("FilmId_" + fd.id + "_" + i));
-                ScenesManagerFabulab.Instance.Scenes.Add(sd);
-            }
-        }
+        }        
 
         void LoadSucces() {
             //Debug.Log("____________LoadSucces");
