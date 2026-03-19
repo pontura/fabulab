@@ -498,6 +498,10 @@ namespace BoardItems
             if (scale < snapScale) scale = snapScale;
 
             scale = snapScale * (scale / snapScale);
+            ScaleSnaped(scale);
+        }
+        public void ScaleSnaped(float scale)
+        {
             itemSelected.data.scale = new Vector3(scale, scale, scale);
             itemSelected.transform.localScale = itemSelected.data.scale;
             FinishEditingItem(itemSelected);
@@ -560,7 +564,7 @@ namespace BoardItems
             FinishEditingItem(itemInScene);
             return newItem;
         }
-        public void AddSceneObjectTo(SOPartData wd, BoardItemManager newBoardItemManager, Transform container)
+        public void AddSceneObjectTo(SOPartData wd, BoardItemManager newBoardItemManager, Transform container, SavedIData savedIOData = null)
         {
             BoardItemManager boardItemManager = Instantiate(newBoardItemManager, container);
             boardItemManager.name = "Object " + wd.id;
@@ -577,15 +581,20 @@ namespace BoardItems
                 newItem.transform.transform.localPosition = pos;
                 childs.Add(newItem.gameObject);
             }
-            boardItemManager.transform.localScale = new Vector3(4,4,1);
+            boardItemManager.transform.localScale = new Vector3(8,8,1);
             foreach(GameObject go in childs)
                 go.transform.SetParent(transform);
             boardItemManager.transform.localScale = new Vector3(1, 1, 1);
             foreach (GameObject go in childs)
                 go.transform.SetParent(boardItemManager.transform);
 
-            boardItemManager.SetInteractableObject(wd.id,  OnObjectMerged);
-           
+            //float snapScale = Data.Instance.settings.snapScale*8;
+            //float scale = snapScale * (8 / snapScale);
+            //UIManager.Instance.boardUI.items.ScaleSnaped(-snapScale);
+
+            boardItemManager.SetInteractableObject(wd.id,  OnObjectMerged, savedIOData);
+
+
         }
         void OnObjectMerged(BoardItemManager boardItemManager)
         {
@@ -660,7 +669,7 @@ namespace BoardItems
                     GameObject go = new GameObject();
                     BoardItemManager boardItemManager_to_add = go.AddComponent<BoardItemManager>();
 
-                    AddSceneObjectTo(o, boardItemManager_to_add, boardItemManager.GetBodyPart((CharacterPartsHelper.parts)soID.part).transform);
+                    AddSceneObjectTo(o, boardItemManager_to_add, boardItemManager.GetBodyPart((CharacterPartsHelper.parts)soID.part).transform, soID);
                     yield return new WaitForSeconds(0.05f);
                 }
                 else   print("open work itemData.soID not found: " + soID);

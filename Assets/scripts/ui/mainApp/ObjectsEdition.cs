@@ -28,9 +28,18 @@ namespace UI.MainApp
                 case UIManager.screenType.WorkDetail:
                     break;
                 case UIManager.screenType.Creation_Objects:
-                    sceneObjectsPanel.Init();
+                    sceneObjectsPanel.Init();                   
                     Events.OnBodyPartActive(CharacterPartsHelper.parts.BODY);
-                    Events.Zoom(ZoomStates.NONE, false);
+                    switch (Data.Instance.sObjectsData.Type)
+                    {
+                        case BoardItems.BoardData.SObjectData.types.generic:
+                            Events.Zoom(ZoomStates.NONE, false);
+                            break;
+                        case BoardItems.BoardData.SObjectData.types.background:
+                            Events.Zoom(ZoomStates.BACKGROUND, false);
+                            break;
+                    }
+                    UIManager.Instance.boardUI.activeBoardItem.Init();
                     changesMade = false;
                     SetButtons();
                     Show(true);

@@ -13,15 +13,14 @@ namespace UI.MainApp
         public virtual void OnStopDrag(ItemInScene item)  {  }
         public virtual void MoveBack(ItemInScene itemSelected)  {  }
         public virtual void MoveUp(ItemInScene itemSelected) {  }
-
         Bounds bounds;
         System.Action<BoardItemManager> OnDone;
-        public void SetInteractableObject(string soID, System.Action<BoardItemManager> OnDone)
+        public void SetInteractableObject(string soID, System.Action<BoardItemManager> OnDone, SavedIData savedIOData = null)
         {
             this.OnDone = OnDone;             
-            StartCoroutine(SetCollidersOff(soID));
+            StartCoroutine(SetCollidersOff(soID, savedIOData));
         }
-        IEnumerator SetCollidersOff(string soID)
+        IEnumerator SetCollidersOff(string soID, SavedIData savedIOData)
         {
             yield return new WaitForSeconds(0.2f);
             SetCollidersOn();
@@ -54,18 +53,25 @@ namespace UI.MainApp
             
             parentCollider.size = localSize;
 
-            AddItemData(soID);
+            AddItemData(soID, savedIOData);
             yield return new WaitForSeconds(0.1f);
             OnDone(this);
         }
-        void AddItemData(string soID)
+        void AddItemData(string soID, SavedIData savedIOData)
         {
             ItemData itemData = gameObject.AddComponent<ItemData>();
+
             itemData.Init();
+
+            itemData.position = savedIOData != null ? savedIOData.position : Vector3.zero;
+            itemData.scale = savedIOData != null ? savedIOData.scale : Vector3.one;
+            itemData.rotation = savedIOData != null ? savedIOData.rotation : Vector3.zero;
+
             itemData.soID = soID;
             itemData.part = BoardItems.Characters.CharacterPartsHelper.parts.BODY;
             ItemInScene iInScene = gameObject.AddComponent<ItemInScene>();
             iInScene.data = itemData;
+            iInScene.data.SetTransformByData();
             print("BoardItemManager AddItemData " + gameObject.name);
             gameObject.tag = "DragItem";
         }

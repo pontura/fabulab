@@ -1,3 +1,4 @@
+using UI;
 using UI.MainApp;
 using UnityEngine;
 
@@ -16,6 +17,19 @@ namespace BoardItems.SceneObjects
         }
         public override void Init()
         {
+            Animator anim = GetComponent<Animator>();
+            if (anim == null) return;
+
+            switch (Data.Instance.sObjectsData.Type)
+            {
+                case BoardItems.BoardData.SObjectData.types.generic:
+                    anim.Play("generic");
+                    break;
+                case BoardItems.BoardData.SObjectData.types.background:
+                    anim.Play("background");
+                    break;
+            }
+            bp.SetSelection(true);
         }
         public override void AttachItem(ItemInScene item)
         {

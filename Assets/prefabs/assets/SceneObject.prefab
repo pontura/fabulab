@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8172272449432595437}
-  - component: {fileID: 5225067677703381320}
   - component: {fileID: 1121799942507258616}
+  - component: {fileID: 7126060489250938798}
   m_Layer: 0
   m_Name: SceneObject
   m_TagString: Untagged
@@ -35,28 +35,6 @@ Transform:
   - {fileID: 913242730091120269}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &5225067677703381320
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6932618505652277940}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a1116d6ca8b32684f9b38b5fcdc3b2c3, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &1121799942507258616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,6 +49,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BoardItems.SceneObjects.SceneObjectManager
   id: 0
   bp: {fileID: 3056882702927376161}
+--- !u!95 &7126060489250938798
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6932618505652277940}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2fa740f1c9973ae41bda3544d137ead8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7008123830164471688
 GameObject:
   m_ObjectHideFlags: 0
@@ -99,7 +99,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -1}
-  m_LocalScale: {x: 0.25091743, y: 0.25091743, z: 0.25091743}
+  m_LocalScale: {x: 0.25091743, y: 0.2509174, z: 0.2509174}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8172272449432595437}
@@ -189,8 +189,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2066299120740701252}
   - component: {fileID: 2193430275898915207}
-  - component: {fileID: 7247362211620075870}
   - component: {fileID: 3056882702927376161}
+  - component: {fileID: 5271422986990944675}
   m_Layer: 0
   m_Name: container
   m_TagString: Untagged
@@ -271,8 +271,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &7247362211620075870
-CircleCollider2D:
+--- !u!114 &3056882702927376161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8180115267968146802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7250606524ab47e49b0e7ed91fd72c0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BoardItems.BodyPart
+  part: 2
+  selectedBodySignal: {fileID: 7008123830164471688}
+  mirror: {fileID: 0}
+--- !u!61 &5271422986990944675
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -306,19 +321,14 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 2.08
---- !u!114 &3056882702927376161
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8180115267968146802}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7250606524ab47e49b0e7ed91fd72c0a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BoardItems.BodyPart
-  part: 2
-  selectedBodySignal: {fileID: 7008123830164471688}
-  mirror: {fileID: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 3.5, y: 3.5}
+  m_EdgeRadius: 0
