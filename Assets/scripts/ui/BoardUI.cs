@@ -60,7 +60,7 @@ namespace UI
                 default:
                     characterManager.gameObject.SetActive(false);
                     sceneobjectsManager.gameObject.SetActive(false);
-                    activeBoardItem.gameObject.SetActive(false);
+                    activeBoardItem?.gameObject.SetActive(false);
                     break;
             }
 

@@ -130,7 +130,6 @@ namespace UI
             Events.ShowScreen(UIManager.screenType.Albums);
         }
         public void NewStory() {
-            boardUI.SetEditingType(editingTypes.SCENE);
             Data.Instance.scenesData.StartNewStory("");
             boardUI.SetEditingType(editingTypes.NONE);
             Events.ShowScreen(UIManager.screenType.StoryMaker);
