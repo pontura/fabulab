@@ -118,6 +118,11 @@ namespace BoardItems.Characters
         {
             anims.Play(anim);
         }
+
+        public void StopAnim() {
+            anims.Stop();
+        }
+
         public override void AttachItem(ItemInScene item)
         {
             BodyPart bp = GetBodyPart(item.data.part);

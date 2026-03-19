@@ -16,6 +16,7 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.AddSceneObject += AddSceneObject;
             StoryMakerEvents.DeleteSceneObject += DeleteSceneObject;
             StoryMakerEvents.RemoveSceneObject += RemoveSceneObject;
+            StoryMakerEvents.OnMovieOver += OnMovieOver;
             SOAvatarData data = new SOAvatarData();
         }
         void OnDestroy()
@@ -23,6 +24,7 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.AddSceneObject -= AddSceneObject;
             StoryMakerEvents.DeleteSceneObject -= DeleteSceneObject;
             StoryMakerEvents.RemoveSceneObject -= RemoveSceneObject;
+            StoryMakerEvents.OnMovieOver -= OnMovieOver;
         }
         
         public override void AddSceneObject(SOData data)
@@ -150,6 +152,13 @@ namespace Yaguar.StoryMaker.Editor
         public override void ResetScene() {
             base.ResetScene();
             Utils.RemoveAllChildsIn(bgContainer);
+        }
+
+        void OnMovieOver() {
+            foreach(SceneObject so in sceneObjects) {
+                if(so.GetData() is SOAvatarFabulabData)
+                    so.GetComponent<AvatarFabulab>().characterManager.StopAnim();
+            }
         }
     }
 }

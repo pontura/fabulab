@@ -37,4 +37,8 @@ public class CharacterAnims : MonoBehaviour
     {
         Play(anims.idle);
     }
+
+    public void Stop() {
+        anim.StopPlayback();
+    }
 }
