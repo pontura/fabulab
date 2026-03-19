@@ -17,44 +17,40 @@ namespace UI.MainApp
         System.Action<BoardItemManager> OnDone;
         public void SetInteractableObject(string soID, System.Action<BoardItemManager> OnDone, SavedIData savedIOData = null)
         {
-            this.OnDone = OnDone;             
-            StartCoroutine(SetCollidersOff(soID, savedIOData));
-        }
-        IEnumerator SetCollidersOff(string soID, SavedIData savedIOData)
-        {
-            yield return new WaitForSeconds(0.2f);
+            this.OnDone = OnDone;  
             SetCollidersOn();
-            yield return new WaitForSeconds(0.2f);
 
             foreach (ItemData comp in transform.GetComponentsInChildren<ItemData>())
-                Destroy(((Component)comp));
+            {
+                Destroy((Component)comp);
+            }
             foreach (ItemInScene comp in transform.GetComponentsInChildren<ItemInScene>())
-                Destroy(((Component)comp));
+            {
+                print("SetInteractableObject colorName __________" + comp.data.colorName);
+                comp.SetColor(comp.data.colorName);
+                Destroy((Component)comp);
+            }
             //foreach (Collider2D comp in transform.GetComponentsInChildren<Collider2D>())
             //    Destroy(((Component)comp));
             foreach (Rigidbody2D comp in transform.GetComponentsInChildren<Rigidbody2D>())
-                Destroy(((Component)comp));
+                Destroy((Component)comp);
 
             BoxCollider2D parentCollider = GetComponent<BoxCollider2D>();
             if (parentCollider == null)
                 parentCollider = gameObject.AddComponent<BoxCollider2D>();
-            // Convert bounds center to local space
+
             Vector3 localCenter = transform.InverseTransformPoint(bounds.center);
             parentCollider.offset = localCenter;
 
-            // Size of bounds is in world space magnitude, to bring it to local space properly we can divide by the local lossyScale
             Vector3 worldSize = bounds.size;
             Vector3 localScale = transform.lossyScale;
 
             Vector2 localSize = new Vector2(
                 worldSize.x / Mathf.Abs(localScale.x), 
                 worldSize.y / Mathf.Abs(localScale.y)
-            );
-            
+            );            
             parentCollider.size = localSize;
-
             AddItemData(soID, savedIOData);
-            yield return new WaitForSeconds(0.1f);
             OnDone(this);
         }
         void AddItemData(string soID, SavedIData savedIOData)
@@ -72,7 +68,6 @@ namespace UI.MainApp
             ItemInScene iInScene = gameObject.AddComponent<ItemInScene>();
             iInScene.data = itemData;
             iInScene.data.SetTransformByData();
-            print("BoardItemManager AddItemData " + gameObject.name);
             gameObject.tag = "DragItem";
         }
         void SetCollidersOn()
