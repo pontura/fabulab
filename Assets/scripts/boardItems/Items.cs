@@ -191,6 +191,7 @@ namespace BoardItems
         }
         void Colorize(PalettesManager.colorNames name)
         {
+            print("COLOR " + name);
             itemSelected.SetColor(name);
             ItemInScene mirror = itemSelected.GetMirror();
             if (mirror != null) mirror.SetColor(name);

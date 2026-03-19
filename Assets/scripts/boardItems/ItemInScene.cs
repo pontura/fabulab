@@ -35,6 +35,8 @@ namespace BoardItems
         }
         private void Start()
         {
+            if (GetComponent<BoardItemManager>() != null) return;// "Object inside an other object";
+            
             if (data != null)
                 SetColor(data.colorName);
         }
@@ -124,6 +126,7 @@ namespace BoardItems
         }
         public void SetColor(PalettesManager.colorNames name)
         {
+            if (sprite == null) return;
             print("SetColor item in scene " + name + " sprite: " + sprite + " data.colorName " + data.colorName);
             data.colorName = name;
             List<Color> allColors = Data.Instance.palettesManager.GetColorsByName(name);
