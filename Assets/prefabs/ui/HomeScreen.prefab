@@ -479,7 +479,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2229960797999813397}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.5764738
+  m_Size: 0.5767786
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -890,6 +890,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1227455725504743334}
+  - component: {fileID: 5969033400845677338}
   m_Layer: 5
   m_Name: Stories
   m_TagString: Untagged
@@ -917,6 +918,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -55.157013}
   m_SizeDelta: {x: 0, y: 327.16998}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &5969033400845677338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247323237435407089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c026b7ac644f574a8245c0673495c43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.MainApp.Home.User.AllStoriesScreen
+  workBtn_prefab: {fileID: 8509828674426686842, guid: db58be10723a5044c9a6ab80ffca998c, type: 3}
+  worksContainer: {fileID: 6591855576058661120}
 --- !u!1 &1782571430485345838
 GameObject:
   m_ObjectHideFlags: 0
@@ -1840,7 +1855,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.HomeScreen
   tabs: {fileID: 6679434034863047464}
-  stories: {fileID: 1247323237435407089}
+  stories: {fileID: 5969033400845677338}
   charactersScreen: {fileID: 608732980934404865}
   objects: {fileID: 841447478453784812}
 --- !u!1 &5181341283583275586

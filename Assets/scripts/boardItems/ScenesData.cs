@@ -46,28 +46,12 @@ namespace BoardItems
             //Events.OnThemesLoadedComplete += LoadThemeFilmMetadataFromServer;
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
             StoryMakerEvents.ChangeSpeed += ChangeSpeed;
-            StoryMakerEvents.Restart += Restart;            
-
-            Init();
         }
-
-        void Init() {
-            Restart();
-        }
-
-        private void Restart() {
-            ScenesManagerFabulab.Instance.Init();
-            /*if (Data.Instance.userData.IsLogged())
-                ScenesManagerFabulab.Instance.currentFDataID = "";
-            else if (userFilmsData.Count > 1) {
-                ScenesManagerFabulab.Instance.currentFDataID = "" + (int.Parse(userFilmsData.Max(t => t.id)) + 1);
-            }*/
-        }
+                
         private void OnDestroy() {
             //Events.OnThemesLoadedComplete -= LoadUserFilmMetadataFromServer;
             FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
             StoryMakerEvents.ChangeSpeed -= ChangeSpeed;
-            StoryMakerEvents.Restart -= Restart;
         }
         void ChangeSpeed(int speed) {
             if (currentFilmData != null) {
@@ -78,7 +62,6 @@ namespace BoardItems
 
         public void StartNewStory(string storyName) {
             Debug.Log("#StartNewStory");
-            Restart();
             ScenesManagerFabulab.Instance.Restart();
             //hace un nuevo id unico:
             ScenesManagerFabulab.Instance.currentFDataID = UnityEngine.Random.Range(0, 1000).ToString();
@@ -102,17 +85,28 @@ namespace BoardItems
         void OnTokenUpdated() {
             if (Data.Instance.userData.IsLogged()) {
                 CancelInvoke();
-                LoadUserFilmMetadataFromServer();
+                //LoadUserFilmMetadataFromServer();
+                LoadAllFilmMetadataFromServer();
             } else
                 Invoke("OnTokenUpdated", 1);
         }
+
+        public void LoadAllFilmMetadataFromServer() {
+            if (Data.Instance.userData.IsLogged()) {
+                ScenesManagerFabulab.Instance.currentFDataID = "";
+                userFilmsData = new List<FilmDataFabulab>();
+                filmsData = new List<FilmDataFabulab>();
+                FirebaseStoryMakerDBManager.Instance.LoadAllFilmDataFromServer(filmsData, OnAddAllFilmsData);
+            }
+        }
+
         public void LoadUserFilmMetadataFromServer() {
             if (Data.Instance.userData.IsLogged()) {
                 ScenesManagerFabulab.Instance.currentFDataID = "";
                 userFilmsData = new List<FilmDataFabulab>();
-                FirebaseStoryMakerDBManager.Instance.LoadUserFilmDataFromServer(OnUserAddFilmDataFromServer);
+                FirebaseStoryMakerDBManager.Instance.LoadUserFilmDataFromServer(userFilmsData, OnAddFilmDataFromServer);
             }
-            SortUserFilmsDataByLikes();
+            //SortUserFilmsDataByLikes();
         }        
 
         int lynaLikeCount = 0;
@@ -128,11 +122,17 @@ namespace BoardItems
             filmsData.RemoveAll(x => x.id == id);
         }
 
-        public void OnUserAddFilmDataFromServer(Dictionary<string, ServerFilmData> sfds) {
-            if(sfds==null) return;
+        public void OnAddAllFilmsData(List<FilmDataFabulab> filmsData, Dictionary<string, ServerFilmData> sfds) {
+            OnAddFilmDataFromServer(filmsData, sfds);
+
+            userFilmsData.AddRange(filmsData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid));
+        }
+
+        public void OnAddFilmDataFromServer(List<FilmDataFabulab> filmsData, Dictionary<string, ServerFilmData> sfds) {
+            if (sfds == null) return;
 
             foreach (KeyValuePair<string, ServerFilmData> e in sfds) {
-                if (userFilmsData.Find(x => x.id == e.Key) == null) {
+                if (filmsData.Find(x => x.id == e.Key) == null) {
                     FilmDataFabulab fd = new FilmDataFabulab();
                     fd.id = e.Key;
                     fd.framecount = -1;
@@ -142,11 +142,12 @@ namespace BoardItems
                     fd.speed = e.Value.speed;
                     fd.thumb = new Texture2D(1, 1);
                     fd.thumb.LoadImage(System.Convert.FromBase64String(e.Value.thumb));
-                    userFilmsData.Add(fd);
+                    filmsData.Add(fd);
                 }
             }
             //Events.OnUpdateFilmIcon();
-        }
+
+        }        
 
         public void OnAddFilmDataFromServer(Dictionary<string, ServerFilmData> usfds, int pageId) {
             if (usfds != null) {
@@ -256,7 +257,27 @@ namespace BoardItems
                 FirebaseStoryMakerDBManager.Instance.SaveFilmDataToServer(fd.id, sfd);
             }
             //Events.OnUpdateFilmIcon();
-        }        
+        }
+
+        public void LoadFilm(string _id) {
+            print("LoadFilm _id:" + _id + " loadedDone: " + loadedDone);
+            loadedDone = false;
+            currentFilmData = filmsData.Find(x => x.id == _id);
+            ScenesManagerFabulab.Instance.currentFilmData = currentFilmData;
+            if (currentFilmData != null) {
+                ScenesManagerFabulab.Instance.currentFDataID = currentFilmData.id;
+                ScenesManagerFabulab.Instance.Scenes = new List<SceneDataFabulab>();
+                Events.OnLoading(true);
+                //Data.Instance.firebaseAuthManager.LoadFilmFromServer(ScenesManager.Instance.currentFDataID, 0);
+                if (Data.Instance.cacheData.filmsCache.ContainsKey(ScenesManagerFabulab.Instance.currentFDataID)) {
+                    Debug.Log("Load From Cache");
+                    ScenesManagerFabulab.Instance.Scenes = Data.Instance.cacheData.GetCacheFilmData(ScenesManagerFabulab.Instance.currentFDataID);
+                    LoadSucces();
+                } else
+                    FirebaseStoryMakerDBManager.Instance.LoadFilmFromServer(currentFilmData, OnFilmLoadedFromServer);
+            } else
+                Debug.LogError("Cant find film Id "+_id);
+        }
 
         public void LoadUserFilm(string _id) {
             print("____________LoadUserFilm" + loadedDone);
@@ -284,6 +305,10 @@ namespace BoardItems
 
         void LoadSucces() {
             //Debug.Log("____________LoadSucces");
+            if(ScenesManagerFabulab.Instance.currentFilmData.userID != Data.Instance.userData.userDataInDatabase.uid) {
+                GetAllFilmElements();
+                return;
+            }
             InitLoadedFilm();
             Events.OnLoading(false);
             loadedDone = true;
@@ -291,6 +316,7 @@ namespace BoardItems
 
         void OnFilmLoadedFromServer(bool succes, List<SceneDataFabulab> sds) {
             if (succes) {
+                Debug.Log("& OnFilmLoadedFromServer "+ sds.Count);
                 //ScenesManagerFabulab.Instance.Scenes = sds.OfType<SceneDataFabulab>().ToList();
                 ScenesManagerFabulab.Instance.Scenes = sds;
                 Data.Instance.cacheData.AddToFilmCache(ScenesManagerFabulab.Instance.currentFDataID, ScenesManagerFabulab.Instance.Scenes);
@@ -308,6 +334,31 @@ namespace BoardItems
                 Invoke("InitLoadedFilm", 1);
             }
         }
+
+        int elementsCount;
+        void GetAllFilmElements() {
+            foreach(SceneDataFabulab sdf in ScenesManagerFabulab.Instance.Scenes) {
+                elementsCount += sdf.GetScenesElements().Count + 1; // + 1 for background Id
+                Data.Instance.sObjectsData.LoadOthersObject(sdf.bgID, OnGetAllElements);
+                foreach(SceneElement se in sdf.GetScenesElements()) {
+                    if(se.type==SceneElementType.AVATAR)
+                        Data.Instance.charactersData.LoadOthersCharacter(se.data.id, OnGetAllElements);
+                    else if(se.type==SceneElementType.PROP)
+                        Data.Instance.sObjectsData.LoadOthersObject(se.data.id, OnGetAllElements);
+                }
+            }
+        }
+
+        void OnGetAllElements(BoardData.SOPartData sOPart) {
+            elementsCount--;
+            if (elementsCount <= 0) {
+                InitLoadedFilm();
+                Events.OnLoading(false);
+                loadedDone = true;
+            }
+        }
+
+
     }
            
 }

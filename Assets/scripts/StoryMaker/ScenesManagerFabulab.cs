@@ -39,9 +39,11 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public override void Init() {
+            Debug.Log("& Init");
             currentSceneId = 1;
             SceneDataFabulab sd = new SceneDataFabulab();
             sd.Init();
+            scenes = new();
             scenes.Add(sd);
         }
 

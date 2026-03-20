@@ -28,11 +28,14 @@ namespace UI.MainApp
         [SerializeField] TMPro.TMP_InputField storyName;
         [SerializeField] bool changesMade;
 
+        bool editionEnabled;
+
         private void Start() {
             StoryMakerEvents.OnSaveScene += OnSaveScene;
             StoryMakerEvents.EditActions += EditorActions;
             StoryMakerEvents.EditExpressions += EditExpressions;
             StoryMakerEvents.OnLoadFilm += OnLoadFilm;
+            StoryMakerEvents.EnableStoryEdition += EnableStoryEdition;
             Invoke(nameof(Init), Time.deltaTime * 4);
         }
 
@@ -41,6 +44,7 @@ namespace UI.MainApp
             StoryMakerEvents.EditActions -= EditorActions;
             StoryMakerEvents.EditExpressions -= EditExpressions;
             StoryMakerEvents.OnLoadFilm -= OnLoadFilm;
+            StoryMakerEvents.EnableStoryEdition -= EnableStoryEdition;
         }
 
         void OnLoadFilm() {
@@ -146,6 +150,8 @@ namespace UI.MainApp
         }
 
         void OnChangesMade() {
+            if (!editionEnabled)
+                return;
             changesMade = true;
             DoneBtn.gameObject.SetActive(true);
         }
@@ -172,6 +178,23 @@ namespace UI.MainApp
                 Data.Instance.scenesData.currentFilmData.name = storyName.text;
                 Data.Instance.scenesData.SaveFilm();
             });            
+        }
+
+        void EnableStoryEdition(bool enable) {
+
+            editionEnabled = enable;
+            tabs.gameObject.SetActive(enable);
+            storyName.interactable = enable;
+
+            if (!enable)
+                DoneBtn.gameObject.SetActive(false);
+
+            Invoke(nameof(SetTabState), Time.deltaTime * 10);
+        }
+
+        void SetTabState() {
+            int id = editionEnabled ? 0 : 4;
+            OnTabClicked(id);
         }
     }
 }

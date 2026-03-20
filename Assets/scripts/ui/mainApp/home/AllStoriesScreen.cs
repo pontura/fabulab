@@ -5,7 +5,7 @@ using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
 {
-    public class UserStoriesScreen : MonoBehaviour
+    public class AllStoriesScreen : MonoBehaviour
     {
         public ItemSelectorBtn workBtn_prefab;
         public Transform worksContainer;
@@ -35,7 +35,7 @@ namespace UI.MainApp.Home.User
         
         void LoadNext()
         {
-            foreach(FilmDataFabulab cd in Data.Instance.scenesData.userFilmsData)
+            foreach(FilmDataFabulab cd in Data.Instance.scenesData.filmsData)
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
@@ -45,14 +45,14 @@ namespace UI.MainApp.Home.User
         }        
 
         public void OpenWork(string id) {
-            Data.Instance.scenesData.LoadUserFilm(id);
+            Data.Instance.scenesData.LoadFilm(id);
             UIManager.Instance.boardUI.SetEditingType(BoardUI.editingTypes.NONE);
             Events.ShowScreen(UIManager.screenType.StoryMaker);
-            Invoke(nameof(SetUserStoryEditionState), Time.deltaTime * 2);
+            Invoke(nameof(SetStoryEditionState), Time.deltaTime * 2);
         }
-
-        void SetUserStoryEditionState() {
-            StoryMakerEvents.EnableStoryEdition(true);
+        
+        void SetStoryEditionState() {
+            StoryMakerEvents.EnableStoryEdition(false);
         }
     }
 

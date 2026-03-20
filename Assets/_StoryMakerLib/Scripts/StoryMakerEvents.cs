@@ -43,5 +43,7 @@ namespace Yaguar.StoryMaker.Editor
         public static System.Action NoneAvatarSelected = delegate { };
 
         public static System.Action<bool> EnableInputManager = delegate { };
+
+        public static System.Action<bool> EnableStoryEdition = delegate { };
     }
 }

@@ -315,6 +315,7 @@ namespace BoardItems
                 CharacterMetaData chmd = charactersMetaData.Find(x => x.id == id);
                 if (chmd == null) {
                     Debug.Log("Fail getting Character Meta Data");
+                    OnDone(null);
                     return;
                 }
 
@@ -328,7 +329,7 @@ namespace BoardItems
                         OnDone(chD);
                     } else {
                         Debug.Log("Fail getting Character Data");
-                        return;
+                        OnDone(null);
                     }
 
                 }, chmd.userID);

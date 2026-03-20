@@ -10,7 +10,28 @@ using Yaguar.StoryMaker.Editor;
 namespace Yaguar.StoryMaker.Editor
 {
     public class FilmMakerManagerFabulab : FilmMakerManager
-    {        
+    {
+        [SerializeField] protected Button newButton;
+        [SerializeField] protected Button hamburguerButton;
+        [SerializeField] protected HorizontalLayoutGroup buttonsGroup;
+
+        protected override void Awake() {
+            base.Awake();
+            StoryMakerEvents.EnableStoryEdition += EnableStoryEdition;
+        }
+
+        protected override void OnDestroy() {
+            base.OnDestroy();
+            StoryMakerEvents.EnableStoryEdition -= EnableStoryEdition;
+        }
+
+        void EnableStoryEdition(bool enable) {
+            deleteButton.gameObject.SetActive(enable);
+            newButton.gameObject.SetActive(enable);
+            hamburguerButton.gameObject.SetActive(enable);
+            buttonsGroup.spacing = enable ? 5 : 10;
+        }
+
         protected override void SetButtons()
         {
             int total = ScenesManagerFabulab.Instance.Scenes.Count;

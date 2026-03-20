@@ -528,12 +528,26 @@ namespace BoardItems
         void LoadBoardItemForStory(BoardItemManager itemManager, string id)
         {
             SOPartData pd = null;
-            if (itemManager is CharacterManager)
+            if (itemManager is CharacterManager) {
                 pd = Data.Instance.charactersData.SetCurrentID(id);
-            else if (itemManager is SceneObjectManager) {
+                if (pd == null) {
+                    Data.Instance.charactersData.LoadOthersCharacter(id, (partData) => OpenWork(itemManager,partData));
+                    return;
+                }
+            } else if (itemManager is SceneObjectManager) {
                 pd = Data.Instance.sObjectsData.SetCurrentID(id);
-                if(pd is SObjectData soData) {
-                    if(soData.type == SObjectData.types.background)
+                if (pd == null) {
+                    Data.Instance.sObjectsData.LoadOthersObject(id, (partData) => {
+                        if (partData is SObjectData soData) {
+                            if (soData.type == SObjectData.types.background)
+                                Events.ColorizeBG(soData.bg);
+                        }
+                        OpenWork(itemManager, partData);
+                        });
+                    return;
+                }
+                if (pd is SObjectData soData) {
+                    if (soData.type == SObjectData.types.background)
                         Events.ColorizeBG(soData.bg);
                 }
             }

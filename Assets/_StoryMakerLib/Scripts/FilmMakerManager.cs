@@ -38,7 +38,7 @@ namespace Yaguar.StoryMaker.Editor
                 return mInstance;
             }
         }
-        protected void Awake()
+        protected virtual void Awake()
         {
             if (!mInstance)
                 mInstance = this;

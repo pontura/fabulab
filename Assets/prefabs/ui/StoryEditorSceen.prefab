@@ -1079,6 +1079,9 @@ MonoBehaviour:
   timelineInSceneUI: {fileID: 6789800709196143157}
   timeline: {fileID: 6113161207474374150}
   isEditing: 1
+  newButton: {fileID: 537530256565359168}
+  hamburguerButton: {fileID: 6187181264908173476}
+  buttonsGroup: {fileID: 351890292320390520}
 --- !u!114 &988781987286539277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1457,8 +1460,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 97.44245, y: -80.95}
-  m_SizeDelta: {x: 194.8849, y: 29.98}
+  m_AnchoredPosition: {x: 97.44245, y: -101.5625}
+  m_SizeDelta: {x: 194.8849, y: 38.225}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1936989885300827567
 CanvasRenderer:
@@ -3119,8 +3122,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 97.44245, y: -14.99}
-  m_SizeDelta: {x: 194.8849, y: 29.98}
+  m_AnchoredPosition: {x: 97.44245, y: -19.1125}
+  m_SizeDelta: {x: 194.8849, y: 38.225}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &239184741328473831
 CanvasRenderer:
@@ -5223,8 +5226,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 97.44245, y: -47.97}
-  m_SizeDelta: {x: 194.8849, y: 29.98}
+  m_AnchoredPosition: {x: 97.44245, y: -60.337498}
+  m_SizeDelta: {x: 194.8849, y: 38.225}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8377333916326936713
 CanvasRenderer:
@@ -8765,8 +8768,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 97.44245, y: -146.91}
-  m_SizeDelta: {x: 194.8849, y: 29.98}
+  m_AnchoredPosition: {x: 97.44245, y: -142.78749}
+  m_SizeDelta: {x: 194.8849, y: 38.225}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2761637596472901725
 CanvasRenderer:
@@ -11107,11 +11110,33 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
+--- !u!114 &351890292320390520 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7959013292843903563, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
+  m_PrefabInstance: {fileID: 7680381398736758579}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.HorizontalLayoutGroup
 --- !u!1 &428833887303520037 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8027019919912118294, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
   m_PrefabInstance: {fileID: 7680381398736758579}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &537530256565359168 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7918316447185679731, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
+  m_PrefabInstance: {fileID: 7680381398736758579}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!114 &945239945306234297 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7460239756413385354, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
@@ -11161,6 +11186,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a8551c1928eab742a7d85a60b6b001f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Yaguar.StoryMaker.Editor.Timeline
+--- !u!114 &6187181264908173476 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4560873896143038359, guid: bd8fc39e436f9c449b1097335177732e, type: 3}
+  m_PrefabInstance: {fileID: 7680381398736758579}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!114 &6789800709196143157 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3795415139892346118, guid: bd8fc39e436f9c449b1097335177732e, type: 3}

@@ -8,7 +8,7 @@ namespace UI.MainApp.Home
     public class HomeScreen : MonoBehaviour
     {
         [SerializeField] TabController tabs;
-        [SerializeField] GameObject stories;
+        [SerializeField] AllStoriesScreen stories;
         [SerializeField] AllCharactersScreen charactersScreen;
         [SerializeField] AllObjectsScreen objects;
 
@@ -29,13 +29,12 @@ namespace UI.MainApp.Home
 
             charactersScreen.Show(false);
             objects.Show(false);
-
-            stories.SetActive(false);
+            stories.Show(false);
 
             switch (id)
             {
                 case 0:
-                    stories.SetActive(true);
+                    stories.Show(true);
                     break;
                 case 1:
                     charactersScreen.Show(true);

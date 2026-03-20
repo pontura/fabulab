@@ -111,9 +111,6 @@ namespace Yaguar.StoryMaker.Editor
 
         public override SceneObject GetSceneObjectInScene(SOData soData) {
             foreach (SceneObject so in sceneObjects) {
-                Debug.Log("&1 " + so.GetData().id);
-                Debug.Log("&2" + so.GetData().pos);
-                Debug.Log("&3" + soData.pos);
 
                 if (so != null && (so.GetData().id == soData.id && soData is SOAvatarData && so.GetData() is SOAvatarData) ||
                     

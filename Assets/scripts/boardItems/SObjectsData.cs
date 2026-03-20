@@ -206,6 +206,7 @@ namespace BoardItems
                 PropMetaData chmd = metaData.Find(x => x.id == id);
                 if (chmd == null) {
                     Debug.Log("Fail getting Prop Meta Data");
+                    OnDone(null);
                     return;
                 }
 
@@ -219,7 +220,7 @@ namespace BoardItems
                         OnDone(chD);
                     } else {
                         Debug.Log("Fail getting Character Data");
-                        return;
+                        OnDone(null);
                     }
 
                 }, chmd.userID);

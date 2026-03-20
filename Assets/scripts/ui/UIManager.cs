@@ -77,10 +77,10 @@ namespace UI
             {
                 case screenType.StoryMaker:
                     Scenario.Instance.gameObject.SetActive(true);
+                    backBtn.SetActive(true);                    
                     break;
                 case screenType.Home:
                     backBtn.SetActive(false);
-                    Scenario.Instance.gameObject.SetActive(false);
                     break;
                 default:
                     backBtn.SetActive(true);
@@ -133,7 +133,12 @@ namespace UI
             Data.Instance.scenesData.StartNewStory("");
             boardUI.SetEditingType(editingTypes.NONE);
             Events.ShowScreen(UIManager.screenType.StoryMaker);
+            Invoke(nameof(SetNewStoryEditionState), Time.deltaTime * 2);
         }
+        void SetNewStoryEditionState() {
+            StoryMakerEvents.EnableStoryEdition(true);
+        }
+
         public void NewCharacter()
         {
             string newCharacterID = "-On3wQ6Vy9jnpMtTTgWb";

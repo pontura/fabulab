@@ -510,22 +510,45 @@ namespace Yaguar.StoryMaker.DB
 
         }
 
-        public void LoadUserFilmDataFromServer(System.Action<Dictionary<string, ServerFilmData>> callback) {
+        public void LoadUserFilmDataFromServer(List<FilmDataFabulab> filmsData, System.Action<List<FilmDataFabulab>, Dictionary<string, ServerFilmData>> callback) {
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/");
             reference.OrderByChild("userID").EqualTo(_uid).GetValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
-                    Debug.Log("#LoadUserFilmDataFromServer FAIL");
-                    if (Data.Instance.scenesData.userFilmsData.Count > 0)
-                        Data.Instance.scenesData.OnFilmDataFromServerCompleted();
+                    Debug.Log("#LoadUserFilmDataFromServer FAIL");                    
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
                     try {
                         string data = task.Result.GetRawJsonValue();
                         if (data != null) {
                             Dictionary<string, ServerFilmData> d = JsonConvert.DeserializeObject<Dictionary<string, ServerFilmData>>(task.Result.GetRawJsonValue());
-                            callback(d);
+                            callback(filmsData, d);
                         } else {
-                            callback(null);
+                            callback(filmsData, null);
+                        }
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
+                }
+            });
+
+            Debug.Log("Server: LoadUserFilmDataFromServer ");
+            //Debug.Log(url);
+        }
+
+        public void LoadAllFilmDataFromServer(List<FilmDataFabulab> filmsData, System.Action<List<FilmDataFabulab>, Dictionary<string, ServerFilmData>> callback) {
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/");
+            reference.GetValueAsync().ContinueWithOnMainThread(task => {
+                if (task.IsFaulted || task.IsCanceled) {
+                    Debug.Log("#LoadAllFilmDataFromServer FAIL");                    
+                    Debug.Log(task.Exception);
+                } else if (task.IsCompleted) {
+                    try {
+                        string data = task.Result.GetRawJsonValue();
+                        if (data != null) {
+                            Dictionary<string, ServerFilmData> d = JsonConvert.DeserializeObject<Dictionary<string, ServerFilmData>>(task.Result.GetRawJsonValue());
+                            callback(filmsData, d);
+                        } else {
+                            callback(filmsData, null);
                         }
                     } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");

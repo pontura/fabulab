@@ -45,7 +45,7 @@ public class CacheData : MonoBehaviour
     }            
 
     public void AddToFilmCache(string id, List<SceneDataFabulab> source) {
-     //   Debug.Log("AddToFilmCache");
+    //   Debug.Log("AddToFilmCache");
         if(filmsCache.ContainsKey(id))
             filmsCache[id] =  CloneFilmData(source);
         else
@@ -53,7 +53,7 @@ public class CacheData : MonoBehaviour
     }
 
     List<SceneDataFabulab> CloneFilmData(List<SceneDataFabulab> source) {
-        List<SceneDataFabulab> nueva = new List<SceneDataFabulab>(source.Count);
+        List<SceneDataFabulab> nueva = new List<SceneDataFabulab>();
         foreach (SceneDataFabulab item in source)
             nueva.Add(item.Clone());
         return nueva;
@@ -76,10 +76,15 @@ public class CacheData : MonoBehaviour
         }
         FirebaseStoryMakerDBManager.Instance.GetUser(uid, (uid, rawjson) =>
         {
+            UserData ud = users.Find(x=>x.uid == uid);
+            if (ud != null) {
+                OnReady(ud);
+                return;
+            }
             //Debug.Log("# " + uid + " " + rawjson);
             ServerMetaData s = JsonUtility.FromJson<ServerMetaData>(rawjson);
             Debug.Log("# " + uid + " " + rawjson + " " + s.thumb);
-            UserData ud = new UserData();
+            ud = new UserData();
             ud.uid = uid;
             ud.username = s.username;
             ud.thumb = new Texture2D(1, 1);
