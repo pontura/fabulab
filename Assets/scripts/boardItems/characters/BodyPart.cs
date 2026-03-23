@@ -3,6 +3,7 @@ using BoardItems.SceneObjects;
 using Google.MiniJSON;
 using System;
 using UI;
+using UI.MainApp;
 using UnityEngine;
 
 namespace BoardItems
@@ -13,7 +14,8 @@ namespace BoardItems
         public CharacterPartsHelper.parts part;
         [SerializeField] GameObject selectedBodySignal;
         [SerializeField] BodyPart mirror;
-        float z_displacement = 0.001f;
+        float z_displacement_inside = 0.001f;
+        float z_displacement_outside = 0.1f;
 
         void Start()
         {
@@ -84,7 +86,14 @@ namespace BoardItems
                 foreach (ItemInScene i in all) i.transform.SetParent(t);
                 item.transform.SetParent(t);
             }
-                SetArrengedItems();
+            SetArrengedItems();
+        }
+        float GetZDisplacement()
+        {
+            if(part != CharacterPartsHelper.parts.BODY)
+                return z_displacement_inside;
+            else
+                return z_displacement_outside;
         }
         public void SetArrengedItems()
         {
@@ -93,26 +102,15 @@ namespace BoardItems
             float _z = 0;
             foreach (ItemInScene i in all)
             {
-                _z -= z_displacement;
-                Vector3 pos = i.data.position;
-                pos.z = _z;
-                i.data.position = pos;
-                i.SetPosByData();
+                if (!i.itemInsideContainer)
+                {
+                    _z -= GetZDisplacement();
+                    Vector3 pos = i.data.position;
+                    pos.z = _z;
+                    i.data.position = pos;
+                    i.SetPosByData();
+                }
             }
-        }
-        public float GetLastZ()
-        {
-            float z = 0;
-            ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
-            return (all.Length +1) * -z_displacement;
-            //foreach (ItemInScene i in all)
-            //{
-            //    if (i.transform.position.z < z)
-            //        z = i.transform.position.z;
-            //}
-            //if(z==0)
-            //    return 0;
-            //return z - z_displacement;
         }
         public void OnStopTransformModify()
         {

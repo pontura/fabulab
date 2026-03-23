@@ -15,6 +15,7 @@ namespace BoardItems
         // [SerializeField] List<Collider2D> colliders;
         [SerializeField] SpriteRenderer sprite;
         ItemInSceneAnims anims;
+        public bool itemInsideContainer; // si el item esta dentro de un objeto compuesto
 
         private void Awake()
         {
@@ -177,15 +178,7 @@ namespace BoardItems
         {
             mirror = mirrored;
         }
-        void ArrengeZPos(BodyPart bp)
-        {
-            float z = bp.GetLastZ();
-            if (z == 0) return; //no objects in bodypart;
-            print("Arrenge Z" + z);
-            Vector3 pos = transform.position;
-            pos.z = z;
-            transform.position = pos;
-        }
+
         Animation anim;
         BordersCreator borders;
         public void SetTools(bool isOn, AnimationClip clip = null)

@@ -18,7 +18,6 @@ namespace BoardItems
         public AnimationClip ReleaseItemAnim;
         public ItemInScene itemInScene_to_instantiate;
         float _z;
-        float _z_value = 0.001f;
 
         [SerializeField] ItemInScene itemSelected;
         [SerializeField] ItemInScene newItemFromMenu;
@@ -587,13 +586,13 @@ namespace BoardItems
             boardItemManager.transform.localPosition = Vector3.zero;
             ItemData newItem;
             List<GameObject> childs = new List<GameObject>();
+            float _z = 0;
             foreach (SavedIData itemData in wd.items)
             {
+                _z -= 0.001f;
+                itemData.position.z = _z;
                 newItem = CreateItem(itemData, newBoardItemManager);
                 newItem.transform.SetParent(boardItemManager.transform);
-                Vector3 pos = newItem.transform.transform.localPosition;
-                pos.z /= 200;
-                newItem.transform.transform.localPosition = pos;
                 childs.Add(newItem.gameObject);
             }
             boardItemManager.transform.localScale = new Vector3(8,8,1);
