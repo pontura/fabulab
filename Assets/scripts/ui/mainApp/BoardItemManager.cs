@@ -19,15 +19,20 @@ namespace UI.MainApp
         {
             this.OnDone = OnDone;  
             SetCollidersOn();
-
+            float _z = 0;
             foreach (ItemData comp in transform.GetComponentsInChildren<ItemData>())
             {
+                _z -= 0.001f;
+                comp.transform.localPosition = new Vector3(comp.transform.localPosition.x, comp.transform.localPosition.y, _z);
+                comp.position = comp.transform.localPosition;
                 Destroy((Component)comp);
             }
             foreach (ItemInScene comp in transform.GetComponentsInChildren<ItemInScene>())
             {
+                comp.itemInsideContainer = true;
                 print("SetInteractableObject colorName __________" + comp.data.colorName + " goName: " + comp.gameObject.name);
                 comp.SetColor(comp.data.colorName);
+                comp.enabled = false;
                 Destroy((Component)comp);
             }
             //foreach (Collider2D comp in transform.GetComponentsInChildren<Collider2D>())
@@ -69,6 +74,7 @@ namespace UI.MainApp
             iInScene.data = itemData;
             iInScene.data.SetTransformByData();
             gameObject.tag = "DragItem";
+            itemData.BoardItemManager = UIManager.Instance.boardUI.activeBoardItem;
         }
         void SetCollidersOn()
         { 
