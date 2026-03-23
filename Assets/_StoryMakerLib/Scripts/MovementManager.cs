@@ -20,15 +20,20 @@ namespace Yaguar.StoryMaker.Editor
             else
                 avatar.Walk();
 
-            
+            if (to.x < 0)
+                avatar.FlipX(true);
+            else
+                avatar.FlipX(false);
+
+
             iTween.MoveTo(avatar.gameObject, iTween.Hash(
-                "islocal", true,
-                "position", to,
-                "time", timeToNextFrame,
-                "easetype", "linear",
-                "oncomplete", "OnCompleteMoveing",
-                "oncompletetarget", this.gameObject
-                ));
+                    "islocal", true,
+                    "position", to,
+                    "time", timeToNextFrame,
+                    "easetype", "linear",
+                    "oncomplete", "OnCompleteMoveing",
+                    "oncompletetarget", this.gameObject
+                    ));
             print(distanceToMove + "   esta en: " + avatar.transform.position + "va a : " + to + "    id : " + avatar.GetData().id + " time " + timeToNextFrame);
         }
 

@@ -94,6 +94,7 @@ namespace Yaguar.StoryMaker.Editor
     [Serializable]
     public class    SceneDataFabulab : SceneData
     {
+
         [SerializeField] protected new List<SceneElement> scenesElements;
 
         public override void Init() {
@@ -346,8 +347,9 @@ namespace Yaguar.StoryMaker.Editor
                 if (soAvatarToMove != null)
                 {
                     Vector3 to = CharacterShouldWalkTo(soAvatarToMove, soAvatarToMove.id);
-                    if (to != Vector3.zero)
+                    if (to != Vector3.zero) {
                         Scenario.Instance.movementManager.MoveCharacter(soAvatarToMove.id, to, timeToNextFrame);
+                    }
                 }
             }
         }

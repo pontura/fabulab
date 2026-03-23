@@ -82,6 +82,16 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.ReorderSceneObjectsInZ();
         }
 
+        public void FlipX(bool setLeft) {
+            if (setLeft) {
+                if(transform.localScale.x>0)
+                    transform.localScale = new Vector3(-1 * transform.localScale.x, transform.localScale.y, transform.localScale.z);
+            } else {
+                if (transform.localScale.x < 0)
+                    transform.localScale = new Vector3(-1 * transform.localScale.x, transform.localScale.y, transform.localScale.z);
+            }
+        }
+
         public void Move()
         {
             if (isBeingHeld && !(data is SODataFixed))

@@ -14,6 +14,7 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] protected Button newButton;
         [SerializeField] protected Button hamburguerButton;
         [SerializeField] protected HorizontalLayoutGroup buttonsGroup;
+        [SerializeField] protected float delayFactor;
 
         protected override void Awake() {
             base.Awake();
@@ -127,7 +128,8 @@ namespace Yaguar.StoryMaker.Editor
                 print(ScenesManagerFabulab.Instance.currentSceneId + " nextSceneid : " + nextSceneid + " backgroundID: " + backgroundID + " : " + nextBackgroundID);
                 if (backgroundID == nextBackgroundID)
                 {
-                    float delay = timeline.keyframe_duration - (timeline.keyframe_duration / 3);
+                    float delay = timeline.keyframe_duration * delayFactor;
+                    Debug.Log("# Delay: " + delay);
                     StartCoroutine(MoveAvatarsAfter(delay));
                 }
             }
