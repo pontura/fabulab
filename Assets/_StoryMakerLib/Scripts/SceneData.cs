@@ -231,7 +231,7 @@ namespace Yaguar.StoryMaker.Editor
                     scenesElements.Add(arr2[i]);
             }
         }
-        public virtual void MakeCharactersWalk(float timeToNextFrame)
+        public virtual void MoveElements(float timeToNextFrame)
         {
             Debug.Log(scenesElements);
             foreach (string data in scenesElements)

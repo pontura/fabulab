@@ -1,9 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using BoardItems.BoardData;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
-using BoardItems.BoardData;
+using Unity.Android.Gradle.Manifest;
+using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -94,7 +95,7 @@ namespace Yaguar.StoryMaker.Editor
     [Serializable]
     public class    SceneDataFabulab : SceneData
     {
-
+        public bool transition;
         [SerializeField] protected new List<SceneElement> scenesElements;
 
         public override void Init() {
@@ -336,52 +337,114 @@ namespace Yaguar.StoryMaker.Editor
             soData.rot = sceneElement.data.rot;
             soData.size = sceneElement.data.size;
             soData.itemName = sceneElement.data.itemName;
-        }        
-
-        public override void MakeCharactersWalk(float timeToNextFrame)
+        }
+                
+        public override void MoveElements(float timeToNextFrame)
         {
-            Debug.Log(scenesElements);
+            if (!transition)
+                return;
+
             foreach (SceneElement data in scenesElements)
             {
-                SOData soAvatarToMove = GetAvatarFromData(data);
-                if (soAvatarToMove != null)
-                {
-                    Vector3 to = CharacterShouldWalkTo(soAvatarToMove, soAvatarToMove.id);
+                SOData soData = null;
+                soData = GetSOData(data);
+                if (soData != null) {
+                    Vector3 to = ElementShouldMoveTo(data.type,soData, soData.id);
                     if (to != Vector3.zero) {
-                        Scenario.Instance.movementManager.MoveCharacter(soAvatarToMove.id, to, timeToNextFrame);
+                        if (data.type == SceneElementType.AVATAR) {
+                            Scenario.Instance.movementManager.MoveCharacter(soData.id, to, timeToNextFrame);
+                        } else if (data.type == SceneElementType.PROP) {
+                            Scenario.Instance.movementManager.MoveElement(soData, to, timeToNextFrame);
+                        }
                     }
+                    float scaleTo = ElementShouldScaleTo(data.type, soData, soData.id);
+                    if(scaleTo != 0) 
+                        Scenario.Instance.movementManager.ScaleElement(soData, scaleTo, timeToNextFrame);
+                    
+                    float rotateTo = ElementShouldRotateTo(data.type, soData, soData.id);
+                    if (rotateTo != 0)
+                            Scenario.Instance.movementManager.RotateElement(soData, rotateTo, timeToNextFrame);
                 }
             }
-        }
-        protected new Vector3 CharacterShouldWalkTo(SOData actualData, string avatarID)
-        {
+        }       
+
+        protected virtual Vector3 ElementShouldMoveTo(SceneElementType type, SOData actualData, string avatarID) {
             SceneData nextSD = ScenesManagerFabulab.Instance.GetNextActiveScene();
             if (nextSD == null)
                 return Vector3.zero;
             List<SceneElement> nextAll = (nextSD as SceneDataFabulab).scenesElements;
             if (nextAll == null)
                 return Vector2.zero;
-            foreach (SceneElement s in nextAll)
-            {
-                SOData soData = GetAvatarFromData(s);
-                if (soData != null && soData.id == avatarID)
-                {
-                    if (actualData.size != soData.size || actualData.pos.Equals(soData.pos))
-                        return Vector3.zero;
-                    else {
-                        Debug.Log("# CharacterShouldWalkTo: " + soData.pos);
-                        return soData.pos.ToVector3();
+            foreach (SceneElement s in nextAll) {
+                if (s.type == type) {
+                    SOData soData = GetSOData(s);
+                    if (soData != null && soData.id == avatarID) {
+                        if (actualData.pos.Equals(soData.pos))
+                            return Vector3.zero;
+                        else {
+                            return soData.pos.ToVector3();
+                        }
                     }
                 }
             }
             return Vector3.zero;
         }
-        protected SOData GetAvatarFromData(SceneElement data)
+
+        protected virtual float ElementShouldScaleTo(SceneElementType type, SOData actualData, string avatarID) {
+            SceneData nextSD = ScenesManagerFabulab.Instance.GetNextActiveScene();
+            if (nextSD == null)
+                return 0f;
+            List<SceneElement> nextAll = (nextSD as SceneDataFabulab).scenesElements;
+            if (nextAll == null)
+                return 0f;
+            foreach (SceneElement s in nextAll) {
+                if (s.type == type) {
+                    SOData soData = GetSOData(s);
+                    if (soData != null && soData.id == avatarID) {
+                        if (actualData.size.Equals(soData.size))
+                            return 0f;
+                        else {
+                            return soData.size;
+                        }
+                    }
+                }
+            }
+            return 0f;
+        }
+
+        protected virtual float ElementShouldRotateTo(SceneElementType type, SOData actualData, string avatarID) {
+            SceneData nextSD = ScenesManagerFabulab.Instance.GetNextActiveScene();
+            if (nextSD == null)
+                return 0f;
+            List<SceneElement> nextAll = (nextSD as SceneDataFabulab).scenesElements;
+            if (nextAll == null)
+                return 0f;
+            foreach (SceneElement s in nextAll) {
+                if (s.type == type) {
+                    SOData soData = GetSOData(s);
+                    if (soData != null && soData.id == avatarID) {
+                        if (actualData.rot.Equals(soData.rot))
+                            return 0f;
+                        else {
+                            return soData.rot;
+                        }
+                    }
+                }
+            }
+            return 0f;
+        }
+
+        protected SOData GetSOData(SceneElement data)
         {            
             SOData soData = null;
             if (data.type == SceneElementType.AVATAR)
             {
                 soData = new SOAvatarFabulabData();
+                //soData.customization = data.customizationData;
+                soData.goLeft = data.data.goLeft;
+                SetSOData(soData, data);
+            } else if (data.type == SceneElementType.PROP) {
+                soData = new SODataFabulab();
                 //soData.customization = data.customizationData;
                 soData.goLeft = data.data.goLeft;
                 SetSOData(soData, data);

@@ -233,7 +233,7 @@ namespace Yaguar.StoryMaker.Editor
         {
             yield return new WaitForSeconds(delay);
             if (State == states.PLAYING)
-                ScenesManager.Instance.GetActiveScene().MakeCharactersWalk(timeline.keyframe_duration - delay);
+                ScenesManager.Instance.GetActiveScene().MoveElements(timeline.keyframe_duration - delay);
         }
         public virtual void JumpTo(int keyframeID)
         {

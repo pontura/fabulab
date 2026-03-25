@@ -15,6 +15,7 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] protected Button hamburguerButton;
         [SerializeField] protected HorizontalLayoutGroup buttonsGroup;
         [SerializeField] protected float delayFactor;
+        [SerializeField] Toggle toggleTransition;
 
         protected override void Awake() {
             base.Awake();
@@ -141,6 +142,8 @@ namespace Yaguar.StoryMaker.Editor
 
             SetButtons();
 
+            toggleTransition.isOn = ScenesManagerFabulab.Instance.GetActiveScene().transition;
+
             ScenesManagerFabulab.Instance.AddSceneObjectsToScene(next);
             StoryMakerEvents.ReorderSceneObjectsInZ();
         }
@@ -148,13 +151,17 @@ namespace Yaguar.StoryMaker.Editor
         {
             yield return new WaitForSeconds(delay);
             if (State == states.PLAYING)
-                ScenesManagerFabulab.Instance.GetActiveScene().MakeCharactersWalk(timeline.keyframe_duration - delay);
+                ScenesManagerFabulab.Instance.GetActiveScene().MoveElements(timeline.keyframe_duration - delay);
         }
         public override void JumpTo(int keyframeID)
         {
             Debug.Log("#JumpTo");
             ScenesManagerFabulab.Instance.currentSceneId = keyframeID;
             SetScene(true);
+        }
+
+        public void OnTransitionChange() {
+            ScenesManagerFabulab.Instance.GetActiveScene().transition = toggleTransition.isOn;
         }
     }
 }

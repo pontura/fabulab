@@ -1,4 +1,5 @@
 using System;
+using System.Xml.Linq;
 using UnityEngine;
 
 [Serializable]
@@ -31,5 +32,9 @@ public struct V3
                 && other.z == z;
         }
         return false;
+    }
+
+    public override string ToString() {
+        return "x: " + x + " y: " + y + " z:" + z;
     }
 }

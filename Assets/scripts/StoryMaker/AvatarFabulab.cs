@@ -46,17 +46,27 @@ namespace Yaguar.StoryMaker.Editor
         void Delayed()
         {
             BoxCollider2D collider = GetComponent<BoxCollider2D>();
-            Bounds bounds = new Bounds(transform.position, Vector3.zero);
-            foreach (SpriteRenderer sr in GetComponentsInChildren<SpriteRenderer>())
-            {
-                bounds.Encapsulate(sr.bounds);
+            Bounds worldBounds = new Bounds(transform.position, Vector3.zero);
+            foreach (SpriteRenderer sr in GetComponentsInChildren<SpriteRenderer>()) {
+                worldBounds.Encapsulate(sr.bounds);
             }
 
-            Vector3 localCenter = transform.InverseTransformPoint(bounds.center);
-            Vector3 localSize = transform.InverseTransformVector(bounds.size);
+            Vector3[] corners = new Vector3[8];
+            Vector3 ext = worldBounds.extents;
+            Vector3 cen = worldBounds.center;
+            int i = 0;
+            for (int x = -1; x <= 1; x += 2)
+                for (int y = -1; y <= 1; y += 2)
+                    for (int z = -1; z <= 1; z += 2)
+                        corners[i++] = cen + Vector3.Scale(ext, new Vector3(x, y, z));
 
-            collider.offset = localCenter;
-            collider.size = localSize;
+            Bounds localBounds = new Bounds(transform.InverseTransformPoint(corners[0]), Vector3.zero);
+            for (int j = 1; j < corners.Length; j++) {
+                localBounds.Encapsulate(transform.InverseTransformPoint(corners[j]));
+            }
+
+            collider.offset = localBounds.center;
+            collider.size = localBounds.size;
         }
 
         public override void Run() {
