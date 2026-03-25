@@ -34,6 +34,7 @@ namespace BoardItems
             Events.AnimateItem += AnimateItem;
             Events.ResetItems += ResetItems;
             Events.LoadBoardItemForStory += LoadBoardItemForStory;
+            Events.LoadBgForStory += LoadBgForStory;
             Events.ShowScreen += ShowScreen;
         }
         public bool storyMode;
@@ -523,6 +524,11 @@ namespace BoardItems
             foreach (ItemInScene item in all)
                 item.SetCollider(isEditMode);
         }
+                    
+        void LoadBgForStory(BoardItemManager itemManager, string id, Transform container) {
+            LoadBoardItemForStory(itemManager, id);
+            LoadBgSos(itemManager, container);
+        }
 
         void LoadBoardItemForStory(BoardItemManager itemManager, string id)
         {
@@ -650,7 +656,24 @@ namespace BoardItems
                 //newItem.GetComponent<ItemInScene>().Appear();
             }
             if (cascade)
-                StartCoroutine(Cascade(boardItemManager, wd));
+                StartCoroutine(Cascade(boardItemManager, wd));            
+        }
+
+        void LoadBgSos(BoardItemManager boardItemManager, Transform container = null) {
+            foreach (SavedIData soID in soIDs) {
+                print("open SO in background soID: " + soID.soID);
+                SOPartData soPartData = Data.Instance.sObjectsData.GetSO(soID.soID);
+                if (soPartData != null) {
+                    SOPartData o = Data.Instance.sObjectsData.GetSO(soID.soID);
+                    GameObject go = new GameObject();
+                    BoardItemManager boardItemManager_to_add = go.AddComponent<BoardItemManager>();
+
+                    if (container == null)
+                        container = boardItemManager.GetBodyPart((CharacterPartsHelper.parts)soID.part).transform;
+
+                    AddSceneObjectTo(o, boardItemManager_to_add, container, soID);
+                } else print("open work itemData.soID not found: " + soID);
+            }
         }
 
         IEnumerator Cascade(BoardItemManager boardItemManager, SOPartData wd)
@@ -673,21 +696,7 @@ namespace BoardItems
                     i.SetCollider(true);
             }
             yield return new WaitForSeconds(0.05f);
-            foreach (SavedIData soID in soIDs)
-            {
-                print("open SO in background soID: " + soID.soID);
-                SOPartData soPartData = Data.Instance.sObjectsData.GetSO(soID.soID);
-                if (soPartData != null)
-                {
-                    SOPartData o = Data.Instance.sObjectsData.GetSO(soID.soID);
-                    GameObject go = new GameObject();
-                    BoardItemManager boardItemManager_to_add = go.AddComponent<BoardItemManager>();
-
-                    AddSceneObjectTo(o, boardItemManager_to_add, boardItemManager.GetBodyPart((CharacterPartsHelper.parts)soID.part).transform, soID);
-                    yield return new WaitForSeconds(0.05f);
-                }
-                else   print("open work itemData.soID not found: " + soID);
-            }
+            LoadBgSos(boardItemManager);
         }
         public void SetColliders(BoardItemManager boardItemManager, bool isOn)
         {

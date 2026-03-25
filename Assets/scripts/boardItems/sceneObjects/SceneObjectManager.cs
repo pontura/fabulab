@@ -47,5 +47,9 @@ namespace BoardItems.SceneObjects
         {
             bp.SendToTop(itemSelected);
         }
+
+        public Transform GetContainer() {
+            return bp.transform;
+        }
     }
 }

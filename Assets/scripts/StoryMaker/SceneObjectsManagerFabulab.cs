@@ -70,8 +70,8 @@ namespace Yaguar.StoryMaker.Editor
                 bg.Init(soBgData);
                 inputsManager.ResetAll();
                 SceneObjectManager objectManager = bg.GetComponent<Background>().objectManager;
-                objectManager.id = soBgData.id;
-                Events.LoadBoardItemForStory(objectManager, soBgData.id);
+                objectManager.id = soBgData.id;                
+                Events.LoadBgForStory(objectManager, soBgData.id, objectManager.GetContainer());
             } else if (data is SOWordBalloonData soWBD) {
                 SceneObject wordBalloon = Instantiate(objectSignal_to_instantiate[0]);
                 AddToContainer(wordBalloon, soWBD);
