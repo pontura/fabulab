@@ -62,15 +62,15 @@ namespace UI
                 presetsDragAndDropToggleGO.SetActive(false);
                 Events.Zoom(0, false);
                 Events.OnBodyPartActive(CharacterPartsHelper.parts.none);
-                presetsSelector.SetOn(true, 9);
+                PresentsOn(9);
             }
             else
             {
                 ZoomStates part = (ZoomStates)id;
                 Events.OnBodyPartActive((CharacterPartsHelper.parts) id);
                 Events.Zoom(part, false);
-                if (isPreset)
-                    presetsSelector.SetOn(true, id);
+                if (isPreset) 
+                    PresentsOn(id);
                 else
                     DragAndDrop();
             }
@@ -83,6 +83,12 @@ namespace UI
             presetsSelector.gameObject.SetActive(false);
             dragAndDropContainer.gameObject.SetActive(true);
             dragAndDropUI.SetOn(true);
+            Events.DragAndDropActive(true);
+        }
+        void PresentsOn(int id)
+        {
+            presetsSelector.SetOn(true, id);
+            Events.DragAndDropActive(false);
         }
         public void Toggle()
         {

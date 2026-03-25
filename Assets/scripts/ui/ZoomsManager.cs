@@ -38,10 +38,16 @@ namespace UI
         }
         public void Zoom(ZoomStates _part, bool saving = false)
         {
+            animator.enabled = true;
             this.lastZoom = currentZoom;
             this.currentZoom = _part;
             animator.enabled = true;
             animator.SetInteger("zoom", (int)currentZoom);
+            Invoke("OnResetCamAnim", 1);
+        }
+        void OnResetCamAnim()
+        {
+            animator.enabled = false;
         }
     }
 }

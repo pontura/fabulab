@@ -34,6 +34,7 @@ public static class Events
     public static System.Action<bool> OnLoading = delegate { };
     public static System.Action<string, System.Action> CaptureGif = delegate { };
     public static System.Action<bool> OnCanvasDragger = delegate { };
+    public static System.Action<bool> DragAndDropActive = delegate { };
     public static System.Action<System.Action<bool>> OnParentalGate = delegate { };
     public static System.Action<string, CharacterAnims.anims> OnCharacterAnim = delegate { };
     public static System.Action<string> SetCharacterIdle = delegate { };

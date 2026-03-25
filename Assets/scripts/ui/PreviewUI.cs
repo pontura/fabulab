@@ -20,7 +20,8 @@ namespace UI
             Events.OnBodyPartActive(CharacterPartsHelper.parts.none);
             Events.Zoom(0, false);
             gameObject.SetActive(true);
-            tabs.Init(OnTabClicked);
+            tabs.Init(OnTabClicked); 
+            Events.DragAndDropActive(false);
         }
         void OnTabClicked(int id)
         {
