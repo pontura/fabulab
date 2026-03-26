@@ -20,7 +20,7 @@ public static class Events
     public static System.Action<CharacterPartsHelper.parts> EmptyCharacterItemsButExlude = delegate { };
     public static System.Action EmptySceneItems = delegate { };
     public static System.Action<BoardItemManager,string> LoadBoardItemForStory = delegate { };
-    public static System.Action<BoardItemManager, string, Transform> LoadBgForStory = delegate { };
+    public static System.Action<BoardItemManager, string, Transform, Transform> LoadBgForStory = delegate { };
 
     public static System.Action<PalettesManager.colorNames> Colorize = delegate { };
     public static System.Action<PalettesManager.colorNames> ColorizeBG = delegate { };
