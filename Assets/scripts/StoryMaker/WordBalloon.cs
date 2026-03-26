@@ -1,8 +1,4 @@
-using BoardItems.SceneObjects;
 using System;
-using System.Runtime.Serialization;
-using TMPro;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor

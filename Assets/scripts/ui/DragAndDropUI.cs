@@ -1,13 +1,8 @@
 using BoardItems;
-using BoardItems.BoardData;
 using BoardItems.Characters;
 using System.Collections;
 using System.Collections.Generic;
-using UI.MainApp;
-using UnityEditor;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
-using static UnityEditor.Progress;
 
 namespace UI
 {

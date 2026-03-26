@@ -1,10 +1,5 @@
-using BoardItems.SceneObjects;
 using System;
-using System.Runtime.Serialization;
-using TMPro;
-using UnityEditor.VersionControl;
 using UnityEngine;
-using static Yaguar.StoryMaker.Editor.WordBalloon;
 
 namespace Yaguar.StoryMaker.Editor
 {
