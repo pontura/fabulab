@@ -30,6 +30,7 @@ namespace BoardItems.SceneObjects
                     break;
             }
             bp.SetSelection(true);
+            Events.DragAndDropActive(true);
         }
         public override void AttachItem(ItemInScene item)
         {
