@@ -56,7 +56,7 @@ namespace UI
 
             gameObject.SetActive(true);
 
-            CharacterAnims.anims anim = CharacterAnims.anims.edit;
+            string anim = Data.Instance.characterAnimsManager.defaultEdit.name;
             Events.EditMode(true);
             Events.OnCharacterAnim(characterEditorID, anim);
             tabs.Init(OnTabClicked, 0);

@@ -24,7 +24,7 @@ namespace UI
             if (isOn)
             {
                 Utils.RemoveAllChildsIn(container);
-                CharacterAnims.anims anim = CharacterAnims.anims.edit;
+                string anim = Data.Instance.characterAnimsManager.defaultEdit.name;
                 Events.OnCharacterAnim("", anim);
                 print("set on " + partID);
                 if (partID == 9) 

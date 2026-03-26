@@ -19,6 +19,7 @@ public class Data : MonoBehaviour
     public Settings settings;
     public ScenesData scenesData;
     public CacheData cacheData;
+    public CharacterAnimsManager characterAnimsManager;
 
     public static Data Instance {  get  {  return mInstance;  }  }
 
@@ -45,5 +46,6 @@ public class Data : MonoBehaviour
         DontDestroyOnLoad(this);
 
         animationsManager = GetComponent<AnimationsManager>();
+        characterAnimsManager = GetComponent<CharacterAnimsManager>();
     }
 }

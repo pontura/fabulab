@@ -53,7 +53,7 @@ namespace Yaguar.StoryMaker.Editor
     [Serializable]
     public class SceneElementAvatar : SceneElement
     {
-        public CharacterAnims.anims anim;
+        public string anim;
         public CharacterExpressions.expressions emoji;
     }
 

@@ -80,7 +80,7 @@ namespace UI
         private void Start()
         {
 
-            CharacterAnims.anims anim = CharacterAnims.anims.edit;
+            string anim = Data.Instance.characterAnimsManager.defaultEdit.name;
             Events.OnCharacterAnim("", anim);
 
             Events.GalleryDone += GalleryDone;

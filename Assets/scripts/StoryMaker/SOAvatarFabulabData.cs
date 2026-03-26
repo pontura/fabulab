@@ -1,12 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
-using BoardItems.BoardData;
+﻿using System;
 
 [Serializable]
 public class SOAvatarFabulabData : SOAvatarData
 {
-    public CharacterAnims.anims anim;
+    public string anim;
     public CharacterExpressions.expressions emoji;
 }

@@ -70,11 +70,11 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public override void Run() {
-            characterManager.SetAnim(CharacterAnims.anims.groovyWalk_right);
+            characterManager.SetAnim(Data.Instance.characterAnimsManager.defaultRun.name);
         }
 
         public override void Walk() {
-            characterManager.SetAnim(CharacterAnims.anims.walk_right);
+            characterManager.SetAnim(Data.Instance.characterAnimsManager.defaultWalk.name);
         }
 
         void OnCharacterExpression(string _characterID, CharacterExpressions.expressions exp) {
@@ -82,7 +82,7 @@ namespace Yaguar.StoryMaker.Editor
             (data as SOAvatarFabulabData).emoji = exp;
         }
 
-        void OnCharacterAnim(string _characterID, CharacterAnims.anims anim) {
+        void OnCharacterAnim(string _characterID, string anim) {
             if(data.id != _characterID) return;
             (data as SOAvatarFabulabData).anim = anim;
         }
