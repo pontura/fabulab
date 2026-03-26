@@ -223,6 +223,9 @@ MonoBehaviour:
   buttons: []
   container: {fileID: 5318463346532128620}
   characterId: 
+  grid: {fileID: 1548425393019593296}
+  columns: 2
+  spacing: 2
 --- !u!222 &6666441323600753286
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1003,7 +1006,8 @@ GameObject:
   m_Component:
   - component: {fileID: 718131443436882019}
   - component: {fileID: 4436976061655606928}
-  - component: {fileID: 8945623794820213125}
+  - component: {fileID: 5446689210760830681}
+  - component: {fileID: 8843283650404410475}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -1045,7 +1049,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
---- !u!114 &8945623794820213125
+--- !u!114 &5446689210760830681
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1054,23 +1058,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 1806526307489557168}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Script: {fileID: 11500000, guid: 67c66aef60ba2bc4cb4ac27321292b16, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridExpand
+  grid: {fileID: 8843283650404410475}
+  columns: 2
+  spacing: 2
+--- !u!114 &8843283650404410475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1806526307489557168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GridLayoutGroup
   m_Padding:
-    m_Left: 7
-    m_Right: 7
-    m_Top: 7
-    m_Bottom: 7
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 7
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 1
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 1
-  m_ReverseArrangement: 0
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 150, y: 30}
+  m_Spacing: {x: 2, y: 2}
+  m_Constraint: 0
+  m_ConstraintCount: 2
 --- !u!1 &1873966960857965113
 GameObject:
   m_ObjectHideFlags: 0
@@ -3276,6 +3293,7 @@ GameObject:
   - component: {fileID: 5318463346532128620}
   - component: {fileID: 9049514589436723277}
   - component: {fileID: 1548425393019593296}
+  - component: {fileID: 8094779275686336026}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -3337,10 +3355,25 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 100, y: 100}
-  m_Spacing: {x: 0, y: 0}
+  m_CellSize: {x: 150, y: 30}
+  m_Spacing: {x: 2, y: 2}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &8094779275686336026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4701913094429461270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67c66aef60ba2bc4cb4ac27321292b16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridExpand
+  grid: {fileID: 1548425393019593296}
+  columns: 2
+  spacing: 2
 --- !u!1 &5503367948310127361
 GameObject:
   m_ObjectHideFlags: 0
@@ -4153,7 +4186,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5546220813719652998}
   m_HandleRect: {fileID: 7760659683626408441}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -6179,7 +6212,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3295005462895340268, guid: b1956c79dcff80648b8cd892ab4b0ede, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 33
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3295005462895340268, guid: b1956c79dcff80648b8cd892ab4b0ede, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6235,7 +6268,7 @@ PrefabInstance:
       objectReference: {fileID: 471463620176282188}
     - target: {fileID: 6541092998132281636, guid: b1956c79dcff80648b8cd892ab4b0ede, type: 3}
       propertyPath: m_fontSize
-      value: 24
+      value: 23.4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6924,7 +6957,7 @@ PrefabInstance:
       objectReference: {fileID: 471463620176282188}
     - target: {fileID: 6541092998132281636, guid: b1956c79dcff80648b8cd892ab4b0ede, type: 3}
       propertyPath: m_fontSize
-      value: 24
+      value: 23.4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
