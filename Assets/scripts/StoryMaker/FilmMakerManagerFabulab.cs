@@ -142,7 +142,8 @@ namespace Yaguar.StoryMaker.Editor
 
             SetButtons();
 
-            toggleTransition.isOn = ScenesManagerFabulab.Instance.GetActiveScene().transition;
+            if(ScenesManagerFabulab.Instance.GetActiveScene()!=null)
+                toggleTransition.isOn = ScenesManagerFabulab.Instance.GetActiveScene().transition;
 
             ScenesManagerFabulab.Instance.AddSceneObjectsToScene(next);
             StoryMakerEvents.ReorderSceneObjectsInZ();

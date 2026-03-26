@@ -9,13 +9,22 @@ public class CharacterAnims : MonoBehaviour
     }
     public void Play(string animName)
     {
-        anim.Play(animName);
+        anim.speed = 1;
+        if(anim.HasState(0, Animator.StringToHash(animName)))
+            anim.Play(animName);
+        else if(int.TryParse(animName, out int index)) {
+            string aName = Data.Instance.characterAnimsManager.all[index - 1].name;
+            Debug.Log("& anim name: " + aName);
+            anim.Play(aName);
+        }
+
     }
     public void Idle()
     {
         Play("idle");
     }
     public void Stop() {
-        anim.StopPlayback();
+        anim.speed = 0;
+        Debug.Log("& Speed: " + anim.speed);
     }
 }
