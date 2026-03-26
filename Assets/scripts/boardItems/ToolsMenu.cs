@@ -38,7 +38,7 @@ namespace BoardItems
             if (itemData != null)
                 isBoardingItemManager = itemData.IsBoardingItemManager();
 
-            clonate.gameObject.SetActive(!isBoardingItemManager);
+            //clonate.gameObject.SetActive(!isBoardingItemManager);
             colorize.gameObject.SetActive(!isBoardingItemManager);
         }
         public void InitGroupTools(InputManager inputManager)
@@ -47,7 +47,7 @@ namespace BoardItems
             this.inputManager = inputManager;
             gameObject.SetActive(true);
             arrow.transform.position = Vector3.zero;
-            clonate.gameObject.SetActive(false);
+           // clonate.gameObject.SetActive(false);
             colorize.gameObject.SetActive(false);
         }
         public void SetBGColors()
@@ -90,6 +90,24 @@ namespace BoardItems
             gameObject.SetActive(false);
         }
         public void Clonate()
+        {
+            print("Clonate");
+            if (UIManager.Instance.part == Characters.CharacterPartsHelper.parts.BODY) ClonateSO();
+            else ClonateItemInAvatar();
+        }
+        public void ClonateSO()
+        {
+            ItemInScene itemToClonate = UIManager.Instance.boardUI.items.GetItemSelected();
+            itemToClonate.SetTools(false);
+            GameObject go = Instantiate(itemToClonate.gameObject, itemToClonate.transform.parent);
+            ItemInScene clon = go.GetComponent<ItemInScene>();
+            clon.data.ClonateFrom(itemToClonate.data);
+            clon.data.position.x = itemToClonate.data.position.x + 0.25f;
+            clon.data.SetTransformByData();
+            inputManager.OnCloseTools(InputManager.states.IDLE);
+            UIManager.Instance.undoManager.OnNewStep();
+        }
+        public void ClonateItemInAvatar()
         {
             ItemInScene itemToClonate = UIManager.Instance.boardUI.items.GetItemSelected();
             Vector3 itemPos = itemToClonate.data.position;
