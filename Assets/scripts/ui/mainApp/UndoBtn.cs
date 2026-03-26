@@ -26,7 +26,8 @@ public class UndoBtn : MonoBehaviour
     }
     void CheckInteraction()
     {
-        btn.interactable = UIManager.Instance.undoManager.undoSteps.Count > 0;
+        if(UIManager.Instance!=null)
+            btn.interactable = UIManager.Instance.undoManager.undoSteps.Count > 0;
     }
     public void OnClicked()
     {

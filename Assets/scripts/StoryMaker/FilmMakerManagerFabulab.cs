@@ -161,7 +161,8 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public void OnTransitionChange() {
-            ScenesManagerFabulab.Instance.GetActiveScene().transition = toggleTransition.isOn;
+            if(ScenesManagerFabulab.Instance!=null && ScenesManagerFabulab.Instance.GetActiveScene()!=null)
+                ScenesManagerFabulab.Instance.GetActiveScene().transition = toggleTransition.isOn;
         }
     }
 }
