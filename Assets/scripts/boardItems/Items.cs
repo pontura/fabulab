@@ -670,7 +670,7 @@ namespace BoardItems
 
                     if (container == null)
                         container = boardItemManager.GetBodyPart((CharacterPartsHelper.parts)soID.part).transform;
-
+                    Destroy(go.gameObject);
                     AddSceneObjectTo(o, boardItemManager_to_add, container, soID);
                 } else print("open work itemData.soID not found: " + soID);
             }
