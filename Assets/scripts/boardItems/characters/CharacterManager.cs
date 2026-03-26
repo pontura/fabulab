@@ -92,13 +92,13 @@ namespace BoardItems.Characters
             }
         }
 
-        private void OnCharacterExpression(string _characterID, CharacterExpressions.expressions exp)
+        private void OnCharacterExpression(string _characterID, string exp)
         {
             if (characterID != _characterID) return;
             expressions.Play(exp);
         }
 
-        void OnCharacterAnim(string _characterID, CharacterAnims.anims anim)
+        void OnCharacterAnim(string _characterID, string anim)
         {
             if (_characterID != this.characterID) return;
             SetAnim(anim);
@@ -114,7 +114,7 @@ namespace BoardItems.Characters
             anims = GetComponent<CharacterAnims>();
             expressions = GetComponent<CharacterExpressions>();
         }
-        public void SetAnim(CharacterAnims.anims anim)
+        public void SetAnim(string anim)
         {
             anims.Play(anim);
         }

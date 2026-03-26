@@ -39,9 +39,8 @@ namespace UI
             dragAndDropUI.Init();
             isPreset = true;
             gameObject.SetActive(true);
-            CharacterAnims.anims anim = CharacterAnims.anims.edit;
             Events.EditMode(true);
-            Events.OnCharacterAnim(characterEditorID, anim);
+            Events.OnCharacterAnim(characterEditorID, Data.Instance.characterAnimsManager.defaultEdit.name);
             tabs.Init(OnTabClicked, 0);
             SetToggle();
         }

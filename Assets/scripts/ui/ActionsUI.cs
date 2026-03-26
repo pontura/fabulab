@@ -24,16 +24,13 @@ namespace UI
             Utils.RemoveAllChildsIn(container);
             initialized = true;
             int id = 0; 
-            foreach (string name in Enum.GetNames(typeof(CharacterAnims.anims)))
+            foreach (CharacterAnimsManager.AnimData d in Data.Instance.characterAnimsManager.all)
             {
-                if (id > 0)// esquiva EDIT:
-                {
-                    int buttonID = id;
-                    Button b = Instantiate(button, container);
-                    b.GetComponentInChildren<TMPro.TMP_Text>().text = name;
-                    b.onClick.AddListener(() => Clicked(buttonID));
-                    buttons.Add(b);
-                }
+                int buttonID = id;
+                Button b = Instantiate(button, container);
+                b.GetComponentInChildren<TMPro.TMP_Text>().text = d.name;
+                b.onClick.AddListener(() => Clicked(buttonID));
+                buttons.Add(b);
                 id++;
             }
         }
@@ -49,19 +46,37 @@ namespace UI
         void Clicked(int id)
         {
             if (buttons.Count == 0) return;
-            print("Clicked " + (id - 1 ));
+            print("Clicked " + (id ));
 
-            buttons[lastActionSelected - 1].animator.SetBool("active", false);
+            buttons[lastActionSelected].animator.SetBool("active", false);
             
-            buttons[id - 1].animator.SetBool("active", true);
+            buttons[id].animator.SetBool("active", true);
 
             lastActionSelected = id;
-            CharacterAnims.anims anim = (CharacterAnims.anims)id;
+            string anim = Data.Instance.characterAnimsManager.all[id].clip.name;
             Events.EditMode(false);
             Events.OnCharacterAnim(characterId, anim);
         }
         public void SetCharacterId(string id) {
             characterId = id;
+        }
+
+
+        public GridLayoutGroup grid;
+        public int columns = 2;
+        public float spacing = 2f;
+
+        void Update()
+        {
+            if (!grid) return;
+
+            RectTransform rt = grid.GetComponent<RectTransform>();
+            float totalWidth = rt.rect.width;
+
+            float totalSpacing = spacing * (columns - 1);
+            float cellWidth = (totalWidth - totalSpacing) / columns;
+
+            grid.cellSize = new Vector2(cellWidth, grid.cellSize.y);
         }
     }
 }

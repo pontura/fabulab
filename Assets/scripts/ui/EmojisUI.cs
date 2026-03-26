@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using static CharacterAnimsManager;
 
 namespace UI
 {
@@ -23,11 +24,11 @@ namespace UI
             initialized = true;
             print("initialized");
             int id = 0;
-            foreach (string name in Enum.GetNames(typeof(CharacterExpressions.expressions)))
+            foreach (EmojiData d in Data.Instance.characterAnimsManager.emojis)
             {
                 int buttonID = id;
                 Button b = Instantiate(button, container);
-                b.GetComponentInChildren<TMPro.TMP_Text>().text = name; 
+                b.GetComponentInChildren<TMPro.TMP_Text>().text = d.name; 
                 b.onClick.AddListener(() => Clicked(buttonID));
                 id++;
             }
@@ -35,7 +36,7 @@ namespace UI
         void Clicked(int id)
         {
             print(id);
-            CharacterExpressions.expressions e = (CharacterExpressions.expressions)id;
+            string e = Data.Instance.characterAnimsManager.emojis[id].clip.name;
             Events.OnCharacterExpression(characterId, e);
         }
 

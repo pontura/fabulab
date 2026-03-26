@@ -1,10 +1,5 @@
 ﻿using BoardItems.Characters;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
-using UnityEngine.UIElements;
-using static CharacterExpressions;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -70,19 +65,19 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public override void Run() {
-            characterManager.SetAnim(CharacterAnims.anims.groovyWalk_right);
+            characterManager.SetAnim(Data.Instance.characterAnimsManager.defaultRun.name);
         }
 
         public override void Walk() {
-            characterManager.SetAnim(CharacterAnims.anims.walk_right);
+            characterManager.SetAnim(Data.Instance.characterAnimsManager.defaultWalk.name);
         }
 
-        void OnCharacterExpression(string _characterID, CharacterExpressions.expressions exp) {
+        void OnCharacterExpression(string _characterID, string exp) {
             if (data.id != _characterID) return;
             (data as SOAvatarFabulabData).emoji = exp;
         }
 
-        void OnCharacterAnim(string _characterID, CharacterAnims.anims anim) {
+        void OnCharacterAnim(string _characterID, string anim) {
             if(data.id != _characterID) return;
             (data as SOAvatarFabulabData).anim = anim;
         }

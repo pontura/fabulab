@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 5560444328876281907}
   - component: {fileID: 7900181744596394278}
   - component: {fileID: 4781433556235439642}
+  - component: {fileID: 1818131810870519092}
   m_Layer: 0
   m_Name: DATA
   m_TagString: Untagged
@@ -67,6 +68,7 @@ MonoBehaviour:
   settings: {fileID: 2886292639552119932}
   scenesData: {fileID: 7900181744596394278}
   cacheData: {fileID: 4781433556235439642}
+  characterAnimsManager: {fileID: 0}
 --- !u!114 &4740097183744302633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,7 +372,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BoardItems.SObjectsData
   thumbSize: {x: 0, y: 0}
   data: []
+  othersData: []
   metaData: []
+  userMetaData: []
   currentID: 
   currentType: 0
 --- !u!114 &7900181744596394278
@@ -412,3 +416,91 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CacheData
   users: []
   filmData: []
+--- !u!114 &1818131810870519092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000013221123710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aab407ee6b8f1b4baa2fd72039c4b81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterAnimsManager
+  defaultIdle: {fileID: 7400000, guid: 4355c8c59361d48409ab8280a3c77f84, type: 2}
+  defaultEdit: {fileID: 7400000, guid: ab7bffaaa5ff64044ab6e441e781be08, type: 2}
+  defaultWalk: {fileID: 7400000, guid: 736e880c0635bee4189f08cab95e3b84, type: 2}
+  defaultRun: {fileID: 7400000, guid: 6e3d258fa02c9ad4ca934c6b5469a885, type: 2}
+  all:
+  - name: idle
+    clip: {fileID: 7400000, guid: 4355c8c59361d48409ab8280a3c77f84, type: 2}
+  - name: idle2
+    clip: {fileID: 7400000, guid: 0ca214481c7c5cc468c5e65dae873292, type: 2}
+  - name: idle3
+    clip: {fileID: 7400000, guid: 925faf3e66ad704489c867b91475a0bb, type: 2}
+  - name: dance1
+    clip: {fileID: 7400000, guid: c7866c38674b44a4d81b0ac81b11b730, type: 2}
+  - name: dance 2
+    clip: {fileID: 7400000, guid: b3e6045011ffa9543adb3f0c152b6497, type: 2}
+  - name: fly
+    clip: {fileID: 7400000, guid: 559848545ef70c64686d59fbf1bc68d1, type: 2}
+  - name: groovy walk
+    clip: {fileID: 7400000, guid: dbfbd529c97ef514eb3e8c64c3e7c04b, type: 2}
+  - name: hold
+    clip: {fileID: 7400000, guid: fe2f8d2f371378644b8c7fb254b1a6f3, type: 2}
+  - name: yes
+    clip: {fileID: 7400000, guid: e943931ce26c50840b99cc8097c4d543, type: 2}
+  - name: no
+    clip: {fileID: 7400000, guid: d1e2f031d414b2a41974edce03c71fe8, type: 2}
+  - name: robot
+    clip: {fileID: 7400000, guid: faa49c50b92da9848b5e2241e70d49ca, type: 2}
+  - name: wak robot
+    clip: {fileID: 7400000, guid: 24afb110bb5fd70418ad1b9df82f0f07, type: 2}
+  - name: run
+    clip: {fileID: 7400000, guid: 6e3d258fa02c9ad4ca934c6b5469a885, type: 2}
+  - name: shake
+    clip: {fileID: 7400000, guid: 145282b2ede3bdc4ebb1b7d23976f922, type: 2}
+  - name: so what
+    clip: {fileID: 7400000, guid: 1bc1eb69d5a38ac48b8575751f67a734, type: 2}
+  - name: spin
+    clip: {fileID: 7400000, guid: 932ed5e02745d7d4fad9a04c032ce405, type: 2}
+  - name: twirl
+    clip: {fileID: 7400000, guid: d7c7198b16463134f95cc8ca0d1cc1c2, type: 2}
+  - name: walk
+    clip: {fileID: 7400000, guid: 736e880c0635bee4189f08cab95e3b84, type: 2}
+  - name: wave
+    clip: {fileID: 7400000, guid: 99bff6743ab6cf445a9affc3f258b422, type: 2}
+  - name: hello
+    clip: {fileID: 7400000, guid: d410e7ae4d4787b41ac03dd832f27cab, type: 2}
+  emojis:
+  - name: idle
+    clip: {fileID: 7400000, guid: c658c39d2e7d46446890afa6db82dbf1, type: 2}
+  - name: anger
+    clip: {fileID: 7400000, guid: 7ad2ae4fc0ca46940bf880c338fe10a1, type: 2}
+  - name: crazy
+    clip: {fileID: 7400000, guid: ab29fae4e915fb946a6678c242c458e1, type: 2}
+  - name: desperate
+    clip: {fileID: 7400000, guid: e49436f9868a844408afafa1acaca2d9, type: 2}
+  - name: displasure
+    clip: {fileID: 7400000, guid: 48e8e416c69e98f4881e29e3abda3608, type: 2}
+  - name: evil
+    clip: {fileID: 7400000, guid: 968ac12c609de7041b8f392a79674c18, type: 2}
+  - name: holy
+    clip: {fileID: 7400000, guid: a8afd5b8b8184104d96d2a7bd6e8188b, type: 2}
+  - name: insulted
+    clip: {fileID: 7400000, guid: 6e9d016d259121b4b9d68c5df82cf309, type: 2}
+  - name: K.O.
+    clip: {fileID: 7400000, guid: ee419fe77c94e4e4e8b51426167c6562, type: 2}
+  - name: Lol
+    clip: {fileID: 7400000, guid: 7f9af15f5bd9b694bad177f8571057ec, type: 2}
+  - name: malfunction
+    clip: {fileID: 7400000, guid: 63508039ef89a7045a2bd41c6ef0d9e5, type: 2}
+  - name: shy
+    clip: {fileID: 7400000, guid: 7771899a531d4074c8b88690384b1aa8, type: 2}
+  - name: smile 2
+    clip: {fileID: 7400000, guid: 6b6843dc51a6164429b39b0797a42a3a, type: 2}
+  - name: thunder
+    clip: {fileID: 7400000, guid: e2923e6de8426374a83e25524b7354c4, type: 2}
+  - name: wow
+    clip: {fileID: 7400000, guid: b50b4dcbadc878f4f89d9736c12e76b8, type: 2}

@@ -53,8 +53,8 @@ namespace Yaguar.StoryMaker.Editor
     [Serializable]
     public class SceneElementAvatar : SceneElement
     {
-        public CharacterAnims.anims anim;
-        public CharacterExpressions.expressions emoji;
+        public string anim;
+        public string emoji;
     }
 
     [Serializable]
@@ -126,7 +126,7 @@ namespace Yaguar.StoryMaker.Editor
                 sceneElement.type = SceneElementType.AVATAR;
                 (sceneElement as SceneElementAvatar).anim = sOAvatar.anim;
                 (sceneElement as SceneElementAvatar).emoji = sOAvatar.emoji;
-                Debug.Log("$ " + sOAvatar.anim.ToString() + " " + sOAvatar.emoji.ToString());
+                Debug.Log("$ anim: " + sOAvatar.anim + " emoji:" + sOAvatar.emoji);
             } else if (soData is SOWordBalloonData soWBD) {
                 sceneElement = new SceneElementTextInput();
                 sceneElement.type = SceneElementType.WORD_BALLOON;

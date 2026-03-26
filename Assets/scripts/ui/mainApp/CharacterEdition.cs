@@ -90,7 +90,7 @@ namespace UI.MainApp
         }
         public void Done()
         {
-            CharacterAnims.anims anim = CharacterAnims.anims.edit;
+            string anim = Data.Instance.characterAnimsManager.defaultEdit.name;
             Events.OnCharacterAnim("", anim);
             savePanel.SetActive(true);
             //UIManager.Instance.boardUI.SaveWork();

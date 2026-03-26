@@ -1,6 +1,7 @@
 ﻿using BoardItems.Characters;
 using BoardItems.SceneObjects;
 using UnityEngine;
+using static AnimationsManager;
 
 
 namespace Yaguar.StoryMaker.Editor
@@ -46,8 +47,9 @@ namespace Yaguar.StoryMaker.Editor
                 selected = avatar;
                 selectedAvatar = avatar;
 
-                if (avatarData.anim == CharacterAnims.anims.edit)
-                    avatarData.anim = CharacterAnims.anims.idle;
+                if (avatarData.anim == Data.Instance.characterAnimsManager.defaultEdit.name)
+                    avatarData.anim = Data.Instance.characterAnimsManager.defaultIdle.name;
+
                 Events.OnCharacterAnim(avatarData.id, avatarData.anim);
                 Events.OnCharacterExpression(avatarData.id, avatarData.emoji);
             } else if (data is SODataFabulab soData) {
