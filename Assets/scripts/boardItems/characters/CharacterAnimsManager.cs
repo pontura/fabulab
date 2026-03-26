@@ -15,4 +15,12 @@ public class CharacterAnimsManager : MonoBehaviour
         public string name;
         public AnimationClip clip;
     }
+
+    public EmojiData[] emojis;
+    [Serializable]
+    public class EmojiData
+    {
+        public string name;
+        public AnimationClip clip;
+    }
 }

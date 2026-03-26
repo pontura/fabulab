@@ -40,7 +40,7 @@ public static class Events
     public static System.Action<string, string> OnCharacterAnim = delegate { };
     public static System.Action<string> SetCharacterIdle = delegate { };
     public static System.Action<string, CharacterPartsHelper.parts> OnCharacterPartAnim = delegate { };
-    public static System.Action<string, CharacterExpressions.expressions> OnCharacterExpression = delegate { };
+    public static System.Action<string, string> OnCharacterExpression = delegate { };
     public static System.Action<bool> EditMode = delegate { };
     public static System.Action<CharacterPartsHelper.parts> OnBodyPartActive = delegate { };
     public static System.Action<ZoomStates, bool> Zoom = delegate { };

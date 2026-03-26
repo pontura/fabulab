@@ -92,7 +92,7 @@ namespace BoardItems.Characters
             }
         }
 
-        private void OnCharacterExpression(string _characterID, CharacterExpressions.expressions exp)
+        private void OnCharacterExpression(string _characterID, string exp)
         {
             if (characterID != _characterID) return;
             expressions.Play(exp);

@@ -4,5 +4,5 @@
 public class SOAvatarFabulabData : SOAvatarData
 {
     public string anim;
-    public CharacterExpressions.expressions emoji;
+    public string emoji;
 }
