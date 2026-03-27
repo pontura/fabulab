@@ -1,4 +1,6 @@
 ﻿using BoardItems.Characters;
+using Google.MiniJSON;
+using UI.MainApp;
 using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
@@ -8,6 +10,8 @@ namespace Yaguar.StoryMaker.Editor
 
         [SerializeField] GameObject character_to_instantiate;
         [field:SerializeField] public CharacterManager characterManager { private set; get; }
+
+        BordersCreator borders;
 
         private void Start()
         {
@@ -64,6 +68,23 @@ namespace Yaguar.StoryMaker.Editor
             collider.size = localBounds.size;
         }
 
+        public override void  BeginDrag() {
+            base.BeginDrag();
+            if (borders == null) {
+                borders = gameObject.AddComponent<BordersCreator>();
+                borders.Init(GetComponent<BoxCollider2D>());
+            }
+
+            borders.Show(true);
+        }
+
+        public override void StopDrag() {            
+            if (initDragPos.Equals(transform.localPosition))
+                StoryMakerEvents.ShowSoButtons(Scenario.Instance.Cam.WorldToScreenPoint(transform.position), data);
+            isBeingHeld = false;
+            StoryMakerEvents.ReorderSceneObjectsInZ();
+            borders.Show(false);
+        }
         public override void Run() {
             characterManager.SetAnim(Data.Instance.characterAnimsManager.defaultRun.name);
         }

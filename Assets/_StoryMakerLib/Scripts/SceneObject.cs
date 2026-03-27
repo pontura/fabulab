@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -8,11 +9,13 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] protected SOData data;
 
         private float startPosX, startPosY;
-        private bool isBeingHeld;
+        protected bool isBeingHeld;
         private Vector3 originalScale;
 
         private float MAX_SCALE = 2f;
         private float MIN_SCALE = 0.5f;
+
+        protected Vector2 initDragPos;
 
         public void SetData(SOData data)
         {
@@ -60,7 +63,7 @@ namespace Yaguar.StoryMaker.Editor
         }
 
 
-        public void BeginDrag()
+        public virtual void BeginDrag()
         {
             StoryMakerEvents.HideSoButtons();
             Vector3 mousePos = Input.mousePosition + Scenario.Instance.Offset;
@@ -69,15 +72,18 @@ namespace Yaguar.StoryMaker.Editor
             startPosX = pos.x - transform.localPosition.x;
             startPosY = pos.y - transform.localPosition.y;
 
+            initDragPos = transform.localPosition;
+
             isBeingHeld = true;
             //Debug.Log("BeingHeld=" + isBeingHeld);
         }
 
-        public void StopDrag()
-        {
+        public virtual void StopDrag() {
+
             //UpdatePos();
-            //Events.ShowSoButtons(Scenario.Instance.cam.WorldToScreenPoint(gameObject.transform.localPosition), data);     
-            StoryMakerEvents.ShowSoButtons(Input.mousePosition, data);
+            //Events.ShowSoButtons(Scenario.Instance.cam.WorldToScreenPoint(gameObject.transform.localPosition), data);
+            if (initDragPos.Equals(transform.localPosition))
+                StoryMakerEvents.ShowSoButtons(Input.mousePosition, data);
             isBeingHeld = false;
             StoryMakerEvents.ReorderSceneObjectsInZ();
         }
