@@ -64,8 +64,9 @@ namespace BoardItems.Characters
             }
         }
 
-        private void ColorizeArms(PalettesManager.colorNames colorName)
+        private void ColorizeArms(string _characterID, PalettesManager.colorNames colorName)
         {
+            if (characterID != _characterID) return;
             this.armsColor = colorName;
             foreach (SpriteRenderer sr in arms)
             {
@@ -73,8 +74,9 @@ namespace BoardItems.Characters
                 sr.color = allColors[0];
             }
         }
-        private void ColorizeLegs(PalettesManager.colorNames colorName)
+        private void ColorizeLegs(string _characterID, PalettesManager.colorNames colorName)
         {
+            if (characterID != _characterID) return;
             this.legsColor = colorName;
             foreach (SpriteRenderer sr in legs)
             {
@@ -82,8 +84,9 @@ namespace BoardItems.Characters
                 sr.color = allColors[0];
             }
         }
-        private void ColorizeEyebrows(PalettesManager.colorNames colorName)
+        private void ColorizeEyebrows(string _characterID, PalettesManager.colorNames colorName)
         {
+            if (characterID != _characterID) return;
             this.eyebrowsColor = colorName;
             foreach (SpriteRenderer sr in eyebrows)
             {

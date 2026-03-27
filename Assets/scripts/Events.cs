@@ -24,9 +24,9 @@ public static class Events
 
     public static System.Action<PalettesManager.colorNames> Colorize = delegate { };
     public static System.Action<PalettesManager.colorNames> ColorizeBG = delegate { };
-    public static System.Action<PalettesManager.colorNames> ColorizeArms = delegate { };
-    public static System.Action<PalettesManager.colorNames> ColorizeLegs = delegate { };
-    public static System.Action<PalettesManager.colorNames> ColorizeEyebrows = delegate { };
+    public static System.Action<string,PalettesManager.colorNames> ColorizeArms = delegate { };
+    public static System.Action<string, PalettesManager.colorNames> ColorizeLegs = delegate { };
+    public static System.Action<string, PalettesManager.colorNames> ColorizeEyebrows = delegate { };
     public static System.Action<string> ChangeName = delegate { };
 
     public static System.Action<AnimationsManager.AnimData> AnimateItem = delegate { };

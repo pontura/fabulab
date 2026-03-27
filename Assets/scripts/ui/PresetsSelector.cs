@@ -75,11 +75,11 @@ namespace UI
             if (partID == 9) //arms and legs colors:
             {
                 if(pb.partToColorizeID == 0)
-                    Events.ColorizeArms(pb.color);
+                    Events.ColorizeArms("", pb.color);
                 else if (pb.partToColorizeID == 1)
-                    Events.ColorizeLegs(pb.color);
+                    Events.ColorizeLegs("", pb.color);
                   else
-                    Events.ColorizeEyebrows(pb.color);
+                    Events.ColorizeEyebrows("", pb.color);
             }
             else
             {
