@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -335,23 +336,35 @@ namespace BoardItems
             }
         }
 
-        int elementsCount;
+        List<(string id, SceneElementType type)> elementsIds;
         void GetAllFilmElements() {
-            foreach(SceneDataFabulab sdf in ScenesManagerFabulab.Instance.Scenes) {
-                elementsCount += sdf.GetScenesElements().Count + 1; // + 1 for background Id
-                Data.Instance.sObjectsData.LoadOthersObject(sdf.bgID, OnGetAllElements);
-                foreach(SceneElement se in sdf.GetScenesElements()) {
-                    if(se.type==SceneElementType.AVATAR)
-                        Data.Instance.charactersData.LoadOthersCharacter(se.data.id, OnGetAllElements);
-                    else if(se.type==SceneElementType.PROP)
-                        Data.Instance.sObjectsData.LoadOthersObject(se.data.id, OnGetAllElements);
-                }
+            elementsIds = new List<(string, SceneElementType)>();
+            foreach (SceneDataFabulab sdf in ScenesManagerFabulab.Instance.Scenes) {
+                elementsIds.AddRange(sdf.GetScenesElements().Where(p => p.type == SceneElementType.AVATAR || p.type == SceneElementType.PROP)
+                    .Select(p => (p.data.id, p.type)).Distinct().ToList().Except(elementsIds));
+                if (!elementsIds.Contains((sdf.bgID, SceneElementType.PROP)))
+                    elementsIds.Add((sdf.bgID, SceneElementType.PROP));
+            }
+
+            Debug.Log("& Count: "+elementsIds.Count);
+            for(int i = elementsIds.Count-1; i > -1 ; i--) {            
+                Debug.Log("& " + elementsIds[i].id + " "+ elementsIds[i].type);
+                if (elementsIds[i].type == SceneElementType.AVATAR)
+                    Data.Instance.charactersData.LoadOthersCharacter(elementsIds[i].id, OnGetAllElements);
+                else if (elementsIds[i].type == SceneElementType.PROP)
+                    Data.Instance.sObjectsData.LoadOthersObject(elementsIds[i].id, OnGetAllElements);
             }
         }
 
         void OnGetAllElements(BoardData.SOPartData sOPart) {
-            elementsCount--;
-            if (elementsCount <= 0) {
+            if(sOPart==null)
+                return;
+            Debug.Log("& ElementsCount: " + elementsIds.Count + " Part: "+ sOPart +" ID: "+sOPart.id);
+            SceneElementType type = SceneElementType.AVATAR;
+            if (sOPart is BoardData.SObjectData)
+                type = SceneElementType.PROP;
+            elementsIds.Remove((sOPart.id,type));
+            if (elementsIds.Count <= 0) {
                 InitLoadedFilm();
                 Events.OnLoading(false);
                 loadedDone = true;

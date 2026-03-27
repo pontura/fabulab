@@ -321,10 +321,17 @@ namespace BoardItems
 
                 FirebaseStoryMakerDBManager.Instance.LoadCharacterFromServer(id, (success, key, data) => {
                     if (success) {
-                        CharacterData chD = new CharacterData();
+                        CharacterData chD = othersCharacters.Find(x => x.id == key);
+                        if(chD != null) {
+                            Debug.Log("& CharacterData != null");
+                            OnDone(chD);
+                            return;
+                        }
+                        Debug.Log("& CharacterData == null");
+                        chD = new CharacterData();
                         chD.id = key;
                         chD.LoadServerData(data);
-                        chD.thumb = userCharactersMetaData.Find(x => x.id == chD.id)?.thumb;
+                        chD.thumb = charactersMetaData.Find(x => x.id == chD.id)?.thumb;
                         othersCharacters.Add(chD);
                         OnDone(chD);
                     } else {
@@ -333,7 +340,8 @@ namespace BoardItems
                     }
 
                 }, chmd.userID);
-                //Debug.Log("#LoadCharactersFromServer " + e.Key + ": " + e.Value);
+                
+                Debug.Log("& LoadOthersCharacter " + id);
                 
             }
 

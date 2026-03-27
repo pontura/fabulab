@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using BoardItems.BoardData;
+using System.Collections.Generic;
 using UI;
+using UI.MainApp;
+using UnityEditor.U2D.Animation;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
-using BoardItems.BoardData;
-using UI.MainApp;
 
 namespace BoardItems
 {
@@ -212,7 +213,13 @@ namespace BoardItems
 
                 FirebaseStoryMakerDBManager.Instance.LoadAssetFromServer(id, (success, key, data) => {
                     if (success) {
-                        SObjectData chD = new SObjectData();
+                        SObjectData chD = othersData.Find(x => x.id == key);
+                        if (chD != null) {
+                            Debug.Log("& othersData != null");
+                            OnDone(chD);
+                            return;
+                        }
+                        chD = new SObjectData();
                         chD.id = key;
                         chD.LoadServerData(data);
                         chD.thumb = metaData.Find(x => x.id == chD.id)?.thumb;
@@ -224,7 +231,8 @@ namespace BoardItems
                     }
 
                 }, chmd.userID);
-                //Debug.Log("#LoadCharactersFromServer " + e.Key + ": " + e.Value);
+
+                Debug.Log("& LoadOthersObject " + id);
 
             }
 
