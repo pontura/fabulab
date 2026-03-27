@@ -31,6 +31,7 @@ namespace Yaguar.StoryMaker.Editor
             deleteButton.gameObject.SetActive(enable);
             newButton.gameObject.SetActive(enable);
             hamburguerButton.gameObject.SetActive(enable);
+            toggleTransition.gameObject.SetActive(enable);
             buttonsGroup.spacing = enable ? 5 : 10;
         }
 
