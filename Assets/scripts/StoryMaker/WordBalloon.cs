@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -12,7 +13,9 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public balloonTypes balloonType;
-        [SerializeField] SpriteRenderer spriteRenderer;
+
+        [SerializeField] Image image;
+        [SerializeField] Canvas canvas;
 
         [field:SerializeField] public Sprite[] balloonSprites { get; private set; }
 
@@ -33,13 +36,12 @@ namespace Yaguar.StoryMaker.Editor
 
             SetField((soData as SOWordBalloonData).inputValue);
 
-            BoxCollider2D collider = GetComponent<BoxCollider2D>();
-            collider.size = new Vector2(10, 10);
+            //BoxCollider2D collider = GetComponent<BoxCollider2D>();
+            //collider.size = new Vector2(10, 10);
 
             balloonType = (balloonTypes)Enum.Parse(typeof(balloonTypes), soData.id);
-
-            spriteRenderer.sprite = balloonSprites[(int)balloonType];
-
+            image.sprite = balloonSprites[(int)balloonType];
+            data.pos.z = -50;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Yaguar.StoryMaker.Editor
 {
     public class ObjectSignal : Objeto
     {
-        public TextMeshPro field;
+        public TMPro.TMP_Text field;
         public virtual void SetField(string text)
         {
             field.text = text;
