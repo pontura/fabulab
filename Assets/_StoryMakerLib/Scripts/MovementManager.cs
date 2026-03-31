@@ -20,10 +20,11 @@ namespace Yaguar.StoryMaker.Editor
             else
                 avatar.Walk();
 
-            if (to.x < 0)
+            if (to.x < avatar.transform.position.x) {
                 avatar.FlipX(true);
-            else
+            } else {
                 avatar.FlipX(false);
+            }
 
 
             iTween.MoveTo(avatar.gameObject, iTween.Hash(
@@ -63,7 +64,9 @@ namespace Yaguar.StoryMaker.Editor
             if (so == null)
                 return;
 
-            Vector3 scale = new Vector3(to, to, to);
+            int signX = so.transform.localScale.x < 0 ? -1 : 1;
+
+            Vector3 scale = new Vector3(to * signX, to, to);
             iTween.ScaleTo(so.gameObject, iTween.Hash(
                     "islocal", true,
                     "scale", scale,
