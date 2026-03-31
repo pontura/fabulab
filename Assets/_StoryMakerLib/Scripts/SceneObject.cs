@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -8,7 +7,7 @@ namespace Yaguar.StoryMaker.Editor
 
         [SerializeField] protected SOData data;
 
-        private float startPosX, startPosY;
+        public float startPosX, startPosY;
         protected bool isBeingHeld;
         private Vector3 originalScale;
 
@@ -126,7 +125,7 @@ namespace Yaguar.StoryMaker.Editor
         {
             Vector3 mousePos = Input.mousePosition + Scenario.Instance.Offset;
             Vector3 pos = Scenario.Instance.Cam.ScreenToWorldPoint(mousePos);
-            data.pos = new V3(pos.x - startPosX, pos.y - startPosY, 0);
+            data.pos = new V3(pos.x - startPosX, pos.y - startPosY, data.pos.z);
         }
 
         public void Resize(float factor)
