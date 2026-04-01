@@ -134,6 +134,8 @@ namespace Yaguar.StoryMaker.Editor
                     Debug.Log("# Delay: " + delay);
                     StartCoroutine(MoveAvatarsAfter(delay));
                 }
+            } else if(State == states.STOPPED) {
+                Invoke(nameof(SetPaused), Time.deltaTime);
             }
 
             if (ScenesManagerFabulab.Instance.currentSceneId > total)
@@ -149,6 +151,11 @@ namespace Yaguar.StoryMaker.Editor
             ScenesManagerFabulab.Instance.AddSceneObjectsToScene(next);
             StoryMakerEvents.ReorderSceneObjectsInZ();
         }
+
+        void SetPaused() {
+            StoryMakerEvents.OnMoviePaused();
+        }
+
         protected override IEnumerator MoveAvatarsAfter(float delay)
         {
             yield return new WaitForSeconds(delay);

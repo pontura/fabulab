@@ -26,6 +26,7 @@ namespace Yaguar.StoryMaker.Editor
         public static System.Action<int> JumpTo = delegate { };
         public static System.Action<bool> OnTimelinePlay = delegate { };
         public static System.Action OnMovieOver = delegate { };
+        public static System.Action OnMoviePaused = delegate { };
 
         public static System.Action SceneCompleteLoading = delegate { };
 

@@ -18,6 +18,7 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.DeleteSceneObject += DeleteSceneObject;
             StoryMakerEvents.RemoveSceneObject += RemoveSceneObject;
             StoryMakerEvents.OnMovieOver += OnMovieOver;
+            StoryMakerEvents.OnMoviePaused += OnMovieOver;
             SOAvatarData data = new SOAvatarData();
         }
         void OnDestroy()
@@ -26,6 +27,7 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.DeleteSceneObject -= DeleteSceneObject;
             StoryMakerEvents.RemoveSceneObject -= RemoveSceneObject;
             StoryMakerEvents.OnMovieOver -= OnMovieOver;
+            StoryMakerEvents.OnMoviePaused -= OnMovieOver;
         }
         
         public override void AddSceneObject(SOData data)
@@ -47,8 +49,8 @@ namespace Yaguar.StoryMaker.Editor
                 selected = avatar;
                 selectedAvatar = avatar;
 
-                if (avatarData.anim == Data.Instance.characterAnimsManager.defaultEdit.name)
-                    avatarData.anim = Data.Instance.characterAnimsManager.defaultIdle.name;
+                Debug.Log("& Anim: " + avatarData.anim);
+                Debug.Log("& Emoji: " + avatarData.emoji);                
 
                 Events.OnCharacterAnim(avatarData.id, avatarData.anim);
                 Events.OnCharacterExpression(avatarData.id, avatarData.emoji);
@@ -155,9 +157,10 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         void OnMovieOver() {
+            Debug.Log("& OnMovieOver");
             foreach(SceneObject so in sceneObjects) {
                 if(so.GetData() is SOAvatarFabulabData)
-                    so.GetComponent<AvatarFabulab>().characterManager.StopAnim();
+                    so.GetComponent<AvatarFabulab>().characterManager.StopAnims();
             }
         }
     }

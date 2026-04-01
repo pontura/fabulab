@@ -122,8 +122,9 @@ namespace BoardItems.Characters
             anims.Play(anim);
         }
 
-        public void StopAnim() {
+        public void StopAnims() {
             anims.Stop();
+            expressions.Stop();
         }
 
         public override void AttachItem(ItemInScene item)

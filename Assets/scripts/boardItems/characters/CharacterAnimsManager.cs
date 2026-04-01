@@ -7,6 +7,7 @@ public class CharacterAnimsManager : MonoBehaviour
     public AnimationClip defaultEdit;
     public AnimationClip defaultWalk;
     public AnimationClip defaultRun;
+    public AnimationClip defaultEmoji;
 
     public AnimData[] all;
     [Serializable]

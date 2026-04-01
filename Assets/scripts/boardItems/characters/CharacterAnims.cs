@@ -10,10 +10,16 @@ public class CharacterAnims : MonoBehaviour
     public void Play(string animName)
     {
         anim.speed = 1;
-        if(anim.HasState(0, Animator.StringToHash(animName)))
+
+        Debug.Log("Play Anim: "+animName);
+
+        if (animName == Data.Instance.characterAnimsManager.defaultEdit.name || animName == "")
+            animName = Data.Instance.characterAnimsManager.defaultIdle.name;
+
+        if (anim.HasState(0, Animator.StringToHash(animName)))
             anim.Play(animName);
         else if(int.TryParse(animName, out int index)) {
-            string aName = Data.Instance.characterAnimsManager.all[index - 1].name;
+            string aName = Data.Instance.characterAnimsManager.all[index - 1].clip.name;
             Debug.Log("& anim name: " + aName);
             anim.Play(aName);
         }
