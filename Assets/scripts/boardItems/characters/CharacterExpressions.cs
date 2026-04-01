@@ -13,7 +13,7 @@ public class CharacterExpressions : MonoBehaviour
         if (anim.HasState(0, Animator.StringToHash(animName)))
             anim.Play(animName);
         else if (int.TryParse(animName, out int index)) {
-            string aName = Data.Instance.characterAnimsManager.all[index - 1].clip.name;
+            string aName = Data.Instance.characterAnimsManager.all[index].clip.name;
             Debug.Log("& anim name: " + aName);
             anim.Play(aName);
         }
