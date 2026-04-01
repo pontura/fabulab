@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
 {
-    public class SOInputData : SOData
+    public class SOInputDataFixed : SODataFixed
     {
         public string inputValue;
     }

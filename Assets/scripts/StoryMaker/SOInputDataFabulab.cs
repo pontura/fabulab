@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using Yaguar.StoryMaker.Editor;
 
 [Serializable]
-public class SOInputDataFabulab : SOData
+public class SOInputDataFabulab : SOInputData
 {
-    public string inputValue;
 
     public override bool Equals(object obj) {        
         if (obj is SOWordBoxData other) {

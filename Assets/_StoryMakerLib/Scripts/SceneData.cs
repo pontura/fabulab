@@ -56,10 +56,11 @@ namespace Yaguar.StoryMaker.Editor
                 data += soData.itemName;
                 if (soData is SOInputData)
                 {
-                    (soData as SOInputData).SetIcon();
+                    //(soData as SOInputData).SetIcon();
                     data += "*" + soData.customization;
                 }
-                (soData as SOIconData).SetIcon();
+                if (soData is SOIconData)
+                    (soData as SOIconData).SetIcon();
             }
             scenesElements.Add(data);
         }

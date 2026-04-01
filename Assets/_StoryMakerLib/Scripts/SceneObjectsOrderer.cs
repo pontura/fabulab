@@ -28,12 +28,9 @@ namespace Yaguar.StoryMaker.Editor
         {
             foreach (SceneObject so in sceneObjectsManager.sceneObjects)
             {
-                Vector3 pos;
-                if (so.GetComponent<ObjectSignal>() != null)
-                    return;
-                if (so.GetData() is SODataFixed)
+                if (so.GetData() is SODataFixed || so.GetData() is SOInputData)
                     continue;
-                pos = so.transform.localPosition;
+                Vector3 pos = so.transform.localPosition;
                 pos.z = so.transform.localPosition.y * zFactor;
                 so.transform.localPosition = pos;
             }

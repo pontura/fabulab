@@ -7,7 +7,7 @@ namespace Yaguar.StoryMaker.Editor
 
         [SerializeField] protected SOData data;
 
-        public float startPosX, startPosY;
+        private float startPosX, startPosY;
         protected bool isBeingHeld;
         private Vector3 originalScale;
 
