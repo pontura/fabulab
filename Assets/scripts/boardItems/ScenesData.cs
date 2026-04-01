@@ -342,7 +342,7 @@ namespace BoardItems
             foreach (SceneDataFabulab sdf in ScenesManagerFabulab.Instance.Scenes) {
                 elementsIds.AddRange(sdf.GetScenesElements().Where(p => p.type == SceneElementType.AVATAR || p.type == SceneElementType.PROP)
                     .Select(p => (p.data.id, p.type)).Distinct().ToList().Except(elementsIds));
-                if (!elementsIds.Contains((sdf.bgID, SceneElementType.PROP)))
+                if (sdf.bgID!="" && !elementsIds.Contains((sdf.bgID, SceneElementType.PROP)))
                     elementsIds.Add((sdf.bgID, SceneElementType.PROP));
             }
 
