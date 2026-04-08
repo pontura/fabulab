@@ -148,6 +148,10 @@ namespace Yaguar.StoryMaker.Editor
             SetPosition();
             UpdateKeyframes();
             ForceMarkerPosition();
+
+            float sliderValue = (all[activeAnimatedKeyframeID - 1].duration - min_speed) / (max_speed - min_speed);
+
+            durationBtn?.SetValue(sliderValue);
         }
         void ForceMarkerPosition()
         {
@@ -181,12 +185,13 @@ namespace Yaguar.StoryMaker.Editor
                 filmMakerUI.JumpTo(activeAnimatedKeyframeID);
             }
         }
-        public void OnChangeDuration(float value)
+        public float OnChangeDuration(float value)
         {
             float duration = Mathf.Lerp(min_speed, max_speed, value);
             all[activeAnimatedKeyframeID-1].SetDuration(duration);
             UpdateKeyframes();
             ForceMarkerPosition();
+            return duration;
         }
     }
 }

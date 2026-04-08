@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,11 +6,14 @@ namespace Yaguar.StoryMaker.Editor
 {
     public class DurationBtn : MonoBehaviour
     {
+        [SerializeField] Image bar;
         Timeline timeline;
         [SerializeField] GameObject sliderPanel;
         [SerializeField] Slider slider;
+        [SerializeField] TMPro.TMP_Text sliderField;
         float duration;
         bool opened;
+        float sliderValue;
         public void Init(Timeline timeline, float duration)
         {
             opened = false;
@@ -22,21 +26,35 @@ namespace Yaguar.StoryMaker.Editor
         {
             if (opened) return;
             opened = true;
-            slider.value = duration;
             sliderPanel.SetActive(true);
+            slider.value = bar.fillAmount;
+            SetText();
         }
-        public void SetValue()
+        public void SetValue(float sliderValue)
         {
-            slider.value = duration;
+            this.sliderValue = sliderValue;
+            if (sliderValue < 0.05f)
+                bar.fillAmount = 0.05f;
+            else
+                bar.fillAmount = sliderValue;
         }
         public void OnSliderChanged()
         {
-            timeline.OnChangeDuration(slider.value);
+            if (!opened) return;
+            duration = timeline.OnChangeDuration(slider.value);
+            SetText();
         }
         public void Close()
         {
             opened = false;
             sliderPanel.SetActive(false);
+        }
+        public void SetText()
+        {
+            int seconds = (int)duration;
+            int milliseconds = (int)((duration - seconds) * 1000);
+
+            sliderField.text = $"{seconds}s {milliseconds}ms";
         }
     }
 }
