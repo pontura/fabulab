@@ -4,6 +4,8 @@ namespace Yaguar.StoryMaker.Editor
 {
     public class TimelineFabulab : Timeline
     {
+    
+
         public float offset = 10;
         protected override void Start() {
 
@@ -19,6 +21,7 @@ namespace Yaguar.StoryMaker.Editor
         {
             filmMakerUI.OnTimelinePlay(false);
             keyframe_duration = ScenesManagerFabulab.Instance.Keyframe_duration - (speed);
+         
         }
         public override void Reset()
         {
@@ -26,7 +29,6 @@ namespace Yaguar.StoryMaker.Editor
                 StoryMakerEvents.ChangeSpeed(ScenesManagerFabulab.Instance.currentFilmData.speed);
 
             keyFrameMarker.transform.localPosition = Vector3.zero;
-            totalTimer = 0;
             timer = 0;
             foreach (Transform child in container)
             {

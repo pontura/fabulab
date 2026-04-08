@@ -17,6 +17,7 @@ public class KeyFrameUI : MonoBehaviour
     public bool selected;
     int id = 0;
     Timeline timeline;
+    public float duration;
 
     public void Init(Timeline timeline)
     {
@@ -27,12 +28,18 @@ public class KeyFrameUI : MonoBehaviour
         this.id = id;
         field.text = (id).ToString();   
     }
-    public void SetSize(float size)
+    public void SetDuration(float duration)
+    {
+        print("SetDuration duration: " + duration);
+        this.duration = duration;
+    }
+    public void SetSize(float totalDuration)
     {
         if(r == null)
             r = GetComponent<RectTransform>();
-        r.sizeDelta = new Vector2(size, r.sizeDelta.y);
-        float _x = size / 2;
+        float w = timeline.total_x_marker * (duration / totalDuration);
+        r.sizeDelta = new Vector2(w, r.sizeDelta.y);
+        float _x = w / 2;
         label.transform.localPosition = new Vector2(_x,0);
     }
     public void SetColor(bool pair)

@@ -1,40 +1,50 @@
-﻿using System.Collections;
+﻿using Newtonsoft.Json.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 namespace Yaguar.StoryMaker.Editor
 {
     public class Timeline : MonoBehaviour
     {
+        [SerializeField] DurationBtn durationBtn;
+        float min_speed = 0.5f;
+        float max_speed = 4;
+
         public FilmMakerManager filmMakerUI;
         public KeyFrameUI keyframe;
         public Transform container;
         public List<KeyFrameUI> all;
         public KeyframeMarker keyFrameMarker;
-        [SerializeField] protected float total_x_marker = 282;
+        public float total_x_marker = 282;
         public float timer;
-        public float totalTimer;
-        public float keyframe_duration;
+        public float totalTimer
+        {
+            get 
+            {
+                float t = 0;
+                foreach(KeyFrameUI k in all)
+                    t+= k.duration;
+                return t;
+            }
+        }
+        public float keyframe_duration = 2;
 
         protected virtual void Start()
         {
-            
-
             StoryMakerEvents.OnLoadFilm += Reset;
             StoryMakerEvents.ChangeSpeed += ChangeSpeed;
-
             StoryMakerEvents.ChangeSpeed(ScenesManager.Instance.currentFilmData.speed);
-
-            //Invoke(nameof(Reset), Time.deltaTime * 3);
         }
-
         private void OnEnable() {
             if (all.Count == 0)
                 Reset();
             UpdateKeyframes();
+
+            float duration = (keyframe_duration - min_speed) / (max_speed - min_speed);
+            durationBtn.Init(this, duration);
         }
-
-
         protected void OnDestroy()
         {
             StoryMakerEvents.OnLoadFilm -= Reset;
@@ -43,7 +53,6 @@ namespace Yaguar.StoryMaker.Editor
         protected virtual void ChangeSpeed(int speed)
         {
             filmMakerUI.OnTimelinePlay(false);
-            keyframe_duration = ScenesManager.Instance.Keyframe_duration - (speed);
         }
         public virtual void Reset()
         {
@@ -51,7 +60,6 @@ namespace Yaguar.StoryMaker.Editor
                 StoryMakerEvents.ChangeSpeed(ScenesManager.Instance.currentFilmData.speed);
 
             keyFrameMarker.transform.localPosition = Vector3.zero;
-            totalTimer = 0;
             timer = 0;
             foreach (Transform child in container)
             {
@@ -63,12 +71,13 @@ namespace Yaguar.StoryMaker.Editor
         }
         protected virtual void RefreshKeyframes()
         {
-            for (int a = 0; a < ScenesManager.Instance.Scenes.Count; a++)
-                AddNewKeyframe();
+            //for (int a = 0; a < ScenesManager.Instance.Scenes.Count; a++)
+            //    AddNewKeyframe();
         }
         public void AddNewKeyframe()
         {
             KeyFrameUI kf = Instantiate(keyframe);
+            kf.SetDuration(keyframe_duration);
             kf.Init(this);
             all.Add(kf);
             kf.transform.SetParent(container);
@@ -80,10 +89,14 @@ namespace Yaguar.StoryMaker.Editor
         void UpdateKeyframes()
         {
             int id = 0;
+            float totalDuration = 0;
+            foreach (KeyFrameUI kf in all)
+                totalDuration += kf.duration;
+
             foreach (KeyFrameUI kf in all)
             {
                 kf.SetID(id+1);
-                kf.SetSize(total_x_marker / (all.Count));
+                kf.SetSize(totalDuration);
                 kf.SetColor(id %2 == 0);
                 if(id+1 == activeAnimatedKeyframeID)
                     kf.SetSelected(true);
@@ -131,19 +144,49 @@ namespace Yaguar.StoryMaker.Editor
         {
             print("JumpTo " + keyframeId);
             activeAnimatedKeyframeID = keyframeId;
-            totalTimer = (all.Count * keyframe_duration);
-            timer = ((keyframeId - 1) * keyframe_duration);
+            timer = CalculateTimer();
             SetPosition();
             UpdateKeyframes();
+            ForceMarkerPosition();
+        }
+        void ForceMarkerPosition()
+        {
+            float timer_pos = CalculateTimer();
+            Vector2 pos = keyFrameMarker.transform.localPosition;
+            pos.x = timer_pos * (total_x_marker / totalTimer);
+            keyFrameMarker.transform.localPosition = pos;
+        }
+        float CalculateTimer()
+        {
+            float timer_pos = 0;
+            for (int a = 0; a < activeAnimatedKeyframeID - 1; a++)
+            {
+                if (a < all.Count)
+                    timer_pos += all[a].duration;
+            }
+            print("CalculateTimer timer_pos" + timer_pos + " activeAnimatedKeyframeID:" + activeAnimatedKeyframeID);
+            return timer_pos;
         }
         void CheckToNextAnimatedKeyframe()
         {
-            float nextTimer = ((activeAnimatedKeyframeID) * keyframe_duration);
+            float nextTimer = 0;
+            for (int a = 0; a < activeAnimatedKeyframeID; a++)
+            {
+                if (a < all.Count)
+                    nextTimer += all[a].duration;
+            }
             if (timer >= nextTimer)
             {
                 activeAnimatedKeyframeID++;
                 filmMakerUI.JumpTo(activeAnimatedKeyframeID);
             }
+        }
+        public void OnChangeDuration(float value)
+        {
+            float duration = Mathf.Lerp(min_speed, max_speed, value);
+            all[activeAnimatedKeyframeID-1].SetDuration(duration);
+            UpdateKeyframes();
+            ForceMarkerPosition();
         }
     }
 }
