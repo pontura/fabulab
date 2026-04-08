@@ -96,6 +96,7 @@ namespace Yaguar.StoryMaker.Editor
     public class    SceneDataFabulab : SceneData
     {
         public bool transition;
+        public float duration;
         [SerializeField] protected new List<SceneElement> scenesElements;
 
         public override void Init() {

@@ -123,6 +123,9 @@ namespace Yaguar.StoryMaker.Editor
             int total = ScenesManagerFabulab.Instance.Scenes.Count;
             int nextSceneid = ScenesManagerFabulab.Instance.currentSceneId + 1;
 
+            if (ScenesManagerFabulab.Instance.GetActiveScene() != null)
+                timeline.keyframe_duration = Mathf.Max(ScenesManagerFabulab.Instance.GetActiveScene().duration, 0.5f);
+
             if (State == states.PLAYING && nextSceneid <= total)
             {
                 string backgroundID = ScenesManagerFabulab.Instance.GetBackground(ScenesManagerFabulab.Instance.currentSceneId);

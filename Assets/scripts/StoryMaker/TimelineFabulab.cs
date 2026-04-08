@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -20,8 +21,10 @@ namespace Yaguar.StoryMaker.Editor
         protected override void ChangeSpeed(int speed)
         {
             filmMakerUI.OnTimelinePlay(false);
-            keyframe_duration = ScenesManagerFabulab.Instance.Keyframe_duration - (speed);
-         
+            if(ScenesManagerFabulab.Instance.GetActiveScene()!=null)
+                keyframe_duration = Mathf.Max(ScenesManagerFabulab.Instance.GetActiveScene().duration,0.5f) - (speed);
+            else
+                keyframe_duration = ScenesManagerFabulab.Instance.Keyframe_default_duration - (speed);
         }
         public override void Reset()
         {
@@ -40,8 +43,21 @@ namespace Yaguar.StoryMaker.Editor
         }
         protected override void RefreshKeyframes()
         {
-            for (int a = 0; a < ScenesManagerFabulab.Instance.Scenes.Count; a++)
+            for (int a = 0; a < ScenesManagerFabulab.Instance.Scenes.Count; a++) {
                 AddNewKeyframe();
-        }        
+                float dur = ScenesManagerFabulab.Instance.GetActiveScene().duration;
+                all[a].duration = dur>0?dur:2;
+            }
+        }
+
+        public override float OnChangeDuration(float value) {
+            float duration = Mathf.Lerp(min_speed, max_speed, value);
+            all[activeAnimatedKeyframeID - 1].SetDuration(duration);
+            if (ScenesManagerFabulab.Instance.GetActiveScene() != null)
+                ScenesManagerFabulab.Instance.GetActiveScene().duration = duration;
+            UpdateKeyframes();
+            ForceMarkerPosition();
+            return duration;
+        }
     }
 }

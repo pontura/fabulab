@@ -22,7 +22,7 @@ namespace Yaguar.StoryMaker.Editor
         public string currentFDataID;
         public FilmData currentFilmData;
 
-        [field:SerializeField] public float Keyframe_duration { private set; get; }
+        [field:SerializeField] public float Keyframe_default_duration { private set; get; }
         [field: SerializeField] public int MaxKeyframes { private set; get; }
 
         public static ScenesManager Instance

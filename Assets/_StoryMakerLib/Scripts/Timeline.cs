@@ -9,8 +9,8 @@ namespace Yaguar.StoryMaker.Editor
     public class Timeline : MonoBehaviour
     {
         [SerializeField] DurationBtn durationBtn;
-        [SerializeField] float min_speed = 0.5f;
-        [SerializeField] float max_speed = 4;
+        [SerializeField] protected float min_speed = 0.5f;
+        [SerializeField] protected float max_speed = 4;
 
         public FilmMakerManager filmMakerUI;
         public KeyFrameUI keyframe;
@@ -86,7 +86,7 @@ namespace Yaguar.StoryMaker.Editor
             //Debug.Log(kf.transform.localPosition);
             UpdateKeyframes();
         }
-        void UpdateKeyframes()
+        protected void UpdateKeyframes()
         {
             int id = 0;
             float totalDuration = 0;
@@ -123,7 +123,7 @@ namespace Yaguar.StoryMaker.Editor
             timer += Time.deltaTime;
             SetPosition();
         }
-        int activeAnimatedKeyframeID;
+        protected int activeAnimatedKeyframeID;
         void SetPosition()
         {
             Vector2 pos = keyFrameMarker.transform.localPosition;
@@ -153,7 +153,7 @@ namespace Yaguar.StoryMaker.Editor
 
             durationBtn?.SetValue(sliderValue);
         }
-        void ForceMarkerPosition()
+        protected void ForceMarkerPosition()
         {
             float timer_pos = CalculateTimer();
             Vector2 pos = keyFrameMarker.transform.localPosition;
@@ -185,7 +185,7 @@ namespace Yaguar.StoryMaker.Editor
                 filmMakerUI.JumpTo(activeAnimatedKeyframeID);
             }
         }
-        public float OnChangeDuration(float value)
+        public virtual float OnChangeDuration(float value)
         {
             float duration = Mathf.Lerp(min_speed, max_speed, value);
             all[activeAnimatedKeyframeID-1].SetDuration(duration);
