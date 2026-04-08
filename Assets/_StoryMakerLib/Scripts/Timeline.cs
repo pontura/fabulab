@@ -31,6 +31,7 @@ namespace Yaguar.StoryMaker.Editor
         private void OnEnable() {
             if (all.Count == 0)
                 Reset();
+            UpdateKeyframes();
         }
 
 
