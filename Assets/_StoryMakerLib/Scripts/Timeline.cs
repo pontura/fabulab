@@ -68,17 +68,35 @@ namespace Yaguar.StoryMaker.Editor
         public void AddNewKeyframe()
         {
             KeyFrameUI kf = Instantiate(keyframe);
+            kf.Init(this);
             all.Add(kf);
             kf.transform.SetParent(container);
             kf.transform.localScale = Vector2.one;
             kf.transform.localPosition = Vector2.zero;
             //Debug.Log(kf.transform.localPosition);
+            UpdateKeyframes();
+        }
+        void UpdateKeyframes()
+        {
+            int id = 0;
+            foreach (KeyFrameUI kf in all)
+            {
+                kf.SetID(id+1);
+                kf.SetSize(total_x_marker / (all.Count));
+                kf.SetColor(id %2 == 0);
+                if(id+1 == activeAnimatedKeyframeID)
+                    kf.SetSelected(true);
+                else if(kf.selected)
+                    kf.SetSelected(false);
+                id++;
+            }
         }
         public void RemoveKeyframe()
         {
             all.RemoveAt(0);
             KeyFrameUI kf = container.GetComponentInChildren<KeyFrameUI>();
             Destroy(kf.gameObject);
+            UpdateKeyframes();
         }
         public void InitPlaying()
         {
@@ -110,10 +128,12 @@ namespace Yaguar.StoryMaker.Editor
         }
         public void JumpTo(int keyframeId)
         {
+            print("JumpTo " + keyframeId);
             activeAnimatedKeyframeID = keyframeId;
             totalTimer = (all.Count * keyframe_duration);
             timer = ((keyframeId - 1) * keyframe_duration);
             SetPosition();
+            UpdateKeyframes();
         }
         void CheckToNextAnimatedKeyframe()
         {

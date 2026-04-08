@@ -1,22 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
 {
     public class TimelineFabulab : Timeline
     {
-        VerticalLayoutGroup vlg;
+        public float offset = 10;
         protected override void Start() {
 
             base.Start();
-            vlg = GetComponentInParent<VerticalLayoutGroup>();
             Invoke(nameof(SetTotalMarkers), Time.deltaTime * 3);
         }
 
         void SetTotalMarkers() {
-            total_x_marker = (vlg.transform as RectTransform).sizeDelta.x - vlg.padding.left - vlg.padding.right;
+            RectTransform canvasRect = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+            total_x_marker = canvasRect.rect.width - offset;
         }
         protected override void ChangeSpeed(int speed)
         {

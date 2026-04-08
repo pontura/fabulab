@@ -12,8 +12,8 @@ namespace Yaguar.StoryMaker.Editor
     public class FilmMakerManagerFabulab : FilmMakerManager
     {
         [SerializeField] protected Button newButton;
-        [SerializeField] protected Button hamburguerButton;
-        [SerializeField] protected HorizontalLayoutGroup buttonsGroup;
+      //  [SerializeField] protected Button hamburguerButton;
+       // [SerializeField] protected HorizontalLayoutGroup buttonsGroup;
         [SerializeField] protected float delayFactor;
         [SerializeField] Toggle toggleTransition;
 
@@ -30,9 +30,9 @@ namespace Yaguar.StoryMaker.Editor
         void EnableStoryEdition(bool enable) {
             deleteButton.gameObject.SetActive(enable);
             newButton.gameObject.SetActive(enable);
-            hamburguerButton.gameObject.SetActive(enable);
+            //hamburguerButton.gameObject.SetActive(enable);
             toggleTransition.gameObject.SetActive(enable);
-            buttonsGroup.spacing = enable ? 5 : 10;
+          //  buttonsGroup.spacing = enable ? 5 : 10;
         }
 
         protected override void SetButtons()
