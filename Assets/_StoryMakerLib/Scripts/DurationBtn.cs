@@ -43,6 +43,7 @@ namespace Yaguar.StoryMaker.Editor
             if (!opened) return;
             duration = timeline.OnChangeDuration(slider.value);
             SetText();
+            SetValue(slider.value);
         }
         public void Close()
         {
