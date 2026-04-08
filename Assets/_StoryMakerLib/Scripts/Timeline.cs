@@ -9,8 +9,8 @@ namespace Yaguar.StoryMaker.Editor
     public class Timeline : MonoBehaviour
     {
         [SerializeField] DurationBtn durationBtn;
-        float min_speed = 0.5f;
-        float max_speed = 4;
+        [SerializeField] float min_speed = 0.5f;
+        [SerializeField] float max_speed = 4;
 
         public FilmMakerManager filmMakerUI;
         public KeyFrameUI keyframe;

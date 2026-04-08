@@ -11,9 +11,12 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] GameObject sliderPanel;
         [SerializeField] Slider slider;
         [SerializeField] TMPro.TMP_Text sliderField;
+        [SerializeField] float sliderFactor;
         float duration;
         bool opened;
         float sliderValue;
+
+
         public void Init(Timeline timeline, float duration)
         {
             opened = false;
@@ -27,7 +30,7 @@ namespace Yaguar.StoryMaker.Editor
             if (opened) return;
             opened = true;
             sliderPanel.SetActive(true);
-            slider.value = bar.fillAmount;
+            slider.value = bar.fillAmount / sliderFactor;
             SetText();
         }
         public void SetValue(float sliderValue)
@@ -41,9 +44,9 @@ namespace Yaguar.StoryMaker.Editor
         public void OnSliderChanged()
         {
             if (!opened) return;
-            duration = timeline.OnChangeDuration(slider.value);
+            duration = timeline.OnChangeDuration(slider.value * sliderFactor);
             SetText();
-            SetValue(slider.value);
+            SetValue(slider.value * sliderFactor);
         }
         public void Close()
         {
