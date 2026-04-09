@@ -6,6 +6,9 @@ namespace Yaguar.StoryMaker.Editor
 {
     public class MovementManager : MonoBehaviour
     {
+        [SerializeField] float minDistanceToMove = 1.5f;
+        [SerializeField] float velocityThresh = 18f;
+
         public void MoveCharacter(string avatarID, Vector3 to, float timeToNextFrame)
         {
             Avatar avatar = Scenario.Instance.sceneObejctsManager.GetAvatarInSceneById(avatarID);
@@ -13,9 +16,9 @@ namespace Yaguar.StoryMaker.Editor
                 return;
 
             float distanceToMove = Vector3.Distance(avatar.transform.position, to);
-            if (distanceToMove < 1.5f)
+            if (distanceToMove  < minDistanceToMove)
                 return;
-            if (distanceToMove > 5)
+            if (distanceToMove/timeToNextFrame > velocityThresh)
                 avatar.Run();
             else
                 avatar.Walk();
