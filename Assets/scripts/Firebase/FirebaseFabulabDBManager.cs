@@ -656,7 +656,15 @@ namespace Yaguar.StoryMaker.DB
                             //SceneDataFabulab sdf = JsonUtility.FromJson<SceneDataFabulab>(child.GetRawJsonValue());
                             SceneDataFabulab sdf = new SceneDataFabulab();
                             sdf.bgID = child.Child("bgID").Value as string;
-                            List<SceneElement> elements = new List<SceneElement>();
+
+                            if(child.HasChild("transition"))
+                                sdf.transition = bool.Parse(child.Child("transition").Value as string);
+                            if (child.HasChild("duration"))
+                                sdf.duration = float.Parse(child.Child("duration").Value as string);
+                            else
+                                sdf.duration = ScenesManagerFabulab.Instance.Keyframe_default_duration;
+
+                            List <SceneElement> elements = new List<SceneElement>();
                             foreach (var se in child.Child("scenesElements").Children) {
                                 SceneElement sceneElement = null;
                                 if ((long)se.Child("type").Value == (long)SceneElementType.AVATAR) {

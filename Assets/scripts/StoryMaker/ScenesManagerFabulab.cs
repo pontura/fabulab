@@ -50,6 +50,7 @@ namespace Yaguar.StoryMaker.Editor
         public override void AddNewScene(int _id) {
             Debug.Log("# AddNewScene");
             SceneDataFabulab activeScene = new SceneDataFabulab();
+            activeScene.duration = Keyframe_default_duration;
             currentSceneId = _id;
             scenes.Insert(currentSceneId - 1, activeScene);
         }
@@ -104,6 +105,8 @@ namespace Yaguar.StoryMaker.Editor
             string json = "[";
             for(int i = 0; i < scenes.Count; i++) {
                 json += "{\"" + nameof(SceneData.bgID) + "\":\"" + scenes[i].bgID + "\",";
+                json += "\"" + nameof(SceneDataFabulab.transition) + "\":\"" + scenes[i].transition + "\",";
+                json += "\"" + nameof(SceneDataFabulab.duration) + "\":\"" + scenes[i].duration + "\",";
                 List<SceneElement> elements = scenes[i].GetScenesElements();
                 if (elements.Count > 0)
                     json += "\"scenesElements\":[";
