@@ -11,6 +11,7 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] protected Objeto background_to_instantiate;
 
         [SerializeField] public Transform bgContainer;
+        [SerializeField] public GameObject bgMask;
 
         void Start()
         {
@@ -19,6 +20,8 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.RemoveSceneObject += RemoveSceneObject;
             StoryMakerEvents.OnMovieOver += OnMovieOver;
             StoryMakerEvents.OnMoviePaused += OnMovieOver;
+            StoryMakerEvents.Restart += ShowBgMask;
+            StoryMakerEvents.ResetScene += HideBgMask;
             SOAvatarData data = new SOAvatarData();
         }
         void OnDestroy()
@@ -28,6 +31,8 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.RemoveSceneObject -= RemoveSceneObject;
             StoryMakerEvents.OnMovieOver -= OnMovieOver;
             StoryMakerEvents.OnMoviePaused -= OnMovieOver;
+            StoryMakerEvents.Restart -= ShowBgMask;
+            StoryMakerEvents.ResetScene -= HideBgMask;
         }
         
         public override void AddSceneObject(SOData data)
@@ -162,6 +167,14 @@ namespace Yaguar.StoryMaker.Editor
                 if(so.GetData() is SOAvatarFabulabData)
                     so.GetComponent<AvatarFabulab>().characterManager.StopAnims();
             }
+        }
+
+        void ShowBgMask() {
+            bgMask.SetActive(true);
+        }
+
+        void HideBgMask() {
+            bgMask.SetActive(false);
         }
     }
 }
