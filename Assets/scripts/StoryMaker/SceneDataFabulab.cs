@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Unity.Android.Gradle.Manifest;
 using UnityEngine;
+using UnityEngine.Windows;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -55,6 +56,37 @@ namespace Yaguar.StoryMaker.Editor
     {
         public string anim;
         public string emoji;
+
+        public override bool Equals(object obj) {
+            if (obj is SceneElementAvatar other) {
+
+                if (this.type != other.type)
+                    return false;
+
+                /*if (!string.Equals(this.customizationData, other.customizationData))
+                    return false;*/
+
+                if (this.data == null && other.data == null)
+                    return true;
+                if (this.data == null || other.data == null)
+                    return false;
+
+                return this.data.Equals(other.data)
+                    && string.Equals(this.anim, other.anim)
+                    && string.Equals(this.emoji, other.emoji);
+            }
+            return false;
+        }
+
+        public override int GetHashCode() {
+            int hash = 17;
+            hash = hash * 31 + type.GetHashCode();
+            //hash = hash * 31 + (customizationData?.GetHashCode() ?? 0);
+            hash = hash * 31 + (data?.GetHashCode() ?? 0);
+            hash = hash * 31 + (anim?.GetHashCode() ?? 0);
+            hash = hash * 31 + (emoji?.GetHashCode() ?? 0);
+            return hash;
+        }
     }
 
     [Serializable]

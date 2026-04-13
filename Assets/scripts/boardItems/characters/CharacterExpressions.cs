@@ -8,7 +8,7 @@ public class CharacterExpressions : MonoBehaviour
     {
         Debug.Log("Play Emoji: " + animName);
 
-        if (animName == "")
+        if (animName == "" || animName ==null)
             animName = Data.Instance.characterAnimsManager.defaultEmoji.name;
         if (anim.HasState(0, Animator.StringToHash(animName)))
             anim.Play(animName);
