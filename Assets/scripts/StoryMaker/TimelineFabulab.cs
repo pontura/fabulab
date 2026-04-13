@@ -59,5 +59,12 @@ namespace Yaguar.StoryMaker.Editor
             ForceMarkerPosition();
             return duration;
         }
+
+        public override void SetJump(int id) {
+            StoryMakerEvents.OnSaveScene();
+            ScenesManagerFabulab.Instance.currentSceneId = id;
+            JumpTo(ScenesManagerFabulab.Instance.currentSceneId);
+            base.SetJump(id);
+        }
     }
 }

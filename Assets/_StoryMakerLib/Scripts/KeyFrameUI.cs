@@ -61,6 +61,6 @@ public class KeyFrameUI : MonoBehaviour
     }
     public void OnClick()
     {
-        timeline.JumpTo(id);
+        timeline.SetJump(id);
     }
 }

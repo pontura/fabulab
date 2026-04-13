@@ -140,6 +140,11 @@ namespace Yaguar.StoryMaker.Editor
                 CheckToNextAnimatedKeyframe();
             keyFrameMarker.transform.localPosition = pos;
         }
+
+        public virtual void SetJump(int id) {
+            StoryMakerEvents.OnTimelineSetJump();
+        }
+
         public void JumpTo(int keyframeId)
         {
             print("JumpTo " + keyframeId);

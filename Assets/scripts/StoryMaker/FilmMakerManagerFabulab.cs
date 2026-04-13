@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -20,11 +21,13 @@ namespace Yaguar.StoryMaker.Editor
         protected override void Awake() {
             base.Awake();
             StoryMakerEvents.EnableStoryEdition += EnableStoryEdition;
+            StoryMakerEvents.OnTimelineSetJump += OnTimelineSetJump;
         }
 
         protected override void OnDestroy() {
             base.OnDestroy();
             StoryMakerEvents.EnableStoryEdition -= EnableStoryEdition;
+            StoryMakerEvents.OnTimelineSetJump -= OnTimelineSetJump;
         }
 
         void EnableStoryEdition(bool enable) {
@@ -118,6 +121,17 @@ namespace Yaguar.StoryMaker.Editor
             SetScene(false);
             timeline.JumpTo(ScenesManagerFabulab.Instance.currentSceneId);
         }
+
+        void OnTimelineSetJump() {
+            SetButtons();
+
+            if (ScenesManagerFabulab.Instance.GetActiveScene() != null)
+                toggleTransition.isOn = ScenesManagerFabulab.Instance.GetActiveScene().transition;
+
+            ScenesManagerFabulab.Instance.AddSceneObjectsToScene(false);
+            StoryMakerEvents.ReorderSceneObjectsInZ();
+        }
+
         protected override void SetScene(bool next)
         {
             int total = ScenesManagerFabulab.Instance.Scenes.Count;
