@@ -17,6 +17,7 @@ namespace Yaguar.StoryMaker.Editor
        // [SerializeField] protected HorizontalLayoutGroup buttonsGroup;
         [SerializeField] protected float delayFactor;
         [SerializeField] Toggle toggleTransition;
+        [SerializeField] GameObject durationBtn;
 
         protected override void Awake() {
             base.Awake();
@@ -31,10 +32,12 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         void EnableStoryEdition(bool enable) {
+            isEditing = enable;
             deleteButton.gameObject.SetActive(enable);
             newButton.gameObject.SetActive(enable);
             //hamburguerButton.gameObject.SetActive(enable);
             toggleTransition.gameObject.SetActive(enable);
+            durationBtn.gameObject.SetActive(enable);
           //  buttonsGroup.spacing = enable ? 5 : 10;
         }
 
