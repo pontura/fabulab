@@ -13,7 +13,7 @@ public class CharacterAnims : MonoBehaviour
 
         Debug.Log("$Play Anim 1: "+animName);
 
-        if (animName == Data.Instance.characterAnimsManager.defaultEdit.name || animName == "" || animName == null)
+        if (animName == "" || animName == null)
             animName = Data.Instance.characterAnimsManager.defaultIdle.name;
 
         Debug.Log("$Play Anim 2: " + animName);
