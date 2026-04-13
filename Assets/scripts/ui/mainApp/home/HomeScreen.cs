@@ -12,6 +12,18 @@ namespace UI.MainApp.Home
         [SerializeField] AllCharactersScreen charactersScreen;
         [SerializeField] AllObjectsScreen objects;
 
+        private void Start() {
+            Events.OnAllFilmMetadataLoadDone += OnServerDataLoadDone;
+        }
+
+        private void OnDestroy() {
+            Events.OnAllFilmMetadataLoadDone -= OnServerDataLoadDone;
+        }
+
+        void OnServerDataLoadDone() {
+            tabs.Init(OnTabClicked);
+        }
+
         public void Show(bool isOn)
         {
             gameObject.SetActive(isOn);

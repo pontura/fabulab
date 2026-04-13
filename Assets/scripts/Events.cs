@@ -50,5 +50,7 @@ public static class Events
     public static System.Action<string> OnPresetLoaded = delegate { };
 
     public static System.Action<UIManager.screenType> ShowScreen = delegate { };
+
+    public static System.Action OnAllFilmMetadataLoadDone = delegate { };
 }
    

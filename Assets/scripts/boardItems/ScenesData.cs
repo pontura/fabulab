@@ -127,6 +127,8 @@ namespace BoardItems
             OnAddFilmDataFromServer(filmsData, sfds);
 
             userFilmsData.AddRange(filmsData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid));
+
+            Events.OnAllFilmMetadataLoadDone();
         }
 
         public void OnAddFilmDataFromServer(List<FilmDataFabulab> filmsData, Dictionary<string, ServerFilmData> sfds) {
