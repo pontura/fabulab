@@ -101,6 +101,8 @@ namespace Yaguar.StoryMaker.Editor
 
         public override void Init() {
             scenesElements = new List<SceneElement>();
+            if(ScenesManagerFabulab.Instance!=null) 
+                duration = ScenesManagerFabulab.Instance.Keyframe_default_duration;
         }
 
         public new SceneDataFabulab Clone() {
@@ -251,12 +253,14 @@ namespace Yaguar.StoryMaker.Editor
                 {
                     if (HasSameAvatar(data, next)) {
                         AvatarFabulab avatar = Scenario.Instance.sceneObejctsManager.GetAvatarInSceneById(data.data.id) as AvatarFabulab;
-                        SOAvatarFabulabData sOData = avatar.GetData() as SOAvatarFabulabData;
-                        SetSOData(sOData, data);
-                        Scenario.Instance.sceneObejctsManager.ApplyData(avatar);
-                        
-                        Events.OnCharacterAnim(sOData.id, (data as SceneElementAvatar).anim);
-                        Events.OnCharacterExpression(sOData.id, (data as SceneElementAvatar).emoji);
+                        if (avatar != null) {
+                            SOAvatarFabulabData sOData = avatar.GetData() as SOAvatarFabulabData;
+                            SetSOData(sOData, data);
+                            Scenario.Instance.sceneObejctsManager.ApplyData(avatar);
+
+                            Events.OnCharacterAnim(sOData.id, (data as SceneElementAvatar).anim);
+                            Events.OnCharacterExpression(sOData.id, (data as SceneElementAvatar).emoji);
+                        }
                     } else {
                         DeleteSO(data);
                         AddSOToScene(data);

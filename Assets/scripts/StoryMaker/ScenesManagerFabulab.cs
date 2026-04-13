@@ -50,7 +50,7 @@ namespace Yaguar.StoryMaker.Editor
         public override void AddNewScene(int _id) {
             Debug.Log("# AddNewScene");
             SceneDataFabulab activeScene = new SceneDataFabulab();
-            activeScene.duration = Keyframe_default_duration;
+            activeScene.Init();
             currentSceneId = _id;
             scenes.Insert(currentSceneId - 1, activeScene);
         }
