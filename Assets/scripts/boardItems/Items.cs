@@ -630,9 +630,9 @@ namespace BoardItems
                 Events.ColorizeBG(wd.bg);
             if (wd is CharacterData characterData)
             {
-                Events.ColorizeArms(wd.id, characterData.armsColor);
-                Events.ColorizeLegs(wd.id, characterData.legsColor);
-                Events.ColorizeEyebrows(wd.id, characterData.eyebrowsColor);
+                Events.ColorizeArms(cascade ? "" : wd.id, characterData.armsColor);
+                Events.ColorizeLegs(cascade ? "" : wd.id, characterData.legsColor);
+                Events.ColorizeEyebrows(cascade ? "" : wd.id, characterData.eyebrowsColor);
             }
 
             print("open work boardItemManager: " + boardItemManager.name + " id: " + wd.id + " cascade: " + cascade);
