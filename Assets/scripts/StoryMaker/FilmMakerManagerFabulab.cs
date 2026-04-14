@@ -135,6 +135,13 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.ReorderSceneObjectsInZ();
         }
 
+        public override void OnTimelinePlay(bool isOn) {
+            base.OnTimelinePlay(isOn);
+            if (!isOn)
+                Invoke(nameof(SetPaused), Time.deltaTime);
+        }
+        
+
         protected override void SetScene(bool next)
         {
             int total = ScenesManagerFabulab.Instance.Scenes.Count;
