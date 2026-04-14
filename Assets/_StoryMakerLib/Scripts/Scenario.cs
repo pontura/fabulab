@@ -68,7 +68,8 @@ namespace Yaguar.StoryMaker.Editor
         IEnumerator CaptureRoutine(System.Action<Texture2D> OnDone)
         {
             yield return new WaitForSeconds(0.1f);
-            targetRenderer.GetComponent<Animator>().Play("story");
+            targetRenderer.GetComponent<Animator>().SetInteger("zoom", 9);
+            yield return new WaitForEndOfFrame();
             Bounds bounds = targetRenderer.bounds;
             Vector3[] points = new Vector3[8];
 

@@ -90,7 +90,7 @@ namespace BoardItems
         }
         float GetZDisplacement()
         {
-            if(part != CharacterPartsHelper.parts.BODY)
+            if(part != CharacterPartsHelper.parts.BODY || GetComponentInParent<CharacterManager>() != null)
                 return z_displacement_inside;
             else
                 return z_displacement_outside;
