@@ -173,6 +173,7 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         void SetPaused() {
+            iTween.Stop();
             StoryMakerEvents.OnMoviePaused();
         }
 
