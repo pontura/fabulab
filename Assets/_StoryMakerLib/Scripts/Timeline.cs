@@ -104,6 +104,7 @@ namespace Yaguar.StoryMaker.Editor
                     kf.SetSelected(false);
                 id++;
             }
+            all[activeAnimatedKeyframeID - 1].UpdateScreenshot();
         }
         public void RemoveKeyframe()
         {
@@ -123,7 +124,7 @@ namespace Yaguar.StoryMaker.Editor
             timer += Time.deltaTime;
             SetPosition();
         }
-        protected int activeAnimatedKeyframeID;
+        protected int activeAnimatedKeyframeID = 1;
         void SetPosition()
         {
             Vector2 pos = keyFrameMarker.transform.localPosition;

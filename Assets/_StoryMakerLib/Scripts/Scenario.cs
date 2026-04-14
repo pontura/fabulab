@@ -58,6 +58,65 @@ namespace Yaguar.StoryMaker.Editor
         void Restart()
         {
             sceneObejctsManager.ResetScene();
-        }        
+        }
+
+        [SerializeField] Renderer targetRenderer;
+        public void Screenshot(System.Action<Texture2D> OnDone)
+        {
+            StartCoroutine(CaptureRoutine(OnDone));
+        }
+        IEnumerator CaptureRoutine(System.Action<Texture2D> OnDone)
+        {
+            yield return new WaitForSeconds(0.1f);
+            targetRenderer.GetComponent<Animator>().Play("story");
+            Bounds bounds = targetRenderer.bounds;
+            Vector3[] points = new Vector3[8];
+
+            Vector3 center = bounds.center;
+            Vector3 extents = bounds.extents;
+
+            points[0] = center + new Vector3(-extents.x, -extents.y, -extents.z);
+            points[1] = center + new Vector3(-extents.x, -extents.y, extents.z);
+            points[2] = center + new Vector3(-extents.x, extents.y, -extents.z);
+            points[3] = center + new Vector3(-extents.x, extents.y, extents.z);
+            points[4] = center + new Vector3(extents.x, -extents.y, -extents.z);
+            points[5] = center + new Vector3(extents.x, -extents.y, extents.z);
+            points[6] = center + new Vector3(extents.x, extents.y, -extents.z);
+            points[7] = center + new Vector3(extents.x, extents.y, extents.z);
+
+            Vector2 min = new Vector2(float.MaxValue, float.MaxValue);
+            Vector2 max = new Vector2(float.MinValue, float.MinValue);
+
+            foreach (var p in points)
+            {
+                Vector3 sp = Cam.WorldToScreenPoint(p);
+                if (sp.z < 0) continue;
+
+                min = Vector2.Min(min, sp);
+                max = Vector2.Max(max, sp);
+            }
+
+            float xMin = Mathf.Clamp(min.x, 0, Screen.width);
+            float yMin = Mathf.Clamp(min.y, 0, Screen.height);
+            float xMax = Mathf.Clamp(max.x, 0, Screen.width);
+            float yMax = Mathf.Clamp(max.y, 0, Screen.height);
+
+            float width = xMax - xMin;
+            float height = yMax - yMin;
+
+            if (width <= 0 || height <= 0)
+            {
+                OnDone(null);
+                yield break;
+            }
+
+            Rect rect = new Rect(xMin, yMin, width, height);
+
+            Texture2D texture = new Texture2D((int)rect.width, (int)rect.height, TextureFormat.RGB24, false);
+            texture.ReadPixels(rect, 0, 0);
+            texture.Apply();
+
+            OnDone(texture);
+        }
     }
 }
