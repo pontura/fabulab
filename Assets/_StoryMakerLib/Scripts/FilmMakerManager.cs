@@ -70,18 +70,28 @@ namespace Yaguar.StoryMaker.Editor
             if (isOn)
             {
                 //Events.OnAddScore(1);
-                if (isEditing)
-                    StoryMakerEvents.OnSaveScene();
-                State = states.PLAYING;
-                timeline.InitPlaying();
-                StoryMakerEvents.ReorderSceneObjectsInZ();
+                Play();
             }
             else
             {
-                playButton.GetComponent<PlayButton>().SetButtons(false);
-                State = states.STOPPED;
+                Stop();
             }
         }
+
+        protected void Play() {
+            if (isEditing)
+                StoryMakerEvents.OnSaveScene();
+            State = states.PLAYING;
+            timeline.InitPlaying();
+            StoryMakerEvents.ReorderSceneObjectsInZ();
+        }
+
+        protected void Stop() {
+            playButton.GetComponent<PlayButton>().SetButtons(false);
+            State = states.STOPPED;
+            iTween.Stop();
+        }
+
         protected void Update()
         {
             if (State == states.STOPPED)
@@ -174,12 +184,12 @@ namespace Yaguar.StoryMaker.Editor
                 }
 
                 ScenesManager.Instance.RemoveScene(ScenesManager.Instance.currentSceneId);
-
+                int lastSceneId = ScenesManager.Instance.currentSceneId;
                 if (ScenesManager.Instance.currentSceneId > 1)
                     ScenesManager.Instance.currentSceneId--;
 
                 SetButtons();
-                ScenesManager.Instance.AddSceneObjectsToScene(false);
+                ScenesManager.Instance.AddSceneObjectsToScene(lastSceneId);
 
                 timeline.RemoveKeyframe();
 
@@ -190,19 +200,21 @@ namespace Yaguar.StoryMaker.Editor
         {
             StoryMakerEvents.OnSaveScene();
             //ScenesManager.Instance.OnSaveScene();
+            int lastSceneId = ScenesManager.Instance.currentSceneId;
             ScenesManager.Instance.currentSceneId++;
-            SetScene(true);
+            SetScene(lastSceneId);
             timeline.JumpTo(ScenesManager.Instance.currentSceneId);
         }
         public virtual void Prev()
         {
             StoryMakerEvents.OnSaveScene();
             //ScenesManager.Instance.OnSaveScene();
+            int lastSceneId = ScenesManager.Instance.currentSceneId;
             ScenesManager.Instance.currentSceneId--;
-            SetScene(false);
+            SetScene(lastSceneId);
             timeline.JumpTo(ScenesManager.Instance.currentSceneId);
         }
-        protected virtual void SetScene(bool next)
+        protected virtual void SetScene(int lastSceneId)
         {
             int total = ScenesManager.Instance.Scenes.Count();
             int nextSceneid = ScenesManager.Instance.currentSceneId + 1;
@@ -226,7 +238,7 @@ namespace Yaguar.StoryMaker.Editor
 
             SetButtons();
 
-            ScenesManager.Instance.AddSceneObjectsToScene(next);
+            ScenesManager.Instance.AddSceneObjectsToScene(lastSceneId);
             StoryMakerEvents.ReorderSceneObjectsInZ();
         }
         protected virtual IEnumerator MoveAvatarsAfter(float delay)
@@ -238,8 +250,9 @@ namespace Yaguar.StoryMaker.Editor
         public virtual void JumpTo(int keyframeID)
         {
             Debug.Log("#JumpTo");
+            int lastSceneId = ScenesManager.Instance.currentSceneId;
             ScenesManager.Instance.currentSceneId = keyframeID;
-            SetScene(true);
+            SetScene(lastSceneId);
         }
     }
 }

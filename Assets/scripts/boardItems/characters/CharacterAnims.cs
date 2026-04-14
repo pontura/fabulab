@@ -34,6 +34,6 @@ public class CharacterAnims : MonoBehaviour
     }
     public void Stop() {
         anim.speed = 0;
-        Debug.Log("& Speed: " + anim.speed);
+        //Debug.Log("& Speed: " + anim.speed);
     }
 }

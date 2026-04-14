@@ -96,7 +96,7 @@ namespace Yaguar.StoryMaker.Editor
             return Scenes.Count;
         }*/
 
-        public virtual void AddSceneObjectsToScene(bool next = true)
+        public virtual void AddSceneObjectsToScene(int lastSceneId=-1)
         {
             //  print("currentSceneId: " + currentSceneId + "    next " + next);
 
@@ -104,8 +104,8 @@ namespace Yaguar.StoryMaker.Editor
             //     Events.ResetScenario();
 
 
-            GetActiveScene()?.DeleteChangedSO(next);
-            GetActiveScene()?.AddSceneObjects(next);
+            GetActiveScene()?.DeleteChangedSO(lastSceneId);
+            GetActiveScene()?.AddSceneObjects(lastSceneId);
         }
 
         public virtual void Restart()

@@ -70,6 +70,8 @@ namespace Yaguar.StoryMaker.Editor
         }
         public override void New()
         {
+            if (State == states.PLAYING)
+                return;
 
             if (timeline.all.Count >= ScenesManagerFabulab.Instance.MaxKeyframes)
             {
@@ -88,6 +90,9 @@ namespace Yaguar.StoryMaker.Editor
         
         public override void OnDelete(bool doIt)
         {
+            if (State == states.PLAYING)
+                return;
+
             if (doIt)
             {
                 if (Scenario.Instance != null)
@@ -96,12 +101,12 @@ namespace Yaguar.StoryMaker.Editor
                 }
 
                 ScenesManagerFabulab.Instance.RemoveScene(ScenesManagerFabulab.Instance.currentSceneId);
-
+                int lastSceneId = ScenesManagerFabulab.Instance.currentSceneId;
                 if (ScenesManagerFabulab.Instance.currentSceneId > 1)
                     ScenesManagerFabulab.Instance.currentSceneId--;
 
                 SetButtons();
-                ScenesManagerFabulab.Instance.AddSceneObjectsToScene(false);
+                ScenesManagerFabulab.Instance.AddSceneObjectsToScene(lastSceneId);
 
                 timeline.RemoveKeyframe();
 
@@ -110,29 +115,37 @@ namespace Yaguar.StoryMaker.Editor
         }
         public override void Next()
         {
+            Stop();
             StoryMakerEvents.OnSaveScene();
             //ScenesManagerFabulab.Instance.OnSaveScene();
+            int lastSceneId = ScenesManagerFabulab.Instance.currentSceneId;
             ScenesManagerFabulab.Instance.currentSceneId++;
-            SetScene(true);
+            SetScene(lastSceneId);
             timeline.JumpTo(ScenesManagerFabulab.Instance.currentSceneId);
         }
         public override void Prev()
         {
+            Stop();
             StoryMakerEvents.OnSaveScene();
             //ScenesManagerFabulab.Instance.OnSaveScene();
+            int lastSceneId = ScenesManagerFabulab.Instance.currentSceneId;
             ScenesManagerFabulab.Instance.currentSceneId--;
-            SetScene(false);
+            SetScene(lastSceneId);
             timeline.JumpTo(ScenesManagerFabulab.Instance.currentSceneId);
         }
 
-        void OnTimelineSetJump() {
+        void OnTimelineSetJump(int lastSceneId) {
+            Debug.Log("& OnTimelineSetJump");
+            Stop();
             SetButtons();
 
             if (ScenesManagerFabulab.Instance.GetActiveScene() != null)
                 toggleTransition.isOn = ScenesManagerFabulab.Instance.GetActiveScene().transition;
 
-            ScenesManagerFabulab.Instance.AddSceneObjectsToScene(false);
+            ScenesManagerFabulab.Instance.AddSceneObjectsToScene(lastSceneId);
             StoryMakerEvents.ReorderSceneObjectsInZ();
+
+            Invoke(nameof(SetPaused), Time.deltaTime);
         }
 
         public override void OnTimelinePlay(bool isOn) {
@@ -142,7 +155,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         
 
-        protected override void SetScene(bool next)
+        protected override void SetScene(int lastSceneId)
         {
             int total = ScenesManagerFabulab.Instance.Scenes.Count;
             int nextSceneid = ScenesManagerFabulab.Instance.currentSceneId + 1;
@@ -175,11 +188,12 @@ namespace Yaguar.StoryMaker.Editor
             if(ScenesManagerFabulab.Instance.GetActiveScene()!=null)
                 toggleTransition.isOn = ScenesManagerFabulab.Instance.GetActiveScene().transition;
 
-            ScenesManagerFabulab.Instance.AddSceneObjectsToScene(next);
+            ScenesManagerFabulab.Instance.AddSceneObjectsToScene(lastSceneId);
             StoryMakerEvents.ReorderSceneObjectsInZ();
         }
 
         void SetPaused() {
+            Debug.Log("& SetPaused");
             iTween.Stop();
             StoryMakerEvents.OnMoviePaused();
         }
@@ -193,8 +207,9 @@ namespace Yaguar.StoryMaker.Editor
         public override void JumpTo(int keyframeID)
         {
             Debug.Log("#JumpTo");
+            int lastSceneId = ScenesManagerFabulab.Instance.currentSceneId;
             ScenesManagerFabulab.Instance.currentSceneId = keyframeID;
-            SetScene(true);
+            SetScene(lastSceneId);
         }
 
         public void OnTransitionChange() {

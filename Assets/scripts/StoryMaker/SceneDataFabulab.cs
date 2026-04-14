@@ -208,9 +208,9 @@ namespace Yaguar.StoryMaker.Editor
             scenesElements.Add(sceneElement);
         }
         
-        protected bool IsThisDataDifferentToPreviousFrame(SceneElement data, bool next)
+        protected bool IsThisDataDifferentToPreviousFrame(SceneElement data, int lastSceneId)
         {
-            List<SceneElement> lastAll = GetLastKeyframeAllData(next);
+            List<SceneElement> lastAll = GetLastKeyframeAllData(lastSceneId);
             if (lastAll == null)
                 return true;
             foreach (SceneElement s in lastAll)
@@ -221,11 +221,11 @@ namespace Yaguar.StoryMaker.Editor
             return true;
         }
 
-        protected bool HasSameAvatar(SceneElement data, bool next) {
+        protected bool HasSameAvatar(SceneElement data, int lastSceneId) {
             if(data.type!=SceneElementType.AVATAR)
                 return false;
 
-            List<SceneElement> lastAll = GetLastKeyframeAllData(next);
+            List<SceneElement> lastAll = GetLastKeyframeAllData(lastSceneId);
             if (lastAll == null)
                 return false;
 
@@ -248,30 +248,26 @@ namespace Yaguar.StoryMaker.Editor
             if (!itemShowContinue)
                 DeleteSO(data);
         }
-        protected new List<SceneElement> GetLastKeyframeAllData(bool next)
+        protected new List<SceneElement> GetLastKeyframeAllData(int otherSceneID)
         {
-            int otherSceneID = ScenesManagerFabulab.Instance.currentSceneId - 2;
-            if (!next)
-                otherSceneID = ScenesManagerFabulab.Instance.currentSceneId;
-
-            if (otherSceneID < 0)
+            if (otherSceneID < 1)
                 return null;
             else if (otherSceneID >= ScenesManagerFabulab.Instance.Scenes.Count)
                 return null;
-            return ScenesManagerFabulab.Instance.Scenes[otherSceneID].GetScenesElements();
+            return ScenesManagerFabulab.Instance.Scenes[otherSceneID-1].GetScenesElements();
         }
-        public new void DeleteChangedSO(bool next)
+        public new void DeleteChangedSO(int lastSceneId)
         {
             if (Scenario.Instance && Scenario.Instance.sceneObejctsManager.sceneObjects.Count == 0)
                 return;
-            List<SceneElement> oldData = GetLastKeyframeAllData(next);
+            List<SceneElement> oldData = GetLastKeyframeAllData(lastSceneId);
             if (oldData != null)
             {
                 foreach (SceneElement data in oldData)
                     DeleteItemsNoLongerExists(data);
             }
         }
-        public new void AddSceneObjects(bool next)
+        public new void AddSceneObjects(int lastSceneId)
         {
 
             if (scenesElements == null)
@@ -279,11 +275,11 @@ namespace Yaguar.StoryMaker.Editor
 
             foreach (SceneElement data in scenesElements)
             {
-                bool DataDiferent = IsThisDataDifferentToPreviousFrame(data, next);
+                bool DataDiferent = IsThisDataDifferentToPreviousFrame(data, lastSceneId);
                 Debug.Log("# DataDiferent: " + DataDiferent);
                 if (DataDiferent)
                 {
-                    if (HasSameAvatar(data, next)) {
+                    if (HasSameAvatar(data, lastSceneId)) {
                         AvatarFabulab avatar = Scenario.Instance.sceneObejctsManager.GetAvatarInSceneById(data.data.id) as AvatarFabulab;
                         if (avatar != null) {
                             SOAvatarFabulabData sOData = avatar.GetData() as SOAvatarFabulabData;

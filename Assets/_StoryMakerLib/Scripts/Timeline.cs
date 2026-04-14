@@ -116,8 +116,8 @@ namespace Yaguar.StoryMaker.Editor
         public void InitPlaying()
         {
             Scenario.Instance.ResetScenario();
-            JumpTo(1);
-            filmMakerUI.JumpTo(1);
+            JumpTo(ScenesManager.Instance.currentSceneId);
+            filmMakerUI.JumpTo(ScenesManager.Instance.currentSceneId);
         }
         public void OnUpdate()
         {
@@ -143,7 +143,8 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public virtual void SetJump(int id) {
-            StoryMakerEvents.OnTimelineSetJump();
+            StoryMakerEvents.OnTimelineSetJump(activeAnimatedKeyframeID);
+            JumpTo(id);
         }
 
         public void JumpTo(int keyframeId)

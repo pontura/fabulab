@@ -162,7 +162,7 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         void OnMovieOver() {
-            Debug.Log("& OnMovieOver");
+            //Debug.Log("& OnMovieOver");
             foreach(SceneObject so in sceneObjects) {
                 if(so.GetData() is SOAvatarFabulabData)
                     so.GetComponent<AvatarFabulab>().characterManager.StopAnims();

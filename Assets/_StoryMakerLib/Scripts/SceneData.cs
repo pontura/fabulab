@@ -67,9 +67,9 @@ namespace Yaguar.StoryMaker.Editor
         public void EditSO(SOData soData)
         {
         }
-        protected bool IsThisDataDifferentToPreviousFrame(string data, bool next)
+        protected bool IsThisDataDifferentToPreviousFrame(string data, int lastSceneId)
         {
-            List<string> lastAll = GetLastKeyframeAllData(next);
+            List<string> lastAll = GetLastKeyframeAllData(lastSceneId);
             if (lastAll == null)
                 return true;
             foreach (string s in lastAll)
@@ -92,30 +92,27 @@ namespace Yaguar.StoryMaker.Editor
             if (!itemShowContinue)
                 DeleteSO(data);
         }
-        protected List<string> GetLastKeyframeAllData(bool next)
-        {
-            int otherSceneID = ScenesManager.Instance.currentSceneId - 2;
-            if (!next)
-                otherSceneID = ScenesManager.Instance.currentSceneId;
+        protected List<string> GetLastKeyframeAllData(int otherSceneID)
+        {            
 
-            if (otherSceneID < 0)
+            if (otherSceneID < 1)
                 return null;
             else if (otherSceneID >= ScenesManager.Instance.Scenes.Count)
                 return null;
-            return ScenesManager.Instance.Scenes[otherSceneID].scenesElements;
+            return ScenesManager.Instance.Scenes[otherSceneID-1].scenesElements;
         }
-        public void DeleteChangedSO(bool next)
+        public void DeleteChangedSO(int lastSceneId)
         {
             if (Scenario.Instance && Scenario.Instance.sceneObejctsManager.sceneObjects.Count == 0)
                 return;
-            List<string> oldData = GetLastKeyframeAllData(next);
+            List<string> oldData = GetLastKeyframeAllData(lastSceneId);
             if (oldData != null)
             {
                 foreach (string data in oldData)
                     DeleteItemsNoLongerExists(data);
             }
         }
-        public void AddSceneObjects(bool next)
+        public void AddSceneObjects(int lastSceneId)
         {
 
             if (scenesElements == null)
@@ -123,7 +120,7 @@ namespace Yaguar.StoryMaker.Editor
 
             foreach (string data in scenesElements)
             {
-                bool DataDiferent = IsThisDataDifferentToPreviousFrame(data, next);
+                bool DataDiferent = IsThisDataDifferentToPreviousFrame(data, lastSceneId);
                 if (DataDiferent)
                 {
                     DeleteSO(data);

@@ -90,15 +90,17 @@ namespace Yaguar.StoryMaker.Editor
             return Scenes.Count;
         }*/
 
-        public override void AddSceneObjectsToScene(bool next = true) {
+        public override void AddSceneObjectsToScene(int lastSceneID=-1) {
             //  print("currentSceneId: " + currentSceneId + "    next " + next);
 
             // if (currentSceneId == 1)
             //     Events.ResetScenario();
-
-
-            GetActiveScene()?.DeleteChangedSO(next);
-            GetActiveScene()?.AddSceneObjects(next);
+            
+            if (lastSceneID == currentSceneId)
+                lastSceneID = -1;
+            Debug.Log("& LastScene = " + lastSceneID);
+            GetActiveScene()?.DeleteChangedSO(lastSceneID);
+            GetActiveScene()?.AddSceneObjects(lastSceneID);
         }      
         
         public string GetSerialized() {
