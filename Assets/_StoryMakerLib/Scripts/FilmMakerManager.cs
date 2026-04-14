@@ -65,7 +65,7 @@ namespace Yaguar.StoryMaker.Editor
             timeline.Reset();
             timelineInSceneUI.RefreshField(1);
         }
-        public void OnTimelinePlay(bool isOn)
+        public virtual void OnTimelinePlay(bool isOn)
         {
             if (isOn)
             {

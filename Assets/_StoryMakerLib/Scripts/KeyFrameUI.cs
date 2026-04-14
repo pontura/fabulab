@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Android.Gradle.Manifest;
+using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
 
@@ -14,6 +15,7 @@ public class KeyFrameUI : MonoBehaviour
 
     RectTransform r;
     [SerializeField] Image image;
+    [SerializeField] Image screenshot;
     public bool selected;
     int id = 0;
     Timeline timeline;
@@ -26,7 +28,7 @@ public class KeyFrameUI : MonoBehaviour
     public void SetID(int id)
     {
         this.id = id;
-        field.text = (id).ToString();   
+        field.text = (id).ToString();
     }
     public void SetDuration(float duration)
     {
@@ -62,5 +64,19 @@ public class KeyFrameUI : MonoBehaviour
     public void OnClick()
     {
         timeline.SetJump(id);
+    }
+    public void UpdateScreenshot()
+    {
+        Scenario.Instance.Screenshot(ScreenshotUpdated);
+    }
+    void ScreenshotUpdated(Texture2D texture)
+    {
+        Sprite sprite = Sprite.Create(
+            texture,                   
+            new Rect(0, 0, texture.width, texture.height), 
+            new Vector2(0.5f, 0.5f)   
+        );
+
+        screenshot.sprite = sprite;
     }
 }
