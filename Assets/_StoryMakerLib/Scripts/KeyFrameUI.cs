@@ -15,6 +15,7 @@ public class KeyFrameUI : MonoBehaviour
 
     RectTransform r;
     [SerializeField] Image image;
+    [SerializeField] Image marker;
     [SerializeField] Image screenshot;
     public bool selected;
     int id = 0;
@@ -23,6 +24,7 @@ public class KeyFrameUI : MonoBehaviour
 
     public void Init(Timeline timeline)
     {
+        marker.color = selectedColor;
         this.timeline = timeline;
     }
     public void SetID(int id)
@@ -56,10 +58,7 @@ public class KeyFrameUI : MonoBehaviour
     public void SetSelected(bool isOn)
     {
         this.selected = isOn;
-        if (isOn)
-            image.color = selectedColor;
-        else
-            image.color = color;
+        marker.enabled = isOn;
     }
     public void OnClick()
     {
