@@ -11,6 +11,7 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] GameObject sliderPanel;
         [SerializeField] Slider slider;
         [SerializeField] TMPro.TMP_Text sliderField;
+        [SerializeField] TMPro.TMP_Text durationField;
         [SerializeField] float sliderFactor;
         float duration;
         bool opened;
@@ -57,8 +58,9 @@ namespace Yaguar.StoryMaker.Editor
         {
             int seconds = (int)duration;
             int milliseconds = (int)((duration - seconds) * 1000);
-
-            sliderField.text = $"{seconds}s {milliseconds}ms";
+            string t = $"{seconds}s {milliseconds}ms";
+            sliderField.text = t;
+            durationField.text = t;
         }
     }
 }

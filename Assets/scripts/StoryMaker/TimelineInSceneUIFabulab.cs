@@ -9,6 +9,8 @@ public class TimelineInSceneUIFabulab : TimelineInSceneUI
 {
     public override void RefreshField(int sceneID)
     {
-        field.text = sceneID + "/" + ScenesManagerFabulab.Instance.Scenes.Count + " ("+ (ScenesManagerFabulab.Instance.MaxKeyframes - ScenesManagerFabulab.Instance.Scenes.Count) +")";
+        field.text = sceneID.ToString();
+
+      //  field.text = sceneID + "/" + ScenesManagerFabulab.Instance.Scenes.Count + " ("+ (ScenesManagerFabulab.Instance.MaxKeyframes - ScenesManagerFabulab.Instance.Scenes.Count) +")";
     }
 }
