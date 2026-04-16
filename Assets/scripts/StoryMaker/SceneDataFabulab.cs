@@ -182,6 +182,8 @@ namespace Yaguar.StoryMaker.Editor
             foreach (SceneElement item in scenesElements)
                 nuevo.scenesElements.Add(item);
             nuevo.bgID = bgID;
+            nuevo.transition = transition;
+            nuevo.duration = duration;
             return nuevo;
         }
 
