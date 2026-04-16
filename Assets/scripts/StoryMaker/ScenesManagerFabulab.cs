@@ -148,6 +148,15 @@ namespace Yaguar.StoryMaker.Editor
         public bool StillExistInOtherScenes(SOData soData) {
             return Scenes.Any(s => s.GetScenesElements().Any(e => e.GetSOData().itemName == soData.itemName));
         }
-            
+
+        public void AddItemToNextScenesSameBG(SOData soData) {
+            string currentBG = GetActiveScene().bgID;
+            for(int i = currentSceneId; i <  Scenes.Count; i++) {
+                if (Scenes[i].bgID == currentBG) {
+                    Scenes[i].AddSO(soData);
+                } else
+                    break;
+            }
+        }            
     }    
 }

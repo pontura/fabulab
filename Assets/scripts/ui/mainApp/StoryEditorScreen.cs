@@ -140,7 +140,7 @@ namespace UI.MainApp
 
 
                 sdf.AddSO(soData);
-
+                ScenesManagerFabulab.Instance.AddItemToNextScenesSameBG(soData);
                 /*if (customizerData != "" && Data.Instance.scenesData.currentFilmData.IsMyStory())
                     StoryMakerEvents.SetNewAvatarCustomization(customizerData);*/
 

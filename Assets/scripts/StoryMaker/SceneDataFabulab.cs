@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using UnityEngine.Windows;
@@ -192,6 +193,9 @@ namespace Yaguar.StoryMaker.Editor
         }
         public void AddSO(SOData soData)
         {
+            if (scenesElements.Any(e => e.GetSOData().itemName == soData.itemName))
+                return;
+
             SceneElement sceneElement = new SceneElement();
             if (soData is SOAvatarFabulabData sOAvatar) {
                 Debug.Log("$ is SOAvatarFabulabData");
