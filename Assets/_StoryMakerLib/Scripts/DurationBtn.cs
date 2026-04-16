@@ -57,8 +57,8 @@ namespace Yaguar.StoryMaker.Editor
         public void SetText()
         {
             int seconds = (int)duration;
-            int milliseconds = (int)((duration - seconds) * 1000);
-            string t = $"{seconds}s {milliseconds}ms";
+            int milliseconds = (int)((duration - seconds) * 10);
+            string t = $"{seconds}:{milliseconds}s";
             sliderField.text = t;
             durationField.text = t;
         }
