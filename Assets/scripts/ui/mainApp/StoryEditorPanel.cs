@@ -20,7 +20,7 @@ namespace UI.MainApp
                     break;
                 default:
                     if (last == UIManager.screenType.StoryMaker) {
-                        StoryMakerEvents.ResetScene();
+                        StoryMakerEvents.ClearScene();
                         Show(false);
                         StoryMakerEvents.EnableInputManager(false);
                     }

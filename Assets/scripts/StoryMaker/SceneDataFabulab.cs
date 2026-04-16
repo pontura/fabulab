@@ -49,6 +49,22 @@ namespace Yaguar.StoryMaker.Editor
             return hash;
         }
 
+        public virtual SOData GetSOData() {
+            SOData soData = new SODataFabulab();
+            //soData.customization = data.customizationData;
+            soData.goLeft = data.goLeft;
+            SetSOData(soData);            
+            return soData;
+        }
+
+        public virtual void SetSOData(SOData soData) {
+            soData.id = data.id;
+            soData.pos = data.pos;
+            soData.rot = data.rot;
+            soData.size = data.size;
+            soData.itemName = data.itemName;
+        }
+
     }
 
     [Serializable]
@@ -87,6 +103,16 @@ namespace Yaguar.StoryMaker.Editor
             hash = hash * 31 + (emoji?.GetHashCode() ?? 0);
             return hash;
         }
+
+        public override SOData GetSOData() {
+            SOData soData = new SOAvatarFabulabData();
+            //soData.customization = data.customizationData;
+            soData.goLeft = data.goLeft;
+            (soData as SOAvatarFabulabData).anim = anim;
+            (soData as SOAvatarFabulabData).emoji = emoji;
+            SetSOData(soData);
+            return soData;
+        }
     }
 
     [Serializable]
@@ -122,10 +148,22 @@ namespace Yaguar.StoryMaker.Editor
             hash = hash * 31 + (input?.GetHashCode() ?? 0);
             return hash;
         }
+
+        public override SOData GetSOData() {
+            SOData soData = null;
+            if (type == SceneElementType.WORD_BALLOON) {
+                soData = new SOWordBalloonData();                
+            } else if (type == SceneElementType.WORD_BOX) {
+                soData = new SOWordBoxData();
+            }
+            soData.goLeft = data.goLeft;
+            SetSOData(soData);
+            return soData;            
+        }
     }
 
     [Serializable]
-    public class    SceneDataFabulab : SceneData
+    public class SceneDataFabulab : SceneData
     {
         public bool transition;
         public float duration;
@@ -176,6 +214,7 @@ namespace Yaguar.StoryMaker.Editor
                 
             sceneElement.data = new SOData();
             sceneElement.data.id = soData.id;
+            sceneElement.data.itemName = soData.itemName;
             sceneElement.data.pos = soData.pos;
             sceneElement.data.rot = soData.rot;
             sceneElement.data.size = soData.size;
@@ -235,36 +274,37 @@ namespace Yaguar.StoryMaker.Editor
             }
             return false;
         }
-        protected void DeleteItemsNoLongerExists(SceneElement data)
+        protected void TurnOffItemsNoExistsInThisScene(SceneElement data)
         {
             if (scenesElements == null)
                 return;
             bool itemShowContinue = false;
             foreach (SceneElement s in scenesElements)
             {
-                if (s.Equals(data) || (data.type==SceneElementType.AVATAR && s.data.id == data.data.id))
+                if (s.data.itemName == data.data.itemName)
                     itemShowContinue = true;
             }
             if (!itemShowContinue)
-                DeleteSO(data);
+                Scenario.Instance.sceneObejctsManager.TurnOff(data.GetSOData());
         }
         protected new List<SceneElement> GetLastKeyframeAllData(int otherSceneID)
         {
             if (otherSceneID < 1)
                 return null;
-            else if (otherSceneID >= ScenesManagerFabulab.Instance.Scenes.Count)
+            else if (otherSceneID > ScenesManagerFabulab.Instance.Scenes.Count)
                 return null;
             return ScenesManagerFabulab.Instance.Scenes[otherSceneID-1].GetScenesElements();
         }
         public new void DeleteChangedSO(int lastSceneId)
         {
+            //Debug.Log("& DeleteChangedSO");
             if (Scenario.Instance && Scenario.Instance.sceneObejctsManager.sceneObjects.Count == 0)
                 return;
             List<SceneElement> oldData = GetLastKeyframeAllData(lastSceneId);
             if (oldData != null)
             {
                 foreach (SceneElement data in oldData)
-                    DeleteItemsNoLongerExists(data);
+                    TurnOffItemsNoExistsInThisScene(data);
             }
         }
         public new void AddSceneObjects(int lastSceneId)
@@ -275,7 +315,9 @@ namespace Yaguar.StoryMaker.Editor
 
             foreach (SceneElement data in scenesElements)
             {
-                bool DataDiferent = IsThisDataDifferentToPreviousFrame(data, lastSceneId);
+                AddSOToScenenario(data);
+
+                /*bool DataDiferent = IsThisDataDifferentToPreviousFrame(data, lastSceneId);
                 Debug.Log("# DataDiferent: " + DataDiferent);
                 if (DataDiferent)
                 {
@@ -290,38 +332,23 @@ namespace Yaguar.StoryMaker.Editor
                             Events.OnCharacterExpression(sOData.id, (data as SceneElementAvatar).emoji);
                         }
                     } else {
-                        DeleteSO(data);
+                        TurnOffSO(data);
                         AddSOToScene(data);
                     }
-                }
+                }*/
 
             }
-            SetBG();
+
+            if (lastSceneId > 0) {
+                if (bgID != ScenesManagerFabulab.Instance.Scenes[lastSceneId - 1].bgID)
+                        SetBG();
+            }else
+                SetBG();
+
             StoryMakerEvents.SceneCompleteLoading();
         }
-        protected void DeleteSO(SceneElement data)
-        {
-            SOData soData = null;
-            if (data.type == SceneElementType.AVATAR)
-            {
-                soData = new SOAvatarFabulabData();
-                SetSOData(soData, data);
-            }
-            else if (data.type == SceneElementType.PROP)
-            {
-                soData = new SODataFabulab();
-                SetSOData(soData, data);
-            } else if (data.type == SceneElementType.WORD_BALLOON) {
-                soData = new SOWordBalloonData();
-                SetSOData(soData, data);
-            } else if (data.type == SceneElementType.WORD_BOX) {
-                soData = new SOWordBoxData();
-                SetSOData(soData, data);
-            }
-            Scenario.Instance.sceneObejctsManager.DeleteSceneObject(soData);
-            // Events.DeleteSceneObject(soData);
-        }
-        protected virtual void AddSOToScene(SceneElement data)
+        
+        protected virtual void AddSOToScenenario(SceneElement data)
         {
             if (data is SceneElementAvatar)
                 Debug.Log("$ data is SceneElementAvatar");
@@ -341,35 +368,23 @@ namespace Yaguar.StoryMaker.Editor
 
                 //StoryMakerEvents.SetNewAvatarCustomization(data);
 
-                SetSOData(soData, data);
             } else if (data.type == SceneElementType.WORD_BALLOON) {
                 soData = new SOWordBalloonData();
                 (soData as SOWordBalloonData).inputValue = (data as SceneElementTextInput).input;
-                SetSOData(soData, data);
             } else if (data.type == SceneElementType.WORD_BOX) {
                 soData = new SOWordBoxData();
                 (soData as SOWordBoxData).inputValue = (data as SceneElementTextInput).input;
-                SetSOData(soData, data);
             } else if (data.type == SceneElementType.PROP) {
                 soData = new SODataFabulab();
-                SetSOData(soData, data);                
             }
+            data.SetSOData(soData);
             
             if (soData != null)
             {
-                Debug.Log("# AddSOToScene");
-                StoryMakerEvents.AddSceneObject(soData);
+                Debug.Log("# AddSOToScenenario");
+                StoryMakerEvents.SetSceneObject(soData);
                 //Scenario.Instance.sceneObejctsManager.AddSceneObject(soData);
             }
-        }
-        
-        protected void SetSOData(SOData soData, SceneElement sceneElement)
-        {
-            soData.id = sceneElement.data.id;
-            soData.pos = sceneElement.data.pos;
-            soData.rot = sceneElement.data.rot;
-            soData.size = sceneElement.data.size;
-            soData.itemName = sceneElement.data.itemName;
         }
                 
         public override void MoveElements(float timeToNextFrame)
@@ -382,7 +397,7 @@ namespace Yaguar.StoryMaker.Editor
                 SOData soData = null;
                 soData = GetSOData(data);
                 if (soData != null) {
-                    Vector3 to = ElementShouldMoveTo(data.type,soData, soData.id);
+                    Vector3 to = ElementShouldMoveTo(data.type,soData, soData.itemName);
                     if (to != Vector3.zero) {
                         if (data.type == SceneElementType.AVATAR) {
                             Scenario.Instance.movementManager.MoveCharacter(soData.id, to, timeToNextFrame);
@@ -390,18 +405,18 @@ namespace Yaguar.StoryMaker.Editor
                             Scenario.Instance.movementManager.MoveElement(soData, to, timeToNextFrame);
                         }
                     }
-                    float scaleTo = ElementShouldScaleTo(data.type, soData, soData.id);
+                    float scaleTo = ElementShouldScaleTo(data.type, soData, soData.itemName);
                     if(scaleTo != 0) 
                         Scenario.Instance.movementManager.ScaleElement(soData, scaleTo, timeToNextFrame);
                     
-                    float rotateTo = ElementShouldRotateTo(data.type, soData, soData.id);
+                    float rotateTo = ElementShouldRotateTo(data.type, soData, soData.itemName);
                     if (rotateTo != 0)
                             Scenario.Instance.movementManager.RotateElement(soData, rotateTo, timeToNextFrame);
                 }
             }
         }       
 
-        protected virtual Vector3 ElementShouldMoveTo(SceneElementType type, SOData actualData, string avatarID) {
+        protected virtual Vector3 ElementShouldMoveTo(SceneElementType type, SOData actualData, string itemName) {
             SceneData nextSD = ScenesManagerFabulab.Instance.GetNextActiveScene();
             if (nextSD == null)
                 return Vector3.zero;
@@ -411,7 +426,7 @@ namespace Yaguar.StoryMaker.Editor
             foreach (SceneElement s in nextAll) {
                 if (s.type == type) {
                     SOData soData = GetSOData(s);
-                    if (soData != null && soData.id == avatarID) {
+                    if (soData != null && soData.itemName == itemName) {
                         if (actualData.pos.Equals(soData.pos))
                             return Vector3.zero;
                         else {
@@ -423,7 +438,7 @@ namespace Yaguar.StoryMaker.Editor
             return Vector3.zero;
         }
 
-        protected virtual float ElementShouldScaleTo(SceneElementType type, SOData actualData, string avatarID) {
+        protected virtual float ElementShouldScaleTo(SceneElementType type, SOData actualData, string itemName) {
             SceneData nextSD = ScenesManagerFabulab.Instance.GetNextActiveScene();
             if (nextSD == null)
                 return 0f;
@@ -433,7 +448,7 @@ namespace Yaguar.StoryMaker.Editor
             foreach (SceneElement s in nextAll) {
                 if (s.type == type) {
                     SOData soData = GetSOData(s);
-                    if (soData != null && soData.id == avatarID) {
+                    if (soData != null && soData.itemName == itemName) {
                         if (actualData.size.Equals(soData.size))
                             return 0f;
                         else {
@@ -445,7 +460,7 @@ namespace Yaguar.StoryMaker.Editor
             return 0f;
         }
 
-        protected virtual float ElementShouldRotateTo(SceneElementType type, SOData actualData, string avatarID) {
+        protected virtual float ElementShouldRotateTo(SceneElementType type, SOData actualData, string itemName) {
             SceneData nextSD = ScenesManagerFabulab.Instance.GetNextActiveScene();
             if (nextSD == null)
                 return 0f;
@@ -455,7 +470,7 @@ namespace Yaguar.StoryMaker.Editor
             foreach (SceneElement s in nextAll) {
                 if (s.type == type) {
                     SOData soData = GetSOData(s);
-                    if (soData != null && soData.id == avatarID) {
+                    if (soData != null && soData.itemName == itemName) {
                         if (actualData.rot.Equals(soData.rot))
                             return 0f;
                         else {
@@ -475,13 +490,12 @@ namespace Yaguar.StoryMaker.Editor
                 soData = new SOAvatarFabulabData();
                 //soData.customization = data.customizationData;
                 soData.goLeft = data.data.goLeft;
-                SetSOData(soData, data);
             } else if (data.type == SceneElementType.PROP) {
                 soData = new SODataFabulab();
                 //soData.customization = data.customizationData;
                 soData.goLeft = data.data.goLeft;
-                SetSOData(soData, data);
             }
+            data.SetSOData(soData);
             return soData;
         }
 

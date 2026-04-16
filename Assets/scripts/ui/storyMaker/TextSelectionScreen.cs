@@ -30,13 +30,15 @@ namespace UI.MainApp.Home.User
         {
             SOWordBalloonData data = new SOWordBalloonData();
             data.id = id;
+            data.itemName = Utils.GetUniqueDateTimeId();
             StoryMakerEvents.AddSceneObject(data);
         }
 
         void OpenWordBox(string id) {
             SOWordBoxData data = new SOWordBoxData();
             data.id = id;
-            StoryMakerEvents.AddSceneObject(data);
+            data.itemName = Utils.GetUniqueDateTimeId();
+            StoryMakerEvents.SetSceneObject(data);
         }
     }
 }

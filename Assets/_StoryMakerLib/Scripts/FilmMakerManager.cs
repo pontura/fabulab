@@ -180,7 +180,7 @@ namespace Yaguar.StoryMaker.Editor
             {
                 if (Scenario.Instance != null)
                 {
-                    Scenario.Instance.sceneObejctsManager.ResetScene();
+                    Scenario.Instance.sceneObejctsManager.ClearScene();
                 }
 
                 ScenesManager.Instance.RemoveScene(ScenesManager.Instance.currentSceneId);
@@ -189,7 +189,7 @@ namespace Yaguar.StoryMaker.Editor
                     ScenesManager.Instance.currentSceneId--;
 
                 SetButtons();
-                ScenesManager.Instance.AddSceneObjectsToScene(lastSceneId);
+                ScenesManager.Instance.SetSceneObjectsIntoScenenario(lastSceneId);
 
                 timeline.RemoveKeyframe();
 
@@ -238,7 +238,7 @@ namespace Yaguar.StoryMaker.Editor
 
             SetButtons();
 
-            ScenesManager.Instance.AddSceneObjectsToScene(lastSceneId);
+            ScenesManager.Instance.SetSceneObjectsIntoScenenario(lastSceneId);
             StoryMakerEvents.ReorderSceneObjectsInZ();
         }
         protected virtual IEnumerator MoveAvatarsAfter(float delay)

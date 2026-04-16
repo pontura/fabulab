@@ -45,7 +45,8 @@ namespace UI.MainApp.Home.User
         public virtual void OpenWork(string id) {
             SOAvatarFabulabData data = new SOAvatarFabulabData();
             data.id = id;
-            StoryMakerEvents.AddSceneObject(data);
+            data.itemName = Utils.GetUniqueDateTimeId();
+            StoryMakerEvents.SetSceneObject(data);
             //UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);    
         }        
     }

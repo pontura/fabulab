@@ -1,5 +1,5 @@
-﻿ ﻿using UnityEngine;
- using System.Collections.Generic;
+﻿ using System.Collections.Generic;
+ ﻿using UnityEngine;
  
  public static class Utils {
  
@@ -25,5 +25,12 @@
         float angle = Mathf.Atan2((endPoint.y - startPoint.y), (endPoint.x - startPoint.x));
         angle *= Mathf.Rad2Deg;
         return angle;
+    }
+
+    public static string GetUniqueDateTimeId() {
+        string timePart = System.DateTime.Now.ToString("yyyyMMddHHmmssfff"); // 17 caracteres
+        string guidPart = System.Guid.NewGuid().ToString("N").Substring(0, 3); // 3 caracteres
+        string id = timePart + guidPart; // Total: 20
+        return id;
     }
 }

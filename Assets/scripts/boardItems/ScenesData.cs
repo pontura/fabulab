@@ -331,7 +331,8 @@ namespace BoardItems
         public void InitLoadedFilm() {
             if (ScenesManagerFabulab.Instance.Scenes.Count > 0 && ScenesManagerFabulab.Instance.Scenes.Count >= currentFilmData.framecount) {
                 ScenesManagerFabulab.Instance.currentSceneId = 1;
-                ScenesManagerFabulab.Instance.AddSceneObjectsToScene();
+                ScenesManagerFabulab.Instance.AddAllObjectsToScene();
+                //Invoke(nameof(StoryMakerEvents.OnLoadFilm),Time.deltaTime);
                 StoryMakerEvents.OnLoadFilm();
             } else {
                 Invoke("InitLoadedFilm", 1);

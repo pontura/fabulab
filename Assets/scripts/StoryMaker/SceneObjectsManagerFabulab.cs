@@ -1,8 +1,8 @@
 ﻿using BoardItems.Characters;
 using BoardItems.SceneObjects;
+using NUnit.Framework;
 using UnityEngine;
-using static AnimationsManager;
-
+using System.Collections.Generic;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -15,26 +15,38 @@ namespace Yaguar.StoryMaker.Editor
 
         void Start()
         {
+            StoryMakerEvents.AddAllSceneObjects += AddAllSceneObjects;
             StoryMakerEvents.AddSceneObject += AddSceneObject;
-            StoryMakerEvents.DeleteSceneObject += DeleteSceneObject;
+            StoryMakerEvents.SetSceneObject += SetSceneObject;
             StoryMakerEvents.RemoveSceneObject += RemoveSceneObject;
             StoryMakerEvents.OnMovieOver += OnMovieOver;
             StoryMakerEvents.OnMoviePaused += OnMovieOver;
             StoryMakerEvents.Restart += ShowBgMask;
-            StoryMakerEvents.ResetScene += HideBgMask;
+            StoryMakerEvents.ClearScene += HideBgMask;
             SOAvatarData data = new SOAvatarData();
         }
         void OnDestroy()
         {
+            StoryMakerEvents.AddAllSceneObjects -= AddAllSceneObjects;
             StoryMakerEvents.AddSceneObject -= AddSceneObject;
-            StoryMakerEvents.DeleteSceneObject -= DeleteSceneObject;
+            StoryMakerEvents.SetSceneObject -= SetSceneObject;
             StoryMakerEvents.RemoveSceneObject -= RemoveSceneObject;
             StoryMakerEvents.OnMovieOver -= OnMovieOver;
             StoryMakerEvents.OnMoviePaused -= OnMovieOver;
             StoryMakerEvents.Restart -= ShowBgMask;
-            StoryMakerEvents.ResetScene -= HideBgMask;
+            StoryMakerEvents.ClearScene -= HideBgMask;
         }
-        
+
+        protected virtual void AddAllSceneObjects(List<SOData> elementsToAdd) {
+            foreach (SOData data in elementsToAdd) {
+                Debug.Log(data is SOAvatarFabulabData);
+                AddSceneObject(data);
+            }
+
+            foreach(SceneObject so in sceneObjects)
+                so.gameObject.SetActive(false);
+        }
+
         public override void AddSceneObject(SOData data)
         {
             Debug.Log("AddSceneObject: " + data.id + " " + data);
@@ -42,10 +54,11 @@ namespace Yaguar.StoryMaker.Editor
             selected = null;
 
             if (data is SOAvatarFabulabData avatarData) {
+                Debug.Log("& is SOAvatarFabulabData");
                 SceneObject avatar = Instantiate(avatar_to_instantiate);
                 AddToContainer(avatar, avatarData);
 
-                avatar.gameObject.name = "Avatar_" + avatarData.id;
+                avatar.gameObject.name = "Avatar_" + avatarData.id + "_" + avatarData.itemName;
                 avatar.Init(avatarData);
                 inputsManager.ResetAll();
                 CharacterManager characterManager = avatar.GetComponent<AvatarFabulab>().characterManager;
@@ -63,7 +76,7 @@ namespace Yaguar.StoryMaker.Editor
                 SceneObject prop = Instantiate(object_to_instantiate);
                 AddToContainer(prop, soData);
 
-                prop.gameObject.name = "Prop_" + soData.id;
+                prop.gameObject.name = "Prop_" + soData.id + "_" + soData.itemName;
                 prop.Init(soData);
                 inputsManager.ResetAll();
                 SceneObjectManager objectManager = prop.GetComponent<Prop>().objectManager;
@@ -86,14 +99,14 @@ namespace Yaguar.StoryMaker.Editor
                 SceneObject wordBalloon = Instantiate(objectSignal_to_instantiate[0]);
                 AddToContainer(wordBalloon, soWBD);
 
-                wordBalloon.gameObject.name = "WordBalloon_" + soWBD.id;
+                wordBalloon.gameObject.name = "WordBalloon_" + soWBD.id + "_" + soWBD.itemName;
                 wordBalloon.Init(soWBD);
                 inputsManager.ResetAll();
                 selected = wordBalloon;
             } else if (data is SOWordBoxData soWBoxD) {
                 SceneObject wordBox = Instantiate(objectSignal_to_instantiate[1]);
                 wordBox.transform.SetParent(container);                
-                wordBox.gameObject.name = "WordBox_" + soWBoxD.id;
+                wordBox.gameObject.name = "WordBox_" + soWBoxD.id + "_" + soWBoxD.itemName;
                 wordBox.Init(soWBoxD);
                 SetWordBox(wordBox);
                 inputsManager.ResetAll();
@@ -104,9 +117,25 @@ namespace Yaguar.StoryMaker.Editor
                 sceneObjects.Add(selected);
         }
 
+        public virtual void SetSceneObject(SOData data) {
+
+            SceneObject so = GetSceneObjectInScene(data);
+            ApplyData(so, data);
+            so.gameObject.SetActive(true);
+            if (data is SOAvatarFabulabData avatarData) {                
+                SOAvatarFabulabData sOData = so.GetData() as SOAvatarFabulabData;
+
+                Events.OnCharacterAnim(sOData.id, avatarData.anim);
+                Events.OnCharacterExpression(sOData.id, avatarData.emoji);
+            }
+        }
+
         override protected void RemoveSceneObject()
         {
-            base.RemoveSceneObject();
+            if (ScenesManagerFabulab.Instance.StillExistInOtherScenes(selected.GetData())) {
+                selected.gameObject.SetActive(false);
+            }else
+                base.RemoveSceneObject();
             //UIManager.Instance.mainMenu.CloseAll();
         }
         public override Avatar GetAvatarInSceneById(string id) {
@@ -122,7 +151,7 @@ namespace Yaguar.StoryMaker.Editor
         public override SceneObject GetSceneObjectInScene(SOData soData) {
             foreach (SceneObject so in sceneObjects) {
 
-                if (so != null && (so.GetData().id == soData.id && soData is SOAvatarData && so.GetData() is SOAvatarData) ||
+                /*if (so != null && (so.GetData().id == soData.id && soData is SOAvatarData && so.GetData() is SOAvatarData) ||
                     
                     //si es un objeto chequea por posicion! quizas haya que mejorar esto...
                     //so.GetData().itemName == soData.itemName && 
@@ -133,6 +162,9 @@ namespace Yaguar.StoryMaker.Editor
                     (soData is SOWordBoxData && so.GetData() is SOWordBoxData && soData.id == so.GetData().id)
                     
                 )
+                    return so;*/
+
+                if (so != null && so.GetData().itemName == soData.itemName)
                     return so;
             }
 
@@ -156,8 +188,8 @@ namespace Yaguar.StoryMaker.Editor
             newSO.transform.localScale = Vector3.one*2.7f;
         }
 
-        public override void ResetScene() {
-            base.ResetScene();
+        public override void ClearScene() {
+            base.ClearScene();
             Utils.RemoveAllChildsIn(bgContainer);
         }
 

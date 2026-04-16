@@ -117,7 +117,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         public void InitPlaying()
         {
-            Scenario.Instance.ResetScenario();
+            Scenario.Instance.ResetScene();
             JumpTo(ScenesManager.Instance.currentSceneId);
             filmMakerUI.JumpTo(ScenesManager.Instance.currentSceneId);
         }
