@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
@@ -56,7 +57,7 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public new SceneDataFabulab GetActiveScene() {
-            Debug.Log("# count: " + scenes.Count + " currentSceneId: " + currentSceneId);
+            //Debug.Log("# count: " + scenes.Count + " currentSceneId: " + currentSceneId);
             return scenes.Count > 0 ? scenes[currentSceneId - 1] : null;
         }
         public new SceneDataFabulab GetNextActiveScene() {
@@ -84,13 +85,24 @@ namespace Yaguar.StoryMaker.Editor
         public override void RemoveScene(int _id) {
             scenes.RemoveAt(currentSceneId - 1);
         }
-                
+
         /*public int GetTotalScenes()
         {
             return Scenes.Count;
         }*/
 
-        public override void AddSceneObjectsToScene(int lastSceneID=-1) {
+        List<SOData> elementsToInstantiate;
+
+        public virtual void AddAllObjectsToScene() {
+            elementsToInstantiate = new List<SOData>();
+            foreach (SceneDataFabulab sdf in Scenes) {
+                elementsToInstantiate.AddRange(sdf.GetScenesElements().Select(p => p.GetSOData()).Where(newItem => !elementsToInstantiate.Any(eItem => eItem.itemName == newItem.itemName)).ToList());
+            }
+            StoryMakerEvents.AddAllSceneObjects(elementsToInstantiate);   
+        }
+        
+
+        public override void SetSceneObjectsIntoScenenario(int lastSceneID=-1) {
             //  print("currentSceneId: " + currentSceneId + "    next " + next);
 
             // if (currentSceneId == 1)
@@ -132,5 +144,10 @@ namespace Yaguar.StoryMaker.Editor
             json += "]";
             return json;
         }
-    }
+
+        public bool StillExistInOtherScenes(SOData soData) {
+            return Scenes.Any(s => s.GetScenesElements().Any(e => e.GetSOData().itemName == soData.itemName));
+        }
+            
+    }    
 }

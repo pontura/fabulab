@@ -30,18 +30,16 @@ namespace Yaguar.StoryMaker.Editor
 
         void Start()
         {
-            StoryMakerEvents.AddSceneObject += AddSceneObject;
-            StoryMakerEvents.DeleteSceneObject += DeleteSceneObject;
+            StoryMakerEvents.SetSceneObject += AddSceneObject;
             StoryMakerEvents.RemoveSceneObject += RemoveSceneObject;
             SOAvatarData data = new SOAvatarData();
         }
         void OnDestroy()
         {
-            StoryMakerEvents.AddSceneObject -= AddSceneObject;
-            StoryMakerEvents.DeleteSceneObject -= DeleteSceneObject;
+            StoryMakerEvents.SetSceneObject -= AddSceneObject;
             StoryMakerEvents.RemoveSceneObject -= RemoveSceneObject;
         }
-        public virtual void ResetScene()
+        public virtual void ClearScene()
         {
             foreach(Transform child in container)
             {
@@ -49,20 +47,28 @@ namespace Yaguar.StoryMaker.Editor
             }
             sceneObjects.Clear();
         }
+
+        public virtual void ResetScene() {
+            foreach (SceneObject si in sceneObjects) {
+                si.gameObject.SetActive(false);
+            }
+        }
+
         public virtual void SetAvatarData(Avatar avatar, SOAvatarData data)
         {
            
         }        
 
-        public void DeleteSceneObject(SOData data)
+        public void TurnOff(SOData data)
         {
-            SceneObject soToRemove = GetSceneObjectInScene(data);
-            Debug.Log("$$$ soToRemove " + (soToRemove == null));
-            if (soToRemove == null)
+            SceneObject soToTurnOff = GetSceneObjectInScene(data);
+            Debug.Log("$$$ soToRemove " + (soToTurnOff == null));
+            if (soToTurnOff == null)
                 return;
 
-            sceneObjects.Remove(soToRemove);
-            Destroy(soToRemove.gameObject);
+            soToTurnOff.gameObject.SetActive(false);
+            /*sceneObjects.Remove(soToTurnOff);
+            Destroy(soToTurnOff.gameObject);*/
         }
         public virtual void AddSceneObject(SOData data)
         {
@@ -100,6 +106,13 @@ namespace Yaguar.StoryMaker.Editor
         public void ApplyData(SceneObject so, SOData data = null) {
             if (data == null)
                 data = so.GetData();
+            else {
+                SOData sod = so.GetData();
+                sod.pos = data.pos;
+                sod.rot = data.rot;
+                sod.size = data.size;
+            }
+
             so.transform.localPosition = data.pos.ToVector3();
             so.transform.localEulerAngles = new Vector3(0, 0, data.rot);
             if (data.size == 0)

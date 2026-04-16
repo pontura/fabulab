@@ -21,6 +21,7 @@ namespace UI.MainApp.Home.User
         public override void OpenWork(string id) {
             SOAvatarFabulabData data = new SOAvatarFabulabData();
             data.id = id;
+            data.itemName = Utils.GetUniqueDateTimeId();
             StoryMakerEvents.AddSceneObject(data);
         }        
     }

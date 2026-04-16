@@ -96,7 +96,7 @@ namespace Yaguar.StoryMaker.Editor
             return Scenes.Count;
         }*/
 
-        public virtual void AddSceneObjectsToScene(int lastSceneId=-1)
+        public virtual void SetSceneObjectsIntoScenenario(int lastSceneId=-1)
         {
             //  print("currentSceneId: " + currentSceneId + "    next " + next);
 

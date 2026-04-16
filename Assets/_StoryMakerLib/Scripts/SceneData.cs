@@ -145,7 +145,7 @@ namespace Yaguar.StoryMaker.Editor
                 soData = new SOIconData();
                 SetSOData(soData, arr);
             }
-            Scenario.Instance.sceneObejctsManager.DeleteSceneObject(soData);
+            Scenario.Instance.sceneObejctsManager.TurnOff(soData);
             // Events.DeleteSceneObject(soData);
         }
         protected virtual void AddSO(string data)
@@ -180,7 +180,7 @@ namespace Yaguar.StoryMaker.Editor
             
             if (soData != null)
             {
-                StoryMakerEvents.AddSceneObject(soData);
+                StoryMakerEvents.SetSceneObject(soData);
                 //Scenario.Instance.sceneObejctsManager.AddSceneObject(soData);
             }
         }

@@ -111,7 +111,7 @@ namespace UI.MainApp
             SOData bgData = Scenario.Instance.sceneObejctsManager.bgData;
             sdf.bgID = bgData.id;
             foreach (SceneObject so in Scenario.Instance.sceneObejctsManager.sceneObjects) {
-                if (so == null)
+                if (so == null || !so.gameObject.activeSelf)
                     continue;
 
                 SOData soData = null;
@@ -136,7 +136,7 @@ namespace UI.MainApp
                     (soData as SOWordBoxData).inputValue = (so.GetData() as SOWordBoxData).inputValue;
                 }
 
-                Debug.Log("# Adding Id: " + soData.id + " " + soData);
+                Debug.Log("# Adding to SceneData: " + soData.id + "_"+ soData.itemName + " " + soData);
 
 
                 sdf.AddSO(soData);

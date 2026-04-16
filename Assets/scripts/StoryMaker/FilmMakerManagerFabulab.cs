@@ -106,7 +106,7 @@ namespace Yaguar.StoryMaker.Editor
                     ScenesManagerFabulab.Instance.currentSceneId--;
 
                 SetButtons();
-                ScenesManagerFabulab.Instance.AddSceneObjectsToScene(lastSceneId);
+                ScenesManagerFabulab.Instance.SetSceneObjectsIntoScenenario();
 
                 timeline.RemoveKeyframe();
 
@@ -142,7 +142,7 @@ namespace Yaguar.StoryMaker.Editor
             if (ScenesManagerFabulab.Instance.GetActiveScene() != null)
                 toggleTransition.isOn = ScenesManagerFabulab.Instance.GetActiveScene().transition;
 
-            ScenesManagerFabulab.Instance.AddSceneObjectsToScene(lastSceneId);
+            ScenesManagerFabulab.Instance.SetSceneObjectsIntoScenenario(lastSceneId);
             StoryMakerEvents.ReorderSceneObjectsInZ();
 
             Invoke(nameof(SetPaused), Time.deltaTime);
@@ -188,7 +188,7 @@ namespace Yaguar.StoryMaker.Editor
             if(ScenesManagerFabulab.Instance.GetActiveScene()!=null)
                 toggleTransition.isOn = ScenesManagerFabulab.Instance.GetActiveScene().transition;
 
-            ScenesManagerFabulab.Instance.AddSceneObjectsToScene(lastSceneId);
+            ScenesManagerFabulab.Instance.SetSceneObjectsIntoScenenario(lastSceneId);
             StoryMakerEvents.ReorderSceneObjectsInZ();
         }
 

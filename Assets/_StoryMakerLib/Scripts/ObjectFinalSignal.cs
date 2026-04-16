@@ -14,7 +14,7 @@ namespace Yaguar.StoryMaker.Editor
         {
             Reset();
             StoryMakerEvents.OnMovieOver += OnMovieOver;
-            StoryMakerEvents.AddSceneObject += AddSceneObject;
+            StoryMakerEvents.SetSceneObject += AddSceneObject;
             Loop();
         }
         void Loop()
@@ -32,7 +32,7 @@ namespace Yaguar.StoryMaker.Editor
         private void OnDestroy()
         {
             StoryMakerEvents.OnMovieOver -= OnMovieOver;
-            StoryMakerEvents.AddSceneObject -= AddSceneObject;
+            StoryMakerEvents.SetSceneObject -= AddSceneObject;
         }
         void JumpTo(int framNum)
         {

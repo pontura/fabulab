@@ -24,6 +24,7 @@ namespace UI.MainApp.Home.User
         {
             SODataFabulab data = new SODataFabulab();
             data.id = id;
+            data.itemName = Utils.GetUniqueDateTimeId();
             StoryMakerEvents.AddSceneObject(data);
         }        
     }

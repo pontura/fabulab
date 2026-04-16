@@ -38,26 +38,28 @@ namespace Yaguar.StoryMaker.Editor
         void Start()
         {
 
-            StoryMakerEvents.Restart += Restart;
-            StoryMakerEvents.ResetScene += ResetScenario;
+            StoryMakerEvents.ResetScene += ResetScene;
+            StoryMakerEvents.Restart += ClearScene;
+            StoryMakerEvents.ClearScene += ClearScene;
             //sceneObjects = GetComponentsInChildren<SceneObject>();
             //WaitTillScenesLoaded();
         }
 
         void OnDestroy()
         {
-            StoryMakerEvents.Restart -= Restart;
-            StoryMakerEvents.ResetScene -= ResetScenario;
+            StoryMakerEvents.ResetScene -= ResetScene;
+            StoryMakerEvents.Restart -= ClearScene;
+            StoryMakerEvents.ClearScene -= ClearScene;
         }        
 
-        public void ResetScenario()
+        public void ResetScene()
         {
             sceneObejctsManager.ResetScene();
         }
 
-        void Restart()
+        void ClearScene()
         {
-            sceneObejctsManager.ResetScene();
+            sceneObejctsManager.ClearScene();
         }
 
         [SerializeField] Renderer targetRenderer;
