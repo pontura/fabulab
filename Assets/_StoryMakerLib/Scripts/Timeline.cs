@@ -202,5 +202,9 @@ namespace Yaguar.StoryMaker.Editor
             ForceMarkerPosition();
             return duration;
         }
+        public virtual void OnChangeLight(float value)
+        {
+            print("change light " + value);
+        }
     }
 }

@@ -15,6 +15,7 @@ namespace Yaguar.StoryMaker.Editor
 
         void Start()
         {
+            StoryMakerEvents.SetBackgroundLights += SetBackgroundLights;
             StoryMakerEvents.AddAllSceneObjects += AddAllSceneObjects;
             StoryMakerEvents.AddSceneObject += AddSceneObject;
             StoryMakerEvents.SetSceneObject += SetSceneObject;
@@ -27,6 +28,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         void OnDestroy()
         {
+            StoryMakerEvents.SetBackgroundLights -= SetBackgroundLights;
             StoryMakerEvents.AddAllSceneObjects -= AddAllSceneObjects;
             StoryMakerEvents.AddSceneObject -= AddSceneObject;
             StoryMakerEvents.SetSceneObject -= SetSceneObject;
@@ -36,7 +38,14 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.Restart -= ShowBgMask;
             StoryMakerEvents.ClearScene -= HideBgMask;
         }
-
+        private void SetBackgroundLights(float value)
+        {
+            print("SetBackgroundLights " + value);
+            SpriteRenderer sr = bgMask.GetComponent<SpriteRenderer>();
+            Color c = sr.color;
+            c.a = value/10;
+            sr.color = c;
+        }
         protected virtual void AddAllSceneObjects(List<SOData> elementsToAdd) {
             foreach (SOData data in elementsToAdd) {
                 Debug.Log(data is SOAvatarFabulabData);

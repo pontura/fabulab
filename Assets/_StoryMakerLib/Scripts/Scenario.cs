@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +16,6 @@ namespace Yaguar.StoryMaker.Editor
         //public ScenesManager scenesManager;
         [field: SerializeField] public SceneObjectsManager sceneObejctsManager { private set; get; }
         [field: SerializeField] public MovementManager movementManager { private set; get; }
-
 
         static Scenario mInstance = null;
         public static Scenario Instance
@@ -48,7 +48,9 @@ namespace Yaguar.StoryMaker.Editor
         {
             StoryMakerEvents.ResetScene -= ResetScenario;
             StoryMakerEvents.ClearScene -= ClearScene;
-        }        
+        }
+
+      
 
         public void ResetScenario()
         {
