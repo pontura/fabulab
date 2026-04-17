@@ -10,8 +10,9 @@ namespace Yaguar.StoryMaker.Editor
     {
         [SerializeField] protected Objeto background_to_instantiate;
 
-        [SerializeField] public Transform bgContainer;
-        [SerializeField] public GameObject bgMask;
+        [SerializeField] Transform bgContainer;
+        [SerializeField] GameObject bgMask;
+        [field:SerializeField] public BackgroundLighting BackgroundLighting {  get; private set; }
 
         void Start()
         {
@@ -42,9 +43,7 @@ namespace Yaguar.StoryMaker.Editor
         {
             print("SetBackgroundLights " + value);
             SpriteRenderer sr = bgMask.GetComponent<SpriteRenderer>();
-            Color c = value<1?Color.black:Color.white;
-            float alpha = value < 1 ? (value-1)*-0.1f : value * 0.1f;
-            c.a = alpha;
+            Color c = BackgroundLighting.GetStepColor((int)value);
             sr.color = c;
         }
         protected virtual void AddAllSceneObjects(List<SOData> elementsToAdd) {

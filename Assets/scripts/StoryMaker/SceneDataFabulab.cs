@@ -168,6 +168,8 @@ namespace Yaguar.StoryMaker.Editor
     {
         public bool transition;
         public float duration;
+        public string lightingId;
+        public int lightingValue;
         [SerializeField] protected new List<SceneElement> scenesElements;
 
         public override void Init() {
