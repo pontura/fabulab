@@ -42,8 +42,9 @@ namespace Yaguar.StoryMaker.Editor
         {
             print("SetBackgroundLights " + value);
             SpriteRenderer sr = bgMask.GetComponent<SpriteRenderer>();
-            Color c = sr.color;
-            c.a = value/10;
+            Color c = value<1?Color.black:Color.white;
+            float alpha = value < 1 ? (value-1)*-0.1f : value * 0.1f;
+            c.a = alpha;
             sr.color = c;
         }
         protected virtual void AddAllSceneObjects(List<SOData> elementsToAdd) {
