@@ -39,11 +39,12 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.Restart -= ShowBgMask;
             StoryMakerEvents.ClearScene -= HideBgMask;
         }
-        private void SetBackgroundLights(float value)
+        private void SetBackgroundLights()
         {
+            int value = ScenesManagerFabulab.Instance.GetActiveScene().lightingValue;
             print("SetBackgroundLights " + value);
             SpriteRenderer sr = bgMask.GetComponent<SpriteRenderer>();
-            Color c = BackgroundLighting.GetStepColor((int)value);
+            Color c = BackgroundLighting.GetStepColor(value);
             sr.color = c;
         }
         protected virtual void AddAllSceneObjects(List<SOData> elementsToAdd) {

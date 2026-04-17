@@ -139,8 +139,10 @@ namespace Yaguar.StoryMaker.Editor
             Stop();
             SetButtons();
 
-            if (ScenesManagerFabulab.Instance.GetActiveScene() != null)
+            if (ScenesManagerFabulab.Instance.GetActiveScene() != null) {
                 toggleTransition.isOn = ScenesManagerFabulab.Instance.GetActiveScene().transition;
+                StoryMakerEvents.SetBackgroundLights();
+            }
 
             ScenesManagerFabulab.Instance.SetSceneObjectsIntoScenenario(lastSceneId);
             StoryMakerEvents.ReorderSceneObjectsInZ();
@@ -185,8 +187,10 @@ namespace Yaguar.StoryMaker.Editor
 
             SetButtons();
 
-            if(ScenesManagerFabulab.Instance.GetActiveScene()!=null)
+            if (ScenesManagerFabulab.Instance.GetActiveScene() != null) {
                 toggleTransition.isOn = ScenesManagerFabulab.Instance.GetActiveScene().transition;
+                StoryMakerEvents.SetBackgroundLights();
+            }
 
             ScenesManagerFabulab.Instance.SetSceneObjectsIntoScenenario(lastSceneId);
             StoryMakerEvents.ReorderSceneObjectsInZ();

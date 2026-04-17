@@ -663,6 +663,10 @@ namespace Yaguar.StoryMaker.DB
                                 sdf.duration = float.Parse(child.Child("duration").Value as string);
                             else
                                 sdf.duration = ScenesManagerFabulab.Instance.Keyframe_default_duration;
+                            if (child.HasChild("lightingId"))
+                                sdf.lightingId = child.Child("lightingId").Value as string;
+                            if (child.HasChild("lightingValue"))
+                                sdf.lightingValue = int.Parse(child.Child("lightingValue").Value as string);
 
                             List <SceneElement> elements = new List<SceneElement>();
                             foreach (var se in child.Child("scenesElements").Children) {

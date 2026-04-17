@@ -61,7 +61,7 @@ namespace Yaguar.StoryMaker.Editor
         {
             if (!opened) return;
             ScenesManagerFabulab.Instance.GetActiveScene().lightingValue = (int)slider.value;
-            StoryMakerEvents.SetBackgroundLights(slider.value);
+            StoryMakerEvents.SetBackgroundLights();
             SetValue(slider.value);
         }
         public void Close()
