@@ -34,6 +34,7 @@ namespace Yaguar.StoryMaker.Editor
         protected virtual void Start()
         {
             StoryMakerEvents.OnLoadFilm += Reset;
+            StoryMakerEvents.OnStartNewStory += Reset;
             StoryMakerEvents.ChangeSpeed += ChangeSpeed;
             StoryMakerEvents.ChangeSpeed(ScenesManager.Instance.currentFilmData.speed);
         }
@@ -49,6 +50,7 @@ namespace Yaguar.StoryMaker.Editor
         protected void OnDestroy()
         {
             StoryMakerEvents.OnLoadFilm -= Reset;
+            StoryMakerEvents.OnStartNewStory -= Reset;
             StoryMakerEvents.ChangeSpeed -= ChangeSpeed;
         }
         protected virtual void ChangeSpeed(int speed)

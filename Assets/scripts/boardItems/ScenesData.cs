@@ -64,6 +64,7 @@ namespace BoardItems
         public void StartNewStory(string storyName) {
             Debug.Log("#StartNewStory");
             ScenesManagerFabulab.Instance.Restart();
+            StoryMakerEvents.OnStartNewStory();
             //hace un nuevo id unico:
             ScenesManagerFabulab.Instance.currentFDataID = UnityEngine.Random.Range(0, 1000).ToString();
             bool idExists = false;

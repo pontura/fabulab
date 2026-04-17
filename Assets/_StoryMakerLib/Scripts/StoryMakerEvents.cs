@@ -12,6 +12,8 @@ namespace Yaguar.StoryMaker.Editor
         public static System.Action<int, SOExpData> OnExpression = delegate { };
         public static System.Action<ObjectSignal> OnInputField = delegate { };
 
+        public static System.Action OnStartNewStory = delegate { };
+
         public static System.Action<SOData> AddSceneObject = delegate { };
         public static System.Action<SOData> SetSceneObject = delegate { };
         public static System.Action<List<SOData>> AddAllSceneObjects = delegate { };
