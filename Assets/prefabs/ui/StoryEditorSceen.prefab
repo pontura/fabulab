@@ -1103,6 +1103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef59bc735851e6b4b879b93343bc5e40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoryEditorScreen
+  tabTools: {fileID: 9169677720298381094}
   tabs: {fileID: 9135470793818571216}
   timeline: {fileID: 428833887303520037}
   itemList: {fileID: 1041746984370589945}
@@ -7659,6 +7660,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2015168913956154472}
+  - component: {fileID: 9169677720298381094}
   m_Layer: 5
   m_Name: tools
   m_TagString: Untagged
@@ -7686,6 +7688,19 @@ RectTransform:
   m_AnchoredPosition: {x: -0.000015258789, y: 58.740013}
   m_SizeDelta: {x: 0, y: -237.48}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &9169677720298381094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6595271751932712520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff8df9863b2fbe45910c206b2db5cdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TabToolsManager
+  backgrounds: {fileID: 3298292594803088389}
 --- !u!1 &6647286910759072451
 GameObject:
   m_ObjectHideFlags: 0

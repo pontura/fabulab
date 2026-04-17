@@ -1,6 +1,5 @@
-using BoardItems.Characters;
+
 using Common.UI;
-using System.Security.Cryptography.X509Certificates;
 using UI.MainApp.Home.User;
 using UnityEngine;
 using Yaguar.StoryMaker.Editor;
@@ -9,6 +8,7 @@ namespace UI.MainApp
 {
     public class StoryEditorScreen : MonoBehaviour
     {
+        [SerializeField] TabToolsManager tabTools;
         [SerializeField] TabController tabs;
         [SerializeField] GameObject timeline;
         [SerializeField] GameObject itemList;
@@ -75,6 +75,7 @@ namespace UI.MainApp
         void OnTabClicked(int id) {
             actionUI.SetOn(false);
             emojisUI.SetOn(false);
+            tabTools.SetOn(id);
             switch (id) {
                 case 0:
                     timeline.SetActive(false);
