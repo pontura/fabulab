@@ -29,13 +29,13 @@ namespace Yaguar.StoryMaker.Editor
                 Debug.Log("%% " + item.Id);
                 SimpleButton btn = Instantiate(btn_prefab, btnContainer);
                 btn.Init(item.Icon);
-                btn.GetComponent<Button>().onClick.AddListener(() => BackgroundLightingPalette(item.Id));
+                btn.GetComponent<Button>().onClick.AddListener(() => BackgroundLightingPalette(item.Id,item.DefaultStep));
             }
         }
 
-        void BackgroundLightingPalette(string id) {
+        void BackgroundLightingPalette(string id, int defaultStep) {
             ScenesManagerFabulab.Instance.GetActiveScene().lightingId = id;
-            ScenesManagerFabulab.Instance.GetActiveScene().lightingValue = 0;
+            ScenesManagerFabulab.Instance.GetActiveScene().lightingValue = defaultStep;
             ResetSlider();
             OnSliderChanged();
         }

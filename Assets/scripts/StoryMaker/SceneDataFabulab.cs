@@ -174,8 +174,12 @@ namespace Yaguar.StoryMaker.Editor
 
         public override void Init() {
             scenesElements = new List<SceneElement>();
-            if(ScenesManagerFabulab.Instance!=null) 
-                duration = ScenesManagerFabulab.Instance.Keyframe_default_duration;
+            if (ScenesManagerFabulab.Instance != null) {
+                duration = ScenesManagerFabulab.Instance.Keyframe_default_duration;                
+                BgLigthtingPalette bglp = (Scenario.Instance.sceneObejctsManager as SceneObjectsManagerFabulab).BackgroundLighting.GetDefaultPalette();
+                lightingId = bglp.Id;
+                lightingValue = bglp.DefaultStep;
+            }
         }
 
         public new SceneDataFabulab Clone() {

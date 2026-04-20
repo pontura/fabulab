@@ -9,6 +9,7 @@ namespace Yaguar.StoryMaker.Editor
 
         [field: SerializeField] public string Id { get; private set; }
         [field:SerializeField] public Sprite Icon {  get; private set; }
+        [field: SerializeField] public int DefaultStep { get; private set; }
         [field: SerializeField] public List<Color> StepColors { get; private set; }
     }
 
@@ -36,6 +37,15 @@ namespace Yaguar.StoryMaker.Editor
         public Color GetStepColor(int step) {
             BgLigthtingPalette bglp = GetCurrentPalette();
             return bglp.StepColors[step];
+        }
+
+        public Color GetDefaultPaletteColor() {
+            BgLigthtingPalette bglp = GetCurrentPalette();
+            return bglp.StepColors[bglp.DefaultStep];
+        }
+
+        public BgLigthtingPalette GetDefaultPalette() {
+            return LightingPalettes.Find(x => x.Id == "default");
         }
     }
 }
