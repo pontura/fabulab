@@ -88,6 +88,7 @@ namespace Yaguar.StoryMaker.Editor
             kf.transform.localPosition = Vector2.zero;
             //Debug.Log(kf.transform.localPosition);
             UpdateKeyframes();
+            kf.UpdateScreenshot();
         }
         protected void UpdateKeyframes()
         {
