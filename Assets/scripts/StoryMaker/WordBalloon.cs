@@ -18,6 +18,7 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] Canvas canvas;
 
         [field:SerializeField] public Sprite[] balloonSprites { get; private set; }
+        [field: SerializeField] public Sprite[] balloonIcons { get; private set; }
 
         public override void SetField(string text) {
             field.text = text;
@@ -42,6 +43,7 @@ namespace Yaguar.StoryMaker.Editor
             balloonType = (balloonTypes)Enum.Parse(typeof(balloonTypes), soData.id);
             image.sprite = balloonSprites[(int)balloonType];
             data.pos.z = -50;
+            gameObject.transform.localPosition = data.pos.ToVector3();
         }
     }
 }

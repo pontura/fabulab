@@ -15,7 +15,7 @@ namespace UI.MainApp.Home.User
             foreach (WordBalloon.balloonTypes balloonType in Enum.GetValues(typeof(WordBalloon.balloonTypes)))
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-                go.Init(wballon_prefab.balloonSprites[(int)balloonType]);
+                go.Init(wballon_prefab.balloonIcons[(int)balloonType]);
                 go.GetComponent<Button>().onClick.AddListener(() => OpenWordBalloon(balloonType.ToString()));                
             }
 
@@ -32,13 +32,19 @@ namespace UI.MainApp.Home.User
             data.id = id;
             data.itemName = Utils.GetUniqueDateTimeId();
             StoryMakerEvents.AddSceneObject(data);
+            Invoke(nameof(OpenTextInput), 2 * Time.deltaTime);
         }
 
         void OpenWordBox(string id) {
             SOWordBoxData data = new SOWordBoxData();
             data.id = id;
             data.itemName = Utils.GetUniqueDateTimeId();
-            StoryMakerEvents.SetSceneObject(data);
+            StoryMakerEvents.AddSceneObject(data);
+            Invoke(nameof(OpenTextInput), 2 * Time.deltaTime);
+        }
+
+        void OpenTextInput() {
+            StoryMakerEvents.OnInputField((ObjectSignal)Scenario.Instance.sceneObejctsManager.selected);
         }
     }
 }
