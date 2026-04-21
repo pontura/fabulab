@@ -179,6 +179,7 @@ namespace Yaguar.StoryMaker.Editor
                 BgLigthtingPalette bglp = (Scenario.Instance.sceneObejctsManager as SceneObjectsManagerFabulab).BackgroundLighting.GetDefaultPalette();
                 lightingId = bglp.Id;
                 lightingValue = bglp.DefaultStep;
+                transition = true;
             }
         }
 
