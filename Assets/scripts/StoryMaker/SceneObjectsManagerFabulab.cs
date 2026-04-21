@@ -218,5 +218,12 @@ namespace Yaguar.StoryMaker.Editor
         void HideBgMask() {
             bgMask.SetActive(false);
         }
+
+        public void TurnOfAllTexts() {
+            foreach (SceneObject so in sceneObjects) {
+                if(so.GetData() is SOWordBalloonData || so.GetData() is SOWordBoxData)
+                    so.gameObject.SetActive(false);
+            }
+        }
     }
 }

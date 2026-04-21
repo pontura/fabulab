@@ -83,6 +83,7 @@ namespace Yaguar.StoryMaker.Editor
             //ScenesManagerFabulab.Instance.OnSaveScene();
             ScenesManagerFabulab.Instance.currentSceneId++;
             ScenesManagerFabulab.Instance.AddNewScene(ScenesManagerFabulab.Instance.currentSceneId);
+            (Scenario.Instance.sceneObejctsManager as SceneObjectsManagerFabulab).TurnOfAllTexts();
             SetButtons();
             timeline.AddNewKeyframe();
             timeline.JumpTo(ScenesManagerFabulab.Instance.currentSceneId);
