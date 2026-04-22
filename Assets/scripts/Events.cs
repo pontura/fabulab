@@ -5,7 +5,8 @@ using UI.MainApp;
 using UnityEngine;
 
 public static class Events
-{    
+{
+    public static System.Action<bool> ShowUndo = delegate { };
     public static System.Action OnUndoAdded = delegate { };
     public static System.Action<bool> OnBGColorizerOpen = delegate { };
     public static System.Action<bool> SetGroupToolsOn = delegate { };

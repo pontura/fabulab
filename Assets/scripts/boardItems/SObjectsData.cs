@@ -9,7 +9,8 @@ using Yaguar.StoryMaker.DB;
 
 namespace BoardItems
 {
-    public class SObjectsData : MonoBehaviour {
+    public class SObjectsData : MonoBehaviour
+    {
         public Vector2Int thumbSize;
 
         public List<SObjectData> data;
@@ -21,14 +22,16 @@ namespace BoardItems
         public void SetType(SObjectData.types type) { this.currentType = type; }
         public List<SObjectData> GetDataByType(SObjectData.types type)
         {
-           return data.FindAll(x => x.type == type);
+            return data.FindAll(x => x.type == type);
         }
 
-        public List<PropMetaData> GetMetadataByType(SObjectData.types type) {
+        public List<PropMetaData> GetMetadataByType(SObjectData.types type)
+        {
             return metaData.FindAll(x => x.type == type);
         }
 
-        public List<PropMetaData> GetUserMetadataByType(SObjectData.types type) {
+        public List<PropMetaData> GetUserMetadataByType(SObjectData.types type)
+        {
             return userMetaData.FindAll(x => x.type == type);
         }
 
@@ -38,28 +41,34 @@ namespace BoardItems
         SObjectData currentSO;
         Dictionary<string, ServerPartMetaData> serverPartsMetaData;
 
-       
-        private void Start() {
-            FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;          
-        }       
 
-        private void OnDestroy() {
+        private void Start()
+        {
+            FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
+        }
+
+        private void OnDestroy()
+        {
             FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
         }
 
-        void OnTokenUpdated() {
+        void OnTokenUpdated()
+        {
             Debug.Log("#OnTokenUpdated");
-            if (Data.Instance.userData.IsLogged()) {
+            if (Data.Instance.userData.IsLogged())
+            {
                 CancelInvoke();
-                LoadSOMetadataFromServer();                
-            } else
+                LoadSOMetadataFromServer();
+            }
+            else
                 Invoke("OnTokenUpdated", 1);
         }
-        void LoadSOMetadataFromServer() {
+        void LoadSOMetadataFromServer()
+        {
             Debug.Log("#Load SO MetadataFromServer");
             metaData = new List<PropMetaData>();
             FirebaseStoryMakerDBManager.Instance.LoadMetadataFromServer(MetadataTypes.so.ToString(), OnLoadSODataFromServer);
-        }        
+        }
 
         public void SaveSO(Texture2D tex)
         {
@@ -111,19 +120,21 @@ namespace BoardItems
                     sd.anim = iInScene.data.anim;
                     sd.color = iInScene.data.colorName;
                     wd.items.Add(sd);
-                  
+
                 }
                 // UIManager.Instance.boardUI.items.Delete(iInScene);
             }
             currentSO = wd;
 
-            if (wd.id == "") {
+            if (wd.id == "")
+            {
                 data.Add(wd);
                 FirebaseStoryMakerDBManager.Instance.SaveToServer(MetadataTypes.so.ToString(), wd.GetServerData(), OnSavedToServer);
-            } 
-            else {
+            }
+            else
+            {
                 FirebaseStoryMakerDBManager.Instance.UpdateDataToServer(MetadataTypes.so.ToString(), wd.id, wd.GetServerData(), OnSavedToServer);
-            } 
+            }
         }
         void OnSavedToServer(bool succes, string id)
         {
@@ -151,7 +162,7 @@ namespace BoardItems
 
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), currentID, swmd);
             UIManager.Instance.ShowWorkDetail(currentSO);
-           
+
         }
         public void OnLoadSODataFromServer(List<CharacterMetaData> sfds)
         {
@@ -176,7 +187,7 @@ namespace BoardItems
                 data.Add(wd);
             }
         }
-        
+
         public string GetCurrent()
         {
             return currentID;
@@ -189,47 +200,56 @@ namespace BoardItems
         public SObjectData SetCurrentID(string id)
         {
             currentID = id;
-            SObjectData o =  data.Find(x => x.id == id);
-            if(o != null)
+            SObjectData o = data.Find(x => x.id == id);
+            if (o != null)
                 currentType = o.type;
             return o;
         }
 
-        public void LoadOthersObject(string id, System.Action<SObjectData> OnDone) {
+        public void LoadOthersObject(string id, System.Action<SObjectData> OnDone)
+        {
             currentID = "";
             //  Debug.Log(currentID);
             if (othersData == null)
                 othersData = new List<SObjectData>();
             SObjectData chd = othersData.Find(x => x.id == id);
-            if (chd != null) {
+            if (chd != null)
+            {
                 currentType = chd.type;
-                OnDone(chd);                
-            } else {
+                OnDone(chd);
+            }
+            else
+            {
                 PropMetaData chmd = metaData.Find(x => x.id == id);
-                if (chmd == null) {
+                if (chmd == null)
+                {
                     Debug.Log("Fail getting Prop Meta Data");
                     OnDone(null);
                     return;
                 }
 
-                FirebaseStoryMakerDBManager.Instance.LoadAssetFromServer(id, (success, key, data) => {
-                    if (success) {
+                FirebaseStoryMakerDBManager.Instance.LoadAssetFromServer(id, (success, key, data) =>
+                {
+                    if (success)
+                    {
                         SObjectData chD = othersData.Find(x => x.id == key);
-                        if (chD != null) {
+                        if (chD != null)
+                        {
                             Debug.Log("& othersData != null");
-                            currentType = chd.type;
+                            currentType = chD.type;
                             OnDone(chD);
                             return;
                         }
                         chD = new SObjectData();
                         chD.id = key;
                         chD.LoadServerData(data);
-                        chD.thumb = chmd.thumb;
-                        chD.type = chmd.type;
+                        currentType = chD.type;
+                        chD.thumb = metaData.Find(x => x.id == chD.id)?.thumb;
                         othersData.Add(chD);
-                        currentType = chmd.type;
                         OnDone(chD);
-                    } else {
+                    }
+                    else
+                    {
                         Debug.Log("Fail getting Character Data");
                         OnDone(null);
                     }
@@ -251,9 +271,9 @@ namespace BoardItems
         {
             //CharacterData wd = characters.Find(x => x.id == id);
             //characters.Remove(wd);
-           // PlayerPrefs.DeleteKey("Work_" + id);
+            // PlayerPrefs.DeleteKey("Work_" + id);
             //  PlayerPrefs.DeleteKey("PkpkShared_" + id);
-           // PersistWorksIds();
+            // PersistWorksIds();
         }
 
 

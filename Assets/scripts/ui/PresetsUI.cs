@@ -25,15 +25,19 @@ namespace UI
         public void SetOff()
         {
             deleteAll.gameObject.SetActive(false);
-            undo.gameObject.SetActive(false);
             snapToggle.Show(false);
-            gameObject.SetActive(false);
+            Events.ShowUndo(false);
         }
         string characterEditorID = "";
         public void Init()
         {
             deleteAll.gameObject.SetActive(true);
-            undo.gameObject.SetActive(true);
+
+            if (Data.Instance.sObjectsData.Type == BoardItems.BoardData.SObjectData.types.generic)
+                Events.ShowUndo(true);
+            else
+                Events.ShowUndo(false);
+
             snapToggle.Init(OnToggle, UIManager.Instance.boardUI.snap);
             dragAndDropUI.transform.SetParent(dragAndDropContainer);
             dragAndDropUI.Init();
