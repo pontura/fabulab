@@ -245,6 +245,7 @@ namespace BoardItems
                         chD.LoadServerData(data);
                         chD.thumb = chmd.thumb;
                         chD.type = chmd.type;
+                        currentType = chD.type;
                         othersData.Add(chD);
                         OnDone(chD);
                     }
