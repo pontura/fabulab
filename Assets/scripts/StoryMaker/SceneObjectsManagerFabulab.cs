@@ -137,6 +137,10 @@ namespace Yaguar.StoryMaker.Editor
 
                 Events.OnCharacterAnim(sOData.id, avatarData.anim);
                 Events.OnCharacterExpression(sOData.id, avatarData.emoji);
+            }else if (data is SOWordBalloonData soWBD) {
+                (so as WordBalloon).SetField(soWBD.inputValue);
+            } else if (data is SOWordBoxData soWBoxD) {
+                (so as WordBox).SetField(soWBoxD.inputValue);
             }
         }
 

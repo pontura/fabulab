@@ -407,24 +407,26 @@ namespace Yaguar.StoryMaker.Editor
 
             foreach (SceneElement data in scenesElements)
             {
-                SOData soData = null;
-                soData = GetSOData(data);
-                if (soData != null) {
-                    Vector3 to = ElementShouldMoveTo(data.type,soData, soData.itemName);
-                    if (to != Vector3.zero) {
-                        if (data.type == SceneElementType.AVATAR) {
-                            Scenario.Instance.movementManager.MoveCharacter(soData.id, to, timeToNextFrame);
-                        } else if (data.type == SceneElementType.PROP) {
-                            Scenario.Instance.movementManager.MoveElement(soData, to, timeToNextFrame);
+                if (data.type == SceneElementType.AVATAR || data.type == SceneElementType.PROP) {
+                    SOData soData = null;
+                    soData = GetSOData(data);
+                    if (soData != null) {
+                        Vector3 to = ElementShouldMoveTo(data.type, soData, soData.itemName);
+                        if (to != Vector3.zero) {
+                            if (data.type == SceneElementType.AVATAR) {
+                                Scenario.Instance.movementManager.MoveCharacter(soData.id, to, timeToNextFrame);
+                            } else if (data.type == SceneElementType.PROP) {
+                                Scenario.Instance.movementManager.MoveElement(soData, to, timeToNextFrame);
+                            }
                         }
-                    }
-                    float scaleTo = ElementShouldScaleTo(data.type, soData, soData.itemName);
-                    if(scaleTo != 0) 
-                        Scenario.Instance.movementManager.ScaleElement(soData, scaleTo, timeToNextFrame);
-                    
-                    float rotateTo = ElementShouldRotateTo(data.type, soData, soData.itemName);
-                    if (rotateTo != 0)
+                        float scaleTo = ElementShouldScaleTo(data.type, soData, soData.itemName);
+                        if (scaleTo != 0)
+                            Scenario.Instance.movementManager.ScaleElement(soData, scaleTo, timeToNextFrame);
+
+                        float rotateTo = ElementShouldRotateTo(data.type, soData, soData.itemName);
+                        if (rotateTo != 0)
                             Scenario.Instance.movementManager.RotateElement(soData, rotateTo, timeToNextFrame);
+                    }
                 }
             }
         }       
