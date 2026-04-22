@@ -114,9 +114,10 @@ namespace Yaguar.StoryMaker.Editor
         }
         public void RemoveKeyframe()
         {
-            all.RemoveAt(0);
-            KeyFrameUI kf = container.GetComponentInChildren<KeyFrameUI>();
+            print("RemoveKeyframe");
+            KeyFrameUI kf = all[activeAnimatedKeyframeID - 1];
             Destroy(kf.gameObject);
+            all.Remove(kf);
             UpdateKeyframes();
         }
         public void InitPlaying()
