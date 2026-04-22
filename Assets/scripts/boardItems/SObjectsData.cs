@@ -18,7 +18,15 @@ namespace BoardItems
         public List<PropMetaData> metaData;
         public List<PropMetaData> userMetaData;
 
-        public SObjectData.types Type { get { return this.currentType; } }
+        [SerializeField] SObjectData.types currentType;
+        public SObjectData.types Type { 
+            get { return this.currentType; }
+            set
+            {
+                print("Type" + currentType);
+                this.currentType = value;
+            }
+        }
         public void SetType(SObjectData.types type) { this.currentType = type; }
         public List<SObjectData> GetDataByType(SObjectData.types type)
         {
@@ -36,7 +44,6 @@ namespace BoardItems
         }
 
         [SerializeField] string currentID;
-        [SerializeField] SObjectData.types currentType;
 
         SObjectData currentSO;
         Dictionary<string, ServerPartMetaData> serverPartsMetaData;
@@ -202,7 +209,7 @@ namespace BoardItems
             currentID = id;
             SObjectData o = data.Find(x => x.id == id);
             if (o != null)
-                currentType = o.type;
+                Type = o.type;
             return o;
         }
 
@@ -215,7 +222,7 @@ namespace BoardItems
             SObjectData chd = othersData.Find(x => x.id == id);
             if (chd != null)
             {
-                currentType = chd.type;
+                Type = chd.type;
                 OnDone(chd);
             }
             else
@@ -236,7 +243,7 @@ namespace BoardItems
                         if (chD != null)
                         {
                             Debug.Log("& othersData != null");
-                            currentType = chD.type;
+                            Type = chD.type;
                             OnDone(chD);
                             return;
                         }
@@ -245,6 +252,7 @@ namespace BoardItems
                         chD.LoadServerData(data);
                         chD.thumb = chmd.thumb;
                         chD.type = chmd.type;
+                        Type = chmd.type;
                         othersData.Add(chD);
                         OnDone(chD);
                     }

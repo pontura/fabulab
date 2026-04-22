@@ -227,6 +227,7 @@ namespace UI
 
         public void OpenWork(SOPartData wd)
         {
+            Events.ShowUndo(Data.Instance.sObjectsData.Type == SObjectData.types.generic);
             items.OpenWork(activeBoardItem, wd, true);
         }
 
