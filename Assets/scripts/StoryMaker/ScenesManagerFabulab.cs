@@ -54,6 +54,10 @@ namespace Yaguar.StoryMaker.Editor
             activeScene.Init();
             currentSceneId = _id;
             scenes.Insert(currentSceneId - 1, activeScene);
+            if (currentSceneId - 1 > 0) {
+                activeScene.lightingId = scenes[currentSceneId - 2].lightingId;
+                activeScene.lightingValue = scenes[currentSceneId - 2].lightingValue;
+            }
         }
 
         public new SceneDataFabulab GetActiveScene() {
