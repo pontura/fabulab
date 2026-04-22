@@ -26,6 +26,7 @@ namespace UI.MainApp
                 case UIManager.screenType.WorkDetail:
                     break;
                 case UIManager.screenType.Creation_Character:
+                    Events.ShowUndo(true);
                     changesMade = false;
                     SetButtons();
                     Show(true);
