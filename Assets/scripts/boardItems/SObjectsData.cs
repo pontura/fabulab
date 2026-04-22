@@ -243,8 +243,8 @@ namespace BoardItems
                         chD = new SObjectData();
                         chD.id = key;
                         chD.LoadServerData(data);
-                        currentType = chD.type;
-                        chD.thumb = metaData.Find(x => x.id == chD.id)?.thumb;
+                        chD.thumb = chmd.thumb;
+                        chD.type = chmd.type;
                         othersData.Add(chD);
                         OnDone(chD);
                     }
