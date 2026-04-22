@@ -201,9 +201,10 @@ namespace BoardItems
             if (othersData == null)
                 othersData = new List<SObjectData>();
             SObjectData chd = othersData.Find(x => x.id == id);
-            if (chd != null)
-                OnDone(chd);
-            else {
+            if (chd != null) {
+                currentType = chd.type;
+                OnDone(chd);                
+            } else {
                 PropMetaData chmd = metaData.Find(x => x.id == id);
                 if (chmd == null) {
                     Debug.Log("Fail getting Prop Meta Data");
@@ -216,14 +217,17 @@ namespace BoardItems
                         SObjectData chD = othersData.Find(x => x.id == key);
                         if (chD != null) {
                             Debug.Log("& othersData != null");
+                            currentType = chd.type;
                             OnDone(chD);
                             return;
                         }
                         chD = new SObjectData();
                         chD.id = key;
                         chD.LoadServerData(data);
-                        chD.thumb = metaData.Find(x => x.id == chD.id)?.thumb;
+                        chD.thumb = chmd.thumb;
+                        chD.type = chmd.type;
                         othersData.Add(chD);
+                        currentType = chmd.type;
                         OnDone(chD);
                     } else {
                         Debug.Log("Fail getting Character Data");
