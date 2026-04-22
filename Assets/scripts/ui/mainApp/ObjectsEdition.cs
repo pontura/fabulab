@@ -1,9 +1,5 @@
-using BoardItems;
 using BoardItems.Characters;
-using Common.UI;
-using System;
 using UnityEngine;
-using static BoardItems.Characters.CharacterPartsHelper;
 
 namespace UI.MainApp
 {
@@ -33,10 +29,12 @@ namespace UI.MainApp
                     switch (Data.Instance.sObjectsData.Type)
                     {
                         case BoardItems.BoardData.SObjectData.types.generic:
-                            Events.Zoom(ZoomStates.NONE, false);
+                            Events.Zoom(ZoomStates.NONE, false); 
+                            Events.ShowUndo(true);
                             break;
                         case BoardItems.BoardData.SObjectData.types.background:
                             Events.Zoom(ZoomStates.BACKGROUND, false);
+                            Events.ShowUndo(false);
                             break;
                     }
                     UIManager.Instance.boardUI.activeBoardItem.Init();

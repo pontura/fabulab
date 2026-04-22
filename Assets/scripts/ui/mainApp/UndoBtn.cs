@@ -7,15 +7,21 @@ public class UndoBtn : MonoBehaviour
 {
     [SerializeField] Button btn;
 
-    private void Start()
+    private void Awake()
     {
+        Events.ShowUndo += ShowUndo;
         Events.OnUndoAdded += OnUndoAdded;
     }
     private void OnDestroy()
     {
+        Events.ShowUndo -= ShowUndo;
         Events.OnUndoAdded -= OnUndoAdded;
     }
-
+    void ShowUndo(bool show)
+    {
+        print("Show undo " + show);
+        gameObject.SetActive(show);
+    }
     private void OnUndoAdded()
     {
         btn.interactable = true;

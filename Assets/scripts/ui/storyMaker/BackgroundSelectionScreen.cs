@@ -14,7 +14,7 @@ namespace UI.MainApp.Home.User
                 Debug.Log("== Type: " + cd.type);
                 if (cd.type == SObjectData.types.background) {
                     ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-                    print("go " + go);
+                    print("BackgroundSelectionScreen " + go + " type: " + cd.type + " id: " + cd.id);
                     go.Init(cd);
                     go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
                 }
