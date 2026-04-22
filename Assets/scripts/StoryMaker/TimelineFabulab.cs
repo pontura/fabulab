@@ -43,11 +43,15 @@ namespace Yaguar.StoryMaker.Editor
         }
         protected override void RefreshKeyframes()
         {
-            for (int a = 0; a < ScenesManagerFabulab.Instance.Scenes.Count; a++) {
-                AddNewKeyframe();
-                float dur = ScenesManagerFabulab.Instance.GetActiveScene().duration;
-                all[a].duration = dur>0?dur:2;
+            int a = 0;
+            foreach (SceneDataFabulab s in ScenesManagerFabulab.Instance.Scenes)
+            {
+                AddNewKeyframe(s.duration);
+                //float dur = ScenesManagerFabulab.Instance.GetActiveScene().duration;
+                //all[a].SetDuration( dur>0?dur:2);
+                //a++;
             }
+            UpdateKeyframes();
         }
 
         public override float OnChangeDuration(float value) {

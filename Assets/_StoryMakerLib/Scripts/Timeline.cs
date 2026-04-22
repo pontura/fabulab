@@ -77,10 +77,11 @@ namespace Yaguar.StoryMaker.Editor
             //for (int a = 0; a < ScenesManager.Instance.Scenes.Count; a++)
             //    AddNewKeyframe();
         }
-        public void AddNewKeyframe()
+        public void AddNewKeyframe(float duration = 0)
         {
+            if (duration == 0) duration = keyframe_duration;
             KeyFrameUI kf = Instantiate(keyframe);
-            kf.SetDuration(keyframe_duration);
+            kf.SetDuration(duration);
             kf.Init(this);
             all.Add(kf);
             kf.transform.SetParent(container);
