@@ -163,11 +163,9 @@ namespace UI.MainApp
             if (!editionEnabled)
                 return;
             changesMade = true;
-            DoneBtn.gameObject.SetActive(true);
         }
 
         public void Save() {
-            DoneBtn.gameObject.SetActive(false);
             savePanel.SetActive(false);
             Invoke(nameof(SaveWork), Time.deltaTime*2);
         }
@@ -178,7 +176,6 @@ namespace UI.MainApp
             SaveWork();
         }
         public void Cancel() {
-            DoneBtn.SetActive(true);
             savePanel.SetActive(false);
         }
 
@@ -200,8 +197,7 @@ namespace UI.MainApp
             actionUI.SetOn(enable);
             emojisUI.SetOn(enable);
 
-            if (!enable)
-                DoneBtn.gameObject.SetActive(false);
+            DoneBtn.gameObject.SetActive(enable);
 
            // Invoke(nameof(SetTabState), Time.deltaTime * 10);
         }
