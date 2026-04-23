@@ -55,6 +55,8 @@ namespace Yaguar.StoryMaker.Editor
             }
             filmMakerUI.JumpTo(1);
             UpdateKeyframes();
+
+            Events.OnLoading(false);
         }
         public override float OnChangeDuration(float value) {
             float duration = Mathf.Lerp(min_speed, max_speed, value);

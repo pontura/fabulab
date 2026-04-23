@@ -174,7 +174,7 @@ namespace BoardItems
                 //Data.Instance.cache.AddToThemeFilmsDataToCache(Data.Instance.themesManager.selectedTheme.id, filmsData, showType, pageId);
                 //Events.OnUpdateFilmIcon();
             }
-            Events.OnLoading(false);
+            
         }
 
         public void SortThemeFilmsDataByLikes(bool moreLikes) {
@@ -271,7 +271,6 @@ namespace BoardItems
             if (currentFilmData != null) {
                 ScenesManagerFabulab.Instance.currentFDataID = currentFilmData.id;
                 ScenesManagerFabulab.Instance.Scenes = new List<SceneDataFabulab>();
-                Events.OnLoading(true);
                 //Data.Instance.firebaseAuthManager.LoadFilmFromServer(ScenesManager.Instance.currentFDataID, 0);
                 if (Data.Instance.cacheData.filmsCache.ContainsKey(ScenesManagerFabulab.Instance.currentFDataID)) {
                     Debug.Log("Load From Cache");
@@ -293,7 +292,6 @@ namespace BoardItems
                 ScenesManagerFabulab.Instance.Scenes = new List<SceneDataFabulab>();
 
                 if (Data.Instance.userData.IsLogged()) {
-                    Events.OnLoading(true);
                     //Data.Instance.firebaseAuthManager.LoadFilmFromServer(ScenesManagerFabulab.Instance.currentFDataID, 0);
                     if (Data.Instance.cacheData.filmsCache.ContainsKey(ScenesManagerFabulab.Instance.currentFDataID)) {
                         Debug.Log("Load From Cache");
@@ -314,7 +312,6 @@ namespace BoardItems
                 return;
             }
             InitLoadedFilm();
-            Events.OnLoading(false);
             loadedDone = true;
         }
 
@@ -370,7 +367,6 @@ namespace BoardItems
             elementsIds.Remove((sOPart.id,type));
             if (elementsIds.Count <= 0) {
                 InitLoadedFilm();
-                Events.OnLoading(false);
                 loadedDone = true;
             }
         }

@@ -26,7 +26,8 @@ namespace BoardItems
 
         IEnumerator CaptureRoutine(System.Action<Texture2D> OnDone)
         {
-            canvas.gameObject.SetActive(false);
+            canvas.enabled = (false);
+            yield return null; // esperar 1 frame completo
             yield return new WaitForEndOfFrame();
 
             Bounds bounds = targetRenderer.bounds;
@@ -66,12 +67,12 @@ namespace BoardItems
             float width = xMax - xMin;
             float height = yMax - yMin;
 
-            if (width <= 0 || height <= 0)
-            {
-                OnDone(null);
-                canvas.gameObject.SetActive(true);
-                yield break;
-            }
+            //if (width <= 0 || height <= 0)
+            //{
+            //    OnDone(null);
+            //    canvas.gameObject.SetActive(true);
+            //    yield break;
+            //}
 
             Rect rect = new Rect(xMin, yMin, width, height);
 
@@ -86,8 +87,9 @@ namespace BoardItems
 
 
             OnDone(texture);
+            yield return new WaitForEndOfFrame();
 
-            canvas.gameObject.SetActive(true);
+            canvas.enabled = (true);
         }
 
         public void TakeShot(Vector2Int size, System.Action<Texture2D> OnDone)
