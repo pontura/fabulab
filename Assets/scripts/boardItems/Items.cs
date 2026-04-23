@@ -711,8 +711,8 @@ namespace BoardItems
                     childBoardItemManager.SetInteractableObject(o.id, OnObjectMerged, soID);
                 } else print("open work itemData.soID not found: " + soID);
             }
-            if(soIDs.Count>0)
-                bgContainer.localScale *= 0.5f;
+            
+            bgContainer.localScale *= 0.5f;
         }
 
         IEnumerator Cascade(BoardItemManager boardItemManager, SOPartData wd)
