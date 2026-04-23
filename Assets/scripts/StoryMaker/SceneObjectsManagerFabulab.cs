@@ -14,6 +14,9 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] GameObject bgMask;
         [field:SerializeField] public BackgroundLighting BackgroundLighting {  get; private set; }
 
+        public List<SceneObject> recentAdded;
+        
+
         void Start()
         {
             StoryMakerEvents.SetBackgroundLights += SetBackgroundLights;
@@ -55,6 +58,8 @@ namespace Yaguar.StoryMaker.Editor
 
             foreach(SceneObject so in sceneObjects)
                 so.gameObject.SetActive(false);
+
+            recentAdded.Clear();
         }
 
         public override void AddSceneObject(SOData data)
@@ -123,8 +128,12 @@ namespace Yaguar.StoryMaker.Editor
                 selected = wordBox;
             }
 
-            if (selected != null)
+            if (selected != null) {
                 sceneObjects.Add(selected);
+                if(recentAdded==null)
+                    recentAdded = new();
+                recentAdded.Add(selected);
+            }
         }
 
         public virtual void SetSceneObject(SOData data) {

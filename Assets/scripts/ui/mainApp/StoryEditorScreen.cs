@@ -147,11 +147,12 @@ namespace UI.MainApp
 
                 Debug.Log("# Adding to SceneData: " + soData.id + "_"+ soData.itemName + " " + soData);
 
-
                 sdf.AddSO(soData);
-                if(so is Prop || so is AvatarFabulab)
+                if ((so is Prop || so is AvatarFabulab) && (Scenario.Instance.sceneObejctsManager as SceneObjectsManagerFabulab).recentAdded.Contains(so)) {
                     ScenesManagerFabulab.Instance.AddItemToNextScenesSameBG(soData);
-                
+                    (Scenario.Instance.sceneObejctsManager as SceneObjectsManagerFabulab).recentAdded.Remove(so);
+                }
+
                 /*if (customizerData != "" && Data.Instance.scenesData.currentFilmData.IsMyStory())
                     StoryMakerEvents.SetNewAvatarCustomization(customizerData);*/
 
