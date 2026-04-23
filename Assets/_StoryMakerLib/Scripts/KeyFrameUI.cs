@@ -66,6 +66,7 @@ public class KeyFrameUI : MonoBehaviour
     }
     public void UpdateScreenshot()
     {
+        print("UpdateScreenshot " + id);
         Scenario.Instance.Screenshot(ScreenshotUpdated);
     }
     void ScreenshotUpdated(Texture2D texture)

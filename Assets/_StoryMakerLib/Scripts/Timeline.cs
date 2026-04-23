@@ -1,8 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -41,8 +38,11 @@ namespace Yaguar.StoryMaker.Editor
         private void OnEnable() {
 
             if (all.Count == 0)
+            {
                 Reset();
-            UpdateKeyframes();
+                all[activeAnimatedKeyframeID - 1].UpdateScreenshot();
+            } else
+                UpdateKeyframes();
 
             float duration = (keyframe_duration - min_speed) / (max_speed - min_speed);
             durationBtn.Init(this, duration);
@@ -109,7 +109,6 @@ namespace Yaguar.StoryMaker.Editor
                     kf.SetSelected(false);
                 id++;
             }
-            if (activeAnimatedKeyframeID >= all.Count) return;
             all[activeAnimatedKeyframeID - 1].UpdateScreenshot();
         }
         public void RemoveKeyframe()
