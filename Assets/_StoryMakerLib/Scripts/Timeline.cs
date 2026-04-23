@@ -110,7 +110,8 @@ namespace Yaguar.StoryMaker.Editor
                 id++;
             }
             print(all.Count + " activeAnimatedKeyframeID_ " + activeAnimatedKeyframeID);
-            all[activeAnimatedKeyframeID - 1].UpdateScreenshot();
+            if(all.Count>0)
+                all[activeAnimatedKeyframeID - 1].UpdateScreenshot();
         }
         public void RemoveKeyframe()
         {
