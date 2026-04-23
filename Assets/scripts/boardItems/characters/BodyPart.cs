@@ -97,7 +97,7 @@ namespace BoardItems
         }
         public void SetArrengedItems()
         {
-            print("SetArrengedItems");
+          //  print("SetArrengedItems");
             ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
             float _z = 0;
             foreach (ItemInScene i in all)
@@ -114,7 +114,7 @@ namespace BoardItems
         }
         public void OnStopTransformModify()
         {
-            print("OnStopTransformModify");
+          //  print("OnStopTransformModify");
             ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
             foreach (ItemInScene i in all) i.transform.SetParent(transform.parent);
             transform.localPosition = Vector3.zero;

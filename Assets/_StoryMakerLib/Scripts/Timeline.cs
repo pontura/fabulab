@@ -40,7 +40,6 @@ namespace Yaguar.StoryMaker.Editor
             if (all.Count == 0)
             {
                 Reset();
-                all[activeAnimatedKeyframeID - 1].UpdateScreenshot();
             } else
                 UpdateKeyframes();
 

@@ -646,7 +646,7 @@ namespace BoardItems
                 else
                 {
                     ItemData newItem = CreateItem(itemData, boardItemManager);
-                    print("open work newItem part: " + newItem.part);
+                //    print("open work newItem part: " + newItem.part);
                 }
                 //if (newItem.anim != AnimationsManager.anim.NONE)
                 //{
@@ -661,7 +661,7 @@ namespace BoardItems
 
         void LoadBgSos(BoardItemManager boardItemManager, Transform bgContainer, Transform container) {            
             foreach (SavedIData soID in soIDs) {
-                print("open SO in background soID: " + soID.soID);
+             //   print("open SO in background soID: " + soID.soID);
                 SOPartData soPartData = Data.Instance.sObjectsData.GetSO(soID.soID);
                 if (soPartData != null) {
                     SOPartData o = Data.Instance.sObjectsData.GetSO(soID.soID);

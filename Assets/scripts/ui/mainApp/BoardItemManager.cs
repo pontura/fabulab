@@ -30,7 +30,7 @@ namespace UI.MainApp
             foreach (ItemInScene comp in transform.GetComponentsInChildren<ItemInScene>())
             {
                 comp.itemInsideContainer = true;
-                print("SetInteractableObject colorName __________" + comp.data.colorName + " goName: " + comp.gameObject.name);
+            //    print("SetInteractableObject colorName __________" + comp.data.colorName + " goName: " + comp.gameObject.name);
                 comp.SetColor(comp.data.colorName);
                 comp.enabled = false;
                 Destroy((Component)comp);

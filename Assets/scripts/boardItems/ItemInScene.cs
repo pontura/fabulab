@@ -32,7 +32,7 @@ namespace BoardItems
             if(sprite == null)
                 sprite = GetComponentInChildren<SpriteRenderer>();
 
-            print("ItemInScene Init " + gameObject.name);
+            //print("ItemInScene Init " + gameObject.name);
         }
         private void Start()
         {
@@ -128,7 +128,7 @@ namespace BoardItems
         public void SetColor(PalettesManager.colorNames name)
         {
             if (sprite == null) return;
-            print("SetColor item in scene " + name + " sprite: " + sprite + " data.colorName " + data.colorName);
+           // print("SetColor item in scene " + name + " sprite: " + sprite + " data.colorName " + data.colorName);
             data.colorName = name;
             List<Color> allColors = Data.Instance.palettesManager.GetColorsByName(name);
             

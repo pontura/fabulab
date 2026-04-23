@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using System.Collections;
 using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
@@ -39,22 +40,22 @@ namespace Yaguar.StoryMaker.Editor
                 Destroy(child.gameObject);
             }
             all.Clear();
-            RefreshKeyframes();
-            filmMakerUI.JumpTo(1);
+
+            StartCoroutine(RefreshKeyframesC());
         }
-        protected override void RefreshKeyframes()
+        IEnumerator RefreshKeyframesC()
         {
             int a = 0;
             foreach (SceneDataFabulab s in ScenesManagerFabulab.Instance.Scenes)
             {
+                a++;
                 AddNewKeyframe(s.duration);
-                //float dur = ScenesManagerFabulab.Instance.GetActiveScene().duration;
-                //all[a].SetDuration( dur>0?dur:2);
-                //a++;
+                yield return new WaitForSeconds(Time.deltaTime * 10);
+                filmMakerUI.JumpTo(a);
             }
+            filmMakerUI.JumpTo(1);
             UpdateKeyframes();
         }
-
         public override float OnChangeDuration(float value) {
             float duration = Mathf.Lerp(min_speed, max_speed, value);
             all[activeAnimatedKeyframeID - 1].SetDuration(duration);

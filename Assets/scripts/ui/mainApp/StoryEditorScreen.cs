@@ -36,7 +36,6 @@ namespace UI.MainApp
             StoryMakerEvents.EditExpressions += EditExpressions;
             StoryMakerEvents.OnLoadFilm += OnLoadFilm;
             StoryMakerEvents.EnableStoryEdition += EnableStoryEdition;
-            Invoke(nameof(Init), Time.deltaTime * 4);
         }
 
         void OnDestroy() {
@@ -50,9 +49,17 @@ namespace UI.MainApp
         void OnLoadFilm() {
             storyName.text = Data.Instance.scenesData.currentFilmData.name;
         }
+        private void OnEnable()
+        {
+            print("OnEnable EnableStoryEdition " + editionEnabled);
+            Invoke(nameof(Init), Time.deltaTime * 4);
+        }
 
-        void Init() {
-            tabs.Init(OnTabClicked);
+        void Init()
+        {
+            print("Init EnableStoryEdition " + editionEnabled + "frames: " + ScenesManagerFabulab.Instance.Scenes.Count);
+            if (!editionEnabled) return;
+            tabs.Init(OnTabClicked, 4);
         }
 
         public void CloseActionsAndEmojis() {
@@ -185,19 +192,23 @@ namespace UI.MainApp
 
         void EnableStoryEdition(bool enable) {
 
+            print("EnableStoryEdition " + enable);
             editionEnabled = enable;
             tabs.gameObject.SetActive(enable);
             storyName.interactable = enable;
 
+            actionUI.SetOn(enable);
+            emojisUI.SetOn(enable);
+
             if (!enable)
                 DoneBtn.gameObject.SetActive(false);
 
-            Invoke(nameof(SetTabState), Time.deltaTime * 10);
+           // Invoke(nameof(SetTabState), Time.deltaTime * 10);
         }
 
-        void SetTabState() {
-            int id = editionEnabled ? 0 : 4;
-            OnTabClicked(id);
-        }
+        //void SetTabState() {
+        //    int id = editionEnabled ? 0 : 4;
+        //    OnTabClicked(id);
+        //}
     }
 }
