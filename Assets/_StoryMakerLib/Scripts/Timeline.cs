@@ -59,6 +59,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         public virtual void Reset()
         {
+            activeAnimatedKeyframeID = 1;
             if (ScenesManager.Instance.currentFilmData != null)
                 StoryMakerEvents.ChangeSpeed(ScenesManager.Instance.currentFilmData.speed);
 
@@ -109,6 +110,7 @@ namespace Yaguar.StoryMaker.Editor
                     kf.SetSelected(false);
                 id++;
             }
+            print(all.Count + " activeAnimatedKeyframeID_ " + activeAnimatedKeyframeID);
             all[activeAnimatedKeyframeID - 1].UpdateScreenshot();
         }
         public void RemoveKeyframe()

@@ -28,6 +28,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         public override void Reset()
         {
+            activeAnimatedKeyframeID = 1;
             if (ScenesManagerFabulab.Instance.currentFilmData != null)
                 StoryMakerEvents.ChangeSpeed(ScenesManagerFabulab.Instance.currentFilmData.speed);
 
