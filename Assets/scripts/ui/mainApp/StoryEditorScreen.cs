@@ -59,6 +59,7 @@ namespace UI.MainApp
         {
             print("Init EnableStoryEdition " + editionEnabled + "frames: " + ScenesManagerFabulab.Instance.Scenes.Count);
             if (!editionEnabled) return;
+            changesMade = false;
             tabs.Init(OnTabClicked, 4);
         }
 
