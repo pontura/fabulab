@@ -649,9 +649,9 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
                     try {
-                        DataSnapshot snapshot = task.Result;
+                        var children = task.Result.Children.OrderBy(c => int.Parse(c.Key)); //Ordena los key evitando el orden lexigráfico (10 antes que 2)
                         List<SceneDataFabulab> scene = new List<SceneDataFabulab>();
-                        foreach (var child in snapshot.Children) {
+                        foreach (var child in children) {
                             //Debug.Log(child.Key + " => " + child.Child("name").Value);
                             //SceneDataFabulab sdf = JsonUtility.FromJson<SceneDataFabulab>(child.GetRawJsonValue());
                             SceneDataFabulab sdf = new SceneDataFabulab();
