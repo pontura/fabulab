@@ -41,7 +41,7 @@ namespace Yaguar.StoryMaker.Editor
             }
             all.Clear();
 
-            StartCoroutine(RefreshKeyframesC());
+            Scenario.Instance.StartCoroutine(RefreshKeyframesC());
         }
         IEnumerator RefreshKeyframesC()
         {
