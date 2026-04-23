@@ -70,9 +70,21 @@ namespace Yaguar.StoryMaker.Editor
         IEnumerator CaptureRoutine(System.Action<Texture2D> OnDone)
         {
             yield return new WaitForSeconds(0.1f);
+
             targetRenderer.GetComponent<Animator>().SetInteger("zoom", 9);
+
             yield return new WaitForEndOfFrame();
+
+            int rtWidth = Screen.width;
+            int rtHeight = Screen.height;
+
+            RenderTexture rt = new RenderTexture(rtWidth, rtHeight, 24);
+            Cam.targetTexture = rt;
+
+            Cam.Render();
+
             Bounds bounds = targetRenderer.bounds;
+
             Vector3[] points = new Vector3[8];
 
             Vector3 center = bounds.center;
@@ -93,31 +105,41 @@ namespace Yaguar.StoryMaker.Editor
             foreach (var p in points)
             {
                 Vector3 sp = Cam.WorldToScreenPoint(p);
+
                 if (sp.z < 0) continue;
 
                 min = Vector2.Min(min, sp);
                 max = Vector2.Max(max, sp);
             }
 
-            float xMin = Mathf.Clamp(min.x, 0, Screen.width);
-            float yMin = Mathf.Clamp(min.y, 0, Screen.height);
-            float xMax = Mathf.Clamp(max.x, 0, Screen.width);
-            float yMax = Mathf.Clamp(max.y, 0, Screen.height);
+            float xMin = Mathf.Clamp(min.x, 0, rtWidth);
+            float yMin = Mathf.Clamp(min.y, 0, rtHeight);
+            float xMax = Mathf.Clamp(max.x, 0, rtWidth);
+            float yMax = Mathf.Clamp(max.y, 0, rtHeight);
 
             float width = xMax - xMin;
             float height = yMax - yMin;
 
             if (width <= 0 || height <= 0)
             {
+                Cam.targetTexture = null;
+                RenderTexture.active = null;
+                Destroy(rt);
                 OnDone(null);
                 yield break;
             }
 
             Rect rect = new Rect(xMin, yMin, width, height);
 
+            RenderTexture.active = rt;
+
             Texture2D texture = new Texture2D((int)rect.width, (int)rect.height, TextureFormat.RGB24, false);
             texture.ReadPixels(rect, 0, 0);
             texture.Apply();
+
+            Cam.targetTexture = null;
+            RenderTexture.active = null;
+            Destroy(rt);
 
             OnDone(texture);
         }

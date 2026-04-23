@@ -45,6 +45,7 @@ namespace UI.MainApp.Home.User
         }        
 
         public void OpenWork(string id) {
+            Events.OnLoading(true);
             Data.Instance.scenesData.LoadUserFilm(id);
             UIManager.Instance.boardUI.SetEditingType(BoardUI.editingTypes.NONE);
             Events.ShowScreen(UIManager.screenType.StoryMaker);
