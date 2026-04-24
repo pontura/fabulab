@@ -138,15 +138,16 @@ namespace Yaguar.StoryMaker.Editor
 
         public virtual void SetSceneObject(SOData data) {
 
-            SceneObject so = GetSceneObjectInScene(data);
-            ApplyData(so, data);
+            SceneObject so = GetSceneObjectInScene(data);            
             so.gameObject.SetActive(true);
-            if (data is SOAvatarFabulabData avatarData) {                
+            if (data is SOAvatarFabulabData avatarData) {
+                ApplyData(so, data);
                 SOAvatarFabulabData sOData = so.GetData() as SOAvatarFabulabData;
 
                 Events.OnCharacterAnim(sOData.id, avatarData.anim);
                 Events.OnCharacterExpression(sOData.id, avatarData.emoji);
             }else if (data is SOWordBalloonData soWBD) {
+                ApplyData(so, data);
                 (so as WordBalloon).SetField(soWBD.inputValue);
             } else if (data is SOWordBoxData soWBoxD) {
                 (so as WordBox).SetField(soWBoxD.inputValue);
