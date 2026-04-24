@@ -16,7 +16,7 @@ namespace Yaguar.StoryMaker.Editor
 
         [SerializeField] protected SpriteRenderer background;
 
-        [HideInInspector]
+        //[HideInInspector]
         public SceneObject selected;
 
         [HideInInspector]
@@ -95,6 +95,7 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.HideSoButtons();
             sceneObjects.Remove(selected);
             Destroy(selected.gameObject);
+            selected = null;
         }
 
         protected void AddToContainer(SceneObject newSO, SOData data)

@@ -8,7 +8,9 @@ namespace Yaguar.StoryMaker.Editor
         protected GameObject asset;
         [SerializeField] GameObject prop_to_instantiate;
         [field: SerializeField] public SceneObjectManager objectManager { private set; get; }
-        
+
+        public BordersCreator Borders { private set; get; }
+
         public override void OnInit() {
 
 
@@ -48,6 +50,16 @@ namespace Yaguar.StoryMaker.Editor
 
             collider.offset = localBounds.center;
             collider.size = localBounds.size;
+        }
+
+        public override void BeginDrag() {
+            base.BeginDrag();
+            if (Borders == null) {
+                Borders = gameObject.AddComponent<BordersCreator>();
+                Borders.Init(GetComponent<BoxCollider2D>());
+            }
+
+            Borders.Show(true);
         }
     }        
 }

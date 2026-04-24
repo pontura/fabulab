@@ -2,6 +2,7 @@
 using Google.MiniJSON;
 using UI.MainApp;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -11,7 +12,7 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] GameObject character_to_instantiate;
         [field:SerializeField] public CharacterManager characterManager { private set; get; }
 
-        BordersCreator borders;
+        public BordersCreator Borders { private set; get; }
 
         private void Start()
         {
@@ -70,20 +71,26 @@ namespace Yaguar.StoryMaker.Editor
 
         public override void  BeginDrag() {
             base.BeginDrag();
-            if (borders == null) {
-                borders = gameObject.AddComponent<BordersCreator>();
-                borders.Init(GetComponent<BoxCollider2D>());
+            if (Borders == null) {
+                Borders = gameObject.AddComponent<BordersCreator>();
+                Borders.Init(GetComponent<BoxCollider2D>());
             }
 
-            borders.Show(true);
+            Borders.Show(true);
         }
 
         public override void StopDrag() {            
-            if (initDragPos.Equals(transform.localPosition))
-                StoryMakerEvents.ShowSoButtons(Scenario.Instance.Cam.WorldToScreenPoint(transform.position), data);
+            if (initDragPos.Equals(transform.localPosition))                
+                    StoryMakerEvents.ShowSoButtons(Input.mousePosition, data);
+            //StoryMakerEvents.ShowSoButtons(Scenario.Instance.Cam.WorldToScreenPoint(transform.position), data);
+            if (Vector2.Distance(initDragPos, transform.position) < MIN_DISTANCE) {
+                transform.position = initDragPos;
+                data.pos = new V3(initDragPos.x, initDragPos.y, data.pos.z);
+            }
+
             isBeingHeld = false;
             StoryMakerEvents.ReorderSceneObjectsInZ();
-            borders.Show(false);
+            //borders.Show(false);
         }
         public override void Run() {
             characterManager.SetAnim(Data.Instance.characterAnimsManager.defaultRun.name);

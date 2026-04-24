@@ -74,13 +74,21 @@ namespace Yaguar.StoryMaker.Editor
 
 
         protected override void SelectSO()
-        {
+        {            
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
 
             if (Input.touchCount > 0)
                 if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
                     return;
+
+            if (sceneObjectsManager.selected is AvatarFabulab avFab) {
+                avFab.Borders?.Show(false);
+            } else if (sceneObjectsManager.selected is Prop prop) {
+                prop.Borders?.Show(false);
+            }
+            sceneObjectsManager.selected = null;
+            StoryMakerEvents.HideSoButtons();
 
             Ray ray = Scenario.Instance.Cam.ScreenPointToRay(Input.mousePosition + Scenario.Instance.Offset);
 

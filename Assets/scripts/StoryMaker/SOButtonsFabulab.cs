@@ -45,7 +45,7 @@ public class SOButtonsFabulab : MonoBehaviour {
             edit.SetActive(true);
 
         container.SetActive(true);
-        Invoke("Reset", buttonsTimeout);
+        //Invoke("Reset", buttonsTimeout);
     }
 
     void HideSoButtons() {

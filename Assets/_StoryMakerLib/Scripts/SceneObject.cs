@@ -11,8 +11,9 @@ namespace Yaguar.StoryMaker.Editor
         protected bool isBeingHeld;
         private Vector3 originalScale;
 
-        private float MAX_SCALE = 2f;
-        private float MIN_SCALE = 0.5f;
+        protected float MAX_SCALE = 2f;
+        protected float MIN_SCALE = 0.5f;
+        protected float MIN_DISTANCE = 2f;
 
         protected Vector2 initDragPos;
 
@@ -83,6 +84,10 @@ namespace Yaguar.StoryMaker.Editor
             //Events.ShowSoButtons(Scenario.Instance.cam.WorldToScreenPoint(gameObject.transform.localPosition), data);
             if (initDragPos.Equals(transform.localPosition))
                 StoryMakerEvents.ShowSoButtons(Input.mousePosition, data);
+            if (Vector2.Distance(initDragPos, transform.position) < MIN_DISTANCE) {
+                transform.position = initDragPos;
+                data.pos = new V3(initDragPos.x, initDragPos.y, data.pos.z);
+            }
             isBeingHeld = false;
             StoryMakerEvents.ReorderSceneObjectsInZ();
         }
