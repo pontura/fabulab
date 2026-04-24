@@ -59,6 +59,7 @@ public class SOButtonsFabulab : MonoBehaviour {
 
     public void Remove() {
         StoryMakerEvents.RemoveSceneObject();
+        container.SetActive(false);
     }
 
     public void EditCustomize() {
