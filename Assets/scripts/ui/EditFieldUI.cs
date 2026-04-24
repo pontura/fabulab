@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
 
 public class EditFieldUI : MonoBehaviour
@@ -11,9 +10,17 @@ public class EditFieldUI : MonoBehaviour
     void Start() {
         Close();
         StoryMakerEvents.OnInputField += OnInputField;
+        StoryMakerEvents.ShowSoButtons += ShowSoButtons;
     }
     private void OnDestroy() {
         StoryMakerEvents.OnInputField -= OnInputField;
+        StoryMakerEvents.ShowSoButtons -= ShowSoButtons;
+    }
+    void ShowSoButtons(Vector3 pos, SOData data)
+    {
+        print("ShowSoButtons " + data);
+        if (data is SOInputData)
+            OnInputField((ObjectSignal)Scenario.Instance.sceneObejctsManager.selected);
     }
     void SetFocus() {
         field.Select();
@@ -50,6 +57,11 @@ public class EditFieldUI : MonoBehaviour
     }
     public void Cancel() {
         //Events.OnUiSfx(UiSfxManager.UiSfxType.CANCEL);
+        Close();
+    }
+    public void Delete()
+    {
+        StoryMakerEvents.RemoveSceneObject();
         Close();
     }
 }
