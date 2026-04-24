@@ -27,7 +27,7 @@ namespace UI.MainApp
                     break;
                 case UIManager.screenType.Creation_Character:
                     Events.ShowUndo(true);
-                    changesMade = false;
+                    SetChangesMade(false);
                     SetButtons();
                     Show(true);
                     savePanel.SetActive(false);
@@ -80,11 +80,9 @@ namespace UI.MainApp
         void SetChangesMade(bool _changesMade)
         {
             this.changesMade = _changesMade;
+            UIManager.Instance.hasUnsavedChanges = this.changesMade;
         }
-        public bool ChangesMade()
-        {
-            return changesMade;
-        }
+        
         private void OnActivateUIButtons(bool isOn)
         {
             DoneBtn.SetActive(isOn);

@@ -58,8 +58,8 @@ namespace UI.MainApp
         void Init()
         {
             print("Init EnableStoryEdition " + editionEnabled + "frames: " + ScenesManagerFabulab.Instance.Scenes.Count);
-            if (!editionEnabled) return;
-            changesMade = false;
+            SetChangesMade(false);
+            if (!editionEnabled) return;            
             tabs.Init(OnTabClicked, 4);
         }
 
@@ -157,14 +157,13 @@ namespace UI.MainApp
                     StoryMakerEvents.SetNewAvatarCustomization(customizerData);*/
 
             }
-            if (!changesMade)
-                OnChangesMade();
+            if (!changesMade && editionEnabled)
+                SetChangesMade(true);
         }
 
-        void OnChangesMade() {
-            if (!editionEnabled)
-                return;
-            changesMade = true;
+        void SetChangesMade(bool _changesMade) {
+            this.changesMade = _changesMade;
+            UIManager.Instance.hasUnsavedChanges = this.changesMade;
         }
 
         public void Save() {

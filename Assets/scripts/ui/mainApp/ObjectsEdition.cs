@@ -38,6 +38,7 @@ namespace UI.MainApp
                             break;
                     }
                     UIManager.Instance.boardUI.activeBoardItem.Init();
+                    SetChangesMade(false);
                     changesMade = false;
                     SetButtons();
                     Show(true);
@@ -63,11 +64,9 @@ namespace UI.MainApp
         void SetChangesMade(bool _changesMade)
         {
             this.changesMade = _changesMade;
+            UIManager.Instance.hasUnsavedChanges = this.changesMade;
         }
-        public bool ChangesMade()
-        {
-            return changesMade;
-        }
+        
         private void OnActivateUIButtons(bool isOn)
         {
             DoneBtn.SetActive(isOn);

@@ -21,6 +21,8 @@ namespace UI
         [SerializeField] ConfirmationScreen confirmationScreen;
         public UndoManager undoManager;
 
+        public bool hasUnsavedChanges;
+
         public enum screenType
         {
             Home,
@@ -41,7 +43,7 @@ namespace UI
                 return mInstance;
             }
         }
-        List<screenType> backToScreen;
+        [SerializeField] List<screenType> backToScreen;
         void Awake()
         {
             confirmationScreen.Init();
@@ -194,7 +196,7 @@ namespace UI
             {
                 Events.OnNewBodyPartSelected(null);
                 Home();
-            } else if (backToScreen[backToScreen.Count - 1] == screenType.Creation_Character && characterEdition.ChangesMade())
+            } else if (CheckLastScreenUnsaved())
             {
                 Events.OnConfirm("All changes will be lost", "Confirm and exit", "Cancel", ExitConfirmed);
             }
@@ -203,6 +205,14 @@ namespace UI
                 SetBack();
             }
         }
+
+        bool CheckLastScreenUnsaved() {
+            return hasUnsavedChanges &&
+                (backToScreen[backToScreen.Count - 1] == screenType.Creation_Character ||
+                backToScreen[backToScreen.Count - 1] == screenType.Creation_Objects ||
+                backToScreen[backToScreen.Count - 1] == screenType.StoryMaker);
+        }
+
         void SetBack()
         {
             if (backToScreen.Count < 3)
