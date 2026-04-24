@@ -191,6 +191,8 @@ namespace Yaguar.StoryMaker.Editor
             nuevo.bgID = bgID;
             nuevo.transition = transition;
             nuevo.duration = duration;
+            nuevo.lightingId = lightingId;
+            nuevo.lightingValue = lightingValue;
             return nuevo;
         }
 
