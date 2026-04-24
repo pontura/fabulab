@@ -15,6 +15,7 @@ namespace Yaguar.StoryMaker.Editor
         public string name;
         public string userID;
         public string username;
+        public string timestamp;
 
         public Sprite GetSprite() {
             if (thumb == null) {

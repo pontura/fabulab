@@ -29,6 +29,7 @@ namespace BoardItems
         public string userID;
         public int likes;
         public int speed;
+        public string timestamp;
     }
 
     public class ScenesData : MonoBehaviour {
@@ -127,6 +128,11 @@ namespace BoardItems
         public void OnAddAllFilmsData(List<FilmDataFabulab> filmsData, Dictionary<string, ServerFilmData> sfds) {
             OnAddFilmDataFromServer(filmsData, sfds);
 
+            foreach (var film in filmsData) {
+                if (film.timestamp == null || film.timestamp == "")
+                    film.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
+            }
+
             userFilmsData.AddRange(filmsData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid));
 
             Events.OnAllFilmMetadataLoadDone();
@@ -135,7 +141,7 @@ namespace BoardItems
         public void OnAddFilmDataFromServer(List<FilmDataFabulab> filmsData, Dictionary<string, ServerFilmData> sfds) {
             if (sfds == null) return;
 
-            foreach (KeyValuePair<string, ServerFilmData> e in sfds) {
+            foreach (KeyValuePair<string, ServerFilmData> e in sfds.OrderByDescending(x => x.Value.timestamp).ToList()) {
                 if (filmsData.Find(x => x.id == e.Key) == null) {
                     FilmDataFabulab fd = new FilmDataFabulab();
                     fd.id = e.Key;
@@ -144,6 +150,10 @@ namespace BoardItems
                     fd.name = e.Value.name;
                     fd.userID = e.Value.userID;
                     fd.speed = e.Value.speed;
+                    if (e.Value.timestamp == null || e.Value.timestamp == "")
+                        fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
+                    else
+                        fd.timestamp = e.Value.timestamp;
                     fd.thumb = new Texture2D(1, 1);
                     fd.thumb.LoadImage(System.Convert.FromBase64String(e.Value.thumb));
                     filmsData.Add(fd);
@@ -232,12 +242,14 @@ namespace BoardItems
                 fd.thumb = currentFilmData.thumb;
                 fd.name = currentFilmData.name;
                 fd.speed = currentFilmData.speed;
+                fd.timestamp = currentFilmData.timestamp;
                 userFilmsData.Add(fd);
             } else {
                 fd.framecount = ScenesManagerFabulab.Instance.Scenes.Count;
                 fd.thumb = currentFilmData.thumb;
                 fd.name = currentFilmData.name;
                 fd.speed = currentFilmData.speed;
+                fd.timestamp = currentFilmData.timestamp;
             }
             currentFilmData = fd;
 
@@ -258,6 +270,7 @@ namespace BoardItems
                 sfd.name = fd.name;
                 sfd.speed = fd.speed;
                 sfd.userID = Data.Instance.userData.userDataInDatabase.uid;
+                sfd.timestamp = fd.timestamp;
                 FirebaseStoryMakerDBManager.Instance.SaveFilmDataToServer(fd.id, sfd);
             }
             //Events.OnUpdateFilmIcon();

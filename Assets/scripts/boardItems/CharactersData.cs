@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using UI;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
@@ -205,13 +206,17 @@ namespace BoardItems
         }
         void OnCharacterSavedToServer(bool succes, string id)
         {
+            string tstamp = DateTime.UtcNow.ToString("o");
+
             if (currentID == "") // is new character
             {
-                userCharactersMetaData.Add(new CharacterMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentCharacter.thumb  });
+                userCharactersMetaData.Add(new CharacterMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentCharacter.thumb, timestamp = tstamp  });
             }
             else
             {
-                userCharactersMetaData.Find(x => x.id == currentID).thumb = currentCharacter.thumb;
+                CharacterMetaData chmd = userCharactersMetaData.Find(x => x.id == currentID);
+                chmd.thumb = currentCharacter.thumb;
+                chmd.timestamp = tstamp;
             }
 
             currentCharacter.id = id;
@@ -222,12 +227,14 @@ namespace BoardItems
             swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
             swmd.thumb = System.Convert.ToBase64String(currentCharacter.thumb.EncodeToPNG());
             swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
+            swmd.timestamp = tstamp;
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.characters.ToString(), currentID, swmd);
 
             OpenCharacterDetail(currentCharacter);
         }
 
-        void OnPresetSavedToServer(bool succes, string id, string partId) {            
+        void OnPresetSavedToServer(bool succes, string id, string partId) {
+            string tstamp = DateTime.UtcNow.ToString("o");
             loadedPresetId = id;
             if (loadedPresetId == "") {
                 Debug.Log("#Error en update preset metadata");
@@ -236,6 +243,7 @@ namespace BoardItems
             ServerPartMetaData swmd = new ServerPartMetaData();
             swmd.thumb = System.Convert.ToBase64String(currentCharacter.thumb.EncodeToPNG());
             swmd.partID = partId;
+            swmd.timestamp = tstamp;
             FirebaseStoryMakerDBManager.Instance.SaveBodypartPresetMetadataToServer(id, swmd);
 
             OpenCharacterDetail(currentCharacter);
@@ -248,7 +256,7 @@ namespace BoardItems
       
         public void OnLoadCharacterDataFromServer(List<CharacterMetaData> sfds)
         {            
-            charactersMetaData = sfds;
+            charactersMetaData = sfds.OrderByDescending(x => x.timestamp).ToList();
             userCharactersMetaData = charactersMetaData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid);
             userCharacters = new();
             FirebaseStoryMakerDBManager.Instance.LoadUserAssetsFromServer(MetadataTypes.characters.ToString(), LoadCharactersFromServer);

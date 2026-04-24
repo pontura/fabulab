@@ -1,5 +1,7 @@
 ﻿using BoardItems.BoardData;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UI;
 using UI.MainApp;
 using UnityEditor.U2D.Animation;
@@ -145,18 +147,24 @@ namespace BoardItems
         }
         void OnSavedToServer(bool succes, string id)
         {
+            string tstamp = DateTime.UtcNow.ToString("o");
             if (currentSO.id == "") // is new
-            {
-                if (Data.Instance.userData.isAdmin)
-                    metaData.Add(new PropMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentSO.thumb, type = currentSO.type });
-                userMetaData.Add(new PropMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentSO.thumb, type = currentSO.type });
+            {                
+                if (Data.Instance.userData.isAdmin)  
+                    metaData.Add(new PropMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentSO.thumb, type = currentSO.type, timestamp=tstamp });
+                userMetaData.Add(new PropMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentSO.thumb, type = currentSO.type, timestamp = tstamp });
 
             }
             else
             {
-                if (Data.Instance.userData.isAdmin)
-                    metaData.Find(x => x.id == currentSO.id).thumb = currentSO.thumb;
-                userMetaData.Find(x => x.id == currentSO.id).thumb = currentSO.thumb;
+                    if (Data.Instance.userData.isAdmin) {
+                        PropMetaData md = metaData.Find(x => x.id == currentSO.id);
+                        md.thumb = currentSO.thumb;
+                        md.timestamp = tstamp;
+                    }
+                    PropMetaData umd = userMetaData.Find(x => x.id == currentSO.id);
+                    umd.thumb = currentSO.thumb;
+                    umd.timestamp = tstamp;
             }
             currentSO.id = id;
             currentID = id;
@@ -166,6 +174,8 @@ namespace BoardItems
             swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
             swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
             swmd.type = currentSO.type;
+            swmd.timestamp = tstamp;
+
 
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), currentID, swmd);
             UIManager.Instance.ShowWorkDetail(currentSO);
@@ -174,7 +184,7 @@ namespace BoardItems
         public void OnLoadSODataFromServer(List<CharacterMetaData> sfds)
         {
             //Debug.Log("OnLoadSODataFromServer !!");
-            foreach (CharacterMetaData sfd in sfds)
+            foreach (CharacterMetaData sfd in sfds.OrderByDescending(x => x.timestamp).ToList())
                 metaData.Add(sfd as PropMetaData);
             userMetaData = metaData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid);
             data = new();

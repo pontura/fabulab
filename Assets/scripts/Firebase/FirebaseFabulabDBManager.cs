@@ -306,8 +306,12 @@ namespace Yaguar.StoryMaker.DB
                                 fd.id = child.Key;
                                 fd.userID = child.Child("userID").Value as string;
                                 fd.creators = new List<string>();
-                                if (child.HasChild("creators"))
-                                {                                   
+                                if (child.HasChild("timestamp"))
+                                    fd.timestamp = child.Child("timestamp").Value as string;
+                                else
+                                    fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
+
+                                if (child.HasChild("creators")) {
                                     foreach (var uid in child.Child("creators").Children)
                                         fd.creators.Add(uid.Value as string);
                                 }
@@ -465,6 +469,10 @@ namespace Yaguar.StoryMaker.DB
                         ServerPartMetaData spmd = new ServerPartMetaData();
                         spmd.partID = child.Child("partID").Value as string;
                         spmd.thumb = child.Child("thumb").Value as string;
+                        if (child.HasChild("timestamp"))
+                            spmd.timestamp = child.Child("timestamp").Value as string;
+                        else
+                            spmd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
                         d.Add(child.Key, spmd);
                     }
 

@@ -29,6 +29,7 @@ namespace BoardItems.BoardData
         public Texture2D thumb;
         public string userID;
         public List<string> creators;
+        public string timestamp;
 
         public Sprite GetSprite() {
             if (thumb == null) {
@@ -45,6 +46,7 @@ namespace BoardItems.BoardData
         public string thumb;
         public string userID;
         public List<string> creators;
+        public string timestamp;
         public void AddCreator(string uid)
         {
             if (creators == null)
@@ -64,6 +66,7 @@ namespace BoardItems.BoardData
         public string thumb;
         public string partID;
         public List<string> creators;
+        public string timestamp;
     }
 
 }

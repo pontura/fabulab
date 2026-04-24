@@ -36,14 +36,14 @@ namespace UI.MainApp.Home.User
         {
            // print("LoadNext " + artID);
            // if (artID >= Data.Instance.characters.Count) return;
-            foreach(CharacterData cd in Data.Instance.charactersData.userCharacters)
+            foreach(CharacterMetaData chmd in Data.Instance.charactersData.userCharactersMetaData)
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
-                go.Init(cd);
+                go.Init(chmd);
                 //RawImage rm = go.GetComponentInChildren<RawImage>();
                // UIManager.Instance.boardUI.GenerateThumb(wd, rm, LoadNext);
-                go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
+                go.GetComponent<Button>().onClick.AddListener(() => OpenWork(chmd.id));
             }
             //CharacterData wd = Data.Instance.albumData.characters[artID];
             //artID++;

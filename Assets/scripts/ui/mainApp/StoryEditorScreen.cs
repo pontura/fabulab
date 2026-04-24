@@ -1,5 +1,6 @@
 
 using Common.UI;
+using System;
 using UI.MainApp.Home.User;
 using UnityEngine;
 using Yaguar.StoryMaker.Editor;
@@ -184,6 +185,7 @@ namespace UI.MainApp
             UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, (tex) => {
                 Data.Instance.scenesData.currentFilmData.thumb = tex;
                 Data.Instance.scenesData.currentFilmData.name = storyName.text;
+                Data.Instance.scenesData.currentFilmData.timestamp = DateTime.UtcNow.ToString("o");
                 Data.Instance.scenesData.SaveFilm();
             });            
         }
