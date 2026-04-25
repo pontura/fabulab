@@ -1,6 +1,8 @@
 
 using Common.UI;
 using System;
+using System.ComponentModel;
+using System.Linq.Expressions;
 using UI.MainApp.Home.User;
 using UnityEngine;
 using Yaguar.StoryMaker.Editor;
@@ -20,6 +22,8 @@ namespace UI.MainApp
         [SerializeField] TextSelectionScreen textsScreen;
         [SerializeField] ActionsUI actionUI;
         [SerializeField] EmojisUI emojisUI;
+        [SerializeField] GameObject editAvatar;
+        [SerializeField] GameObject editObjects;
 
         [SerializeField] GameObject savePanel;
         [SerializeField] GameObject deleteStoryButton;
@@ -31,20 +35,29 @@ namespace UI.MainApp
 
         bool editionEnabled;
 
-        private void Start() {
+        private void Start()
+        {
+            CloseTools();
+            StoryMakerEvents.ShowSoButtons += ShowSoButtons;
             StoryMakerEvents.OnSaveScene += OnSaveScene;
             StoryMakerEvents.EditActions += EditorActions;
             StoryMakerEvents.EditExpressions += EditExpressions;
             StoryMakerEvents.OnLoadFilm += OnLoadFilm;
             StoryMakerEvents.EnableStoryEdition += EnableStoryEdition;
+            StoryMakerEvents.EditAvatar += EditAvatar;
+            StoryMakerEvents.EditObject += EditObject;
         }
 
-        void OnDestroy() {
+        void OnDestroy()
+        {
+            StoryMakerEvents.ShowSoButtons -= ShowSoButtons;
             StoryMakerEvents.OnSaveScene -= OnSaveScene;
             StoryMakerEvents.EditActions -= EditorActions;
             StoryMakerEvents.EditExpressions -= EditExpressions;
             StoryMakerEvents.OnLoadFilm -= OnLoadFilm;
             StoryMakerEvents.EnableStoryEdition -= EnableStoryEdition;
+            StoryMakerEvents.EditAvatar -= EditAvatar;
+            StoryMakerEvents.EditObject -= EditObject;
         }
 
         void OnLoadFilm() {
@@ -68,20 +81,54 @@ namespace UI.MainApp
             actionUI.SetOn(false);
             emojisUI.SetOn(false);
         }
+        void ShowSoButtons(Vector3 pos, SOData data)
+        {
+            if (data is SOAvatarData)
+                EditAvatar(data.id);
+            print ("ShowSoButtons " + data);
+             if (data is SODataFabulab)
+                EditObject(data.id);
 
-        void EditorActions(string id) {
+        }
+        string selectedSOId;
+        void EditAvatar(string id)
+        {
+            this.selectedSOId = id;
+            editAvatar.SetActive(true);
             actionUI.SetCharacterId(id);
             actionUI.SetOn(true);
             emojisUI.SetOn(false);
         }
+        void EditObject(string id)
+        {
+            this.selectedSOId = id;
+            editObjects.SetActive(true);
+        }
+        public void RemoveSO()
+        {
+            StoryMakerEvents.RemoveSceneObject();
+            CloseTools();
+        }
+        public void CloseTools()
+        {
+            editAvatar.SetActive(false);
+            editObjects.SetActive(false);
+        }
+        public void EditorActions() {
+            actionUI.SetCharacterId(selectedSOId);
+            actionUI.SetOn(true);
+            emojisUI.SetOn(false);
+        }
 
-        void EditExpressions(string id) {
-            emojisUI.SetCharacterId(id);
+        public void EditExpressions() {
+            emojisUI.SetCharacterId(selectedSOId);
             actionUI.SetOn(false);
             emojisUI.SetOn(true);
         }
 
-        void OnTabClicked(int id) {
+        void OnTabClicked(int id)
+        {
+            CloseTools();
             actionUI.SetOn(false);
             emojisUI.SetOn(false);
             tabTools.SetOn(id);

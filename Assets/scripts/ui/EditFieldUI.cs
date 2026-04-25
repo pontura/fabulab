@@ -33,7 +33,10 @@ public class EditFieldUI : MonoBehaviour
             field.text = objectSignal.field.text;
         panel.SetActive(true);
     }
-
+    public void OnFieldChanged()
+    {
+        objectSignal.SetField(field.text);
+    }
     public void Done() {
         string text = field.text;
 
