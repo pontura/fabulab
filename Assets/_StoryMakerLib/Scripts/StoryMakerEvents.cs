@@ -41,8 +41,6 @@ namespace Yaguar.StoryMaker.Editor
         public static System.Action ResetScene = delegate { };
 
         public static System.Action EditCustomize = delegate { };
-        public static System.Action<string> EditAvatar = delegate { };
-        public static System.Action<string> EditObject = delegate { };
         public static System.Action EditActions = delegate { };
         public static System.Action EditExpressions = delegate { };
 

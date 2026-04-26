@@ -11,6 +11,7 @@ namespace UI.MainApp
 {
     public class StoryEditorScreen : MonoBehaviour
     {
+        [SerializeField] GameObject arrowSelect;
         [SerializeField] TabToolsManager tabTools;
         [SerializeField] TabController tabs;
         [SerializeField] GameObject timeline;
@@ -44,8 +45,6 @@ namespace UI.MainApp
             StoryMakerEvents.EditExpressions += EditExpressions;
             StoryMakerEvents.OnLoadFilm += OnLoadFilm;
             StoryMakerEvents.EnableStoryEdition += EnableStoryEdition;
-            StoryMakerEvents.EditAvatar += EditAvatar;
-            StoryMakerEvents.EditObject += EditObject;
         }
 
         void OnDestroy()
@@ -56,8 +55,6 @@ namespace UI.MainApp
             StoryMakerEvents.EditExpressions -= EditExpressions;
             StoryMakerEvents.OnLoadFilm -= OnLoadFilm;
             StoryMakerEvents.EnableStoryEdition -= EnableStoryEdition;
-            StoryMakerEvents.EditAvatar -= EditAvatar;
-            StoryMakerEvents.EditObject -= EditObject;
         }
 
         void OnLoadFilm() {
@@ -84,23 +81,27 @@ namespace UI.MainApp
         void ShowSoButtons(Vector3 pos, SOData data)
         {
             if (data is SOAvatarData)
-                EditAvatar(data.id);
+                EditAvatar(pos, data.id);
             print ("ShowSoButtons " + data);
              if (data is SODataFabulab)
-                EditObject(data.id);
+                EditObject(pos, data.id);
 
         }
         string selectedSOId;
-        void EditAvatar(string id)
+        void EditAvatar(Vector3 pos, string id)
         {
+            arrowSelect.SetActive(true);
+            arrowSelect.transform.position = pos;
             this.selectedSOId = id;
             editAvatar.SetActive(true);
             actionUI.SetCharacterId(id);
             actionUI.SetOn(true);
             emojisUI.SetOn(false);
         }
-        void EditObject(string id)
+        void EditObject(Vector3 pos, string id)
         {
+            arrowSelect.SetActive(true);
+            arrowSelect.transform.position = pos;
             this.selectedSOId = id;
             editObjects.SetActive(true);
         }
@@ -111,6 +112,7 @@ namespace UI.MainApp
         }
         public void CloseTools()
         {
+            arrowSelect.SetActive(false);
             editAvatar.SetActive(false);
             editObjects.SetActive(false);
         }
