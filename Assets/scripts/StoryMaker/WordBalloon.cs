@@ -82,6 +82,7 @@ namespace Yaguar.StoryMaker.Editor
 
             // 2. ángulo
             float angle = Mathf.Atan2(smooth.y, smooth.x) * Mathf.Rad2Deg;
+            angle -= 180;
             if (angle < 0) angle += 360;
 
             int candidate = Mathf.RoundToInt(angle / 45f) % 8;
@@ -94,7 +95,7 @@ namespace Yaguar.StoryMaker.Editor
 
             // 3. ángulo entre direcciones (en grados)
             float currentAngle = lastDir * 45f;
-            float delta = Mathf.DeltaAngle(currentAngle, candidate * 45f);
+            float delta = Mathf.DeltaAngle(currentAngle, (candidate * 45f));
 
             if (Mathf.Abs(delta) > angleThreshold)
             {
