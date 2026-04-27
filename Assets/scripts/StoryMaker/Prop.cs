@@ -50,16 +50,26 @@ namespace Yaguar.StoryMaker.Editor
 
             collider.offset = localBounds.center;
             collider.size = localBounds.size;
-        }
+        }        
 
-        public override void BeginDrag() {
-            base.BeginDrag();
-            if (Borders == null) {
-                Borders = gameObject.AddComponent<BordersCreator>();
-                Borders.Init(GetComponent<BoxCollider2D>());
+        public override void StopDrag() {
+
+            //UpdatePos();
+            //Events.ShowSoButtons(Scenario.Instance.cam.WorldToScreenPoint(gameObject.transform.localPosition), data);
+            if (initDragPos.Equals(transform.localPosition)) {
+                StoryMakerEvents.ShowSoButtons(Input.mousePosition, data);
+                if (Borders == null) {
+                    Borders = gameObject.AddComponent<BordersCreator>();
+                    Borders.Init(GetComponent<BoxCollider2D>());
+                }
+                Borders.Show(true);
             }
-
-            Borders.Show(true);
+            if (Vector2.Distance(initDragPos, transform.position) < MIN_DISTANCE) {
+                transform.position = initDragPos;
+                data.pos = new V3(initDragPos.x, initDragPos.y, data.pos.z);
+            }
+            isBeingHeld = false;
+            StoryMakerEvents.ReorderSceneObjectsInZ();
         }
     }        
 }

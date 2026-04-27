@@ -115,6 +115,11 @@ namespace UI.MainApp
             arrowSelect.SetActive(false);
             editAvatar.SetActive(false);
             editObjects.SetActive(false);
+            if (Scenario.Instance.sceneObejctsManager.selected is AvatarFabulab avFab) {
+                avFab.Borders.Show(false);
+            } else if (Scenario.Instance.sceneObejctsManager.selected is Prop prop) {
+                prop.Borders.Show(false);
+            }
         }
         public void EditorActions() {
             actionUI.SetCharacterId(selectedSOId);
