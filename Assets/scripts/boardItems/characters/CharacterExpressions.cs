@@ -6,19 +6,22 @@ public class CharacterExpressions : MonoBehaviour
 
     public void Play(string animName)
     {
+        anim.speed = 1;
         Debug.Log("Play Emoji: " + animName);
 
         if (animName == "" || animName ==null)
             animName = Data.Instance.characterAnimsManager.defaultEmoji.name;
-        if (anim.HasState(0, Animator.StringToHash(animName)))
+        if (anim.HasState(0, Animator.StringToHash(animName))) {
+            //Debug.Log("% Play Emoji: " + animName);
             anim.Play(animName);
-        else if (int.TryParse(animName, out int index)) {
+        } else if (int.TryParse(animName, out int index)) {
             string aName = Data.Instance.characterAnimsManager.all[index].clip.name;
-            Debug.Log("& anim name: " + aName);
+            //Debug.Log("% anim name: " + aName);
             anim.Play(aName);
         }
     }
     public void Stop() {
+        //Debug.Log("% emojis stop");
         anim.speed = 0;
     }
 }
