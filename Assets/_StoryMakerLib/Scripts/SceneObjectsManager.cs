@@ -89,7 +89,6 @@ namespace Yaguar.StoryMaker.Editor
             }
             sceneObjects.Add(selected);
         }
-
         protected virtual void RemoveSceneObject()
         {
             StoryMakerEvents.HideSoButtons();

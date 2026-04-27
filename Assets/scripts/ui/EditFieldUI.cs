@@ -1,8 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
 
 public class EditFieldUI : MonoBehaviour
 {
+    [SerializeField] GameObject[] fontsBtn;
     [SerializeField] GameObject panel;
     [SerializeField] TMPro.TMP_InputField field;
     ObjectSignal objectSignal;
@@ -11,6 +13,13 @@ public class EditFieldUI : MonoBehaviour
         Close();
         StoryMakerEvents.OnInputField += OnInputField;
         StoryMakerEvents.ShowSoButtons += ShowSoButtons;
+        int id = 0;
+        foreach (GameObject btn in fontsBtn)
+        {
+            int capturedId = id; // 👈 copia local
+            btn.GetComponent<Button>().onClick.AddListener(() => FontClicked(capturedId));
+            id++;
+        }
     }
     private void OnDestroy() {
         StoryMakerEvents.OnInputField -= OnInputField;
@@ -70,5 +79,13 @@ public class EditFieldUI : MonoBehaviour
     {
         StoryMakerEvents.RemoveSceneObject();
         Close();
+    }
+    public void FontClicked(int id)
+    {
+        print("id: " + id);
+        Fonts font = (Scenario.Instance.sceneObejctsManager as SceneObjectsManagerFabulab).FontAssets.GetFont(id);
+        field.fontAsset = font.fontAsset;
+        StoryMakerEvents.ChangeFont(id);
+
     }
 }

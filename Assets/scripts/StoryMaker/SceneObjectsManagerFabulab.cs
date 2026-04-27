@@ -13,12 +13,14 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] Transform bgContainer;
         [SerializeField] GameObject bgMask;
         [field:SerializeField] public BackgroundLighting BackgroundLighting {  get; private set; }
+        [field: SerializeField] public FontAssets FontAssets{ get; private set; }
 
         public List<SceneObject> recentAdded;
         
 
         void Start()
         {
+            StoryMakerEvents.ChangeFont += ChangeFont;
             StoryMakerEvents.SetBackgroundLights += SetBackgroundLights;
             StoryMakerEvents.AddAllSceneObjects += AddAllSceneObjects;
             StoryMakerEvents.AddSceneObject += AddSceneObject;
@@ -32,6 +34,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         void OnDestroy()
         {
+            StoryMakerEvents.ChangeFont -= ChangeFont;
             StoryMakerEvents.SetBackgroundLights -= SetBackgroundLights;
             StoryMakerEvents.AddAllSceneObjects -= AddAllSceneObjects;
             StoryMakerEvents.AddSceneObject -= AddSceneObject;
@@ -153,7 +156,12 @@ namespace Yaguar.StoryMaker.Editor
                 (so as WordBox).SetField(soWBoxD.inputValue);
             }
         }
-
+        void ChangeFont(int id)
+        {
+            WordBalloon wordBaloon = selected.GetComponent<WordBalloon>();
+            if(wordBaloon != null)
+                wordBaloon.SetFont(id);
+        }
         override protected void RemoveSceneObject()
         {
             if (ScenesManagerFabulab.Instance.StillExistInOtherScenes(selected.GetData())) {

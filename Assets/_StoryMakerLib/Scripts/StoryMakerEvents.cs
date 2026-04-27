@@ -18,6 +18,7 @@ namespace Yaguar.StoryMaker.Editor
         public static System.Action<SOData> SetSceneObject = delegate { };
         public static System.Action<List<SOData>> AddAllSceneObjects = delegate { };
         public static System.Action RemoveSceneObject = delegate { };
+        public static System.Action<int> ChangeFont = delegate { };
         public static System.Action OnLoadFilm = delegate { };
         public static System.Action<int> ChangeSpeed = delegate { };
         public static System.Action OnSaveScene = delegate { };

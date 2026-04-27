@@ -25,6 +25,11 @@ namespace Yaguar.StoryMaker.Editor
             field.text = text;
             (GetData() as SOWordBalloonData).inputValue = text;
         }
+        public void SetFont(int id)
+        {
+            Fonts font =  (Scenario.Instance.sceneObejctsManager as SceneObjectsManagerFabulab).FontAssets.GetFont(id);
+            field.font = font.fontAsset;
+        }
 
         public override void OnInit() {
             SOData soData = GetData();
