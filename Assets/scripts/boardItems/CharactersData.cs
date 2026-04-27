@@ -219,6 +219,8 @@ namespace BoardItems
                 chmd.timestamp = tstamp;
             }
 
+            userCharactersMetaData = userCharactersMetaData.OrderByDescending(x => x.timestamp).ToList();
+
             currentCharacter.id = id;
             currentID = id;
 

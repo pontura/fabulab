@@ -166,6 +166,10 @@ namespace BoardItems
                     umd.thumb = currentSO.thumb;
                     umd.timestamp = tstamp;
             }
+
+            metaData = metaData.OrderByDescending(x => x.timestamp).ToList();
+            userMetaData = userMetaData.OrderByDescending(x => x.timestamp).ToList();
+
             currentSO.id = id;
             currentID = id;
 

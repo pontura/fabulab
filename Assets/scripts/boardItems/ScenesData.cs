@@ -251,6 +251,9 @@ namespace BoardItems
                 fd.speed = currentFilmData.speed;
                 fd.timestamp = currentFilmData.timestamp;
             }
+
+            userFilmsData = userFilmsData.OrderByDescending(x => x.timestamp).ToList();
+
             currentFilmData = fd;
 
             ScenesManagerFabulab.Instance.currentFilmData = currentFilmData;
@@ -272,6 +275,8 @@ namespace BoardItems
                 sfd.userID = Data.Instance.userData.userDataInDatabase.uid;
                 sfd.timestamp = fd.timestamp;
                 FirebaseStoryMakerDBManager.Instance.SaveFilmDataToServer(fd.id, sfd);
+
+                filmsData = filmsData.OrderByDescending(x => x.timestamp).ToList();
             }
             //Events.OnUpdateFilmIcon();
         }
