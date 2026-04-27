@@ -1,8 +1,5 @@
-
 using Common.UI;
 using System;
-using System.ComponentModel;
-using System.Linq.Expressions;
 using UI.MainApp.Home.User;
 using UnityEngine;
 using Yaguar.StoryMaker.Editor;
@@ -83,8 +80,13 @@ namespace UI.MainApp
             if (data is SOAvatarData)
                 EditAvatar(pos, data.id);
             print ("ShowSoButtons " + data);
-             if (data is SODataFabulab)
+            if (data is SODataFabulab)
                 EditObject(pos, data.id);
+            else if (data is SOInputData)
+            {
+                arrowSelect.SetActive(true);
+                arrowSelect.transform.position = pos;
+            }
 
         }
         string selectedSOId;
@@ -120,6 +122,7 @@ namespace UI.MainApp
             } else if (Scenario.Instance.sceneObejctsManager.selected is Prop prop) {
                 prop.Borders.Show(false);
             }
+            GetComponent<EditFieldUI>().ClosePanel();
         }
         public void EditorActions() {
             actionUI.SetCharacterId(selectedSOId);

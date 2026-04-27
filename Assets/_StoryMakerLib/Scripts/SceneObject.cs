@@ -85,11 +85,12 @@ namespace Yaguar.StoryMaker.Editor
             if (initDragPos.Equals(transform.localPosition))
                 StoryMakerEvents.ShowSoButtons(Input.mousePosition, data);
             if (Vector2.Distance(initDragPos, transform.position) < MIN_DISTANCE) {
-                transform.position = initDragPos;
                 data.pos = new V3(initDragPos.x, initDragPos.y, data.pos.z);
+                transform.position = new Vector3(data.pos.x, data.pos.y, data.pos.z);
             }
             isBeingHeld = false;
             StoryMakerEvents.ReorderSceneObjectsInZ();
+            data.pos = new V3(initDragPos.x, initDragPos.y, data.pos.z);
         }
 
         public void FlipX(bool setLeft) {
@@ -126,7 +127,7 @@ namespace Yaguar.StoryMaker.Editor
             }
         }
 
-        void UpdatePos()
+        public virtual void UpdatePos()
         {
             Vector3 mousePos = Input.mousePosition + Scenario.Instance.Offset;
             Vector3 pos = Scenario.Instance.Cam.ScreenToWorldPoint(mousePos);

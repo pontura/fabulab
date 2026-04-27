@@ -15,6 +15,7 @@ namespace Yaguar.StoryMaker.Editor
         public balloonTypes balloonType;
 
         [SerializeField] Image image;
+        [SerializeField] Image[] arrows;
         [SerializeField] Canvas canvas;
 
         [field:SerializeField] public Sprite[] balloonSprites { get; private set; }
@@ -44,6 +45,64 @@ namespace Yaguar.StoryMaker.Editor
             image.sprite = balloonSprites[(int)balloonType];
             data.pos.z = -50;
             gameObject.transform.localPosition = data.pos.ToVector3();
+            SetDirection(0);
         }
+        public override void UpdatePos()
+        {
+            Vector3 scale = image.transform.localScale;
+            V3 lastPos = data.pos;
+            base.UpdatePos();
+            V3 pos = data.pos;
+            Vector2 v2 = new Vector2(pos.x - lastPos.x, pos.y - lastPos.y);
+            int p = Quantize8Stable(v2);
+            if(p>= 0)
+                SetDirection(p);
+        }
+        void SetDirection(int dir)
+        {
+            foreach (Image i in arrows)
+                i.gameObject.SetActive(false);
+            arrows[dir].gameObject.SetActive(true);
+        }
+
+        int lastDir = -1;
+        Vector2 smooth = Vector2.zero;
+
+        float smoothFactor = 0.18f;
+        float angleThreshold = 25f;
+        float deadzone = 0.2f;
+
+        int Quantize8Stable(Vector2 input)
+        {
+            if (input.magnitude < deadzone)
+                return lastDir;
+
+            // 1. suavizado
+            smooth = Vector2.Lerp(smooth, input.normalized, smoothFactor);
+
+            // 2. ángulo
+            float angle = Mathf.Atan2(smooth.y, smooth.x) * Mathf.Rad2Deg;
+            if (angle < 0) angle += 360;
+
+            int candidate = Mathf.RoundToInt(angle / 45f) % 8;
+
+            if (lastDir == -1)
+            {
+                lastDir = candidate;
+                return lastDir;
+            }
+
+            // 3. ángulo entre direcciones (en grados)
+            float currentAngle = lastDir * 45f;
+            float delta = Mathf.DeltaAngle(currentAngle, candidate * 45f);
+
+            if (Mathf.Abs(delta) > angleThreshold)
+            {
+                lastDir = candidate;
+            }
+
+            return lastDir;
+        }
+
     }
 }

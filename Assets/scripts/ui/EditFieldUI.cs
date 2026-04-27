@@ -54,9 +54,13 @@ public class EditFieldUI : MonoBehaviour
         objectSignal.SetField(text);
         Close();
     }
-
-    void Close() {
+    public void ClosePanel()
+    {
         panel.SetActive(false);
+    }
+    void Close() {
+        ClosePanel();
+        GetComponent<UI.MainApp.StoryEditorScreen>().CloseTools();
     }
     public void Cancel() {
         //Events.OnUiSfx(UiSfxManager.UiSfxType.CANCEL);
