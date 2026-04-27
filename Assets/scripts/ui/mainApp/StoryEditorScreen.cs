@@ -1,7 +1,9 @@
+using BoardItems;
 using Common.UI;
 using System;
 using UI.MainApp.Home.User;
 using UnityEngine;
+using Yaguar.StoryMaker.DB;
 using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp
@@ -117,11 +119,13 @@ namespace UI.MainApp
             arrowSelect.SetActive(false);
             editAvatar.SetActive(false);
             editObjects.SetActive(false);
-            if (Scenario.Instance.sceneObejctsManager.selected is AvatarFabulab avFab) {
-                avFab.Borders.Show(false);
-            } else if (Scenario.Instance.sceneObejctsManager.selected is Prop prop) {
-                prop.Borders.Show(false);
-            }
+            if (Scenario.Instance.sceneObejctsManager.selected != null) {
+                if (Scenario.Instance.sceneObejctsManager.selected is AvatarFabulab avFab) {
+                    avFab?.Borders?.Show(false);
+                } else if (Scenario.Instance.sceneObejctsManager.selected is Prop prop) {
+                    prop?.Borders?.Show(false);
+                }
+            }            
             GetComponent<EditFieldUI>().ClosePanel();
         }
         public void EditorActions() {
@@ -224,15 +228,22 @@ namespace UI.MainApp
             UIManager.Instance.hasUnsavedChanges = this.changesMade;
         }
 
+        public void SaveDialog() {
+            savePanel.SetActive(true);
+        }
+
         public void Save() {
+            Data.Instance.scenesData.currentFilmData = new FilmDataFabulab();
+            Data.Instance.scenesData.currentFilmData.name = storyName.text;
+            ScenesManagerFabulab.Instance.currentFilmData = Data.Instance.scenesData.currentFilmData;
+            ScenesManagerFabulab.Instance.currentFDataID = "";
             savePanel.SetActive(false);
-            Invoke(nameof(SaveWork), Time.deltaTime*2);
+            Invoke(nameof(SaveWork), Time.deltaTime * 2);
         }
         public void Replace()// Guarda la version editada del personaje.
         {
-            Events.SetCharacterIdle("");
             savePanel.SetActive(false);
-            SaveWork();
+            Invoke(nameof(SaveWork), Time.deltaTime * 2);
         }
         public void Cancel() {
             savePanel.SetActive(false);
@@ -244,7 +255,26 @@ namespace UI.MainApp
                 Data.Instance.scenesData.currentFilmData.name = storyName.text;
                 Data.Instance.scenesData.currentFilmData.timestamp = DateTime.UtcNow.ToString("o");
                 Data.Instance.scenesData.SaveFilm();
-            });            
+                SetChangesMade(false);
+            });
+        }
+
+        public void Delete() {
+            Events.OnConfirm("Confirmás que querés borrar esta historia?", "SI", "NO", OnConfirm);
+        }
+        void OnConfirm(bool ok) {
+            if (ok) {
+                Events.OnLoading(true);
+                FirebaseStoryMakerDBManager.Instance.DeleteFilm(Data.Instance.scenesData.currentFilmData, OnDeleted);
+            }
+        }
+        public void OnDeleted(string filmId) {
+            Data.Instance.scenesData.currentFilmData = null;
+            ScenesManager.Instance.currentFilmData = null;
+            ScenesManager.Instance.currentFDataID = "";
+            Data.Instance.scenesData.RemoveFD(filmId);
+            savePanel.SetActive(false);
+            UIManager.Instance.Back();
         }
 
         void EnableStoryEdition(bool enable) {
