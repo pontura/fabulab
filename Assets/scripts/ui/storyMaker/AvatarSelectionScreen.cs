@@ -1,5 +1,4 @@
 ﻿using BoardItems.BoardData;
-using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
 
@@ -9,7 +8,8 @@ namespace UI.MainApp.Home.User
     {
         protected override void LoadNext()
         {
-            foreach(CharacterData cd in Data.Instance.charactersData.userCharacters)
+            AddBtn();
+            foreach (CharacterData cd in Data.Instance.charactersData.userCharacters)
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
@@ -23,7 +23,9 @@ namespace UI.MainApp.Home.User
             data.id = id;
             data.itemName = Utils.GetUniqueDateTimeId();
             StoryMakerEvents.AddSceneObject(data);
-        }        
+        }
+        public override void New() { 
+        }
     }
 
 }

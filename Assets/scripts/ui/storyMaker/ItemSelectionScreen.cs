@@ -7,9 +7,15 @@ namespace UI.MainApp.Home.User
 {
     public class ItemSelectionScreen : MonoBehaviour
     {
+        [SerializeField] Button addBtn;
         public ItemSelectorBtn workBtn_prefab;
         public Transform worksContainer;
 
+        public void AddBtn()
+        {
+            Button go = Instantiate(addBtn, worksContainer);
+            go.GetComponent<Button>().onClick.AddListener(() => New());
+        }
         public void Show(bool isOn)
         {
             gameObject.SetActive(isOn);
@@ -27,7 +33,6 @@ namespace UI.MainApp.Home.User
                 if (child.tag != "Persistent")
                     Destroy(child.gameObject);
             }
-
             LoadNext();
         }
         
@@ -41,7 +46,7 @@ namespace UI.MainApp.Home.User
                 go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
             }           
         }
-
+        public virtual void New(){ }
         public virtual void OpenWork(string id) {
             SOAvatarFabulabData data = new SOAvatarFabulabData();
             data.id = id;

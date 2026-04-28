@@ -9,6 +9,7 @@ namespace UI.MainApp.Home.User
     {
         protected override void LoadNext()
         {
+            AddBtn();
             foreach (SObjectData cd in Data.Instance.sObjectsData.data)
             {
                 Debug.Log("== Type: " + cd.type);
