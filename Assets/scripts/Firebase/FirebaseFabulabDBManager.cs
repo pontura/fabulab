@@ -668,7 +668,7 @@ namespace Yaguar.StoryMaker.DB
                             if(child.HasChild("transition"))
                                 sdf.transition = bool.Parse(child.Child("transition").Value as string);
                             if (child.HasChild("duration"))
-                                sdf.duration = float.Parse(child.Child("duration").Value as string);
+                                sdf.duration = float.Parse(child.Child("duration").Value as string,System.Globalization.CultureInfo.InvariantCulture);
                             else
                                 sdf.duration = ScenesManagerFabulab.Instance.Keyframe_default_duration;
                             if (child.HasChild("lightingId"))
