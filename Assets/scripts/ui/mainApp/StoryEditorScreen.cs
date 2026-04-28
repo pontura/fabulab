@@ -151,25 +151,30 @@ namespace UI.MainApp
                     timeline.SetActive(false);
                     itemList.SetActive(true);
                     backgroundScreen.Init();
+                    Events.OnPopupTopSignalText("Fondos");
                     break;
                 case 1:
                     timeline.SetActive(false);
                     itemList.SetActive(true);
                     characterScreen.Init();
+                    Events.OnPopupTopSignalText("Personajes");
                     break;
                 case 2:
                     timeline.SetActive(false);
                     itemList.SetActive(true);
                     objectsScreen.Init();
+                    Events.OnPopupTopSignalText("Objetos");
                     break;
                 case 3:
                     timeline.SetActive(false);
                     itemList.SetActive(true);
                     textsScreen.Init();
+                    Events.OnPopupTopSignalText("Diálogos");
                     break;
                 case 4:
                     timeline.SetActive(true);
                     itemList.SetActive(false);
+                    Events.OnPopupTopSignalText("Film");
                     break;                    
             }   
         }
