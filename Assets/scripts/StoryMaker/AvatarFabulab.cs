@@ -76,14 +76,17 @@ namespace Yaguar.StoryMaker.Editor
         }        
 
         public override void StopDrag() {
-            if (initDragPos.Equals(transform.localPosition)) {
+            if(Mathf.Approximately(initDragPos.x, transform.localPosition.x) &&
+               Mathf.Approximately(initDragPos.y, transform.localPosition.y)) {
                 StoryMakerEvents.ShowSoButtons(Input.mousePosition, data);
                 if (Borders == null) {
                     Borders = gameObject.AddComponent<BordersCreator>();
                     Borders.Init(GetComponent<BoxCollider2D>());
                 }
                 Borders.Show(true);
-            }
+            } /*else {
+                Debug.Log("% mouse pos change: " + transform.localPosition + " = " + initDragPos);                
+            }*/
             //StoryMakerEvents.ShowSoButtons(Scenario.Instance.Cam.WorldToScreenPoint(transform.position), data);
             if (Vector2.Distance(initDragPos, transform.position) < MIN_DISTANCE) {
                 transform.position = initDragPos;

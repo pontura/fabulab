@@ -82,7 +82,8 @@ namespace Yaguar.StoryMaker.Editor
 
             //UpdatePos();
             //Events.ShowSoButtons(Scenario.Instance.cam.WorldToScreenPoint(gameObject.transform.localPosition), data);
-            if (initDragPos.Equals(transform.localPosition))
+            if (Mathf.Approximately(initDragPos.x, transform.localPosition.x) &&
+               Mathf.Approximately(initDragPos.y, transform.localPosition.y))
                 StoryMakerEvents.ShowSoButtons(Input.mousePosition, data);
             if (Vector2.Distance(initDragPos, transform.position) < MIN_DISTANCE) {
                 data.pos = new V3(initDragPos.x, initDragPos.y, data.pos.z);
