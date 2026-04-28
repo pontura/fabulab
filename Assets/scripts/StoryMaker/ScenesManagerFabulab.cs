@@ -124,7 +124,7 @@ namespace Yaguar.StoryMaker.Editor
             for(int i = 0; i < scenes.Count; i++) {
                 json += "{\"" + nameof(SceneData.bgID) + "\":\"" + scenes[i].bgID + "\",";
                 json += "\"" + nameof(SceneDataFabulab.transition) + "\":\"" + scenes[i].transition + "\",";
-                json += "\"" + nameof(SceneDataFabulab.duration) + "\":\"" + scenes[i].duration + "\",";
+                json += "\"" + nameof(SceneDataFabulab.duration) + "\":\"" + scenes[i].duration.ToString(System.Globalization.CultureInfo.InvariantCulture) + "\",";
                 json += "\"" + nameof(SceneDataFabulab.lightingId) + "\":\"" + scenes[i].lightingId + "\",";
                 json += "\"" + nameof(SceneDataFabulab.lightingValue) + "\":\"" + scenes[i].lightingValue + "\",";
                 List<SceneElement> elements = scenes[i].GetScenesElements();
