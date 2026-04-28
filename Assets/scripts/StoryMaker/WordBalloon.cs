@@ -6,13 +6,21 @@ namespace Yaguar.StoryMaker.Editor
 {
     public class WordBalloon : ObjectSignal
     {
+        int standardSize = 22;
+        int genericSize = 60;
+
         public enum balloonTypes {
             speech,
             scream,
-            thought
+            thought,
+            generic,
+            title
         }
 
         public balloonTypes balloonType;
+
+        [SerializeField] Sprite arrowSimple;
+        [SerializeField] Sprite arrowThink;
 
         [SerializeField] Image image;
         [SerializeField] Image[] arrows;
@@ -32,6 +40,7 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public override void OnInit() {
+
             SOData soData = GetData();
             if (soData == null)
                 return;
@@ -39,7 +48,7 @@ namespace Yaguar.StoryMaker.Editor
                 SetField(GetData().customization);*/
 
             string text = (soData as SOWordBalloonData).inputValue;
-            Debug.Log("&& " + text);
+            Debug.Log("&& WordBalloon " + text);
 
             SetField((soData as SOWordBalloonData).inputValue);
 
@@ -51,6 +60,29 @@ namespace Yaguar.StoryMaker.Editor
             data.pos.z = -50;
             gameObject.transform.localPosition = data.pos.ToVector3();
             SetDirection(0);
+            SetArrow();
+
+            if (balloonType == balloonTypes.generic || balloonType == balloonTypes.title)
+            {
+                canvas.GetComponent<RectTransform>().sizeDelta = new Vector2(genericSize, canvas.GetComponent<RectTransform>().sizeDelta.y);
+                foreach (Image i in arrows)
+                    i.enabled = false;
+            }
+            else
+            {
+                canvas.GetComponent<RectTransform>().sizeDelta = new Vector2(standardSize, canvas.GetComponent<RectTransform>().sizeDelta.y);
+                foreach (Image i in arrows)
+                    i.enabled =true;
+            }
+        }
+        void SetArrow()
+        {
+            Sprite arrow = arrowSimple;
+            if (balloonType == balloonTypes.thought) arrow = arrowThink;
+
+            if(balloonType != balloonTypes.generic)
+                foreach (Image i in arrows)
+                    i.sprite = arrow;
         }
         public override void UpdatePos()
         {
@@ -79,6 +111,7 @@ namespace Yaguar.StoryMaker.Editor
 
         int Quantize8Stable(Vector2 input)
         {
+            if(balloonType == balloonTypes.generic || balloonType == balloonTypes.title) return 0; // sin flecha
             if (input.magnitude < deadzone)
                 return lastDir;
 

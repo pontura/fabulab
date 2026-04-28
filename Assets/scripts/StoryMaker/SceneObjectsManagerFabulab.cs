@@ -121,15 +121,16 @@ namespace Yaguar.StoryMaker.Editor
                 wordBalloon.Init(soWBD);
                 inputsManager.ResetAll();
                 selected = wordBalloon;
-            } else if (data is SOWordBoxData soWBoxD) {
-                SceneObject wordBox = Instantiate(objectSignal_to_instantiate[1]);
-                wordBox.transform.SetParent(container);                
-                wordBox.gameObject.name = "WordBox_" + soWBoxD.id + "_" + soWBoxD.itemName;
-                wordBox.Init(soWBoxD);
-                SetWordBox(wordBox);
-                inputsManager.ResetAll();
-                selected = wordBox;
-            }
+            } 
+            //else if (data is SOWordBoxData soWBoxD) {
+            //    SceneObject wordBox = Instantiate(objectSignal_to_instantiate[1]);
+            //    wordBox.transform.SetParent(container);                
+            //    wordBox.gameObject.name = "WordBox_" + soWBoxD.id + "_" + soWBoxD.itemName;
+            //    wordBox.Init(soWBoxD);
+            //    SetWordBox(wordBox);
+            //    inputsManager.ResetAll();
+            //    selected = wordBox;
+            //}
 
             if (selected != null) {
                 sceneObjects.Add(selected);
@@ -152,9 +153,10 @@ namespace Yaguar.StoryMaker.Editor
             }else if (data is SOWordBalloonData soWBD) {
                 ApplyData(so, data);
                 (so as WordBalloon).SetField(soWBD.inputValue);
-            } else if (data is SOWordBoxData soWBoxD) {
-                (so as WordBox).SetField(soWBoxD.inputValue);
-            }
+            } 
+            //else if (data is SOWordBoxData soWBoxD) {
+            //    (so as WordBox).SetField(soWBoxD.inputValue);
+            //}
         }
         void ChangeFont(int id)
         {
@@ -212,9 +214,9 @@ namespace Yaguar.StoryMaker.Editor
         }
         protected void SetWordBox(SceneObject newSO) {
             float yPos = 0f;
-            if(newSO.GetData() is SOWordBoxData soWBD) {
-                yPos = soWBD.id == WordBox.boxTypes.top.ToString() ? 41.5f : -8.35f;
-            }
+            //if(newSO.GetData() is SOWordBoxData soWBD) {
+            //    yPos = soWBD.id == WordBox.boxTypes.top.ToString() ? 41.5f : -8.35f;
+            //}
             newSO.transform.localPosition = new Vector3(0, yPos, 0);
             newSO.transform.localEulerAngles = Vector3.zero;
             newSO.transform.localScale = Vector3.one*2.7f;
@@ -242,10 +244,10 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public void TurnOfAllTexts() {
-            foreach (SceneObject so in sceneObjects) {
-                if(so.GetData() is SOWordBalloonData || so.GetData() is SOWordBoxData)
-                    so.gameObject.SetActive(false);
-            }
+            //foreach (SceneObject so in sceneObjects) {
+            //    if(so.GetData() is SOWordBalloonData || so.GetData() is SOWordBoxData)
+            //        so.gameObject.SetActive(false);
+            //}
         }
     }
 }

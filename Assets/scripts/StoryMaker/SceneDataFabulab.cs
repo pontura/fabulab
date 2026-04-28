@@ -154,9 +154,10 @@ namespace Yaguar.StoryMaker.Editor
             SOData soData = null;
             if (type == SceneElementType.WORD_BALLOON) {
                 soData = new SOWordBalloonData();                
-            } else if (type == SceneElementType.WORD_BOX) {
-                soData = new SOWordBoxData();
-            }
+            } 
+            //else if (type == SceneElementType.WORD_BOX) {
+            //    soData = new SOWordBoxData();
+            //}
             soData.goLeft = data.goLeft;
             SetSOData(soData);
             return soData;            
@@ -219,11 +220,13 @@ namespace Yaguar.StoryMaker.Editor
                 sceneElement = new SceneElementTextInput();
                 sceneElement.type = SceneElementType.WORD_BALLOON;
                 (sceneElement as SceneElementTextInput).input = soWBD.inputValue;
-            } else if (soData is SOWordBoxData soWBox) {
-                sceneElement = new SceneElementTextInput();
-                sceneElement.type = SceneElementType.WORD_BOX;
-                (sceneElement as SceneElementTextInput).input = soWBox.inputValue;
-            } else if (soData is SODataFabulab) {
+            } 
+            //else if (soData is SOWordBoxData soWBox) {
+            //    sceneElement = new SceneElementTextInput();
+            //    sceneElement.type = SceneElementType.WORD_BOX;
+            //    (sceneElement as SceneElementTextInput).input = soWBox.inputValue;
+            //} 
+            else if (soData is SODataFabulab) {
                 sceneElement.type = SceneElementType.PROP;
             }
                 
@@ -386,10 +389,12 @@ namespace Yaguar.StoryMaker.Editor
             } else if (data.type == SceneElementType.WORD_BALLOON) {
                 soData = new SOWordBalloonData();
                 (soData as SOWordBalloonData).inputValue = (data as SceneElementTextInput).input;
-            } else if (data.type == SceneElementType.WORD_BOX) {
-                soData = new SOWordBoxData();
-                (soData as SOWordBoxData).inputValue = (data as SceneElementTextInput).input;
-            } else if (data.type == SceneElementType.PROP) {
+            } 
+            //else if (data.type == SceneElementType.WORD_BOX) {
+            //    soData = new SOWordBoxData();
+            //    (soData as SOWordBoxData).inputValue = (data as SceneElementTextInput).input;
+            //} 
+            else if (data.type == SceneElementType.PROP) {
                 soData = new SODataFabulab();
             }
             data.SetSOData(soData);

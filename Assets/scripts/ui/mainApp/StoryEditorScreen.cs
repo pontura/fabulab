@@ -201,11 +201,12 @@ namespace UI.MainApp
                     soData = new SOWordBalloonData();
                     soData.Clone(so.GetData());
                     (soData as SOWordBalloonData).inputValue = (so.GetData() as SOWordBalloonData).inputValue;
-                } else if (so is WordBox) {
-                    soData = new SOWordBoxData();
-                    soData.Clone(so.GetData());
-                    (soData as SOWordBoxData).inputValue = (so.GetData() as SOWordBoxData).inputValue;
-                }
+                } 
+                //else if (so is WordBox) {
+                //    soData = new SOWordBoxData();
+                //    soData.Clone(so.GetData());
+                //    (soData as SOWordBoxData).inputValue = (so.GetData() as SOWordBoxData).inputValue;
+                //}
 
                 Debug.Log("# Adding to SceneData: " + soData.id + "_"+ soData.itemName + " " + soData);
 

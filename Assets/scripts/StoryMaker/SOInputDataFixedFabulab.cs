@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
-using UnityEngine.UI;
 using System;
 using Yaguar.StoryMaker.Editor;
 
@@ -9,17 +7,17 @@ using Yaguar.StoryMaker.Editor;
 public class SOInputDataFixedFabulab : SOInputDataFixed
 {
     public override bool Equals(object obj) {
-        if (obj is SOWordBoxData other) {
-            Debug.Log(this.inputValue + " == " + other.inputValue);
-            return string.Equals(this.itemName, other.itemName)
-                && this.pos.Equals(other.pos)
-                && this.goLeft == other.goLeft
-                && this.size == other.size
-                && this.rot == other.rot
-                && this.id == other.id
-                && string.Equals(this.customization, other.customization)
-                && string.Equals(this.inputValue, other.inputValue);
-        }
+        //if (obj is SOWordBoxData other) {
+        //    Debug.Log(this.inputValue + " == " + other.inputValue);
+        //    return string.Equals(this.itemName, other.itemName)
+        //        && this.pos.Equals(other.pos)
+        //        && this.goLeft == other.goLeft
+        //        && this.size == other.size
+        //        && this.rot == other.rot
+        //        && this.id == other.id
+        //        && string.Equals(this.customization, other.customization)
+        //        && string.Equals(this.inputValue, other.inputValue);
+        //}
         return false;
     }
 
