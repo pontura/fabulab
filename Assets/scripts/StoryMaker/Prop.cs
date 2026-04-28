@@ -50,6 +50,12 @@ namespace Yaguar.StoryMaker.Editor
 
             collider.offset = localBounds.center;
             collider.size = localBounds.size;
+
+            foreach (Collider2D coll in GetComponentsInChildren<Collider2D>()) {
+                if (coll == collider)
+                    continue;
+                coll.enabled = false;
+            }
         }        
 
         public override void StopDrag() {
