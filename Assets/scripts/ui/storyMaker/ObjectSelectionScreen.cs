@@ -27,6 +27,10 @@ namespace UI.MainApp.Home.User
             data.id = id;
             data.itemName = Utils.GetUniqueDateTimeId();
             StoryMakerEvents.AddSceneObject(data);
-        }        
+        }
+        public override void New()
+        {
+            GetComponent<AddNew>().Show(true);
+        }
     }
 }

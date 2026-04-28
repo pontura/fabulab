@@ -174,7 +174,7 @@ namespace UI.MainApp
                 case 4:
                     timeline.SetActive(true);
                     itemList.SetActive(false);
-                    Events.OnPopupTopSignalText("Film");
+                    Events.OnPopupTopSignalText("Film   ");
                     break;                    
             }   
         }

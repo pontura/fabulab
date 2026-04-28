@@ -27,6 +27,10 @@ namespace UI.MainApp.Home.User
             SOBGData data = new SOBGData();
             data.id = id;
             StoryMakerEvents.AddSceneObject(data);
-        }        
+        }
+        public override void New()
+        {
+            GetComponent<AddNew>().Show(true);
+        }
     }
 }

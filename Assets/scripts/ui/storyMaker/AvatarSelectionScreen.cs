@@ -24,7 +24,8 @@ namespace UI.MainApp.Home.User
             data.itemName = Utils.GetUniqueDateTimeId();
             StoryMakerEvents.AddSceneObject(data);
         }
-        public override void New() { 
+        public override void New() {
+            GetComponent<AddNew>().Show(true);
         }
     }
 
