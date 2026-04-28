@@ -66,16 +66,19 @@ namespace BoardItems
         }
         public void Delete()
         {
+            Events.OnPopupTopSignalText("Item borrado");
             inputManager.Delete();
             inputManager.OnCloseTools(InputManager.states.IDLE);
         }
         public void Rotate()
         {
+            Events.OnPopupTopSignalText("Rotando objeto");
             inputManager.Rotate();
             inputManager.OnCloseTools(InputManager.states.ROTATING);
         }
         public void Scale()
         {
+            Events.OnPopupTopSignalText("Escalando objeto");
             inputManager.Scale();
             inputManager.OnCloseTools(InputManager.states.SCALING);
         }
@@ -91,7 +94,7 @@ namespace BoardItems
         }
         public void Clonate()
         {
-            print("Clonate");
+            Events.OnPopupTopSignalText("Objeto clonado");
             if (UIManager.Instance.part == Characters.CharacterPartsHelper.parts.BODY) ClonateSO();
             else ClonateItemInAvatar();
         }
@@ -122,12 +125,14 @@ namespace BoardItems
         }
         public void MoveBack()
         {
+            Events.OnPopupTopSignalText("Item al fondo");
             UIManager.Instance.boardUI.items.MoveBack();
             inputManager.OnCloseTools(InputManager.states.IDLE);
             UIManager.Instance.undoManager.OnNewStep();
         }
         public void MoveUp()
         {
+            Events.OnPopupTopSignalText("Item al frente");
             UIManager.Instance.boardUI.items.MoveUp();
             inputManager.OnCloseTools(InputManager.states.IDLE);
             UIManager.Instance.undoManager.OnNewStep();
@@ -139,6 +144,7 @@ namespace BoardItems
         }
         public void ScaleSnaped(bool up)
         {
+            Events.OnPopupTopSignalText("Escalado snap " + up.ToString());
             UIManager.Instance.boardUI.items.ScaleSnaped(up);
             UIManager.Instance.undoManager.OnNewStep();
             //inputManager.OnCloseTools(InputManager.states.IDLE);

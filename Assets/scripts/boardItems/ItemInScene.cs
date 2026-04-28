@@ -183,21 +183,24 @@ namespace BoardItems
         BordersCreator borders;
         public void SetTools(bool isOn, AnimationClip clip = null)
         {
-            print("SetTools " + gameObject.name);
             SetBorders(isOn);
         }
         void SetBorders(bool isOn)
         {
-            if (borders == null)
+            if (!UIManager.Instance.inputManager.groupOn)
             {
-                borders = gameObject.AddComponent<BordersCreator>();
-                if(GetComponent<BoardItemManager>())
-                    borders.Init(GetComponent<BoxCollider2D>());
-                else
-                    borders.Init(sprite);
-            }
+                print("SetBorders " + isOn + " go: " + gameObject.name);
+                if (borders == null)
+                {
+                    borders = gameObject.AddComponent<BordersCreator>();
+                    if (GetComponent<BoardItemManager>())
+                        borders.Init(GetComponent<BoxCollider2D>());
+                    else
+                        borders.Init(sprite);
+                }
 
-            borders.Show(isOn);
+                borders.Show(isOn);
+            }
         }
     }
 }

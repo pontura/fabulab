@@ -32,10 +32,19 @@ namespace UI
 
         void OnToggle(bool isOn)
         {
+            string s = "Grilla ";
+            if (isOn) s += "Activa";
+            else s += "Inactiva";
+
+            Events.OnPopupTopSignalText(s);
             UIManager.Instance.boardUI.snap = isOn;
         }
         void OnToggleGroup(bool isOn)
         {
+            string s = "Grupo ";
+            if (isOn) s += "Activado";
+            else s += "Desactivado";
+            Events.OnPopupTopSignalText(s);
             Events.SetGroupToolsOn(isOn);
         }
         public void SetOff()

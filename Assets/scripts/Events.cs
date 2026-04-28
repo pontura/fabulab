@@ -31,6 +31,7 @@ public static class Events
     public static System.Action<string> ChangeName = delegate { };
 
     public static System.Action<AnimationsManager.AnimData> AnimateItem = delegate { };
+    public static System.Action<string> OnPopupTopSignalText = delegate { };
     public static System.Action<bool> ActivateUIButtons = delegate { };
     public static System.Action<bool> SetChangesMade = delegate { };
     public static System.Action<bool> OnLoading = delegate { };

@@ -20,6 +20,7 @@ namespace UI
         CharacterEdition characterEdition;
         [SerializeField] ConfirmationScreen confirmationScreen;
         public UndoManager undoManager;
+        public InputManager inputManager;
 
         public bool hasUnsavedChanges;
 
@@ -51,6 +52,7 @@ namespace UI
             zoomManager = GetComponent<ZoomsManager>();
             characterEdition = GetComponent<CharacterEdition>();
             undoManager = GetComponent<UndoManager>();
+            inputManager = GetComponent<InputManager>();
             if (!mInstance)
                 mInstance = this;
         }
