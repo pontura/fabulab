@@ -279,6 +279,9 @@ namespace BoardItems
                 filmsData = filmsData.OrderByDescending(x => x.timestamp).ToList();
             }
             //Events.OnUpdateFilmIcon();
+
+            AudioManager.Instance.musicManager.Play("work");
+            Events.OnPopupTopSignalText("Historia salvada");
         }
 
         public void LoadFilm(string _id) {
