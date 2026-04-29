@@ -56,5 +56,9 @@ public static class Events
     public static System.Action<string> DuplicateSO = delegate { };
 
     public static System.Action OnAllFilmMetadataLoadDone = delegate { };
+
+    public static System.Action<FilmDataFabulab> OnFilmMetadataAdded = delegate { };
+    public static System.Action<FilmDataFabulab> OnFilmMetadataUpdated = delegate { };
+    public static System.Action<string> OnFilmMetadataRemoved = delegate { };
 }
    

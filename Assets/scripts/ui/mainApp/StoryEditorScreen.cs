@@ -38,6 +38,10 @@ namespace UI.MainApp
 
         bool editionEnabled;
 
+        private void Awake() {
+            gameObject.SetActive(false);
+        }
+
         private void Start()
         {
             avatarSelectionScreen = GetComponent<AvatarSelectionScreen>();

@@ -1,50 +1,30 @@
 ﻿using BoardItems;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
 {
-    public class AllStoriesScreen : MonoBehaviour
-    {
-        public ItemSelectorBtn workBtn_prefab;
-        public Transform worksContainer;
-
-        int artID = 0;
-        public void Show(bool isOn)
-        {
-            gameObject.SetActive(isOn);
-            if(isOn)
-            {
-                Init();
-            }
-        }
-
-        public void Init()
-        {
-            artID = 0;
-
-            foreach (Transform child in worksContainer)
-            {
-                if (child.tag != "Persistent")
-                    Destroy(child.gameObject);
-            }
-
-            LoadNext();
-        }
+    public class AllStoriesScreen : UserStoriesScreen
+    {        
         
-        void LoadNext()
+        protected override void LoadNext()
         {
+            Debug.Log("% AllStoriesScreen LoadNext");
             foreach(FilmDataFabulab cd in Data.Instance.scenesData.filmsData)
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
-                go.Init(cd.GetSprite());
+                go.Init(cd.id, cd.GetSprite());
                 go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
-            }            
+            }
+
+            if (Data.Instance.scenesData.filmsData.Count > 0)
+                firstLoad = true;
         }        
 
-        public void OpenWork(string id) {
+        public override void OpenWork(string id) {
             Events.OnLoading(true);
             Data.Instance.scenesData.LoadFilm(id);
             UIManager.Instance.boardUI.SetEditingType(BoardUI.editingTypes.NONE);
