@@ -1,12 +1,7 @@
-﻿using BoardItems.BoardData;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
-using UnityEngine.Windows;
 
 namespace Yaguar.StoryMaker.Editor
 {

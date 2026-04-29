@@ -1,8 +1,5 @@
 ﻿using BoardItems.Characters;
-using Google.MiniJSON;
-using UI.MainApp;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 namespace Yaguar.StoryMaker.Editor
 {

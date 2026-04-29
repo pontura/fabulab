@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UI;
-using UI.MainApp;
-using UnityEditor.U2D.Animation;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
