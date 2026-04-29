@@ -77,11 +77,11 @@ namespace UI
         {
             undoManager.Reset();
             backToScreen.Add(type);
-            switch(type)
+            switch (type)
             {
                 case screenType.StoryMaker:
                     Scenario.Instance.gameObject.SetActive(true);
-                    backBtn.SetActive(true);                    
+                    backBtn.SetActive(true);
                     break;
                 case screenType.Home:
                     backBtn.SetActive(false);
@@ -94,7 +94,7 @@ namespace UI
         void InitGalleryDelayed() // to-do inicia los items:
         {
             GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(1);
-           // InitGallery(gd, true, null);
+            // InitGallery(gd, true, null);
             Events.InitGallery(gd, true, null);
         }
         void Init()
@@ -124,9 +124,9 @@ namespace UI
                 NewStory(); // TO-DO
             else if (id == 2)
                 NewCharacter();
-            else if(id == 3)
+            else if (id == 3)
                 NewObject(SObjectData.types.generic);
-             else if (id == 4)
+            else if (id == 4)
                 NewObject(SObjectData.types.background);
         }
         public void Albums()
@@ -180,7 +180,7 @@ namespace UI
         {
             boardUI.SetEditingType(type);
             boardUI.LoadWork(id);
-            switch(type)
+            switch (type)
             {
                 case editingTypes.CHARACTER:
                     Events.OnCharacterReset();
@@ -194,7 +194,7 @@ namespace UI
         }
         public void Back()
         {
-            if (backToScreen[backToScreen.Count - 1] == screenType.WorkDetail)
+            if (backToScreen.Count>0 && backToScreen[backToScreen.Count - 1] == screenType.WorkDetail)
             {
                 Events.OnNewBodyPartSelected(null);
                 Home();
@@ -217,23 +217,33 @@ namespace UI
 
         void SetBack()
         {
-            if (backToScreen.Count < 3)
+            if(StoryMakerEvents.isEditing)
+                Events.ShowScreen(screenType.StoryMaker);
+            else if (backToScreen.Count < 3)
                 Events.ShowScreen(screenType.Home);
             else
                 Events.ShowScreen(backToScreen[backToScreen.Count - 2]);
-            backToScreen.RemoveAt(backToScreen.Count - 1);
-            backToScreen.RemoveAt(backToScreen.Count - 1);
+
+            if(backToScreen.Count>1) backToScreen.RemoveAt(backToScreen.Count - 1);
+            if (backToScreen.Count > 1) backToScreen.RemoveAt(backToScreen.Count - 1);
         }
         void ExitConfirmed(bool exit)
         {
-            if(exit)
+            if (exit)
                 SetBack();
         }
         public void ShowWorkDetail(SOPartData wd)
         {
-            Sprite sprite = Sprite.Create(wd.thumb, new Rect(0, 0, wd.thumb.width, wd.thumb.height), Vector2.zero);
-            Events.ShowScreen(UIManager.screenType.WorkDetail);
-            workDetailUI.ShowWorkDetail(wd.id, sprite, true);
+            if (StoryMakerEvents.isEditing)
+            {
+                Events.ShowScreen(UIManager.screenType.StoryMaker);
+            }
+            else
+            {
+                Sprite sprite = Sprite.Create(wd.thumb, new Rect(0, 0, wd.thumb.width, wd.thumb.height), Vector2.zero);
+                Events.ShowScreen(UIManager.screenType.WorkDetail);
+                workDetailUI.ShowWorkDetail(wd.id, sprite, true);
+            }
             //Events.ResetItems();
         }
     }

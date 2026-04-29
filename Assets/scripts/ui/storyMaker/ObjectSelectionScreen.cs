@@ -30,7 +30,11 @@ namespace UI.MainApp.Home.User
         }
         public override void New()
         {
-            GetComponent<AddNew>().Show(true);
+            GetComponent<AddNew>().Show(true, Clicked);
+        }
+        public void Clicked(int id)
+        {
+            UIManager.Instance.NewObject(SObjectData.types.generic);
         }
     }
 }

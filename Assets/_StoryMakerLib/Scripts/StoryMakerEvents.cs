@@ -7,7 +7,11 @@ namespace Yaguar.StoryMaker.Editor
 {
     public static class StoryMakerEvents
     {
-
+        public static bool isEditing;
+        public static void SetEditing(bool editing)
+        {
+            isEditing = editing;
+        }
         public static System.Action<int, SOActionData> OnAction = delegate { };
         public static System.Action<int, SOExpData> OnExpression = delegate { };
         public static System.Action<ObjectSignal> OnInputField = delegate { };
@@ -39,7 +43,6 @@ namespace Yaguar.StoryMaker.Editor
         public static System.Action Restart = delegate { };
         public static System.Action ClearScene = delegate { };
         public static System.Action SetBackgroundLights= delegate { };
-        public static System.Action ResetScene = delegate { };
 
         public static System.Action EditCustomize = delegate { };
         public static System.Action EditActions = delegate { };

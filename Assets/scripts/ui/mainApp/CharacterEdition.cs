@@ -2,6 +2,7 @@ using BoardItems;
 using BoardItems.Characters;
 using UnityEngine;
 using Yaguar.StoryMaker.DB;
+using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp
 {
@@ -124,6 +125,7 @@ namespace UI.MainApp
         }
         public void SetButtons()
         {
+            Debug.Log("Data.Instance.charactersData.GetCurrent() SetButtons: " + Data.Instance.charactersData.GetCurrent());
             if (Data.Instance.userData.isAdmin)
             {
                 savePartButton.SetActive(true);
@@ -137,6 +139,8 @@ namespace UI.MainApp
                 deletePartButton.SetActive(false);
             }
             saveCharacterButton.SetActive(Data.Instance.charactersData.GetCurrent() != "");
+
+            saveNewCharacterButton.GetComponentInChildren<TMPro.TMP_Text>().text = "Guardar";
         }
         public void Save()
         {
@@ -188,7 +192,6 @@ namespace UI.MainApp
             else
                 Data.Instance.charactersData.SaveCharacter(tex);
         }
-
     }
 
 }

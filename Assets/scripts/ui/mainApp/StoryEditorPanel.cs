@@ -1,3 +1,4 @@
+using BoardItems.Characters;
 using System.Diagnostics;
 using Yaguar.StoryMaker.Editor;
 
@@ -5,7 +6,7 @@ namespace UI.MainApp
 {
     public class StoryEditorPanel : MainScreen
     {
-
+       
         UIManager.screenType last;
         protected override void ShowScreen(UIManager.screenType type) 
         {
@@ -17,6 +18,8 @@ namespace UI.MainApp
                     Show(true);
                     StoryMakerEvents.EnableInputManager(true);
                     Events.ColorizeBG(PalettesManager.colorNames.BG_CELESTE);
+                    UIManager.Instance.boardUI.characterManager.gameObject.SetActive(false);
+                    Invoke("Delayed", 0.5f);
                     break;
                 default:
                     if (last == UIManager.screenType.StoryMaker) {
@@ -27,6 +30,10 @@ namespace UI.MainApp
                     break;
             }
             last = type;
-        }        
+        }
+        void Delayed()
+        {
+            StoryMakerEvents.SetEditing(false);
+        }
     }
 }

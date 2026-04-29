@@ -32,11 +32,13 @@ namespace UI.MainApp
         [SerializeField] GameObject DoneBtn;
         [SerializeField] TMPro.TMP_InputField storyName;
         [SerializeField] bool changesMade;
+        AddNew addNewPanel;
 
         bool editionEnabled;
 
         private void Start()
         {
+            addNewPanel = GetComponent<AddNew>();
             CloseTools();
             StoryMakerEvents.ShowSoButtons += ShowSoButtons;
             StoryMakerEvents.OnSaveScene += OnSaveScene;
@@ -142,6 +144,7 @@ namespace UI.MainApp
 
         void OnTabClicked(int id)
         {
+            addNewPanel.Close();
             CloseTools();
             actionUI.SetOn(false);
             emojisUI.SetOn(false);

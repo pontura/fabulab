@@ -223,8 +223,14 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public override void ClearScene() {
-            base.ClearScene();
-            Utils.RemoveAllChildsIn(bgContainer);
+            if (StoryMakerEvents.isEditing)
+            {
+                gameObject.SetActive(false);
+            } else
+            {
+                base.ClearScene();
+                Utils.RemoveAllChildsIn(bgContainer);
+            }
         }
 
         void OnMovieOver() {

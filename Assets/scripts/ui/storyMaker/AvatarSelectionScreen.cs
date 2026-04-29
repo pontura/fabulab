@@ -25,7 +25,11 @@ namespace UI.MainApp.Home.User
             StoryMakerEvents.AddSceneObject(data);
         }
         public override void New() {
-            GetComponent<AddNew>().Show(true);
+            GetComponent<AddNew>().Show(true, Clicked);
+        }
+        public void Clicked(int id)
+        {
+            UIManager.Instance.NewCharacter();
         }
     }
 
