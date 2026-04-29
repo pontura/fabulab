@@ -31,7 +31,7 @@ namespace UI.MainApp.Home
             {
                 tabs.Init(OnTabClicked);
                 int charactersQty = Data.Instance.charactersData.userCharacters.Count;
-                List<string> tabNames = new List<string>() { "Stories", "Characters (" + charactersQty + ")", "Objects" };
+                List<string> tabNames = new List<string>() { "Historias", "Personajes (" + charactersQty + ")", "Objectos" };
                 tabs.SetTabNames(tabNames);
             }
         }
