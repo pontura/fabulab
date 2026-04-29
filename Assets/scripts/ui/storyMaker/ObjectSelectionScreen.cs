@@ -7,6 +7,16 @@ namespace UI.MainApp.Home.User
 {
     public class ObjectSelectionScreen : ItemSelectionScreen
     {
+        public AllObjectsScreen allObjectsScreen;
+        private void Start()
+        {
+            Cancel();
+            Events.DuplicateSO += DuplicateSO;
+        }
+        private void OnDestroy()
+        {
+            Events.DuplicateSO -= DuplicateSO;
+        }
         protected override void LoadNext()
         {
             AddBtn();
@@ -34,7 +44,26 @@ namespace UI.MainApp.Home.User
         }
         public void Clicked(int id)
         {
-            UIManager.Instance.NewObject(SObjectData.types.generic);
+            switch (id)
+            {
+                case 0:
+                    UIManager.Instance.NewObject(SObjectData.types.generic);
+                    break;
+                case 1:
+                    allObjectsScreen.Init();
+                    allObjectsScreen.gameObject.SetActive(true);
+                    break;
+            }
+        }
+        public void Cancel()
+        {
+            allObjectsScreen.gameObject.SetActive(false);
+        }
+        void DuplicateSO(string id)
+        {
+            GetComponent<AddNew>().Show(false, null);
+            print("Duplicate " + id);
+            Cancel();
         }
     }
 }

@@ -1,12 +1,13 @@
 using BoardItems.Characters;
 using System.Diagnostics;
+using UI.MainApp.Home.User;
 using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp
 {
     public class StoryEditorPanel : MainScreen
     {
-       
+
         UIManager.screenType last;
         protected override void ShowScreen(UIManager.screenType type) 
         {
@@ -19,6 +20,7 @@ namespace UI.MainApp
                     StoryMakerEvents.EnableInputManager(true);
                     Events.ColorizeBG(PalettesManager.colorNames.BG_CELESTE);
                     UIManager.Instance.boardUI.characterManager.gameObject.SetActive(false);
+                    UIManager.Instance.boardUI.sceneobjectsManager.gameObject.SetActive(false);
                     Invoke("Delayed", 0.5f);
                     break;
                 default:

@@ -1,5 +1,4 @@
 ﻿using BoardItems.BoardData;
-using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
 
@@ -11,6 +10,7 @@ namespace UI.MainApp.Home.User
 
         private void Start()
         {
+            Cancel();
             Events.DuplicateCharacter += DuplicateCharacter;
         }
         private void OnDestroy()

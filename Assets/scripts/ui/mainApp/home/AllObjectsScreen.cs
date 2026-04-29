@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
 {
@@ -53,7 +54,10 @@ namespace UI.MainApp.Home.User
         }
         public void OpenWork(string id)
         {
-            UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
+            if(StoryMakerEvents.isEditing)
+                Events.DuplicateSO(id);
+            else
+                UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
         }
 
         public void New()
