@@ -1,4 +1,5 @@
 ﻿using BoardItems.BoardData;
+using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
 
@@ -6,6 +7,16 @@ namespace UI.MainApp.Home.User
 {
     public class AvatarSelectionScreen : ItemSelectionScreen
     {
+        public AllCharactersScreen allCharactersScreen;
+
+        private void Start()
+        {
+            Events.DuplicateCharacter += DuplicateCharacter;
+        }
+        private void OnDestroy()
+        {
+            Events.DuplicateCharacter -= DuplicateCharacter;
+        }
         protected override void LoadNext()
         {
             AddBtn();
@@ -29,8 +40,29 @@ namespace UI.MainApp.Home.User
         }
         public void Clicked(int id)
         {
-            UIManager.Instance.NewCharacter();
+            switch(id)
+            {
+                case 0:
+                    UIManager.Instance.NewCharacter();
+                    break;
+                case 1:
+                    allCharactersScreen.Init();
+                    allCharactersScreen.gameObject.SetActive(true);
+                    break;
+            }
         }
+        public void Cancel()
+        {
+            allCharactersScreen.gameObject.SetActive(false);
+        }
+        void DuplicateCharacter(string id)
+        {
+            GetComponent<AddNew>().Show(false, null);
+            print("Duplicate " + id);
+            Cancel();
+        }
+
+
     }
 
 }

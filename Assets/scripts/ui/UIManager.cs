@@ -149,13 +149,6 @@ namespace UI
             LoadWork(editingTypes.CHARACTER, newCharacterID);
             Data.Instance.charactersData.SetCurrentID("");
             Events.OnPresetReset();
-
-            //boardUI.SetEditingType(editingTypes.CHARACTER);
-            //Data.Instance.charactersData.ResetCurrentID();
-            //Events.OnPresetReset();
-            //GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(1);
-            //Events.InitGallery(gd, true, InitCharacterScreen);
-            //Events.EmptySceneItems();
         }
         void InitCharacterScreen()
         {

@@ -10,6 +10,7 @@ namespace UI.MainApp
 {
     public class StoryEditorScreen : MonoBehaviour
     {
+        AvatarSelectionScreen avatarSelectionScreen;
         [SerializeField] GameObject arrowSelect;
         [SerializeField] TabToolsManager tabTools;
         [SerializeField] TabController tabs;
@@ -38,6 +39,7 @@ namespace UI.MainApp
 
         private void Start()
         {
+            avatarSelectionScreen = GetComponent<AvatarSelectionScreen>();
             addNewPanel = GetComponent<AddNew>();
             CloseTools();
             StoryMakerEvents.ShowSoButtons += ShowSoButtons;
@@ -144,6 +146,7 @@ namespace UI.MainApp
 
         void OnTabClicked(int id)
         {
+            avatarSelectionScreen.Cancel();
             addNewPanel.Close();
             CloseTools();
             actionUI.SetOn(false);

@@ -1,6 +1,7 @@
 ﻿using BoardItems.BoardData;
 using UnityEngine;
 using UnityEngine.UI;
+using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
 {
@@ -34,35 +35,21 @@ namespace UI.MainApp.Home.User
         
         void LoadNext()
         {
-           // print("LoadNext " + artID);
-           // if (artID >= Data.Instance.characters.Count) return;
             foreach(CharacterMetaData cd in Data.Instance.charactersData.charactersMetaData)
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
                 go.Init(cd);
-                //RawImage rm = go.GetComponentInChildren<RawImage>();
-               // UIManager.Instance.boardUI.GenerateThumb(wd, rm, LoadNext);
-                go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
+
+                if(StoryMakerEvents.isEditing)
+                    go.GetComponent<Button>().onClick.AddListener(() => Duplicate(cd.id));
+                else
+                    go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
             }
-            //CharacterData wd = Data.Instance.albumData.characters[artID];
-            //artID++;
-            //if (wd.thumb != null)
-            //{
-            //    //if (Data.Instance.galeriasData.ExistGallery(wd.galleryID))
-            //    //{
-            //        GameObject go = Instantiate(workBtn_prefab, worksContainer);
-            //        print("go " + go);
-            //        //RawImage rm = go.GetComponentInChildren<RawImage>();
-            //        //UIManager.Instance.boardUI.GenerateThumb(wd, rm, LoadNext);
-            //        go.GetComponent<Button>().onClick.AddListener(() => OpenWork(wd.id));
-            //    //}
-            //}
         }
-        public void DuplicateWork(int PakaPakaObjectID)
+        public void Duplicate(string soID)
         {
-          //  UIManager.Instance.boardUI.LoadPakapakaWork(PakaPakaObjectID);
-           // album.SetActive(false);
+            Events.DuplicateCharacter(soID);
         }
 
         public void OpenWork(string id) { 

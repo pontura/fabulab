@@ -27,11 +27,8 @@ public class AddNew : MonoBehaviour
     }
     public void Clicked(int id)
     {
-        if (id == 0)
-        {
-            Data.Instance.charactersData.ResetCurrentID();
-            StoryMakerEvents.SetEditing(true);
-        }
+        Data.Instance.charactersData.ResetCurrentID();
+        StoryMakerEvents.SetEditing(true);
         OnClicked(id);
     }
     public void Close()
