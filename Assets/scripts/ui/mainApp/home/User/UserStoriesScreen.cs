@@ -1,4 +1,5 @@
 ﻿using BoardItems;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
@@ -10,13 +11,46 @@ namespace UI.MainApp.Home.User
         public ItemSelectorBtn workBtn_prefab;
         public Transform worksContainer;
 
-        int artID = 0;
+        protected int artID = 0;
+        protected bool firstLoad;
+
+        protected virtual void Start() {
+            Events.OnFilmMetadataUpdated += OnFilmMetadataUpdated;
+            Events.OnFilmMetadataAdded += OnFilmMetadataAdded;
+            Events.OnFilmMetadataRemoved += OnFilmMetadataRemoved;
+        }
+        protected virtual void OnDestroy() {
+            Events.OnFilmMetadataUpdated += OnFilmMetadataUpdated;
+            Events.OnFilmMetadataAdded -= OnFilmMetadataAdded;
+            Events.OnFilmMetadataRemoved += OnFilmMetadataRemoved;
+        }
         public void Show(bool isOn)
         {
             gameObject.SetActive(isOn);
-            if(isOn)
-            {
+            if (!firstLoad) {                
                 Init();
+            }
+        }
+
+        void OnFilmMetadataAdded(FilmDataFabulab fd) {
+            AddFilmMetadata(fd);
+            worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
+        }
+
+        void OnFilmMetadataUpdated(FilmDataFabulab fd) {
+            ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
+            ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
+            if (btn != null) {
+                btn.Init(fd.GetSprite());
+                btn.transform.SetAsFirstSibling();
+            }
+        }
+
+        void OnFilmMetadataRemoved(string id) {
+            ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
+            ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == id);
+            if (btn != null) {
+                Destroy(btn.gameObject);
             }
         }
 
@@ -33,18 +67,24 @@ namespace UI.MainApp.Home.User
             LoadNext();
         }
         
-        void LoadNext()
+        protected virtual void LoadNext()
         {
             foreach(FilmDataFabulab cd in Data.Instance.scenesData.userFilmsData)
             {
-                ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-                print("go " + go);
-                go.Init(cd.GetSprite());
-                go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
-            }            
-        }        
+                AddFilmMetadata(cd);                
+            }
+            if (Data.Instance.scenesData.userFilmsData.Count > 0)
+                firstLoad = true;
+        }
 
-        public void OpenWork(string id) {
+        void AddFilmMetadata(FilmDataFabulab fd) {
+            Debug.Log("% OnFilmMetadataAdded");
+            ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
+            go.Init(fd.id, fd.GetSprite());
+            go.GetComponent<Button>().onClick.AddListener(() => OpenWork(fd.id));
+        }
+
+        public virtual void OpenWork(string id) {
             Events.OnLoading(true);
             Data.Instance.scenesData.LoadUserFilm(id);
             UIManager.Instance.boardUI.SetEditingType(BoardUI.editingTypes.NONE);

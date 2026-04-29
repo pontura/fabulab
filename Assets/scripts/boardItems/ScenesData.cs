@@ -1,3 +1,4 @@
+using Firebase.Database;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -89,8 +90,8 @@ namespace BoardItems
             if (Data.Instance.userData.IsLogged()) {
                 CancelInvoke();
                 //LoadUserFilmMetadataFromServer();
-                LoadAllFilmMetadataFromServer();
-            } else
+                LoadAllFilmMetadataFromServer();                            
+        } else
                 Invoke("OnTokenUpdated", 1);
         }
 
@@ -136,6 +137,11 @@ namespace BoardItems
             userFilmsData.AddRange(filmsData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid));
 
             Events.OnAllFilmMetadataLoadDone();
+
+            var filmMetadata = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/");
+            filmMetadata.ChildAdded += OnFilmdAdded;
+            filmMetadata.ChildChanged += OnFilmChanged;
+            filmMetadata.ChildRemoved += OnFilmRemoved;
         }
 
         public void OnAddFilmDataFromServer(List<FilmDataFabulab> filmsData, Dictionary<string, ServerFilmData> sfds) {
@@ -185,6 +191,101 @@ namespace BoardItems
                 //Events.OnUpdateFilmIcon();
             }
             
+        }
+
+        void OnFilmdAdded(object sender, ChildChangedEventArgs args) {
+            if (args.DatabaseError != null) {
+                Debug.LogError(args.DatabaseError.Message);
+                return;
+            }
+            Debug.Log("% OnFilmdAdded: " + args.Snapshot.GetRawJsonValue());
+
+            DataSnapshot snapshot = args.Snapshot;
+            if (snapshot.Exists) {
+                ServerFilmData sfd = JsonUtility.FromJson<ServerFilmData>(snapshot.GetRawJsonValue());
+                FilmDataFabulab fd = filmsData.Find(x => x.id == snapshot.Key);
+                if (fd != null) {
+                    SetFilmChanged(fd, sfd);
+                } else {
+                    fd = new FilmDataFabulab();
+                    fd.id = snapshot.Key;
+
+                    fd.framecount = -1;
+                    fd.likes = sfd.likes;
+                    fd.name = sfd.name;
+                    fd.userID = sfd.userID;
+                    fd.speed = sfd.speed;
+                    if (sfd.timestamp == null || sfd.timestamp == "")
+                        fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
+                    else
+                        fd.timestamp = sfd.timestamp;
+                    fd.thumb = new Texture2D(1, 1);
+                    fd.thumb.LoadImage(System.Convert.FromBase64String(sfd.thumb));
+                    filmsData.Insert(0, fd);
+
+                    if (sfd.userID == Data.Instance.userData.userDataInDatabase.uid)
+                        userFilmsData.Insert(0, fd);
+
+                    Events.OnFilmMetadataAdded(fd);
+                }
+            }                
+        }
+
+        void OnFilmChanged(object sender, ChildChangedEventArgs args) {
+            if (args.DatabaseError != null) {
+                Debug.LogError(args.DatabaseError.Message);
+                return;
+            }
+
+            Debug.Log("% OnFilmChanged: " + args.Snapshot.GetRawJsonValue());
+
+            DataSnapshot snapshot = args.Snapshot;
+            if (snapshot.Exists) {
+                ServerFilmData sfd = JsonUtility.FromJson<ServerFilmData>(snapshot.GetRawJsonValue());                
+                FilmDataFabulab fd = filmsData.Find(x => x.id == snapshot.Key);
+                if (fd == null) {
+                    return;
+                }
+
+                SetFilmChanged(fd, sfd);
+                /*if (sfd.userID == Data.Instance.userData.userDataInDatabase.uid)
+                    userFilmsData.Insert(0, fd);*/
+            }
+        }
+
+        void SetFilmChanged(FilmDataFabulab fd, ServerFilmData sfd) {
+            fd.name = sfd.name;
+            fd.speed = sfd.speed;
+            if (sfd.timestamp == null || sfd.timestamp == "")
+                fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
+            else
+                fd.timestamp = sfd.timestamp;
+            fd.thumb = new Texture2D(1, 1);
+            fd.thumb.LoadImage(System.Convert.FromBase64String(sfd.thumb));
+
+            filmsData = filmsData.OrderByDescending(x => x.timestamp).ToList();
+            userFilmsData = userFilmsData.OrderByDescending(x => x.timestamp).ToList();
+
+            Events.OnFilmMetadataUpdated(fd);
+        }
+
+        void OnFilmRemoved(object sender, ChildChangedEventArgs args) {
+            if (args.DatabaseError != null) {
+                Debug.LogError(args.DatabaseError.Message);
+                return;
+            }
+
+            Debug.Log("% OnFilmRemoved: " + args.Snapshot.GetRawJsonValue());
+
+            DataSnapshot snapshot = args.Snapshot;
+            if (snapshot.Exists) {
+                FilmDataFabulab fd = filmsData.Find(x => x.id == snapshot.Key);
+                if (fd != null) {
+                    filmsData.Remove(fd);
+                    userFilmsData.Remove(fd);
+                    Events.OnFilmMetadataRemoved(fd.id);
+                }
+            }
         }
 
         public void SortThemeFilmsDataByLikes(bool moreLikes) {
