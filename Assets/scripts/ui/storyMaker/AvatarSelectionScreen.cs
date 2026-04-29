@@ -46,8 +46,8 @@ namespace UI.MainApp.Home.User
                     UIManager.Instance.NewCharacter();
                     break;
                 case 1:
-                    allCharactersScreen.Init();
                     allCharactersScreen.gameObject.SetActive(true);
+                    allCharactersScreen.Init();
                     break;
             }
         }

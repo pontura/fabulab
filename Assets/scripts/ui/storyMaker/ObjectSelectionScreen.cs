@@ -50,8 +50,8 @@ namespace UI.MainApp.Home.User
                     UIManager.Instance.NewObject(SObjectData.types.generic);
                     break;
                 case 1:
-                    allObjectsScreen.Init();
                     allObjectsScreen.gameObject.SetActive(true);
+                    allObjectsScreen.Init();
                     break;
             }
         }

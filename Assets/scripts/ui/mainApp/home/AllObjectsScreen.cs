@@ -30,7 +30,7 @@ namespace UI.MainApp.Home.User
             List<PropMetaData> generics = Data.Instance.sObjectsData.GetMetadataByType(SObjectData.types.generic);
             List<PropMetaData> backgrounds  = Data.Instance.sObjectsData.GetMetadataByType(SObjectData.types.background);
 
-            AddTitle(0, "Generic Objects (" + generics.Count + ")");
+            AddTitle(0, "Objectos (" + generics.Count + ")");
             foreach (PropMetaData cd in generics)
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, objectsContainer);
@@ -38,7 +38,7 @@ namespace UI.MainApp.Home.User
                 go.Init(cd);
                 go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
             }
-            AddTitle(1, "Backgrounds (" + backgrounds.Count + ")");
+            AddTitle(1, "Fondos (" + backgrounds.Count + ")");
             foreach (PropMetaData cd in backgrounds)
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, backgroundsContainer);
