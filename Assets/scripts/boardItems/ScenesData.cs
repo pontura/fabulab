@@ -41,7 +41,8 @@ namespace BoardItems
 
         public bool loadedDone;
 
-        
+
+        string initTimeStamp;
 
         private void Start() {
             //Events.OnThemesLoadedComplete += LoadThemeFilmMetadataFromServer;
@@ -136,6 +137,8 @@ namespace BoardItems
 
             Events.OnAllFilmMetadataLoadDone();
 
+            initTimeStamp = DateTime.UtcNow.ToString("o");
+
             var filmMetadata = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/");
             filmMetadata.ChildAdded += OnFilmdAdded;
             filmMetadata.ChildChanged += OnFilmChanged;
@@ -196,11 +199,16 @@ namespace BoardItems
                 Debug.LogError(args.DatabaseError.Message);
                 return;
             }
-            Debug.Log("% OnFilmdAdded: " + args.Snapshot.GetRawJsonValue());
+            
 
             DataSnapshot snapshot = args.Snapshot;
             if (snapshot.Exists) {
+
                 ServerFilmData sfd = JsonUtility.FromJson<ServerFilmData>(snapshot.GetRawJsonValue());
+                if (sfd.timestamp == null || sfd.timestamp == "" || String.Compare(sfd.timestamp,initTimeStamp)<0)
+                    return;
+
+                Debug.Log("% OnFilmdAdded: "+sfd.timestamp + " > " + initTimeStamp);
                 FilmDataFabulab fd = filmsData.Find(x => x.id == snapshot.Key);
                 if (fd != null) {
                     SetFilmChanged(fd, sfd);
@@ -264,6 +272,8 @@ namespace BoardItems
             filmsData = filmsData.OrderByDescending(x => x.timestamp).ToList();
             userFilmsData = userFilmsData.OrderByDescending(x => x.timestamp).ToList();
 
+            Data.Instance.cacheData.RemoveFilmCache(fd.id);
+
             Events.OnFilmMetadataUpdated(fd);
         }
 
@@ -281,6 +291,7 @@ namespace BoardItems
                 if (fd != null) {
                     filmsData.Remove(fd);
                     userFilmsData.Remove(fd);
+                    Data.Instance.cacheData.RemoveFilmCache(fd.id);
                     Events.OnFilmMetadataRemoved(fd.id);
                 }
             }
