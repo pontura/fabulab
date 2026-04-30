@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Yaguar.StoryMaker.Editor;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -25,7 +22,7 @@ namespace Yaguar.StoryMaker.Editor
 
         [SerializeField] protected TimelineInSceneUI timelineInSceneUI;
         [SerializeField] protected Timeline timeline;
-        [SerializeField] protected bool isEditing;
+        [SerializeField] public bool isEditing;
 
         public event Action<Action<bool>> DeleteDialog;
         public event Action OnMaxFrames;

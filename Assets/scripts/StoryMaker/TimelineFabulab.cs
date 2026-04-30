@@ -41,7 +41,20 @@ namespace Yaguar.StoryMaker.Editor
             }
             all.Clear();
 
-            Scenario.Instance.StartCoroutine(RefreshKeyframesC());
+            if(filmMakerUI.isEditing)
+                Scenario.Instance.StartCoroutine(RefreshKeyframesC());
+            else
+            {
+                int a = 0;
+                foreach (SceneDataFabulab s in ScenesManagerFabulab.Instance.Scenes)
+                {
+                    a++;
+                    AddNewKeyframe(s.duration);
+                }
+                filmMakerUI.JumpTo(1);
+                UpdateKeyframes();
+                Events.OnLoading(false);
+            }
         }
         IEnumerator RefreshKeyframesC()
         {
