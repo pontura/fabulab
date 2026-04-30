@@ -22,7 +22,7 @@ namespace UI.MainApp.Home
                 profilePicture.InitOwner();
                 tabs.Init(OnTabClicked);
                 int charactersQty = Data.Instance.charactersData.userCharacters.Count;
-                List<string> tabNames = new List<string>() { "Settings", "Stories", "Characters (" + charactersQty + ")", "Objects" };
+                List<string> tabNames = new List<string>() { "Usuario", "Historias", "Personajes (" + charactersQty + ")", "Objectos" };
                 tabs.SetTabNames(tabNames);
             }
         }

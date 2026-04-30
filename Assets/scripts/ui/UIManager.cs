@@ -187,13 +187,19 @@ namespace UI
         }
         public void Back()
         {
-            if (backToScreen.Count>0 && backToScreen[backToScreen.Count - 1] == screenType.WorkDetail)
+           if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.WorkDetail)
             {
                 Events.OnNewBodyPartSelected(null);
                 Home();
-            } else if (CheckLastScreenUnsaved())
+            }
+            else if (CheckLastScreenUnsaved())
             {
                 Events.OnConfirm("All changes will be lost", "Confirm and exit", "Cancel", ExitConfirmed);
+            }
+            else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.StoryMaker)
+            {
+                StoryMakerEvents.SetEditing(false);
+                Home();
             }
             else
             {

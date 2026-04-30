@@ -1,5 +1,6 @@
 using BoardItems.Characters;
 using UnityEngine;
+using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp
 {
@@ -45,6 +46,7 @@ namespace UI.MainApp
                     savePanel.SetActive(false);
                     dragAndDropUI.SetOn(true);
                     dragAndDropUI.Init();
+                    if (StoryMakerEvents.isEditing)  Done(); // por si llegas desde la historia te manda al Save directamente.
                     break;
                 default:
                     Show(false);
