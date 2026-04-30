@@ -54,7 +54,11 @@ namespace UI.MainApp
         {
             bool isEditingCharacter = (Data.Instance.charactersData.GetCurrent() != "");
             isPreview = isEditingCharacter;
-            SetTogglePreview();
+            if (StoryMakerEvents.isEditing)
+                Done();
+            else
+                SetTogglePreview();
+
         }
         public void TogglePreview()
         {

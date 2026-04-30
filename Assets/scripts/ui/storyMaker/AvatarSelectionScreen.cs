@@ -58,7 +58,7 @@ namespace UI.MainApp.Home.User
         void DuplicateCharacter(string id)
         {
             GetComponent<AddNew>().Show(false, null);
-            print("Duplicate " + id);
+            UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);
             Cancel();
         }
 
