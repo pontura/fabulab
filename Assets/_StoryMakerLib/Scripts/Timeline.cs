@@ -28,11 +28,13 @@ namespace Yaguar.StoryMaker.Editor
         }
         public float keyframe_duration = 2;
 
-        protected virtual void Start()
-        {
+        protected virtual void Awake() {
             StoryMakerEvents.OnLoadFilm += Reset;
             StoryMakerEvents.OnStartNewStory += Reset;
             StoryMakerEvents.ChangeSpeed += ChangeSpeed;
+        }
+
+        protected virtual void Start() {
             StoryMakerEvents.ChangeSpeed(ScenesManager.Instance.currentFilmData.speed);
         }
         private void OnEnable() {

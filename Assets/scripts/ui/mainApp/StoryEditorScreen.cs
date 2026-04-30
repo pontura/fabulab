@@ -37,10 +37,7 @@ namespace UI.MainApp
         AddNew addNewPanel;
 
         bool editionEnabled;
-
-        private void Awake() {
-            gameObject.SetActive(false);
-        }
+              
 
         private void Start()
         {
