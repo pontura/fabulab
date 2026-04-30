@@ -7,6 +7,18 @@ namespace UI.MainApp.Home.User
 {
     public class BackgroundSelectionScreen : ItemSelectionScreen
     {
+        public AllObjectsScreen allObjectsScreen;
+
+        private void Start()
+        {
+            Cancel();
+            Events.DuplicateSO += DuplicateSO;
+        }
+        private void OnDestroy()
+        {
+            Events.DuplicateSO -= DuplicateSO;
+        }
+
         protected override void LoadNext()
         {
             AddBtn();
@@ -34,7 +46,27 @@ namespace UI.MainApp.Home.User
         }
         public void Clicked(int id)
         {
-            UIManager.Instance.NewObject(SObjectData.types.background);
+            switch (id)
+            {
+                case 0:
+
+                    UIManager.Instance.NewObject(SObjectData.types.background);
+                    break;
+                case 1:
+                    allObjectsScreen.gameObject.SetActive(true);
+                    allObjectsScreen.Init();
+                    break;
+            }
+        }
+        public void Cancel()
+        {
+            allObjectsScreen.gameObject.SetActive(false);
+        }
+        void DuplicateSO(string id)
+        {
+            GetComponent<AddNew>().Show(false, null);
+            UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
+            Cancel();
         }
     }
 }

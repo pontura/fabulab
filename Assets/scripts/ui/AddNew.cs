@@ -1,6 +1,4 @@
-﻿using UI;
-using UI.MainApp;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
 

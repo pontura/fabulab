@@ -62,7 +62,7 @@ namespace UI.MainApp.Home.User
         void DuplicateSO(string id)
         {
             GetComponent<AddNew>().Show(false, null);
-            print("Duplicate " + id);
+            UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
             Cancel();
         }
     }
