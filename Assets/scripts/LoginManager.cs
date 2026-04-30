@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Yaguar.Auth;
-using static UnityEditor.ShaderData;
 
 public class LoginManager : MonoBehaviour
 {
