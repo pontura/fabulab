@@ -52,6 +52,10 @@ public class CacheData : MonoBehaviour
             filmsCache.Add(id, CloneFilmData(source));
     }
 
+    public void RemoveFilmCache(string id) {
+        filmsCache.Remove(id);
+    }
+
     List<SceneDataFabulab> CloneFilmData(List<SceneDataFabulab> source) {
         List<SceneDataFabulab> nueva = new List<SceneDataFabulab>();
         foreach (SceneDataFabulab item in source)
