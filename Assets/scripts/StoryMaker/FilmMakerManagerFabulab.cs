@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Yaguar.StoryMaker.Editor;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -18,6 +12,7 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] protected float delayFactor;
         [SerializeField] Toggle toggleTransition;
         [SerializeField] GameObject durationBtn;
+        [SerializeField] VideoPlayerFabulab videoPlayerFabulab;
 
         protected override void Awake() {
             base.Awake();
@@ -37,6 +32,7 @@ namespace Yaguar.StoryMaker.Editor
             newButton.gameObject.SetActive(enable);
             //hamburguerButton.gameObject.SetActive(enable);
             toggleTransition.gameObject.SetActive(enable);
+            videoPlayerFabulab.Show(!enable);
             durationBtn.gameObject.SetActive(enable);
           //  buttonsGroup.spacing = enable ? 5 : 10;
         }
@@ -131,6 +127,7 @@ namespace Yaguar.StoryMaker.Editor
             //ScenesManagerFabulab.Instance.OnSaveScene();
             int lastSceneId = ScenesManagerFabulab.Instance.currentSceneId;
             ScenesManagerFabulab.Instance.currentSceneId--;
+            if (ScenesManagerFabulab.Instance.currentSceneId < 1) ScenesManagerFabulab.Instance.currentSceneId = 1;
             SetScene(lastSceneId);
             timeline.JumpTo(ScenesManagerFabulab.Instance.currentSceneId);
         }

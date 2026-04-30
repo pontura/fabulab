@@ -8,7 +8,7 @@ namespace Yaguar.StoryMaker.Editor
     {
         [SerializeField] GameObject on;
         [SerializeField] GameObject off;
-        [SerializeField] FilmMakerManager filmMakerUI;
+
         bool isOn;        
 
         private void Start()
