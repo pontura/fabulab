@@ -17,6 +17,7 @@ namespace UI.MainApp.Home.User
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
                 go.Init(cd.id, cd.GetSprite());
+                go.GetComponent<ItemSelectorStory>().SetContent(cd);
                 go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
             }
 

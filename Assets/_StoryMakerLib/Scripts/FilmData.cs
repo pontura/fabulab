@@ -24,5 +24,15 @@ namespace Yaguar.StoryMaker.Editor
             }
             return Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), Vector2.zero);
         }
+        public string GetTimestamp()
+        {
+            DateTime dateTime = DateTime.Parse(timestamp, null, System.Globalization.DateTimeStyles.RoundtripKind);
+
+            // Si querés hora local:
+            dateTime = dateTime.ToLocalTime();
+
+            string formatted = dateTime.ToString("dd-MM-yyyy");
+            return formatted;
+        }
     }
 }
