@@ -55,7 +55,11 @@ namespace Yaguar.StoryMaker.Editor
             //BoxCollider2D collider = GetComponent<BoxCollider2D>();
             //collider.size = new Vector2(10, 10);
 
-            balloonType = (balloonTypes)Enum.Parse(typeof(balloonTypes), soData.id);
+            if (Enum.IsDefined(typeof(balloonTypes), soData.id))
+                balloonType = (balloonTypes)Enum.Parse(typeof(balloonTypes), soData.id);
+            else
+                balloonType = balloonTypes.generic;
+                
             image.sprite = balloonSprites[(int)balloonType];
             data.pos.z = -50;
             gameObject.transform.localPosition = data.pos.ToVector3();

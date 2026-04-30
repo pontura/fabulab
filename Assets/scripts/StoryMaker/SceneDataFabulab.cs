@@ -146,13 +146,14 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public override SOData GetSOData() {
+            Debug.Log("% GetSOData type: " + type);
             SOData soData = null;
             if (type == SceneElementType.WORD_BALLOON) {
                 soData = new SOWordBalloonData();                
             } 
-            //else if (type == SceneElementType.WORD_BOX) {
-            //    soData = new SOWordBoxData();
-            //}
+            else if (type == SceneElementType.WORD_BOX) {
+                soData = new SOWordBalloonData();
+            }
             soData.goLeft = data.goLeft;
             SetSOData(soData);
             return soData;            
@@ -385,10 +386,10 @@ namespace Yaguar.StoryMaker.Editor
                 soData = new SOWordBalloonData();
                 (soData as SOWordBalloonData).inputValue = (data as SceneElementTextInput).input;
             } 
-            //else if (data.type == SceneElementType.WORD_BOX) {
-            //    soData = new SOWordBoxData();
-            //    (soData as SOWordBoxData).inputValue = (data as SceneElementTextInput).input;
-            //} 
+            else if (data.type == SceneElementType.WORD_BOX) {
+                soData = new SOWordBalloonData();
+                (soData as SOWordBalloonData).inputValue = (data as SceneElementTextInput).input;
+            } 
             else if (data.type == SceneElementType.PROP) {
                 soData = new SODataFabulab();
             }
