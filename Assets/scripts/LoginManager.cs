@@ -4,14 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.Auth;
+using static UnityEditor.ShaderData;
 
 public class LoginManager : MonoBehaviour
 {
     [SerializeField] GameObject container;
+    [SerializeField] TMPro.TextMeshProUGUI title;
     [SerializeField] TMPro.TMP_InputField usernameField;
     [SerializeField] TMPro.TMP_InputField emailField;
     [SerializeField] TMPro.TMP_InputField passField;
     [SerializeField] TMPro.TextMeshProUGUI error;
+    [SerializeField] GameObject loginLink, resetLink, signUpLink;
+    [SerializeField] GameObject loginBtn, signUpBtn, resetBtn;
     public bool isNew;
 
     //public override void OnEnabled()
@@ -29,6 +33,8 @@ public class LoginManager : MonoBehaviour
     void CheckLogged() {
         if (Data.Instance.userData.userDataInDatabase.username == "")
             isNew = true;
+
+        ToRegister();
 
         if (!isNew) {
             error.text = "Bienvenide " + Data.Instance.userData.userDataInDatabase.username;
@@ -129,6 +135,48 @@ public class LoginManager : MonoBehaviour
 
         FirebaseAuthManager.Instance.PasswordReset(emailField.text);
 
+    }
+
+    public void ToRegister() {
+        ResetRegisterFields();
+        title.text = "Completá tus datos para registrarte";
+        loginBtn.SetActive(false);
+        resetBtn.SetActive(false);
+        signUpBtn.SetActive(true);
+        usernameField.gameObject.SetActive(true);
+        emailField.gameObject.SetActive(true);
+        passField.gameObject.SetActive(true);
+        loginLink.SetActive(true);
+        resetLink.SetActive(true);
+        signUpLink.SetActive(false);
+    }
+
+    public void ToReset() {
+        ResetRegisterFields();
+        title.text = "Si no recordás tu contraseña completá tu correo electrónico";
+        loginBtn.SetActive(false);
+        signUpBtn.SetActive(false);
+        resetBtn.SetActive(true);
+        usernameField.gameObject.SetActive(false);
+        emailField.gameObject.SetActive(true);
+        passField.gameObject.SetActive(false);
+        loginLink.SetActive(true);
+        resetLink.SetActive(false);
+        signUpLink.SetActive(true);
+    }
+
+    public void ToLogin() {
+        ResetRegisterFields();
+        title.text = "Si ya estás registrado completá tus datos para ingresar";
+        signUpBtn.SetActive(false);
+        resetBtn.SetActive(false);
+        loginBtn.SetActive(true);
+        usernameField.gameObject.SetActive(false);
+        emailField.gameObject.SetActive(true);
+        passField.gameObject.SetActive(true);
+        loginLink.SetActive(false);
+        resetLink.SetActive(true);
+        signUpLink.SetActive(true);
     }
 
 }
