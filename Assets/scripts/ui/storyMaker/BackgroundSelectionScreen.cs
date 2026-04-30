@@ -8,6 +8,7 @@ namespace UI.MainApp.Home.User
     public class BackgroundSelectionScreen : ItemSelectionScreen
     {
         public AllObjectsScreen allObjectsScreen;
+        [SerializeField] Scrollbar scrollbar;
 
         private void Start()
         {
@@ -31,7 +32,8 @@ namespace UI.MainApp.Home.User
                     go.Init(cd);
                     go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
                 }
-            }            
+            }
+            scrollbar.value = 0;
         }        
 
         public override void OpenWork(string id)

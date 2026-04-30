@@ -1,4 +1,5 @@
 ﻿using BoardItems.BoardData;
+using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
 
@@ -7,6 +8,7 @@ namespace UI.MainApp.Home.User
     public class AvatarSelectionScreen : ItemSelectionScreen
     {
         public AllCharactersScreen allCharactersScreen;
+        [SerializeField] Scrollbar scrollbar;   
 
         private void Start()
         {
@@ -26,7 +28,8 @@ namespace UI.MainApp.Home.User
                 print("go " + go);
                 go.Init(cd);
                 go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
-            }           
+            }
+            scrollbar.value = 0;
         }
 
         public override void OpenWork(string id) {
