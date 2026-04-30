@@ -1,16 +1,12 @@
 ﻿using BoardItems.BoardData;
 using BoardItems.Characters;
-using Firebase.Auth;
+using Firebase.Database;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using UI;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
-using UnityEngine.Windows;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
 using static BoardItems.Characters.CharacterPartsHelper;
@@ -44,7 +40,9 @@ namespace BoardItems
 
         [SerializeField] string loadedPresetId;
         public string PresetID { get { return loadedPresetId; } }
-       
+
+        string initTimeStamp;
+
         private void Start() {
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
             Events.OnPresetReset += OnPresetReset;
@@ -262,6 +260,114 @@ namespace BoardItems
             userCharactersMetaData = charactersMetaData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid);
             userCharacters = new();
             FirebaseStoryMakerDBManager.Instance.LoadUserAssetsFromServer(MetadataTypes.characters.ToString(), LoadCharactersFromServer);
+
+            initTimeStamp = DateTime.UtcNow.ToString("o");
+            var charactersMetadata = FirebaseDatabase.DefaultInstance.GetReference("metadata/characters/");
+            charactersMetadata.ChildAdded += OnCharacterAdded;
+            charactersMetadata.ChildChanged += OnCharacterChanged;
+            charactersMetadata.ChildRemoved += OnCharacterRemoved;
+        }
+
+        void OnCharacterAdded(object sender, ChildChangedEventArgs args) {
+            if (args.DatabaseError != null) {
+                Debug.LogError(args.DatabaseError.Message);
+                return;
+            }
+
+            DataSnapshot snapshot = args.Snapshot;
+            if (snapshot.Exists) {
+                if (!snapshot.HasChild("timestamp"))
+                    return;
+
+                string timestamp = snapshot.Child("timestamp").Value as string;
+                if (timestamp == null || timestamp == "" || String.Compare(timestamp, initTimeStamp) < 0)
+                    return;
+
+                Debug.Log("% OnCharacterChanged: " + timestamp + " > " + initTimeStamp);
+                CharacterMetaData cmd = charactersMetaData.Find(x => x.id == snapshot.Key);
+                if (cmd != null) {
+                    SetFilmChanged(cmd, snapshot);
+                } else {
+
+                    cmd = new CharacterMetaData();
+                    cmd.id = snapshot.Key;
+                    cmd.userID = snapshot.Child("userID").Value as string;
+                    cmd.creators = new List<string>();
+                    if (snapshot.HasChild("timestamp"))
+                        cmd.timestamp = snapshot.Child("timestamp").Value as string;
+                    else
+                        cmd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
+
+                    if (snapshot.HasChild("creators")) {
+                        foreach (var uid in snapshot.Child("creators").Children)
+                            cmd.creators.Add(uid.Value as string);
+                    }
+                    cmd.thumb = new Texture2D(1, 1);
+                    cmd.thumb.LoadImage(System.Convert.FromBase64String(snapshot.Child("thumb").Value as string));
+                    charactersMetaData.Insert(0, cmd);
+
+                    if (cmd.userID == Data.Instance.userData.userDataInDatabase.uid)
+                        userCharactersMetaData.Insert(0, cmd);
+
+                    Events.OnCharacterMetadataAdded(cmd);
+                }
+            }
+        }
+
+        void OnCharacterChanged(object sender, ChildChangedEventArgs args) {
+            if (args.DatabaseError != null) {
+                Debug.LogError(args.DatabaseError.Message);
+                return;
+            }
+
+            Debug.Log("% OnCharacterChanged: " + args.Snapshot.GetRawJsonValue());
+
+            DataSnapshot snapshot = args.Snapshot;
+            if (snapshot.Exists) {
+                CharacterMetaData cmd = charactersMetaData.Find(x => x.id == snapshot.Key);
+                if (cmd == null) {
+                    return;
+                }
+
+                SetFilmChanged(cmd, snapshot);
+                /*if (sfd.userID == Data.Instance.userData.userDataInDatabase.uid)
+                    userFilmsData.Insert(0, fd);*/
+            }
+        }
+
+        void SetFilmChanged(CharacterMetaData fd, DataSnapshot child) {
+            fd.userID = child.Child("userID").Value as string;
+            if (child.HasChild("timestamp"))
+                fd.timestamp = child.Child("timestamp").Value as string;
+            else
+                fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");                        
+            fd.thumb = new Texture2D(1, 1);
+            fd.thumb.LoadImage(System.Convert.FromBase64String(child.Child("thumb").Value as string));
+
+            charactersMetaData = charactersMetaData.OrderByDescending(x => x.timestamp).ToList();
+            userCharactersMetaData = userCharactersMetaData.OrderByDescending(x => x.timestamp).ToList();
+
+            Events.OnCharacterMetadataUpdated(fd);
+
+        }
+
+        void OnCharacterRemoved(object sender, ChildChangedEventArgs args) {
+            if (args.DatabaseError != null) {
+                Debug.LogError(args.DatabaseError.Message);
+                return;
+            }
+
+            Debug.Log("% OnCharacterRemoved: " + args.Snapshot.GetRawJsonValue());
+
+            DataSnapshot snapshot = args.Snapshot;
+            if (snapshot.Exists) {
+                CharacterMetaData fd = charactersMetaData.Find(x => x.id == snapshot.Key);
+                if (fd != null) {
+                    charactersMetaData.Remove(fd);
+                    userCharactersMetaData.Remove(fd);
+                    Events.OnCharacterMetadataRemoved(fd.id);
+                }
+            }
         }
 
         void LoadCharactersFromServer(Dictionary<string, CharacterServerData> data)

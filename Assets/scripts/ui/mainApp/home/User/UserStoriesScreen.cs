@@ -27,7 +27,7 @@ namespace UI.MainApp.Home.User
         public void Show(bool isOn)
         {
             gameObject.SetActive(isOn);
-            if (!firstLoad) {                
+            if (isOn && !firstLoad) {                
                 Init();
             }
         }

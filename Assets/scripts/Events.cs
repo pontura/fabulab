@@ -1,4 +1,5 @@
 ﻿using BoardItems;
+using BoardItems.BoardData;
 using BoardItems.Characters;
 using UI;
 using UI.MainApp;
@@ -60,5 +61,9 @@ public static class Events
     public static System.Action<FilmDataFabulab> OnFilmMetadataAdded = delegate { };
     public static System.Action<FilmDataFabulab> OnFilmMetadataUpdated = delegate { };
     public static System.Action<string> OnFilmMetadataRemoved = delegate { };
+
+    public static System.Action<CharacterMetaData> OnCharacterMetadataAdded = delegate { };
+    public static System.Action<CharacterMetaData> OnCharacterMetadataUpdated = delegate { };
+    public static System.Action<string> OnCharacterMetadataRemoved = delegate { };
 }
    

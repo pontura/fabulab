@@ -1,4 +1,6 @@
-﻿using BoardItems.BoardData;
+﻿using BoardItems;
+using BoardItems.BoardData;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,13 +11,53 @@ namespace UI.MainApp.Home.User
         public ItemSelectorBtn workBtn_prefab;
         public Transform worksContainer;
 
-        int artID = 0;
+        protected int artID = 0;
+        protected bool firstLoad;
+
+        protected virtual void Start() {
+            Events.OnCharacterMetadataUpdated += OnCharacterMetadataUpdated;
+            Events.OnCharacterMetadataAdded += OnCharacterMetadataAdded;
+            Events.OnCharacterMetadataRemoved += OnCharacterMetadataRemoved;
+        }
+        protected virtual void OnDestroy() {
+            Events.OnCharacterMetadataUpdated += OnCharacterMetadataUpdated;
+            Events.OnCharacterMetadataAdded -= OnCharacterMetadataAdded;
+            Events.OnCharacterMetadataRemoved += OnCharacterMetadataRemoved;
+        }
         public void Show(bool isOn)
         {
             gameObject.SetActive(isOn);
-            if(isOn)
-            {
+            if (isOn && !firstLoad) {
                 Init();
+            }
+        }
+
+        void OnCharacterMetadataAdded(CharacterMetaData fd) {
+            AddCharacterMetadata(fd);
+            worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
+        }
+
+        void AddCharacterMetadata(CharacterMetaData fd) {
+            Debug.Log("% AddCharacterMetadata");
+            ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
+            go.Init(fd.id, fd.GetSprite());
+            go.GetComponent<Button>().onClick.AddListener(() => OpenWork(fd.id));
+        }
+
+        void OnCharacterMetadataUpdated(CharacterMetaData fd) {
+            ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
+            ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
+            if (btn != null) {
+                btn.Init(fd.GetSprite());
+                btn.transform.SetAsFirstSibling();
+            }
+        }
+
+        void OnCharacterMetadataRemoved(string id) {
+            ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
+            ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == id);
+            if (btn != null) {
+                Destroy(btn.gameObject);
             }
         }
 
@@ -31,45 +73,22 @@ namespace UI.MainApp.Home.User
 
             LoadNext();
         }
-        
-        void LoadNext()
+
+        protected virtual void LoadNext()
         {
-           // print("LoadNext " + artID);
-           // if (artID >= Data.Instance.characters.Count) return;
             foreach(CharacterMetaData chmd in Data.Instance.charactersData.userCharactersMetaData)
             {
-                ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-                print("go " + go);
-                go.Init(chmd);
-                //RawImage rm = go.GetComponentInChildren<RawImage>();
-               // UIManager.Instance.boardUI.GenerateThumb(wd, rm, LoadNext);
-                go.GetComponent<Button>().onClick.AddListener(() => OpenWork(chmd.id));
+                AddCharacterMetadata(chmd);                
             }
-            //CharacterData wd = Data.Instance.albumData.characters[artID];
-            //artID++;
-            //if (wd.thumb != null)
-            //{
-            //    //if (Data.Instance.galeriasData.ExistGallery(wd.galleryID))
-            //    //{
-            //        GameObject go = Instantiate(workBtn_prefab, worksContainer);
-            //        print("go " + go);
-            //        //RawImage rm = go.GetComponentInChildren<RawImage>();
-            //        //UIManager.Instance.boardUI.GenerateThumb(wd, rm, LoadNext);
-            //        go.GetComponent<Button>().onClick.AddListener(() => OpenWork(wd.id));
-            //    //}
-            //}
-        }
-        public void DuplicateWork(int PakaPakaObjectID)
-        {
-          //  UIManager.Instance.boardUI.LoadPakapakaWork(PakaPakaObjectID);
-           // album.SetActive(false);
+            if (Data.Instance.charactersData.userCharactersMetaData.Count > 0)
+                firstLoad = true;
         }
 
-        public void OpenWork(string id) { 
+        public virtual void OpenWork(string id) { 
             UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);    
         }
 
-        public void New()
+        public virtual void New()
         {
             print("New Character");
             UIManager.Instance.NewCharacter();
