@@ -7,7 +7,7 @@ namespace UI.MainApp.Home.User
 {
     public class ObjectSelectionScreen : ItemSelectionScreen
     {
-        public AllObjectsScreen allObjectsScreen;
+        public AllObjectsFullScreenScreen allObjectsScreen;
         [SerializeField] Scrollbar scrollbar;
         private void Start()
         {
@@ -53,7 +53,7 @@ namespace UI.MainApp.Home.User
                     break;
                 case 1:
                     allObjectsScreen.gameObject.SetActive(true);
-                    allObjectsScreen.Init();
+                    allObjectsScreen.Init(SObjectData.types.generic);
                     break;
             }
         }
