@@ -26,6 +26,9 @@ namespace UI.MainApp.Home.User
             {
                 AddPropMetadata(cd);
             }
+
+            if (Data.Instance.sObjectsData.metaData.Count > 0)
+                firstLoad = true;
         }
         
         public override void OpenWork(string id)

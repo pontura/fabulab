@@ -94,7 +94,7 @@ namespace UI.MainApp.Home.User
                 AddPropMetadata(cd);
             }
 
-            if (Data.Instance.sObjectsData.metaData.Count > 0)
+            if (Data.Instance.sObjectsData.userMetaData.Count > 0)
                 firstLoad = true;
         }
         protected virtual void AddTitle(int id, string s)
