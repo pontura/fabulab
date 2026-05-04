@@ -4,7 +4,6 @@ namespace Yaguar.StoryMaker.Editor
 {
     public class SceneObject : MonoBehaviour
     {
-
         [SerializeField] protected SOData data;
 
         private float startPosX, startPosY;

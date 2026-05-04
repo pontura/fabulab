@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Globalization;
+using System.Runtime.InteropServices;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -56,8 +57,7 @@ namespace Yaguar.StoryMaker.Editor
                 data += soData.itemName;
                 if (soData is SOInputData)
                 {
-                    //(soData as SOInputData).SetIcon();
-                    data += "*" + soData.customization;
+                    data += stringCustomizerSeparator + soData.customization;
                 }
                 if (soData is SOIconData)
                     (soData as SOIconData).SetIcon();
@@ -168,7 +168,7 @@ namespace Yaguar.StoryMaker.Editor
                 soData = new SOIconData();
                 SetSOData(soData, arr);
                 string itemName = arr[8];
-                string[] serializedValueArr = itemName.Split("*"[0]);
+                string[] serializedValueArr = itemName.Split(stringCustomizerSeparator[0]);
                 if (serializedValueArr.Length > 1)
                 {
                     soData.customization = serializedValueArr[1];
@@ -204,7 +204,6 @@ namespace Yaguar.StoryMaker.Editor
             soData.customization = data;
             StoryMakerEvents.SetNewAvatarCustomization(data);
         }
-
         public string Serialize()
         {
             string sceneData = bgID + serialSeparator;

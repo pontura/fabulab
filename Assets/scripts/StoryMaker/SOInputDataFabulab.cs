@@ -34,6 +34,7 @@ public class SOInputDataFabulab : SOInputData
         hash = hash * 31 + id.GetHashCode();
         hash = hash * 31 + (customization?.GetHashCode() ?? 0);
         hash = hash * 31 + (inputValue?.GetHashCode() ?? 0);
+        hash = hash * 31 + (direction.ToString()?.GetHashCode() ?? 0);
         return hash;
     }
 }

@@ -1,11 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Yaguar.StoryMaker.Editor
+﻿namespace Yaguar.StoryMaker.Editor
 {
     public class SOInputData : SOData
     {
         public string inputValue;
+        public int direction;
     }
 }

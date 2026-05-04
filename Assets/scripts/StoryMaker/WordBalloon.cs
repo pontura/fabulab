@@ -29,9 +29,17 @@ namespace Yaguar.StoryMaker.Editor
         [field:SerializeField] public Sprite[] balloonSprites { get; private set; }
         [field: SerializeField] public Sprite[] balloonIcons { get; private set; }
 
-        public override void SetField(string text) {
+        public override void SetField(string text)
+        {
+            print("SetField Direction text: " + text);
             field.text = text;
             (GetData() as SOWordBalloonData).inputValue = text;
+        }
+        public override void SetDirection(int direction)
+        {
+            print("SetDirection " + direction);
+            (GetData() as SOWordBalloonData).direction = direction;
+            SetDirectionArrow(direction);
         }
         public void SetFont(int id)
         {
@@ -51,6 +59,7 @@ namespace Yaguar.StoryMaker.Editor
             Debug.Log("&& WordBalloon " + text);
 
             SetField((soData as SOWordBalloonData).inputValue);
+           
 
             //BoxCollider2D collider = GetComponent<BoxCollider2D>();
             //collider.size = new Vector2(10, 10);
@@ -59,12 +68,14 @@ namespace Yaguar.StoryMaker.Editor
                 balloonType = (balloonTypes)Enum.Parse(typeof(balloonTypes), soData.id);
             else
                 balloonType = balloonTypes.generic;
-                
+            SetArrow(); 
+            int direction = (soData as SOWordBalloonData).direction;
+            SetDirection(direction);
+            SetDirectionArrow(direction);
+
             image.sprite = balloonSprites[(int)balloonType];
             data.pos.z = -50;
             gameObject.transform.localPosition = data.pos.ToVector3();
-            SetDirection(0);
-            SetArrow();
 
             if (balloonType == balloonTypes.generic || balloonType == balloonTypes.title)
             {
@@ -96,10 +107,10 @@ namespace Yaguar.StoryMaker.Editor
             V3 pos = data.pos;
             Vector2 v2 = new Vector2(pos.x - lastPos.x, pos.y - lastPos.y);
             int p = Quantize8Stable(v2);
-            if(p>= 0)
+            if (p>= 0)
                 SetDirection(p);
         }
-        void SetDirection(int dir)
+        void SetDirectionArrow(int dir)
         {
             foreach (Image i in arrows)
                 i.gameObject.SetActive(false);

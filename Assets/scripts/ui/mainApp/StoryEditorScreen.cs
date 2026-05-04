@@ -216,6 +216,7 @@ namespace UI.MainApp
                     soData = new SOWordBalloonData();
                     soData.Clone(so.GetData());
                     (soData as SOWordBalloonData).inputValue = (so.GetData() as SOWordBalloonData).inputValue;
+                    (soData as SOWordBalloonData).direction = (so.GetData() as SOWordBalloonData).direction;
                 } 
                 //else if (so is WordBox) {
                 //    soData = new SOWordBoxData();
