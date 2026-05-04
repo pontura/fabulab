@@ -72,8 +72,8 @@ namespace Yaguar.StoryMaker.Editor
                 Borders.Show(true);
             }
             if (Vector2.Distance(initDragPos, transform.position) < MIN_DISTANCE) {
-                transform.position = initDragPos;
                 data.pos = new V3(initDragPos.x, initDragPos.y, data.pos.z);
+                transform.position = new Vector3(data.pos.x, data.pos.y, data.pos.z);
             }
             isBeingHeld = false;
             StoryMakerEvents.ReorderSceneObjectsInZ();

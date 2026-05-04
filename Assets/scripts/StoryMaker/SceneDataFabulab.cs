@@ -235,7 +235,8 @@ namespace Yaguar.StoryMaker.Editor
             sceneElement.data.rot = soData.rot;
             sceneElement.data.size = soData.size;
             sceneElement.data.goLeft = soData.goLeft;
-            
+            sceneElement.data.force_z = soData.force_z;
+
             /*if (soData is SOAvatarFabulabData avatarFabulabData)
             {
                 sceneElement.customizationData = avatarFabulabData.customization;
@@ -254,7 +255,7 @@ namespace Yaguar.StoryMaker.Editor
                 
             }*/
 
-            if(scenesElements==null)
+            if (scenesElements==null)
                 scenesElements = new List<SceneElement>();
             
             if(sceneElement is SceneElementAvatar)
@@ -370,6 +371,7 @@ namespace Yaguar.StoryMaker.Editor
                 Debug.Log("$ data is SceneElementAvatar");
 
             SOData soData = null;
+            soData.force_z = data.data.force_z;
             if (data.type==SceneElementType.AVATAR)
             {
                 soData = new SOAvatarFabulabData();
@@ -516,6 +518,7 @@ namespace Yaguar.StoryMaker.Editor
                 //soData.customization = data.customizationData;
                 soData.goLeft = data.data.goLeft;
             }
+            soData.force_z = data.data.force_z;
             data.SetSOData(soData);
             return soData;
         }

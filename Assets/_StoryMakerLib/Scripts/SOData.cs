@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 [Serializable]
 public class SOData
@@ -10,6 +9,7 @@ public class SOData
     public float size, rot;
     public string id;
     public string customization;
+    public float force_z;
 
     public virtual void Clone(SOData source) {
         this.itemName = source.itemName;
@@ -18,6 +18,7 @@ public class SOData
         this.rot = source.rot;
         this.id = source.id;
         this.customization = source.customization;
+        this.force_z = source.force_z;
     }
 
     public override bool Equals(object obj) {

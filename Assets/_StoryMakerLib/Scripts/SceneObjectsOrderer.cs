@@ -31,7 +31,9 @@ namespace Yaguar.StoryMaker.Editor
                 if (so.GetData() is SODataFixed || so.GetData() is SOInputData)
                     continue;
                 Vector3 pos = so.transform.localPosition;
-                pos.z = so.transform.localPosition.y * zFactor;
+                if (so.GetData().force_z != 0) pos.z = so.GetData().force_z;
+                else
+                    pos.z = so.transform.localPosition.y * zFactor;
                 so.transform.localPosition = pos;
             }
         }

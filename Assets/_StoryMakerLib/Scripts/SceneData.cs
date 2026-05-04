@@ -46,6 +46,7 @@ namespace Yaguar.StoryMaker.Editor
             data += soData.rot.ToString(CultureInfo.InvariantCulture) + stringSeparator;
             data += soData.size.ToString(CultureInfo.InvariantCulture) + stringSeparator;
             data += soData.goLeft + stringSeparator;
+            data += soData.force_z + stringSeparator;
             if (soData is SOAvatarData)
             {
                 data += "a" + stringSeparator;

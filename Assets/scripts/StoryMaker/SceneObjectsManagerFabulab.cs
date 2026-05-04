@@ -165,6 +165,10 @@ namespace Yaguar.StoryMaker.Editor
             if(wordBaloon != null)
                 wordBaloon.SetFont(id);
         }
+        public void ForceZ(float value)
+        {
+            selected.ForceZ(value);
+        }
         override protected void RemoveSceneObject()
         {
             if (ScenesManagerFabulab.Instance.StillExistInOtherScenes(selected.GetData())) {

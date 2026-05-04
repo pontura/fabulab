@@ -110,7 +110,6 @@ namespace Yaguar.StoryMaker.Editor
                 float lastPosX = data.pos.x;
                 UpdatePos();
                 gameObject.transform.localPosition = data.pos.ToVector3();
-
                 if (data is SOAvatarData)
                 {
                     if (!data.goLeft && lastPosX > data.pos.x)
@@ -160,5 +159,12 @@ namespace Yaguar.StoryMaker.Editor
             data.rot = z;
         }
         public virtual void OnInit() { }
+        public void ForceZ(float value)
+        {
+            print("force Z: " + value);
+            data.force_z = value;
+            data.pos = new V3(data.pos.x, data.pos.y, value);
+            transform.position = new Vector3(data.pos.x, data.pos.y, data.pos.z);
+        }
     }
 }
