@@ -49,6 +49,7 @@ namespace Yaguar.StoryMaker.Editor
             SOData soData = new SODataFabulab();
             //soData.customization = data.customizationData;
             soData.goLeft = data.goLeft;
+            soData.force_z = data.force_z;
             SetSOData(soData);            
             return soData;
         }
@@ -59,6 +60,7 @@ namespace Yaguar.StoryMaker.Editor
             soData.rot = data.rot;
             soData.size = data.size;
             soData.itemName = data.itemName;
+            soData.force_z = data.force_z;
         }
 
     }

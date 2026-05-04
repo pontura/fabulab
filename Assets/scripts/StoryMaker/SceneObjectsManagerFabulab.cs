@@ -67,7 +67,7 @@ namespace Yaguar.StoryMaker.Editor
 
         public override void AddSceneObject(SOData data)
         {
-            Debug.Log("AddSceneObject: " + data.id + " " + data);
+            Debug.Log("AddSceneObject: " + data.id + " data.force_z: " + data.force_z);
             
             selected = null;
 
