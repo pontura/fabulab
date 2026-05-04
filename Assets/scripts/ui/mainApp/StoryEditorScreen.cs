@@ -281,7 +281,7 @@ namespace UI.MainApp
         }
         void OnConfirm(bool ok) {
             if (ok) {
-                Events.OnLoading(true);
+                Events.OnLoading(true, LoadingType.Fullscreen);
                 FirebaseStoryMakerDBManager.Instance.DeleteFilm(Data.Instance.scenesData.currentFilmData, OnDeleted);
             }
         }

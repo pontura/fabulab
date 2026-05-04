@@ -23,10 +23,12 @@ namespace UI.MainApp.Home.User
 
             if (Data.Instance.scenesData.filmsData.Count > 0)
                 firstLoad = true;
+
+            Events.OnLoading(false, UI.LoadingType.Home);
         }        
 
         public override void OpenWork(string id) {
-            Events.OnLoading(true);
+            Events.OnLoading(true, LoadingType.Fullscreen);
             Data.Instance.scenesData.LoadFilm(id);
             UIManager.Instance.boardUI.SetEditingType(BoardUI.editingTypes.NONE);
             Events.ShowScreen(UIManager.screenType.StoryMaker);

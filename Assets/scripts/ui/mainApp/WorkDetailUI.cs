@@ -36,7 +36,7 @@ namespace UI.MainApp
             workImage.sprite = sprite;
             confirmation.SetActive(false);
             savedSignal.SetActive(isNew);
-            Events.OnLoading(false);
+            Events.OnLoading(false, UI.LoadingType.Fullscreen);
         }
         public void ContinueEditing()
         {

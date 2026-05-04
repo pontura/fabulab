@@ -63,6 +63,7 @@ namespace UI.MainApp.Home.User
 
         public void Init()
         {
+            Events.OnLoading(true, LoadingType.Home);
             artID = 0;
 
             foreach (Transform child in worksContainer)
@@ -82,6 +83,8 @@ namespace UI.MainApp.Home.User
             }
             if (Data.Instance.charactersData.userCharactersMetaData.Count > 0)
                 firstLoad = true;
+
+            Events.OnLoading(false, UI.LoadingType.Home);
         }
 
         public virtual void OpenWork(string id) { 
