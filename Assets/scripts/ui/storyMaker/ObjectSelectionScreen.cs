@@ -17,10 +17,12 @@ namespace UI.MainApp.Home.User
         {
             Cancel();
             Events.DuplicateSO += DuplicateSO;
+            StoryMakerEvents.ShowSoButtons += ShowSoButtons;
         }
         private void OnDestroy()
         {
             Events.DuplicateSO -= DuplicateSO;
+            StoryMakerEvents.ShowSoButtons -= ShowSoButtons;
         }
         protected override void LoadNext()
         {
@@ -74,7 +76,7 @@ namespace UI.MainApp.Home.User
         }
         float maxZ = 50;
         float minZ = -50;
-        float offsetZ = 0.1f;
+        float offsetZ = 1;
         float force_z;
         public void SetFront(bool front)
         {
@@ -108,20 +110,25 @@ namespace UI.MainApp.Home.User
             }
             SetFrontBack();
         }
+        void ShowSoButtons(Vector3 pos, SOData data)
+        {
+            SetFrontBack();
+        }
         void SetFrontBack()
         {
             if (Scenario.Instance.GetComponent<SceneObjectsManagerFabulab>().selected == null) return;
             force_z = Scenario.Instance.GetComponent<SceneObjectsManagerFabulab>().selected.GetData().force_z;
+            print("SetFrontBack force_z " + force_z);
             if(force_z == 0)
             {
                 sendFront.SetIsOnWithoutNotify(false);
                 sendBack.SetIsOnWithoutNotify(false);
-            }else if (force_z > 0)
+            }else if (force_z < 0)
             {
                 sendFront.SetIsOnWithoutNotify(true);
                 sendBack.SetIsOnWithoutNotify(false);
             }
-            else if (force_z < 0)
+            else if (force_z > 0)
             {
                 sendFront.SetIsOnWithoutNotify(false);
                 sendBack.SetIsOnWithoutNotify(true);
