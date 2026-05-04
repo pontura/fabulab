@@ -65,5 +65,9 @@ public static class Events
     public static System.Action<CharacterMetaData> OnCharacterMetadataAdded = delegate { };
     public static System.Action<CharacterMetaData> OnCharacterMetadataUpdated = delegate { };
     public static System.Action<string> OnCharacterMetadataRemoved = delegate { };
+
+    public static System.Action<PropMetaData> OnPropMetadataAdded = delegate { };
+    public static System.Action<PropMetaData> OnPropMetadataUpdated = delegate { };
+    public static System.Action<PropMetaData> OnPropMetadataRemoved = delegate { };
 }
    

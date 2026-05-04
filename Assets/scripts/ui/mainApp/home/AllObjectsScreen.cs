@@ -6,23 +6,9 @@ using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
 {
-    public class AllObjectsScreen : MonoBehaviour
+    public class AllObjectsScreen : UserObjectsScreen
     {
-        public ItemSelectorBtn workBtn_prefab;
-        public Transform container;
-        public Transform backgroundsContainer;
-        public Transform objectsContainer;
-        [SerializeField] TitleScrollView[] titleScrollView;
-
-        public void Show(bool isOn)
-        {
-            gameObject.SetActive(isOn);
-            if(isOn)
-            {
-                Init();
-            }
-        }
-        public void Init()
+        public override void Init()
         {
             Utils.RemoveAllChildsIn(backgroundsContainer);
             Utils.RemoveAllChildsIn(objectsContainer);
@@ -33,38 +19,22 @@ namespace UI.MainApp.Home.User
             AddTitle(0, "Objectos (" + generics.Count + ")");
             foreach (PropMetaData cd in generics)
             {
-                ItemSelectorBtn go = Instantiate(workBtn_prefab, objectsContainer);
-                print("go " + go);
-                go.Init(cd);
-                go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
+                AddPropMetadata(cd);
             }
             AddTitle(1, "Fondos (" + backgrounds.Count + ")");
             foreach (PropMetaData cd in backgrounds)
             {
-                ItemSelectorBtn go = Instantiate(workBtn_prefab, backgroundsContainer);
-                print("go " + go);
-                go.Init(cd);
-                go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
+                AddPropMetadata(cd);
             }
         }
-        void AddTitle(int id, string s)
-        {
-            TitleScrollView t = titleScrollView[id];
-            t.Init(s);
-        }
-        public void OpenWork(string id)
+        
+        public override void OpenWork(string id)
         {
             if(StoryMakerEvents.isEditing)
                 Events.DuplicateSO(id);
             else
                 UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
-        }
-
-        public void New()
-        {
-            print("New Character");
-            UIManager.Instance.NewCharacter();
-        }
+        }        
     }
 
 }

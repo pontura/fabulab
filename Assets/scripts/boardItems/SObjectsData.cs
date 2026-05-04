@@ -1,4 +1,5 @@
 ﻿using BoardItems.BoardData;
+using Firebase.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,8 @@ namespace BoardItems
         public List<SObjectData> othersData;
         public List<PropMetaData> metaData;
         public List<PropMetaData> userMetaData;
+
+        string initTimeStamp;
 
         [SerializeField] SObjectData.types currentType;
         public SObjectData.types Type { 
@@ -185,12 +188,120 @@ namespace BoardItems
         }
         public void OnLoadSODataFromServer(List<CharacterMetaData> sfds)
         {
-            //Debug.Log("OnLoadSODataFromServer !!");
+            //Debug.Log("% OnLoadSODataFromServer !!");
             foreach (CharacterMetaData sfd in sfds.OrderByDescending(x => x.timestamp).ToList())
                 metaData.Add(sfd as PropMetaData);
             userMetaData = metaData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid);
             data = new();
             FirebaseStoryMakerDBManager.Instance.LoadUserAssetsFromServer(MetadataTypes.so.ToString(), LoadAssetsFromServer);
+
+            initTimeStamp = DateTime.UtcNow.ToString("o");
+            var partMetadata = FirebaseDatabase.DefaultInstance.GetReference("metadata/so/");
+            partMetadata.ChildAdded += OnPropAdded;
+            partMetadata.ChildChanged += OnPropChanged;
+            partMetadata.ChildRemoved += OnPropRemoved;
+        }
+
+        void OnPropAdded(object sender, ChildChangedEventArgs args) {
+            if (args.DatabaseError != null) {
+                Debug.LogError(args.DatabaseError.Message);
+                return;
+            }
+
+            DataSnapshot snapshot = args.Snapshot;
+            if (snapshot.Exists) {
+                if (!snapshot.HasChild("timestamp"))
+                    return;
+
+                string timestamp = snapshot.Child("timestamp").Value as string;
+                if (timestamp == null || timestamp == "" || String.Compare(timestamp, initTimeStamp) < 0)
+                    return;
+
+                Debug.Log("% OnPartAdded: " + timestamp + " > " + initTimeStamp);
+                PropMetaData pmd = metaData.Find(x => x.id == snapshot.Key);
+                if (pmd != null) {
+                    SetPropChanged(pmd, snapshot);
+                } else {
+
+                    pmd = new PropMetaData();
+                    pmd.type = (SObjectData.types)((int)(long)snapshot.Child("type").Value);
+                    pmd.id = snapshot.Key;
+                    pmd.userID = snapshot.Child("userID").Value as string;
+                    pmd.creators = new List<string>();
+                    if (snapshot.HasChild("timestamp"))
+                        pmd.timestamp = snapshot.Child("timestamp").Value as string;
+                    else
+                        pmd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
+
+                    if (snapshot.HasChild("creators")) {
+                        foreach (var uid in snapshot.Child("creators").Children)
+                            pmd.creators.Add(uid.Value as string);
+                    }
+                    pmd.thumb = new Texture2D(1, 1);
+                    pmd.thumb.LoadImage(System.Convert.FromBase64String(snapshot.Child("thumb").Value as string));
+                    metaData.Insert(0, pmd);
+
+                    if (pmd.userID == Data.Instance.userData.userDataInDatabase.uid)
+                        userMetaData.Insert(0, pmd);
+
+                    Events.OnPropMetadataAdded(pmd);
+                }
+            }
+        }
+
+        void OnPropChanged(object sender, ChildChangedEventArgs args) {
+            if (args.DatabaseError != null) {
+                Debug.LogError(args.DatabaseError.Message);
+                return;
+            }
+
+            Debug.Log("% OnPartChanged: " + args.Snapshot.GetRawJsonValue());
+
+            DataSnapshot snapshot = args.Snapshot;
+            if (snapshot.Exists) {
+                PropMetaData pmd = metaData.Find(x => x.id == snapshot.Key);
+                if (pmd == null) {
+                    return;
+                }
+
+                SetPropChanged(pmd, snapshot);
+                /*if (sfd.userID == Data.Instance.userData.userDataInDatabase.uid)
+                    userFilmsData.Insert(0, fd);*/
+            }
+        }
+
+        void SetPropChanged(PropMetaData pmd, DataSnapshot child) {
+            if (child.HasChild("timestamp"))
+                pmd.timestamp = child.Child("timestamp").Value as string;
+            else
+                pmd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
+            pmd.thumb = new Texture2D(1, 1);
+            pmd.thumb.LoadImage(System.Convert.FromBase64String(child.Child("thumb").Value as string));
+
+            metaData = metaData.OrderByDescending(x => x.timestamp).ToList();
+            userMetaData = userMetaData.OrderByDescending(x => x.timestamp).ToList();
+
+            Events.OnPropMetadataUpdated(pmd);
+
+        }
+
+        void OnPropRemoved(object sender, ChildChangedEventArgs args) {
+            if (args.DatabaseError != null) {
+                Debug.LogError(args.DatabaseError.Message);
+                return;
+            }
+
+            Debug.Log("% OnPartRemoved: " + args.Snapshot.GetRawJsonValue());
+
+            DataSnapshot snapshot = args.Snapshot;
+            if (snapshot.Exists) {
+                PropMetaData pmd = metaData.Find(x => x.id == snapshot.Key);
+                if (pmd != null) {
+                    metaData.Remove(pmd);
+                    userMetaData.Remove(pmd);
+                    Events.OnPropMetadataRemoved(pmd);
+                }
+            }
         }
 
         void LoadAssetsFromServer(Dictionary<string, SObjectServerData> d)

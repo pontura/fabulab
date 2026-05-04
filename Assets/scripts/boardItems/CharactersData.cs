@@ -286,7 +286,7 @@ namespace BoardItems
                 Debug.Log("% OnCharacterChanged: " + timestamp + " > " + initTimeStamp);
                 CharacterMetaData cmd = charactersMetaData.Find(x => x.id == snapshot.Key);
                 if (cmd != null) {
-                    SetFilmChanged(cmd, snapshot);
+                    SetCharacterChanged(cmd, snapshot);
                 } else {
 
                     cmd = new CharacterMetaData();
@@ -329,14 +329,13 @@ namespace BoardItems
                     return;
                 }
 
-                SetFilmChanged(cmd, snapshot);
+                SetCharacterChanged(cmd, snapshot);
                 /*if (sfd.userID == Data.Instance.userData.userDataInDatabase.uid)
                     userFilmsData.Insert(0, fd);*/
             }
         }
 
-        void SetFilmChanged(CharacterMetaData fd, DataSnapshot child) {
-            fd.userID = child.Child("userID").Value as string;
+        void SetCharacterChanged(CharacterMetaData fd, DataSnapshot child) {
             if (child.HasChild("timestamp"))
                 fd.timestamp = child.Child("timestamp").Value as string;
             else
