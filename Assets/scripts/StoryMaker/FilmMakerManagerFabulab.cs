@@ -34,7 +34,12 @@ namespace Yaguar.StoryMaker.Editor
             toggleTransition.gameObject.SetActive(enable);
             videoPlayerFabulab.Show(!enable);
             durationBtn.gameObject.SetActive(enable);
-          //  buttonsGroup.spacing = enable ? 5 : 10;
+
+            if(enable)
+                timeline.GetComponent<Animator>().Play("editor");
+            else
+                timeline.GetComponent<Animator>().Play("player");
+            //  buttonsGroup.spacing = enable ? 5 : 10;
         }
 
         protected override void SetButtons()
@@ -113,12 +118,20 @@ namespace Yaguar.StoryMaker.Editor
         public override void Next()
         {
             Stop();
-            StoryMakerEvents.OnSaveScene();
-            //ScenesManagerFabulab.Instance.OnSaveScene();
+
+            if(isEditing)
+                StoryMakerEvents.OnSaveScene();
+
             int lastSceneId = ScenesManagerFabulab.Instance.currentSceneId;
-            ScenesManagerFabulab.Instance.currentSceneId++;
-            SetScene(lastSceneId);
-            timeline.JumpTo(ScenesManagerFabulab.Instance.currentSceneId);
+            
+            int totalScenes = ScenesManagerFabulab.Instance.Scenes.Count;
+
+            if (ScenesManagerFabulab.Instance.currentSceneId < totalScenes)
+            {
+                ScenesManagerFabulab.Instance.currentSceneId++;
+                SetScene(lastSceneId);
+                timeline.JumpTo(ScenesManagerFabulab.Instance.currentSceneId);
+            }
         }
         public override void Prev()
         {

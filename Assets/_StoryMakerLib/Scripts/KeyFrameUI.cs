@@ -66,7 +66,10 @@ public class KeyFrameUI : MonoBehaviour
     public void UpdateScreenshot()
     {
         print("UpdateScreenshot " + id);
-        Scenario.Instance.Screenshot(ScreenshotUpdated);
+        if (timeline.filmMakerUI.isEditing)
+            Scenario.Instance.Screenshot(ScreenshotUpdated);
+        else
+            screenshot.enabled = false;
     }
     void ScreenshotUpdated(Texture2D texture)
     {

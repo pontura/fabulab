@@ -15,6 +15,18 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] TimelineFabulab timeline;
         [SerializeField] GameObject playButton;
 
+        private void Start()
+        {
+            StoryMakerEvents.OnMovieOver += OnMovieOver;
+        }
+        private void OnDestroy()
+        {
+            StoryMakerEvents.OnMovieOver -= OnMovieOver;
+        }
+        void OnMovieOver()
+        {
+            playButton.SetActive(true);
+        }
         public void Show(bool isOn)
         {
             gameObject.SetActive(isOn);
