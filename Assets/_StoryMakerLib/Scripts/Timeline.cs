@@ -28,7 +28,9 @@ namespace Yaguar.StoryMaker.Editor
         }
         public float keyframe_duration = 2;
 
-        protected virtual void Awake() {
+        protected virtual void Awake()
+        {
+            StoryMakerEvents.UpdateDraw += UpdateDraw;
             StoryMakerEvents.OnLoadFilm += Reset;
             StoryMakerEvents.OnStartNewStory += Reset;
             StoryMakerEvents.ChangeSpeed += ChangeSpeed;
@@ -43,13 +45,17 @@ namespace Yaguar.StoryMaker.Editor
             {
                 Reset();
             } else
+            {
                 UpdateKeyframes();
+                StoryMakerEvents.UpdateDraw();
+            }
 
             float duration = (keyframe_duration - min_speed) / (max_speed - min_speed);
             durationBtn.Init(this, duration);
         }
         protected void OnDestroy()
         {
+            StoryMakerEvents.UpdateDraw -= UpdateDraw;
             StoryMakerEvents.OnLoadFilm -= Reset;
             StoryMakerEvents.OnStartNewStory -= Reset;
             StoryMakerEvents.ChangeSpeed -= ChangeSpeed;
@@ -92,6 +98,12 @@ namespace Yaguar.StoryMaker.Editor
             //Debug.Log(kf.transform.localPosition);
             UpdateKeyframes();
             kf.UpdateScreenshot();
+        }
+        void UpdateDraw()
+        {
+            print("UpdateDraw");
+            if(activeAnimatedKeyframeID >= all.Count-1)
+            all[activeAnimatedKeyframeID - 1].UpdateScreenshot();
         }
         protected void UpdateKeyframes()
         {

@@ -12,6 +12,7 @@ namespace Yaguar.StoryMaker.Editor
         {
             isEditing = editing;
         }
+        public static System.Action UpdateDraw = delegate { };
         public static System.Action<int, SOActionData> OnAction = delegate { };
         public static System.Action<int, SOExpData> OnExpression = delegate { };
         public static System.Action<ObjectSignal> OnInputField = delegate { };
