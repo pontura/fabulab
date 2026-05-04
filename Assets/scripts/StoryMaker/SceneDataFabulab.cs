@@ -371,7 +371,6 @@ namespace Yaguar.StoryMaker.Editor
                 Debug.Log("$ data is SceneElementAvatar");
 
             SOData soData = null;
-            soData.force_z = data.data.force_z;
             if (data.type==SceneElementType.AVATAR)
             {
                 soData = new SOAvatarFabulabData();
