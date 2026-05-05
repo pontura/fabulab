@@ -4,6 +4,7 @@ using BoardItems.Characters;
 using System.Collections.Generic;
 using UI.MainApp;
 using UnityEngine;
+using Yaguar.Auth;
 using Yaguar.StoryMaker.Editor;
 using static UI.BoardUI;
 
@@ -58,16 +59,26 @@ namespace UI
         }
         private void Start()
         {
+            FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
             Events.OnBodyPartActive += OnBodyPartActive;
             Events.ShowScreen += OnShowScreen;
-            Init();
-            Invoke("InitGalleryDelayed", 0.1f);
+            if (Data.Instance.userData.IsLogged()) {
+                Init();
+                Invoke("InitGalleryDelayed", 0.1f);
+            }
         }
         private void OnDestroy()
         {
+            FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
             Events.OnBodyPartActive -= OnBodyPartActive;
             Events.ShowScreen -= OnShowScreen;
         }
+
+        void OnTokenUpdated() {
+            Init();
+            Invoke("InitGalleryDelayed", 0.1f);
+        }
+
         public CharacterPartsHelper.parts part;
         void OnBodyPartActive(CharacterPartsHelper.parts part)
         {
@@ -100,7 +111,7 @@ namespace UI
         void Init()
         {
             string uid = Data.Instance.userData.userDataInDatabase.uid;
-            if (uid != "")
+            if (uid != "" || uid!=null)
                 Data.Instance.cacheData.GetUser(uid, OnUserDone);
             Home();
         }
@@ -239,9 +250,8 @@ namespace UI
             }
             else
             {
-                Sprite sprite = Sprite.Create(wd.thumb, new Rect(0, 0, wd.thumb.width, wd.thumb.height), Vector2.zero);
                 Events.ShowScreen(UIManager.screenType.WorkDetail);
-                workDetailUI.ShowWorkDetail(wd.id, sprite, true);
+                workDetailUI.ShowWorkDetail(wd.id, true);
             }
             //Events.ResetItems();
         }
