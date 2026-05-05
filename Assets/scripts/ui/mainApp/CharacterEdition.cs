@@ -176,7 +176,7 @@ namespace UI.MainApp
         }
         void SaveProfilePicDelayed()
         {
-            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, SaveProfilePictureDone);
+            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.ThumbSize, SaveProfilePictureDone);
         }
         public void SaveProfilePictureDone(Texture2D tex)
         {
@@ -186,7 +186,7 @@ namespace UI.MainApp
         void SaveWork()
         {
             Events.OnNewBodyPartSelected(null);
-            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, OnTakeShotDone);
+            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.ThumbSize, OnTakeShotDone);
         }
         bool savingPart = false;
         public void OnTakeShotDone(Texture2D tex)

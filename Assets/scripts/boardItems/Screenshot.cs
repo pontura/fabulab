@@ -11,6 +11,8 @@ namespace BoardItems
         public Renderer targetRenderer;
         [SerializeField] Animator animator;
 
+        Vector2Int targetSize;
+
         private void Awake()
         {
             Events.Zoom += Zoom;
@@ -81,9 +83,14 @@ namespace BoardItems
             texture.Apply();
 
             // Guardar archivo local
-           // byte[] bytes = texture.EncodeToPNG();
-           // System.IO.File.WriteAllBytes(Application.dataPath + "/screenshot.png", bytes);
-           // Debug.Log("Screenshot guardado en: " + Application.dataPath + "/screenshot.png");
+            // byte[] bytes = texture.EncodeToPNG();
+            // System.IO.File.WriteAllBytes(Application.dataPath + "/screenshot.png", bytes);
+            // Debug.Log("Screenshot guardado en: " + Application.dataPath + "/screenshot.png");
+
+            if (!targetSize.Equals(Vector2Int.zero)){
+                texture = TextureUtils.GPUScaleTexture(texture, targetSize.x,targetSize.y);
+                targetSize = Vector2Int.zero;
+            }
 
 
             OnDone(texture);
@@ -95,6 +102,7 @@ namespace BoardItems
         public void TakeShot(Vector2Int size, System.Action<Texture2D> OnDone)
         {
             Debug.Log("TAKE Screenshot");
+            targetSize = size;
             StartCoroutine(CaptureRoutine(OnDone));
         }
 

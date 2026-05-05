@@ -101,7 +101,7 @@ namespace UI.MainApp
         }
         void SaveProfilePicDelayed()
         {
-            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, SaveProfilePicture);
+            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.ThumbSize, SaveProfilePicture);
         }
         public void SaveProfilePicture(Texture2D tex)
         {
@@ -110,7 +110,7 @@ namespace UI.MainApp
         void SaveWork()
         {
             Events.OnNewBodyPartSelected(null);
-            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.thumbSize, OnTakeShotDone);
+            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.ThumbSize, OnTakeShotDone);
         }
         public void OnTakeShotDone(Texture2D tex)
         {

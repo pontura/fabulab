@@ -14,7 +14,7 @@ using static BoardItems.Characters.CharacterPartsHelper;
 namespace BoardItems
 {
     public class CharactersData : MonoBehaviour {
-        public Vector2Int thumbSize;
+        [field:SerializeField] public Vector2Int ThumbSize { get; private set; }
 
         public List<CharacterData> userCharacters;
         public List<CharacterData> othersCharacters;

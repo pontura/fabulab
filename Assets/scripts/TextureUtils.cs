@@ -72,11 +72,36 @@ public class TextureUtils{
         return result;
     }
 
-	// Uso:
-	// Texture2D texture2d;
-	// yield return StartCoroutine(TextureUtils.LoadRemote(url, value => texture2d = value));
-	// carga en texture2d la textura remota
-	public static IEnumerator LoadRemote(string url, System.Action<Texture2D> result)
+    public static Texture2D GPUScaleTexture(Texture2D source, int targetWidth, int targetHeight) {
+        // Crear RenderTexture temporal
+        RenderTexture rt = new RenderTexture(targetWidth, targetHeight, 0, RenderTextureFormat.ARGB32);
+        rt.filterMode = FilterMode.Bilinear;
+
+        // Copiar la textura fuente al RenderTexture (escalado automático por GPU)
+        Graphics.Blit(source, rt);
+
+        // Guardar el RenderTexture activo
+        RenderTexture previous = RenderTexture.active;
+        RenderTexture.active = rt;
+
+        // Crear la textura final y leer los píxeles del RenderTexture
+        Texture2D result = new Texture2D(targetWidth, targetHeight, TextureFormat.ARGB32, false);
+        result.ReadPixels(new Rect(0, 0, targetWidth, targetHeight), 0, 0);
+        result.Apply();
+
+        // Restaurar el RT activo y liberar el temporal
+        RenderTexture.active = previous;
+        rt.Release();
+        Object.Destroy(rt);
+
+        return result;
+    }
+
+    // Uso:
+    // Texture2D texture2d;
+    // yield return StartCoroutine(TextureUtils.LoadRemote(url, value => texture2d = value));
+    // carga en texture2d la textura remota
+    public static IEnumerator LoadRemote(string url, System.Action<Texture2D> result)
 	{
 		WWW www = new WWW(url);
 
