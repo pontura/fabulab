@@ -2,6 +2,7 @@ using Firebase.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UI;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
@@ -298,6 +299,7 @@ namespace BoardItems
                     Events.OnFilmMetadataRemoved(fd.id);
                 }
             }
+            Events.OnLoading(false, LoadingType.Fullscreen);
         }
 
         public void SortThemeFilmsDataByLikes(bool moreLikes) {
