@@ -52,11 +52,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 6
+  soID: 
   paletteName: 0
   colorName: 3
   anims: 00000000010000000400000006000000080000000a0000000f00000010000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!60 &6079662149796550265
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -342,11 +344,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 16
+  soID: 
   paletteName: 0
   colorName: 3
   anims: 000000000600000002000000040000000c000000080000000b00000011000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!61 &1411072560664322682
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -535,11 +539,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 9
+  soID: 
   paletteName: 0
   colorName: 11
   anims: 000000000100000005000000020000000a0000000e0000000f00000012000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!60 &2808626377615935994
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -642,11 +648,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 3
+  soID: 
   paletteName: 0
   colorName: 12
   anims: 000000000500000001000000020000000f000000090000000b00000012000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!60 &4031437304009483950
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -839,11 +847,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 22
+  soID: 
   paletteName: 0
   colorName: 0
   anims: 000000000600000002000000040000000c000000080000000b00000011000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!60 &8848827155823482236
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1130,11 +1140,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 11
+  soID: 
   paletteName: 0
   colorName: 3
   anims: 000000000100000005000000060000000b000000100000000c0000000e000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!61 &1437926564711918155
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1233,11 +1245,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 18
+  soID: 
   paletteName: 0
   colorName: 12
   anims: 000000000600000002000000040000000c000000080000000b00000011000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!70 &2386298438054943630
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1285,7 +1299,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3413500225208810057}
   - component: {fileID: 3603589737525082460}
-  - component: {fileID: 7110158059417787808}
   - component: {fileID: 3761438772209051271}
   m_Layer: 0
   m_Name: Item_2
@@ -1328,27 +1341,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 2
+  soID: 
   paletteName: 0
   colorName: 0
   anims: 000000000500000001000000070000000c000000080000000a0000000e000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
---- !u!111 &7110158059417787808
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3413500225208810062}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 0}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
+  boardItemManager: {fileID: 0}
 --- !u!61 &3761438772209051271
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1447,11 +1446,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 20
+  soID: 
   paletteName: 0
   colorName: 5
   anims: 000000000600000002000000040000000c000000080000000b00000011000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!60 &5028760042171241626
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1554,11 +1555,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 10
+  soID: 
   paletteName: 0
   colorName: 5
   anims: 000000000100000005000000060000000b000000100000000c0000000e000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!58 &977986130770922615
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1647,11 +1650,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 12
+  soID: 
   paletteName: 0
   colorName: 0
   anims: 000000000200000006000000040000000d0000000e0000000f00000010000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!60 &561851989816900441
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1802,7 +1807,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4732219032430634387}
   - component: {fileID: 59695723387146898}
-  - component: {fileID: 7795828751397417513}
   - component: {fileID: 2245493702716641444}
   m_Layer: 0
   m_Name: Item_1
@@ -1845,28 +1849,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 1
+  soID: 
   paletteName: 0
   colorName: 3
   anims: 000000000300000005000000040000000d0000000f000000110000000a000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
---- !u!111 &7795828751397417513
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4732219032430634388}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 0}
-  m_Animations:
-  - {fileID: 7400000, guid: b88815539631fb4438ebb949c41ed197, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
+  boardItemManager: {fileID: 0}
 --- !u!58 &2245493702716641444
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1955,11 +1944,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 13
+  soID: 
   paletteName: 0
   colorName: 12
   anims: 000000000200000006000000040000000d0000000e0000000f00000010000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!60 &4017445162462687575
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2069,11 +2060,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 4
+  soID: 
   paletteName: 0
   colorName: 11
   anims: 000000000200000006000000040000001b0000000c0000001100000012000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!60 &3546083622789975127
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2180,11 +2173,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 19
+  soID: 
   paletteName: 0
   colorName: 11
   anims: 000000000600000002000000040000000c000000080000000b00000011000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!70 &7005266801297602594
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -2274,11 +2269,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 14
+  soID: 
   paletteName: 0
   colorName: 11
   anims: 00000000020000000100000006000000080000000c0000001000000012000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!61 &326469604098752098
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2377,11 +2374,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 5
+  soID: 
   paletteName: 0
   colorName: 5
   anims: 000000000300000004000000060000000f00000010000000080000000b000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!60 &6696992914031292516
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2581,11 +2580,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 21
+  soID: 
   paletteName: 0
   colorName: 3
   anims: 000000000600000002000000040000000c000000080000000b00000011000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!60 &4197286721006959433
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2958,11 +2959,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 7
+  soID: 
   paletteName: 0
   colorName: 0
   anims: 000000000700000001000000060000000f000000100000000c00000011000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!60 &764461109085072072
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -3341,11 +3344,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 17
+  soID: 
   paletteName: 0
   colorName: 0
   anims: 000000000600000002000000040000000c000000080000000b00000011000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!70 &4797555381346975701
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -3525,11 +3530,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 8
+  soID: 
   paletteName: 0
   colorName: 12
   anims: 000000000100000005000000020000000a0000000e0000000f00000012000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!60 &5820775147122260280
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -4319,11 +4326,13 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   id: 15
+  soID: 
   paletteName: 0
   colorName: 5
   anims: 000000000700000002000000060000000d000000110000000a0000000c000000
   anim: 0
   originalScale: {x: 0, y: 0, z: 0}
+  boardItemManager: {fileID: 0}
 --- !u!61 &4740120951954342061
 BoxCollider2D:
   m_ObjectHideFlags: 0
