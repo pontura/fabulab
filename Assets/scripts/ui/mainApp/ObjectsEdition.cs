@@ -98,15 +98,8 @@ namespace UI.MainApp
         {
             DoneBtn.SetActive(true);
             savePanel.SetActive(false);
-        }
-        void SaveProfilePicDelayed()
-        {
-            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.ThumbSize, SaveProfilePicture);
-        }
-        public void SaveProfilePicture(Texture2D tex)
-        {
-            print("TO-DO: graba la profilepicture");
-        }
+        }        
+        
         void SaveWork()
         {
             Events.OnNewBodyPartSelected(null);

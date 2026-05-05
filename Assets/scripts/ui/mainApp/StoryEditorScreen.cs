@@ -267,7 +267,7 @@ namespace UI.MainApp
         }
 
         void SaveWork() {
-            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.ThumbSize, (tex) => {
+            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.scenesData.ThumbSize, (tex) => {
                 Data.Instance.scenesData.currentFilmData.thumb = tex;
                 Data.Instance.scenesData.currentFilmData.name = storyName.text;
                 Data.Instance.scenesData.currentFilmData.timestamp = DateTime.UtcNow.ToString("o");

@@ -32,6 +32,9 @@ namespace BoardItems
     }
 
     public class ScenesData : MonoBehaviour {
+
+        [field: SerializeField] public Vector2Int ThumbSize { get; private set; }
+
         string sdSeparator = "|";
         string fieldSeparator = "#";
         public List<FilmDataFabulab> userFilmsData;
