@@ -110,10 +110,11 @@ namespace UI.MainApp
         void SaveWork()
         {
             Events.OnNewBodyPartSelected(null);
-            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.ThumbSize, OnTakeShotDone);
+            UIManager.Instance.boardUI.screenshot.TakeShot(Vector2Int.zero, OnTakeShotDone);
         }
         public void OnTakeShotDone(Texture2D tex)
         {
+            UIManager.Instance.workDetailUI.SetTexture(tex);
             Data.Instance.sObjectsData.SaveSO(tex);
         }
        

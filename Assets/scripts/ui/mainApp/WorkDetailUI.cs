@@ -29,6 +29,19 @@ namespace UI.MainApp
                     break;
             }
         }
+
+        public void SetTexture(Texture2D tex) {
+            workImage.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
+        }
+
+        public void ShowWorkDetail(string _id, bool isNew) {
+            AudioManager.Instance.musicManager.Play("work");
+            id = _id;
+            confirmation.SetActive(false);
+            savedSignal.SetActive(isNew);
+            Events.OnLoading(false, UI.LoadingType.Fullscreen);
+        }
+
         public void ShowWorkDetail(string _id, Sprite sprite, bool isNew)
         {
             AudioManager.Instance.musicManager.Play("work");

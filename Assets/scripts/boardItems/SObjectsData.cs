@@ -12,7 +12,7 @@ namespace BoardItems
 {
     public class SObjectsData : MonoBehaviour
     {
-        public Vector2Int thumbSize;
+        [field: SerializeField] public Vector2Int ThumbSize { get; private set; }
 
         public List<SObjectData> data;
         public List<SObjectData> othersData;
@@ -93,7 +93,7 @@ namespace BoardItems
 
             wd.bg = Data.Instance.palettesManager.bgColorName;
             wd.type = currentType;
-            wd.thumb = tex;
+            wd.thumb = TextureUtils.GPUScaleTexture(tex, ThumbSize.x, ThumbSize.y);            
             wd.items = new List<SavedIData>();
 
             List<ItemInScene> mirrors = new List<ItemInScene>();

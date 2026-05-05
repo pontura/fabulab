@@ -144,7 +144,7 @@ namespace UI.MainApp
             }
             saveCharacterButton.SetActive(Data.Instance.charactersData.GetCurrent() != "");
 
-            saveNewCharacterButton.GetComponentInChildren<TMPro.TMP_Text>().text = "Guardar";
+            saveNewCharacterButton.GetComponentInChildren<TMPro.TMP_Text>().text = "Guardar nuevo";
         }
         public void Save()
         {
@@ -186,11 +186,13 @@ namespace UI.MainApp
         void SaveWork()
         {
             Events.OnNewBodyPartSelected(null);
-            UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.charactersData.ThumbSize, OnTakeShotDone);
+            UIManager.Instance.boardUI.screenshot.TakeShot(Vector2Int.zero, OnTakeShotDone);
         }
         bool savingPart = false;
         public void OnTakeShotDone(Texture2D tex)
         {
+            UIManager.Instance.workDetailUI.SetTexture(tex);
+
             if(savingPart)
                 Data.Instance.charactersData.SavePartCharacter(tex, (CharacterPartsHelper.parts)(int)UIManager.Instance.zoomManager.currentZoom);
             else

@@ -125,7 +125,7 @@ namespace BoardItems
             wd.armsColor = cm.GetArmsColor();
             wd.legsColor = cm.GetLegsColor();
             wd.eyebrowsColor = cm.GetEyebrowsColor();
-            wd.thumb = tex;
+            wd.thumb = TextureUtils.GPUScaleTexture(tex, ThumbSize.x, ThumbSize.y);
             wd.items = new List<SavedIData>();
             foreach (ItemInScene iInScene in UIManager.Instance.boardUI.items.all)
             {
@@ -165,7 +165,7 @@ namespace BoardItems
             CharacterData wd = new CharacterData();
             CharacterManager cm = UIManager.Instance.boardUI.characterManager;
 
-            wd.thumb = tex;
+            wd.thumb = TextureUtils.GPUScaleTexture(tex,ThumbSize.x,ThumbSize.y);
             wd.items = new List<SavedIData>();
             int partID = 0;
             foreach (ItemInScene iInScene in UIManager.Instance.boardUI.items.all)
