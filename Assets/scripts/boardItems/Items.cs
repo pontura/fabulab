@@ -739,13 +739,22 @@ namespace BoardItems
                 print("open SO in background soID: " + soID.soID);
                 SOPartData soPartData = Data.Instance.sObjectsData.GetSO(soID.soID);
                 if (soPartData != null) {
-                    SOPartData o = Data.Instance.sObjectsData.GetSO(soID.soID);
                     GameObject go = new GameObject();
-                    BoardItemManager boardItemManager_to_add = go.AddComponent<BoardItemManager>();                    
-                    
+                    BoardItemManager boardItemManager_to_add = go.AddComponent<BoardItemManager>();
+
                     Destroy(go.gameObject);
-                    AddSceneObjectTo(o, boardItemManager_to_add, boardItemManager.GetBodyPart((CharacterPartsHelper.parts)soID.part).transform, soID);
-                } else print("open work itemData.soID not found: " + soID);
+                    AddSceneObjectTo(soPartData, boardItemManager_to_add, boardItemManager.GetBodyPart((CharacterPartsHelper.parts)soID.part).transform, soID);
+                } else {
+                    print("open work itemData.soID not found: " + soID.soID);
+
+                    Data.Instance.sObjectsData.LoadOthersObject(soID.soID, (partData) => {
+                        GameObject go = new GameObject();
+                        BoardItemManager boardItemManager_to_add = go.AddComponent<BoardItemManager>();
+
+                        Destroy(go.gameObject);
+                        AddSceneObjectTo(partData, boardItemManager_to_add, boardItemManager.GetBodyPart((CharacterPartsHelper.parts)soID.part).transform, soID);
+                    });
+                }
             }
         }
         public void SetColliders(BoardItemManager boardItemManager, bool isOn)
