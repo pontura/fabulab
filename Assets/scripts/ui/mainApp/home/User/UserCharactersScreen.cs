@@ -40,7 +40,7 @@ namespace UI.MainApp.Home.User
         void AddCharacterMetadata(CharacterMetaData fd) {
             Debug.Log("% AddCharacterMetadata");
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-            go.Init(fd.id, fd.GetSprite());
+            go.Init(fd);
             go.GetComponent<Button>().onClick.AddListener(() => OpenWork(fd.id));
         }
 

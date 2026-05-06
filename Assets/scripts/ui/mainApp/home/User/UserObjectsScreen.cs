@@ -41,7 +41,7 @@ namespace UI.MainApp.Home.User
             if (fd.type == SObjectData.types.background)
                 t = backgroundsContainer;
             ItemSelectorBtn go = Instantiate(workBtn_prefab, t);
-            go.Init(fd.id, fd.GetSprite());
+            go.Init(fd);
             go.GetComponent<Button>().onClick.AddListener(() => OpenWork(fd.id));
         }
 
@@ -52,7 +52,7 @@ namespace UI.MainApp.Home.User
             ItemSelectorBtn[] itemBtns = t.GetComponentsInChildren<ItemSelectorBtn>();
             ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
             if (btn != null) {
-                btn.Init(fd.GetSprite());
+                btn.Init(fd);
                 btn.transform.SetAsFirstSibling();
             }
         }

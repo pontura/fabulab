@@ -14,7 +14,7 @@ namespace UI.MainApp.Home.User
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
-                go.Init(cd.id, cd.GetSprite());
+                go.Init(cd);
 
                 if (StoryMakerEvents.isEditing)
                     go.GetComponent<Button>().onClick.AddListener(() => Duplicate(cd.id));
