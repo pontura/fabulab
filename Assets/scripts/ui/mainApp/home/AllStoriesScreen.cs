@@ -42,7 +42,9 @@ namespace UI.MainApp.Home.User
         
         void SetStoryEditionState() {
             StoryMakerEvents.EnableStoryEdition(false);
+            StoryMakerEvents.EnableInputManager(false);
         }
+
     }
 
 }
