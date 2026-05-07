@@ -118,6 +118,7 @@ namespace Yaguar.StoryMaker.Editor
     {
         public string input;
         public int direction;
+        public int fontId;
 
         public override bool Equals(object obj) {
             if (obj is SceneElementTextInput other) {
@@ -220,6 +221,8 @@ namespace Yaguar.StoryMaker.Editor
                 sceneElement.type = SceneElementType.WORD_BALLOON;
                 (sceneElement as SceneElementTextInput).input = soWBD.inputValue;
                 (sceneElement as SceneElementTextInput).direction = soWBD.direction;
+                (sceneElement as SceneElementTextInput).fontId = soWBD.fontId;
+
             } 
             //else if (soData is SOWordBoxData soWBox) {
             //    sceneElement = new SceneElementTextInput();
@@ -391,6 +394,7 @@ namespace Yaguar.StoryMaker.Editor
                 soData = new SOWordBalloonData();
                 (soData as SOWordBalloonData).inputValue = (data as SceneElementTextInput).input;
                 (soData as SOWordBalloonData).direction = (data as SceneElementTextInput).direction;
+                (soData as SOWordBalloonData).fontId = (data as SceneElementTextInput).fontId;
             } 
             else if (data.type == SceneElementType.WORD_BOX) {
                 soData = new SOWordBalloonData();

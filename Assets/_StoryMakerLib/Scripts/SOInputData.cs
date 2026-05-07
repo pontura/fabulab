@@ -2,7 +2,6 @@
 {
     public class SOInputData : SOData
     {
-        public string inputValue;
-        public int direction;
+        public string inputValue;        
     }
 }

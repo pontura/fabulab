@@ -41,8 +41,9 @@ namespace Yaguar.StoryMaker.Editor
             (GetData() as SOWordBalloonData).direction = direction;
             SetDirectionArrow(direction);
         }
-        public void SetFont(int id)
+        public override void SetFont(int id)
         {
+            (GetData() as SOWordBalloonData).fontId = id;
             Fonts font =  (Scenario.Instance.sceneObejctsManager as SceneObjectsManagerFabulab).FontAssets.GetFont(id);
             field.font = font.fontAsset;
         }
@@ -69,9 +70,11 @@ namespace Yaguar.StoryMaker.Editor
             else
                 balloonType = balloonTypes.generic;
             SetArrow(); 
-            int direction = (soData as SOWordBalloonData).direction;
+            int direction = (soData as SOWordBalloonData).direction;            
             SetDirection(direction);
             SetDirectionArrow(direction);
+            int fontId = (soData as SOWordBalloonData).fontId;
+            SetFont(fontId);
 
             image.sprite = balloonSprites[(int)balloonType];
             data.pos.z = -50;

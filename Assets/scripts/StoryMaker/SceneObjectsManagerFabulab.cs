@@ -153,6 +153,7 @@ namespace Yaguar.StoryMaker.Editor
             }else if (data is SOWordBalloonData soWBD) {
                 (so as WordBalloon).SetField(soWBD.inputValue);
                 (so as WordBalloon).SetDirection(soWBD.direction);
+                (so as WordBalloon).SetFont(soWBD.fontId);
             } 
             //else if (data is SOWordBoxData soWBoxD) {
             //    (so as WordBox).SetField(soWBoxD.inputValue);

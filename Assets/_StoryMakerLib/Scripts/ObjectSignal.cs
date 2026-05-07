@@ -11,6 +11,10 @@
         public virtual void SetDirection(int direction)
         {
         }
+
+        public virtual void SetFont(int fontId) {
+        }
+
         public override void OnInit()
         {
             SOData soData = GetData();
