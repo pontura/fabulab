@@ -198,6 +198,7 @@ namespace UI
         }
         public void Back()
         {
+            inputManager.Back();
            if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.WorkDetail)
             {
                 Events.OnNewBodyPartSelected(null);
