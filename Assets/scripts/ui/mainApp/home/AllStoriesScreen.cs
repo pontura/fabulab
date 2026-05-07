@@ -29,7 +29,7 @@ namespace UI.MainApp.Home.User
         string id;
         public override void OpenWork(string id) {
             this.id = id;
-            Events.OnLoadingParent(transform, LoadingDone);
+            Events.OnLoadingParent(null, LoadingDone);
         }
         void LoadingDone()
         {
