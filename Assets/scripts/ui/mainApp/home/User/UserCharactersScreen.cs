@@ -63,7 +63,10 @@ namespace UI.MainApp.Home.User
 
         public void Init()
         {
-            Events.OnLoadingParent(transform);
+            Events.OnLoadingParent(transform, LoadingDone);
+        }
+        void LoadingDone()
+        {
             Events.OnLoading(true);
             artID = 0;
 

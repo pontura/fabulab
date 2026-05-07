@@ -25,11 +25,14 @@ namespace UI.MainApp.Home.User
                 firstLoad = true;
 
             Events.OnLoading(false);
-        }        
-
+        }
+        string id;
         public override void OpenWork(string id) {
-
-            Events.OnLoadingParent(transform);
+            this.id = id;
+            Events.OnLoadingParent(transform, LoadingDone);
+        }
+        void LoadingDone()
+        {
             Events.OnLoading(true);
             Data.Instance.scenesData.LoadFilm(id);
             UIManager.Instance.boardUI.SetEditingType(BoardUI.editingTypes.NONE);

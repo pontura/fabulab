@@ -10,7 +10,10 @@ namespace UI.MainApp.Home.User
     {
         public override void Init()
         {
-            Events.OnLoadingParent(transform);
+            Events.OnLoadingParent(transform, LoadingDone);
+        } 
+        void LoadingDone()
+        { 
             Events.OnLoading(true);
 
             Utils.RemoveAllChildsIn(backgroundsContainer);

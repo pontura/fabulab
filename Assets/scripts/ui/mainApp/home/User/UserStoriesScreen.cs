@@ -83,10 +83,13 @@ namespace UI.MainApp.Home.User
             go.Init(fd.id, fd.GetSprite());
             go.GetComponent<Button>().onClick.AddListener(() => OpenWork(fd.id));
         }
-
+        string id;
         public virtual void OpenWork(string id) {
-
-            Events.OnLoadingParent(transform);
+            this.id = id;
+            Events.OnLoadingParent(transform, LoadingDone);
+        }
+        void LoadingDone()
+        {
             Events.OnLoading(true);
             Data.Instance.scenesData.LoadUserFilm(id);
             UIManager.Instance.boardUI.SetEditingType(BoardUI.editingTypes.NONE);
