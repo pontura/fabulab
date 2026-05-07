@@ -90,7 +90,6 @@ namespace Yaguar.StoryMaker.Editor
             }
             isBeingHeld = false;
             StoryMakerEvents.ReorderSceneObjectsInZ();
-            data.pos = new V3(initDragPos.x, initDragPos.y, data.pos.z);
         }
 
         public void FlipX(bool setLeft) {

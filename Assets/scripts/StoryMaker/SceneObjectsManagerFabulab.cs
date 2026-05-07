@@ -254,10 +254,10 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public void TurnOfAllTexts() {
-            //foreach (SceneObject so in sceneObjects) {
-            //    if(so.GetData() is SOWordBalloonData || so.GetData() is SOWordBoxData)
-            //        so.gameObject.SetActive(false);
-            //}
+            foreach (SceneObject so in sceneObjects) {
+                if(so.GetData() is SOWordBalloonData)
+                   so.gameObject.SetActive(false);
+            }
         }
     }
 }
