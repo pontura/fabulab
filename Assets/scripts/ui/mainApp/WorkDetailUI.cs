@@ -39,7 +39,7 @@ namespace UI.MainApp
             id = _id;
             confirmation.SetActive(false);
             savedSignal.SetActive(isNew);
-            Events.OnLoading(false, UI.LoadingType.Fullscreen);
+            Events.OnLoading(false);
         }
 
         public void ShowWorkDetail(string _id, Sprite sprite, bool isNew)
@@ -49,7 +49,7 @@ namespace UI.MainApp
             workImage.sprite = sprite;
             confirmation.SetActive(false);
             savedSignal.SetActive(isNew);
-            Events.OnLoading(false, UI.LoadingType.Fullscreen);
+            Events.OnLoading(false);
         }
         public void ContinueEditing()
         {

@@ -77,7 +77,8 @@ namespace UI.MainApp.Home.User
         }
         public virtual void Init()
         {
-            Events.OnLoading(true,LoadingType.Home);
+            Events.OnLoadingParent(transform);
+            Events.OnLoading(true);
 
             Utils.RemoveAllChildsIn(backgroundsContainer);
             Utils.RemoveAllChildsIn(objectsContainer);
@@ -99,7 +100,7 @@ namespace UI.MainApp.Home.User
             if (Data.Instance.sObjectsData.userMetaData.Count > 0)
                 firstLoad = true;
 
-            Events.OnLoading(false, UI.LoadingType.Home);
+            Events.OnLoading(false);
         }
         protected virtual void AddTitle(int id, string s)
         {

@@ -35,7 +35,10 @@ public static class Events
     public static System.Action<string> OnPopupTopSignalText = delegate { };
     public static System.Action<bool> ActivateUIButtons = delegate { };
     public static System.Action<bool> SetChangesMade = delegate { };
-    public static System.Action<bool, LoadingType> OnLoading = delegate { };
+
+    public static System.Action<bool> OnLoading = delegate { };
+    public static System.Action<Transform> OnLoadingParent = delegate { };
+
     public static System.Action<string, System.Action> CaptureGif = delegate { };
     public static System.Action<bool> OnCanvasDragger = delegate { };
     public static System.Action<bool> DragAndDropActive = delegate { };

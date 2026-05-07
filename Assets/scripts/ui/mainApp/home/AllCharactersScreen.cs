@@ -25,7 +25,7 @@ namespace UI.MainApp.Home.User
             if (Data.Instance.charactersData.charactersMetaData.Count > 0)
                 firstLoad = true;
 
-            Events.OnLoading(false, UI.LoadingType.Home);
+            Events.OnLoading(false);
         }
         public void Duplicate(string soID)
         {

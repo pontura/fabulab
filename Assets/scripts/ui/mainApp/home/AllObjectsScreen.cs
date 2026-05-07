@@ -10,7 +10,8 @@ namespace UI.MainApp.Home.User
     {
         public override void Init()
         {
-            Events.OnLoading(true,  LoadingType.Home);
+            Events.OnLoadingParent(transform);
+            Events.OnLoading(true);
 
             Utils.RemoveAllChildsIn(backgroundsContainer);
             Utils.RemoveAllChildsIn(objectsContainer);
@@ -32,7 +33,7 @@ namespace UI.MainApp.Home.User
             if (Data.Instance.sObjectsData.metaData.Count > 0)
                 firstLoad = true;
 
-            Events.OnLoading(false, UI.LoadingType.Home);
+            Events.OnLoading(false);
         }
         
         public override void OpenWork(string id)

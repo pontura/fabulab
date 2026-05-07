@@ -280,8 +280,9 @@ namespace UI.MainApp
             Events.OnConfirm("Confirmás que querés borrar esta historia?", "SI", "NO", OnConfirm);
         }
         void OnConfirm(bool ok) {
-            if (ok) {
-                Events.OnLoading(true, LoadingType.Fullscreen);
+            if (ok)
+            {
+                Events.OnLoading(true);
                 FirebaseStoryMakerDBManager.Instance.DeleteFilm(Data.Instance.scenesData.currentFilmData, OnDeleted);
             }
         }

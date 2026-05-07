@@ -299,7 +299,7 @@ namespace BoardItems
                     Events.OnFilmMetadataRemoved(fd.id);
                 }
             }
-            Events.OnLoading(false, LoadingType.Fullscreen);
+            Events.OnLoading(false);
         }
 
         public void SortThemeFilmsDataByLikes(bool moreLikes) {
