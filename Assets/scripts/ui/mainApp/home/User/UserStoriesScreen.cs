@@ -54,18 +54,15 @@ namespace UI.MainApp.Home.User
             }
         }
 
-        public void Init()
-        {
+        public void Init() {
+            Events.OnLoadingParent(transform, LoadNext);
             artID = 0;
 
-            foreach (Transform child in worksContainer)
-            {
+            foreach (Transform child in worksContainer) {
                 if (child.tag != "Persistent")
                     Destroy(child.gameObject);
             }
-
-            LoadNext();
-        }
+        }        
         
         protected virtual void LoadNext()
         {
@@ -73,8 +70,10 @@ namespace UI.MainApp.Home.User
             {
                 AddFilmMetadata(cd);                
             }
-            if (Data.Instance.scenesData.userFilmsData.Count > 0)
+            if (Data.Instance.scenesData.userFilmsData.Count > 0) {
                 firstLoad = true;
+                Events.OnLoading(false);
+            }
         }
 
         void AddFilmMetadata(FilmDataFabulab fd) {

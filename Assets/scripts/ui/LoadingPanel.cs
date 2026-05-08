@@ -43,7 +43,7 @@ namespace UI
             rt.localScale = Vector3.one;
             rt.localRotation = Quaternion.identity;
             
-            Invoke("OnDoneOn", 0.25f);
+            Invoke(nameof(OnDoneOn), Time.deltaTime*2);
         }
         void OnDoneOn()
         {
