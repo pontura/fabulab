@@ -64,7 +64,7 @@ namespace UI
             Events.ShowScreen += OnShowScreen;
             if (Data.Instance.userData.IsLogged()) {
                 Init();
-                Invoke("InitGalleryDelayed", 0.1f);
+                Invoke(nameof(InitGalleryDelayed), Time.deltaTime*2);
             }
         }
         private void OnDestroy()
@@ -76,7 +76,7 @@ namespace UI
 
         void OnTokenUpdated() {
             Init();
-            Invoke("InitGalleryDelayed", 0.1f);
+            Invoke(nameof(InitGalleryDelayed), Time.deltaTime * 2);
         }
 
         public CharacterPartsHelper.parts part;
@@ -111,7 +111,7 @@ namespace UI
         void Init()
         {
             string uid = Data.Instance.userData.userDataInDatabase.uid;
-            if (uid != "" || uid!=null)
+            if (uid != "" && uid!=null)
                 Data.Instance.cacheData.GetUser(uid, OnUserDone);
             Home();
         }
