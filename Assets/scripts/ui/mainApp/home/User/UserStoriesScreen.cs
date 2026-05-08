@@ -2,6 +2,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Yaguar.StoryMaker.DB;
 using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
@@ -33,11 +34,13 @@ namespace UI.MainApp.Home.User
         }
 
         void OnFilmMetadataAdded(FilmDataFabulab fd) {
+            Debug.Log("% UserStoriesScreen OnFilmMetadataAdded");
             AddFilmMetadata(fd);
             worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
         }
 
         void OnFilmMetadataUpdated(FilmDataFabulab fd) {
+            Debug.Log("% UserStoriesScreen OnFilmMetadataUpdated");
             ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
             ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
             if (btn != null) {
@@ -47,9 +50,11 @@ namespace UI.MainApp.Home.User
         }
 
         void OnFilmMetadataRemoved(string id) {
+            Debug.Log("% UserStoriesScreen OnFilmMetadataUpdated");
             ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
             ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == id);
             if (btn != null) {
+                Debug.Log("% UserStoriesScreen OnFilmMetadataUpdated destroy");
                 Destroy(btn.gameObject);
             }
         }
@@ -76,7 +81,7 @@ namespace UI.MainApp.Home.User
             }
         }
 
-        void AddFilmMetadata(FilmDataFabulab fd) {
+        protected virtual void AddFilmMetadata(FilmDataFabulab fd) {
             Debug.Log("% OnFilmMetadataAdded");
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
             go.Init(fd.id, fd.GetSprite());
@@ -107,7 +112,18 @@ namespace UI.MainApp.Home.User
         public void Delete(string id)
         {
             this.id = id;
-            print("Delete ID: " + id);
+            print("Delete ID: " + id);        
+            Events.OnConfirm("Confirmás que querés borrar esta historia?", "SI", "NO", OnConfirm);
+        }
+        void OnConfirm(bool ok) {
+            if (ok) {
+                FirebaseStoryMakerDBManager.Instance.DeleteFilm(Data.Instance.scenesData.userFilmsData.Find(x => x.id == id), OnDeleted);
+                this.id = null;
+            }
+        }
+        public void OnDeleted(string filmId) {            
+            Data.Instance.scenesData.RemoveFD(filmId);
+            Events.OnFilmMetadataRemoved(filmId);
         }
     }
 

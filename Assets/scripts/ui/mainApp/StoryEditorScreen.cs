@@ -253,6 +253,7 @@ namespace UI.MainApp
             Data.Instance.scenesData.currentFilmData = new FilmDataFabulab();
             Data.Instance.scenesData.currentFilmData.name = storyName.text;
             ScenesManagerFabulab.Instance.currentFilmData = Data.Instance.scenesData.currentFilmData;
+            Data.Instance.scenesData.currentFilmData.userID = Data.Instance.userData.userDataInDatabase.uid;
             ScenesManagerFabulab.Instance.currentFDataID = "";
             savePanel.SetActive(false);
             Invoke(nameof(SaveWork), Time.deltaTime * 2);

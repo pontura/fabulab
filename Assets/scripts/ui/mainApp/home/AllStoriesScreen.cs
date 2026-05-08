@@ -13,10 +13,7 @@ namespace UI.MainApp.Home.User
             Debug.Log("% AllStoriesScreen LoadNext");
             foreach(FilmDataFabulab cd in Data.Instance.scenesData.filmsData)
             {
-                ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-                print("go " + go);
-                go.Init(cd.id, cd.GetSprite());
-                go.GetComponent<ItemSelectorStory>().SetContent(cd, this, false);
+                AddFilmMetadata(cd);
             }
 
             if (Data.Instance.scenesData.filmsData.Count > 0) {
@@ -24,6 +21,13 @@ namespace UI.MainApp.Home.User
                 Events.OnLoading(false);
             }
         }
+
+        protected override void AddFilmMetadata(FilmDataFabulab fd) {
+            ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
+            go.Init(fd.id, fd.GetSprite());
+            go.GetComponent<ItemSelectorStory>().SetContent(fd, this, false);
+        }
+
         string id;
         public override void OpenWork(string id) {
             this.id = id;

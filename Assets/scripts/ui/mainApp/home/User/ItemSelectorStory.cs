@@ -9,7 +9,7 @@ namespace UI.MainApp.Home.User
         [SerializeField] TMPro.TMP_Text titleField;
         [SerializeField] TMPro.TMP_Text creatorField;
         [SerializeField] TMPro.TMP_Text dateField;
-        [SerializeField] Image image;
+        [SerializeField] Image creatorThumb;
 
         [SerializeField] GameObject editionGO;
         [SerializeField] GameObject viewGO;
@@ -41,7 +41,7 @@ namespace UI.MainApp.Home.User
 
                 Data.Instance.cacheData.GetUser(content.userID, (userData) => {
                     creatorField.text = userData.username;
-                    image.sprite = userData.thumb != null ? Sprite.Create(userData.thumb, new Rect(0, 0, userData.thumb.width, userData.thumb.height), new Vector2(0.5f, 0.5f)) : null;
+                    creatorThumb.sprite = userData.thumb != null ? Sprite.Create(userData.thumb, new Rect(0, 0, userData.thumb.width, userData.thumb.height), new Vector2(0.5f, 0.5f)) : null;
 
                 });
             }

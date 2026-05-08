@@ -51,12 +51,14 @@ namespace BoardItems
         private void Start() {
             //Events.OnThemesLoadedComplete += LoadThemeFilmMetadataFromServer;
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
+            FirebaseAuthManager.Instance.OnSignedOut += OnSignedOut;
             StoryMakerEvents.ChangeSpeed += ChangeSpeed;
         }
                 
         private void OnDestroy() {
             //Events.OnThemesLoadedComplete -= LoadUserFilmMetadataFromServer;
             FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
+            FirebaseAuthManager.Instance.OnSignedOut -= OnSignedOut;
             StoryMakerEvents.ChangeSpeed -= ChangeSpeed;
         }
         void ChangeSpeed(int speed) {
@@ -87,6 +89,14 @@ namespace BoardItems
             }
 
             loadedDone = true;
+        }
+
+        void OnSignedOut() {
+            userFilmsData = new();
+            var filmMetadata = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/");
+            filmMetadata.ChildAdded -= OnFilmdAdded;
+            filmMetadata.ChildChanged -= OnFilmChanged;
+            filmMetadata.ChildRemoved -= OnFilmRemoved;
         }
 
         void OnTokenUpdated() {
@@ -358,7 +368,9 @@ namespace BoardItems
                 fd.name = currentFilmData.name;
                 fd.speed = currentFilmData.speed;
                 fd.timestamp = currentFilmData.timestamp;
+                fd.userID = currentFilmData.userID;
                 userFilmsData.Add(fd);
+                Events.OnFilmMetadataAdded(fd);
             } else {
                 fd.framecount = ScenesManagerFabulab.Instance.Scenes.Count;
                 fd.thumb = currentFilmData.thumb;
