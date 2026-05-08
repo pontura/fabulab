@@ -6,7 +6,7 @@ namespace Yaguar.StoryMaker.Editor
 {
     public class TimelineFabulab : Timeline
     {
-    
+        [SerializeField] GameObject shotButtons;
 
         public float offset = 10;
         protected override void Start() {
@@ -55,6 +55,7 @@ namespace Yaguar.StoryMaker.Editor
                 UpdateKeyframes();
                 Events.OnLoading(false);
             }
+            OnStop();
         }
         IEnumerator RefreshKeyframesC()
         {
@@ -86,5 +87,7 @@ namespace Yaguar.StoryMaker.Editor
             ScenesManagerFabulab.Instance.currentSceneId = id;
             base.SetJump(id);
         }
+        public override void OnPlay() { shotButtons.SetActive(false); }
+        public override void OnStop() { shotButtons.SetActive(true); }
     }
 }

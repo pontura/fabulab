@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
@@ -137,6 +138,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         public void InitPlaying()
         {
+            OnPlay();
             if (!StoryMakerEvents.isEditing)
             {
                 Scenario.Instance.ResetScenario();
@@ -145,6 +147,8 @@ namespace Yaguar.StoryMaker.Editor
                 filmMakerUI.JumpTo(ScenesManager.Instance.currentSceneId);
             }
         }
+        public virtual void OnPlay() { }
+        public virtual void OnStop() { }
         public void OnUpdate()
         {
             timer += Time.deltaTime;
