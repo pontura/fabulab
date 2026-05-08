@@ -184,6 +184,7 @@ namespace Yaguar.StoryMaker.Editor
 
             float sliderValue = (all[activeAnimatedKeyframeID - 1].duration - min_speed) / (max_speed - min_speed);
 
+            durationBtn?.SetDuration(all[activeAnimatedKeyframeID - 1].duration);
             durationBtn?.SetValue(sliderValue);
         }
         protected void ForceMarkerPosition()
