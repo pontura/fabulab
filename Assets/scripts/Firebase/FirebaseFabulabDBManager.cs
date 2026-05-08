@@ -186,7 +186,7 @@ namespace Yaguar.StoryMaker.DB
                         foreach (var child in snapshot.Children)
                         {
                             string json = JsonConvert.SerializeObject(child.Value);
-                            Debug.Log(json);
+                            //Debug.Log(json);
                             if (!json.Contains("#"))
                                 d.Add(child.Key, JsonConvert.DeserializeObject<SObjectServerData>(json));
                         }
@@ -288,7 +288,7 @@ namespace Yaguar.StoryMaker.DB
                 } else if (task.IsCompleted) {
                     //Debug.Log("#Load " + type + " MetadataFromServer IsCompleted");
                     try {
-                        Debug.Log(task.Result.GetRawJsonValue());
+                        //Debug.Log(task.Result.GetRawJsonValue());
                         DataSnapshot snapshot = task.Result;
 
                         if (snapshot.Exists) {
@@ -297,7 +297,7 @@ namespace Yaguar.StoryMaker.DB
                             //Debug.Log("#Load " + type + " MetadataFromServer snapshot Count: " + snapshot.Children.Count<DataSnapshot>());
 
                             foreach (var child in snapshot.Children) {
-                                Debug.Log(child.Key + ": " + child.Value.ToString());
+                                //Debug.Log(child.Key + ": " + child.Value.ToString());
                                 CharacterMetaData fd = new CharacterMetaData();
                                 if (type == "so") {
                                     fd = new PropMetaData();
