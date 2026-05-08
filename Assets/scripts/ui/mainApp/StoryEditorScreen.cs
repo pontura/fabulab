@@ -31,7 +31,6 @@ namespace UI.MainApp
         [SerializeField] GameObject deleteStoryButton;
         [SerializeField] GameObject saveNewStoryButton;
         [SerializeField] GameObject saveStoryButton;
-        [SerializeField] GameObject DoneBtn;
         [SerializeField] TMPro.TMP_InputField storyName;
         [SerializeField] bool changesMade;
         AddNew addNewPanel;
@@ -305,15 +304,6 @@ namespace UI.MainApp
 
             actionUI.SetOn(enable);
             emojisUI.SetOn(enable);
-
-            DoneBtn.gameObject.SetActive(enable);
-
-           // Invoke(nameof(SetTabState), Time.deltaTime * 10);
         }
-
-        //void SetTabState() {
-        //    int id = editionEnabled ? 0 : 4;
-        //    OnTabClicked(id);
-        //}
     }
 }

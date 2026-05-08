@@ -16,7 +16,7 @@ namespace UI.MainApp.Home.User
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
                 go.Init(cd.id, cd.GetSprite());
-                go.GetComponent<ItemSelectorStory>().SetContent(cd, this);
+                go.GetComponent<ItemSelectorStory>().SetContent(cd, this, false);
             }
 
             if (Data.Instance.scenesData.filmsData.Count > 0)

@@ -81,7 +81,7 @@ namespace UI.MainApp.Home.User
             Debug.Log("% OnFilmMetadataAdded");
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
             go.Init(fd.id, fd.GetSprite());
-            go.GetComponent<ItemSelectorStory>().SetContent(fd, this);
+            go.GetComponent<ItemSelectorStory>().SetContent(fd, this, true);
         }
         string id;
         public virtual void OpenWork(string id) {

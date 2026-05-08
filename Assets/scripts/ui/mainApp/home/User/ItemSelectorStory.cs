@@ -16,12 +16,12 @@ namespace UI.MainApp.Home.User
         UserStoriesScreen userStoriesScreen;
         FilmDataFabulab content;
 
-        public void SetContent(FilmDataFabulab content, UserStoriesScreen userStoriesScreen)
+        public void SetContent(FilmDataFabulab content, UserStoriesScreen userStoriesScreen, bool isEdition)
         {
             this.content = content;
             this.userStoriesScreen = userStoriesScreen;
             titleField.text =content.name;
-            InitStoryBtn(content.userID == Data.Instance.userData.userDataInDatabase.uid);
+            InitStoryBtn(isEdition);
             dateField.text = content.GetTimestamp();
         }
 
