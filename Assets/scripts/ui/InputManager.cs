@@ -43,7 +43,10 @@ namespace UI
             Events.SetGroupToolsOn -= SetGroupToolsOn;
             Events.ShowScreen -= ShowScreen;
         }
-
+        public void Back()
+        {
+            toolsMenu.SetOff();
+        }
         bool storyMode;
         private void ShowScreen(UIManager.screenType type)
         {

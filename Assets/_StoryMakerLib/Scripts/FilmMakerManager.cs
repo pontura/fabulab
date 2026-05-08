@@ -84,6 +84,7 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         protected void Stop() {
+            timeline.OnStop();
             playButton.GetComponent<PlayButton>().SetButtons(false);
             State = states.STOPPED;
             iTween.Stop();

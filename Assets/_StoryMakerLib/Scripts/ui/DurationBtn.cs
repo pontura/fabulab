@@ -42,6 +42,11 @@ namespace Yaguar.StoryMaker.Editor
             else
                 bar.fillAmount = sliderValue;
         }
+        public void SetDuration(float duration)
+        {
+            this.duration = duration;
+            SetText();
+        }
         public void OnSliderChanged()
         {
             if (!opened) return;
