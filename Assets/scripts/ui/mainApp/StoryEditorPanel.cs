@@ -28,6 +28,7 @@ namespace UI.MainApp
                         StoryMakerEvents.ClearScene();
                         Show(false);
                         StoryMakerEvents.EnableInputManager(false);
+                        iTween.Stop();
                     }
                     break;
             }
