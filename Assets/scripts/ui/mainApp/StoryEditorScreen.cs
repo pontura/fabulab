@@ -259,8 +259,13 @@ namespace UI.MainApp
         }
         public void Replace()// Guarda la version editada del personaje.
         {
-            savePanel.SetActive(false);
-            Invoke(nameof(SaveWork), Time.deltaTime * 2);
+            if (Data.Instance.scenesData.currentFilmData.id == "")
+                Save();
+            else
+            {
+                savePanel.SetActive(false);
+                Invoke(nameof(SaveWork), Time.deltaTime * 2);
+            }
         }
         public void Cancel() {
             savePanel.SetActive(false);
