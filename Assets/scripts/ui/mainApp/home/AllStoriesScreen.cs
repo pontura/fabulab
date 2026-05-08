@@ -1,5 +1,4 @@
 ﻿using BoardItems;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
@@ -17,8 +16,7 @@ namespace UI.MainApp.Home.User
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
                 go.Init(cd.id, cd.GetSprite());
-                go.GetComponent<ItemSelectorStory>().SetContent(cd);
-                go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
+                go.GetComponent<ItemSelectorStory>().SetContent(cd, this);
             }
 
             if (Data.Instance.scenesData.filmsData.Count > 0)
@@ -31,6 +29,7 @@ namespace UI.MainApp.Home.User
             this.id = id;
             Events.OnLoadingParent(null, LoadingDone);
         }
+       
         void LoadingDone()
         {
             Events.OnLoading(true);

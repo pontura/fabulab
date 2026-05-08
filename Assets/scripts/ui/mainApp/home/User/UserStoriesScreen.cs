@@ -81,12 +81,12 @@ namespace UI.MainApp.Home.User
             Debug.Log("% OnFilmMetadataAdded");
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
             go.Init(fd.id, fd.GetSprite());
-            go.GetComponent<Button>().onClick.AddListener(() => OpenWork(fd.id));
+            go.GetComponent<ItemSelectorStory>().SetContent(fd, this);
         }
         string id;
         public virtual void OpenWork(string id) {
             this.id = id;
-            Events.OnLoadingParent(transform, LoadingDone);
+            Events.OnLoadingParent(null, LoadingDone);
         }
         void LoadingDone()
         {
@@ -99,6 +99,16 @@ namespace UI.MainApp.Home.User
 
         void SetUserStoryEditionState() {
             StoryMakerEvents.EnableStoryEdition(true);
+        }
+        public void Duplicate(string id)
+        {
+            this.id = id;
+            print("Duplica ID: " + id);
+        }
+        public void Delete(string id)
+        {
+            this.id = id;
+            print("Delete ID: " + id);
         }
     }
 
