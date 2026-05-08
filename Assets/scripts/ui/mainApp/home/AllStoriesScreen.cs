@@ -19,10 +19,10 @@ namespace UI.MainApp.Home.User
                 go.GetComponent<ItemSelectorStory>().SetContent(cd, this, false);
             }
 
-            if (Data.Instance.scenesData.filmsData.Count > 0)
+            if (Data.Instance.scenesData.filmsData.Count > 0) {
                 firstLoad = true;
-
-            Events.OnLoading(false);
+                Events.OnLoading(false);
+            }
         }
         string id;
         public override void OpenWork(string id) {
