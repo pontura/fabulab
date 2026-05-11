@@ -260,7 +260,7 @@ namespace UI.MainApp
         }
         public void Replace()// Guarda la version editada del personaje.
         {
-            if (Data.Instance.scenesData.currentFilmData.id == "")
+            if (ScenesManagerFabulab.Instance.currentFDataID == "")
                 Save();
             else
             {
