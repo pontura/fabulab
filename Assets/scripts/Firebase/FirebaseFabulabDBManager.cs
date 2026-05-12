@@ -3,13 +3,13 @@
 using BoardItems.BoardData;
 using Firebase.Database;
 using Firebase.Extensions;
-using Google.MiniJSON;
+using Firebase.Storage;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Unity.Burst.Intrinsics;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.DB;
@@ -804,6 +804,83 @@ namespace Yaguar.StoryMaker.DB
             });
             Debug.Log("Server: SaveProfilePicture thumb: " + thumb);
             //print("SaveInventoryItem url : " + url);
+        }
+
+        public async Task UploadTexture(Texture2D texture, string folder, string fileName, string userId = null) {
+            string uid = _uid;
+            if (userId != null) {
+                uid = userId;
+            }
+
+            // Convertir Texture2D a JPG en bytes
+            byte[] imageBytes = texture.EncodeToJPG();
+
+            // Ruta en Storage: userImages/{uid}/{fileName}.jpg
+            StorageReference storageRef = FirebaseStorage.DefaultInstance.GetReference($"images/{uid}/{folder}/{fileName}.jpg");
+
+            // Subir archivo
+            await storageRef.PutBytesAsync(imageBytes);/*.ContinueWithOnMainThread(task => {
+                if (task.IsFaulted || task.IsCanceled) {
+                    Debug.Log("#UploadTexture FAIL " + task.Exception);
+                }
+                Debug.Log("Imagen subida correctamente");
+            });*/
+            Debug.Log("Imagen subida correctamente");
+        }
+
+        public async void DownloadTexture(System.Action<Texture2D> onComplete, string folder, string fileName, string userId = null) {
+            string uid = _uid;
+            if (userId != null) {
+                uid = userId;
+            }
+            // Referencia al archivo en Storage
+            StorageReference storageRef = FirebaseStorage.DefaultInstance.GetReference($"images/{uid}/{folder}/{fileName}.jpg");
+
+            // Descargar como bytes
+            const long maxAllowedSize = 5 * 1024 * 1024; // 5 MB
+            byte[] fileContents = await storageRef.GetBytesAsync(maxAllowedSize);
+
+            // Convertir a Texture2D
+            Texture2D texture = new Texture2D(2, 2);
+            texture.LoadImage(fileContents);
+            Debug.Log("Imagen descargada correctamente");
+
+            onComplete(texture);
+            //return texture;
+        }
+
+        public void DownloadTexture(string folder, string fileName, System.Action<Texture2D> onComplete, string userId = null) {
+            string uid = _uid;
+            if (userId != null) {
+                uid = userId;
+            }
+            // Referencia al archivo en Storage
+            StorageReference storageRef = FirebaseStorage.DefaultInstance.GetReference($"images/{uid}/{folder}/{fileName}.jpg");
+
+            // Descargar como bytes
+            const long maxAllowedSize = 5 * 1024 * 1024; // 5 MB
+            //byte[] fileContents = await storageRef.GetBytesAsync(maxAllowedSize);
+            storageRef.GetBytesAsync(maxAllowedSize).ContinueWithOnMainThread(task =>
+             {
+                 if (task.IsFaulted || task.IsCanceled) {
+                     Debug.LogError("Error al descargar la imagen: " + task.Exception);
+                     onComplete?.Invoke(null);
+                     return;
+                 } else if (task.IsCompleted) {
+                     try {
+                         // Convertir a Texture2D en el hilo principal
+                         byte[] fileContents = task.Result;
+                         Texture2D texture = new Texture2D(2, 2);
+                         texture.LoadImage(fileContents);
+
+                         Debug.Log("Imagen descargada correctamente");
+                         onComplete?.Invoke(texture);
+                     } catch (Exception ex) {
+                         Debug.LogError($"Error en callback: {ex}");
+                     }
+                 }
+                 Debug.Log($"Server DownloadTexture: images/{uid}/{folder}/{fileName}.jpg");
+             });
         }
     }
 }

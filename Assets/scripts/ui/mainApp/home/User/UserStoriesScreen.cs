@@ -21,7 +21,7 @@ namespace UI.MainApp.Home.User
             Events.OnFilmMetadataRemoved += OnFilmMetadataRemoved;
         }
         protected virtual void OnDestroy() {
-            Events.OnFilmMetadataUpdated += OnFilmMetadataUpdated;
+            Events.OnFilmMetadataUpdated -= OnFilmMetadataUpdated;
             Events.OnFilmMetadataAdded -= OnFilmMetadataAdded;
             Events.OnFilmMetadataRemoved += OnFilmMetadataRemoved;
         }

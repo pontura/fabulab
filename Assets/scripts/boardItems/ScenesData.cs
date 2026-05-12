@@ -24,7 +24,6 @@ namespace BoardItems
     [Serializable]
     public class ServerFilmData
     {
-        public string thumb;
         public string name;
         public string userID;
         public int likes;
@@ -110,6 +109,7 @@ namespace BoardItems
 
         public void LoadAllFilmMetadataFromServer() {
             if (Data.Instance.userData.IsLogged()) {
+                Events.OnLoading(true);
                 ScenesManagerFabulab.Instance.currentFDataID = "";
                 userFilmsData = new List<FilmDataFabulab>();
                 filmsData = new List<FilmDataFabulab>();
@@ -147,9 +147,7 @@ namespace BoardItems
                     film.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
             }
 
-            userFilmsData.AddRange(filmsData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid));
-
-            Events.OnAllFilmMetadataLoadDone();
+            userFilmsData.AddRange(filmsData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid));            
 
             initTimeStamp = DateTime.UtcNow.ToString("o");
 
@@ -162,6 +160,7 @@ namespace BoardItems
         public void OnAddFilmDataFromServer(List<FilmDataFabulab> filmsData, Dictionary<string, ServerFilmData> sfds) {
             if (sfds == null) return;
 
+            int count = 0;
             foreach (KeyValuePair<string, ServerFilmData> e in sfds.OrderByDescending(x => x.Value.timestamp).ToList()) {
                 if (filmsData.Find(x => x.id == e.Key) == null) {
                     FilmDataFabulab fd = new FilmDataFabulab();
@@ -175,8 +174,30 @@ namespace BoardItems
                         fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
                     else
                         fd.timestamp = e.Value.timestamp;
-                    fd.thumb = new Texture2D(1, 1);
-                    fd.thumb.LoadImage(System.Convert.FromBase64String(e.Value.thumb));
+
+                    /*FirebaseStoryMakerDBManager.Instance.DownloadTexture((tex) => {
+                        fd.thumb = tex;
+                        count++;
+                        Debug.Log("% " + count + " >= " + sfds.Count);
+                        if (count >= sfds.Count)
+                            Events.OnAllFilmMetadataLoadDone();
+                    }, "stories", fd.id, fd.userID);*/
+
+                    FirebaseStoryMakerDBManager.Instance.DownloadTexture("stories", fd.id, (tex) => {
+                        fd.thumb = tex;
+                        count++;
+                        Debug.Log("% " + count + " >= " + sfds.Count);
+                        if(count>= sfds.Count)
+                            Events.OnAllFilmMetadataLoadDone();
+                    }, fd.userID);
+
+                    //fd.thumb = new Texture2D(1, 1);
+                    //fd.thumb.LoadImage(System.Convert.FromBase64String(e.Value.thumb));
+
+                    /*if (count == 0) {
+                        Debug.Log("% UploadTexture");
+                        await FirebaseStoryMakerDBManager.Instance.UploadTexture(fd.thumb, "stories", fd.id, fd.userID);
+                    }*/
                     filmsData.Add(fd);
                 }
             }
@@ -198,7 +219,7 @@ namespace BoardItems
                     fd.userID = e.Value.userID;
                     fd.speed = e.Value.speed;
                     fd.thumb = new Texture2D(1, 1);
-                    fd.thumb.LoadImage(System.Convert.FromBase64String(e.Value.thumb));
+                    //fd.thumb.LoadImage(System.Convert.FromBase64String(e.Value.thumb));
                     filmsData.Add(fd);
                 }
                 SortThemeFilmsDataByLikes(true);
@@ -239,14 +260,17 @@ namespace BoardItems
                         fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
                     else
                         fd.timestamp = sfd.timestamp;
-                    fd.thumb = new Texture2D(1, 1);
-                    fd.thumb.LoadImage(System.Convert.FromBase64String(sfd.thumb));
+
+                    FirebaseStoryMakerDBManager.Instance.DownloadTexture("stories", fd.id, (tex) => {
+                        fd.thumb = tex;
+                        Events.OnFilmMetadataAdded(fd);
+                    }, fd.userID);
                     filmsData.Insert(0, fd);
 
                     if (sfd.userID == Data.Instance.userData.userDataInDatabase.uid)
                         userFilmsData.Insert(0, fd);
 
-                    Events.OnFilmMetadataAdded(fd);
+                    
                 }
             }                
         }
@@ -280,15 +304,16 @@ namespace BoardItems
                 fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
             else
                 fd.timestamp = sfd.timestamp;
-            fd.thumb = new Texture2D(1, 1);
-            fd.thumb.LoadImage(System.Convert.FromBase64String(sfd.thumb));
 
+            FirebaseStoryMakerDBManager.Instance.DownloadTexture("stories", fd.id, (tex) => {
+                fd.thumb = tex;
+                Events.OnFilmMetadataUpdated(fd);
+            }, fd.userID);
+            
             filmsData = filmsData.OrderByDescending(x => x.timestamp).ToList();
             userFilmsData = userFilmsData.OrderByDescending(x => x.timestamp).ToList();
 
             Data.Instance.cacheData.RemoveFilmCache(fd.id);
-
-            Events.OnFilmMetadataUpdated(fd);
         }
 
         void OnFilmRemoved(object sender, ChildChangedEventArgs args) {
@@ -385,8 +410,6 @@ namespace BoardItems
 
             ScenesManagerFabulab.Instance.currentFilmData = currentFilmData;
 
-            byte[] bytes = fd.thumb.EncodeToPNG();
-
             if (Data.Instance.userData.IsLogged()) {
                 FilmDataFabulab tfd = filmsData.Find(x => x.id == fd.id);
                 if (tfd == null)
@@ -395,13 +418,13 @@ namespace BoardItems
                     tfd = fd;
 
                 ServerFilmData sfd = new ServerFilmData();
-                sfd.thumb = System.Convert.ToBase64String(bytes);
-                Debug.Log("& Length: " + sfd.thumb.Length);
                 sfd.name = fd.name;
                 sfd.speed = fd.speed;
                 sfd.userID = Data.Instance.userData.userDataInDatabase.uid;
                 sfd.timestamp = fd.timestamp;
                 FirebaseStoryMakerDBManager.Instance.SaveFilmDataToServer(fd.id, sfd);
+
+                FirebaseStoryMakerDBManager.Instance.UploadTexture(fd.thumb, "stories", fd.id, fd.userID);
 
                 filmsData = filmsData.OrderByDescending(x => x.timestamp).ToList();
             }
