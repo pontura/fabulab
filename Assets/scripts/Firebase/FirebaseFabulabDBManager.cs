@@ -314,9 +314,8 @@ namespace Yaguar.StoryMaker.DB
                                 if (child.HasChild("creators")) {
                                     foreach (var uid in child.Child("creators").Children)
                                         fd.creators.Add(uid.Value as string);
-                                }
-                                fd.thumb = new Texture2D(1, 1);
-                                fd.thumb.LoadImage(System.Convert.FromBase64String(child.Child("thumb").Value as string));
+                                }                                
+                                                                
                                 metas.Add(fd);
                             }
                             //Dictionary<string, ServerCharacterMetaData> d = JsonConvert.DeserializeObject<Dictionary<string, ServerCharacterMetaData>>(task.Result.GetRawJsonValue());
@@ -806,7 +805,7 @@ namespace Yaguar.StoryMaker.DB
             //print("SaveInventoryItem url : " + url);
         }
 
-        public async Task UploadTexture(Texture2D texture, string folder, string fileName, string userId = null) {
+        public async Task UploadTexture(Texture2D texture, string folder, string fileName, string userId = null, System.Action onDone=null) {
             string uid = _uid;
             if (userId != null) {
                 uid = userId;
@@ -826,6 +825,8 @@ namespace Yaguar.StoryMaker.DB
                 Debug.Log("Imagen subida correctamente");
             });*/
             Debug.Log("Imagen subida correctamente");
+            if (onDone != null)
+                onDone();
         }
 
         public async void DownloadTexture(System.Action<Texture2D> onComplete, string folder, string fileName, string userId = null) {
@@ -863,7 +864,7 @@ namespace Yaguar.StoryMaker.DB
             storageRef.GetBytesAsync(maxAllowedSize).ContinueWithOnMainThread(task =>
              {
                  if (task.IsFaulted || task.IsCanceled) {
-                     Debug.LogError("Error al descargar la imagen: " + task.Exception);
+                     Debug.LogError($"Error al descargar la images/{uid}/{folder}/{fileName}.jpg : " + task.Exception);
                      onComplete?.Invoke(null);
                      return;
                  } else if (task.IsCompleted) {

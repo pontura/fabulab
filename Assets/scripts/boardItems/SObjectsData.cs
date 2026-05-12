@@ -175,7 +175,6 @@ namespace BoardItems
             currentID = id;
 
             ServerPropMetaData swmd = new ServerPropMetaData();
-            swmd.thumb = System.Convert.ToBase64String(currentSO.thumb.EncodeToPNG());
             swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
             swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
             swmd.type = currentSO.type;
@@ -183,6 +182,9 @@ namespace BoardItems
 
 
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), currentID, swmd);
+
+            FirebaseStoryMakerDBManager.Instance.UploadTexture(currentSO.thumb, MetadataTypes.so.ToString(), currentSO.id, Data.Instance.userData.userDataInDatabase.uid);
+
             UIManager.Instance.ShowWorkDetail(currentSO);
 
         }

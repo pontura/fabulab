@@ -7,7 +7,8 @@ namespace BoardItems.BoardData
     public enum MetadataTypes {
         characters,
         presets,
-        so
+        so,
+        stories
     }
 
     [Serializable]
@@ -43,7 +44,6 @@ namespace BoardItems.BoardData
     [Serializable]
     public class ServerCharacterMetaData
     {
-        public string thumb;
         public string userID;
         public List<string> creators;
         public string timestamp;

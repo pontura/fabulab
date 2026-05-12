@@ -1,15 +1,18 @@
 ﻿using BoardItems.BoardData;
 using BoardItems.Characters;
 using Firebase.Database;
+using Firebase.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using UI;
+using UnityEditor;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
 using static BoardItems.Characters.CharacterPartsHelper;
+using static Unity.Burst.Intrinsics.X86.Avx;
 
 namespace BoardItems
 {
@@ -225,10 +228,11 @@ namespace BoardItems
             ServerCharacterMetaData swmd = new ServerCharacterMetaData();
 
             swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
-            swmd.thumb = System.Convert.ToBase64String(currentCharacter.thumb.EncodeToPNG());
             swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
             swmd.timestamp = tstamp;
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.characters.ToString(), currentID, swmd);
+
+            FirebaseStoryMakerDBManager.Instance.UploadTexture(currentCharacter.thumb, MetadataTypes.characters.ToString(), currentCharacter.id, Data.Instance.userData.userDataInDatabase.uid);
 
             OpenCharacterDetail(currentCharacter);
         }
@@ -257,6 +261,28 @@ namespace BoardItems
         public void OnLoadCharacterDataFromServer(List<CharacterMetaData> sfds)
         {            
             charactersMetaData = sfds.OrderByDescending(x => x.timestamp).ToList();
+            /*int count = 0;
+            foreach (CharacterMetaData uc in charactersMetaData) {
+                if (count > 0) {
+                    FirebaseStoryMakerDBManager.Instance.UploadTexture(uc.thumb, "characters", uc.id, uc.userID, () => {
+                        DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/characters/" + uc.id + "/thumb");
+                        reference.RemoveValueAsync().ContinueWithOnMainThread(task => {
+                            if (task.IsFaulted || task.IsCanceled) {
+                                Debug.Log("#Delete Character thumb FAIL");
+                                Debug.Log(task.Exception);
+                            } else {
+                                Debug.Log("#Delete Character thumb metadata/characters/" + uc.id);
+                            }
+                        });
+                    });
+                }
+                count++;
+            }*/
+            foreach (CharacterMetaData cmd in charactersMetaData) {
+                FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.characters.ToString(), cmd.id, (tex) => {
+                    cmd.thumb = tex;
+                }, cmd.userID);
+            }
             userCharactersMetaData = charactersMetaData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid);
             userCharacters = new();
             FirebaseStoryMakerDBManager.Instance.LoadUserAssetsFromServer(MetadataTypes.characters.ToString(), LoadCharactersFromServer);
@@ -302,14 +328,16 @@ namespace BoardItems
                         foreach (var uid in snapshot.Child("creators").Children)
                             cmd.creators.Add(uid.Value as string);
                     }
-                    cmd.thumb = new Texture2D(1, 1);
-                    cmd.thumb.LoadImage(System.Convert.FromBase64String(snapshot.Child("thumb").Value as string));
+                    
+                    FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.characters.ToString(), cmd.id, (tex) => {
+                        cmd.thumb = tex;
+                        Events.OnCharacterMetadataAdded(cmd);
+                    }, cmd.userID);
                     charactersMetaData.Insert(0, cmd);
 
                     if (cmd.userID == Data.Instance.userData.userDataInDatabase.uid)
                         userCharactersMetaData.Insert(0, cmd);
-
-                    Events.OnCharacterMetadataAdded(cmd);
+                    
                 }
             }
         }
@@ -340,13 +368,15 @@ namespace BoardItems
                 fd.timestamp = child.Child("timestamp").Value as string;
             else
                 fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");                        
-            fd.thumb = new Texture2D(1, 1);
-            fd.thumb.LoadImage(System.Convert.FromBase64String(child.Child("thumb").Value as string));
+            
+            FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.characters.ToString(), fd.id, (tex) => {
+                fd.thumb = tex;
+                Events.OnCharacterMetadataUpdated(fd);
+            }, fd.userID);
 
             charactersMetaData = charactersMetaData.OrderByDescending(x => x.timestamp).ToList();
             userCharactersMetaData = userCharactersMetaData.OrderByDescending(x => x.timestamp).ToList();
-
-            Events.OnCharacterMetadataUpdated(fd);
+            
 
         }
 

@@ -1,3 +1,4 @@
+using BoardItems.BoardData;
 using Firebase.Database;
 using System;
 using System.Collections.Generic;
@@ -183,10 +184,9 @@ namespace BoardItems
                             Events.OnAllFilmMetadataLoadDone();
                     }, "stories", fd.id, fd.userID);*/
 
-                    FirebaseStoryMakerDBManager.Instance.DownloadTexture("stories", fd.id, (tex) => {
+                    FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.stories.ToString(), fd.id, (tex) => {
                         fd.thumb = tex;
                         count++;
-                        Debug.Log("% " + count + " >= " + sfds.Count);
                         if(count>= sfds.Count)
                             Events.OnAllFilmMetadataLoadDone();
                     }, fd.userID);
@@ -261,7 +261,7 @@ namespace BoardItems
                     else
                         fd.timestamp = sfd.timestamp;
 
-                    FirebaseStoryMakerDBManager.Instance.DownloadTexture("stories", fd.id, (tex) => {
+                    FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.stories.ToString(), fd.id, (tex) => {
                         fd.thumb = tex;
                         Events.OnFilmMetadataAdded(fd);
                     }, fd.userID);
@@ -305,7 +305,7 @@ namespace BoardItems
             else
                 fd.timestamp = sfd.timestamp;
 
-            FirebaseStoryMakerDBManager.Instance.DownloadTexture("stories", fd.id, (tex) => {
+            FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.stories.ToString(), fd.id, (tex) => {
                 fd.thumb = tex;
                 Events.OnFilmMetadataUpdated(fd);
             }, fd.userID);
@@ -424,7 +424,7 @@ namespace BoardItems
                 sfd.timestamp = fd.timestamp;
                 FirebaseStoryMakerDBManager.Instance.SaveFilmDataToServer(fd.id, sfd);
 
-                FirebaseStoryMakerDBManager.Instance.UploadTexture(fd.thumb, "stories", fd.id, fd.userID);
+                FirebaseStoryMakerDBManager.Instance.UploadTexture(fd.thumb, MetadataTypes.stories.ToString(), fd.id, fd.userID);
 
                 filmsData = filmsData.OrderByDescending(x => x.timestamp).ToList();
             }
