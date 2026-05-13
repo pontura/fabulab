@@ -1,5 +1,6 @@
 ﻿using BoardItems.BoardData;
 using Firebase.Database;
+using Firebase.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using UI;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
+using static Unity.Burst.Intrinsics.X86.Avx;
 
 namespace BoardItems
 {
@@ -191,8 +193,26 @@ namespace BoardItems
         public void OnLoadSODataFromServer(List<CharacterMetaData> sfds)
         {
             //Debug.Log("% OnLoadSODataFromServer !!");
-            foreach (CharacterMetaData sfd in sfds.OrderByDescending(x => x.timestamp).ToList())
-                metaData.Add(sfd as PropMetaData);
+            foreach (CharacterMetaData sfd in sfds.OrderByDescending(x => x.timestamp).ToList()) {
+                PropMetaData pmd = sfd as PropMetaData;
+                metaData.Add(pmd);
+                FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.so.ToString(), pmd.id, (tex) => {
+                    pmd.thumb = tex;
+                }, pmd.userID);
+
+                /* FirebaseStoryMakerDBManager.Instance.UploadTexture(sfd.thumb, MetadataTypes.so.ToString(), sfd.id, sfd.userID, () => {
+                     DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/so/" + sfd.id + "/thumb");
+                     reference.RemoveValueAsync().ContinueWithOnMainThread(task => {
+                         if (task.IsFaulted || task.IsCanceled) {
+                             Debug.Log("#Delete SO thumb FAIL");
+                             Debug.Log(task.Exception);
+                         } else {
+                             Debug.Log("#Delete SO thumb metadata/characters/" + sfd.id);
+                         }
+                     });
+                 });*/
+
+            }
             userMetaData = metaData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid);
             data = new();
             FirebaseStoryMakerDBManager.Instance.LoadUserAssetsFromServer(MetadataTypes.so.ToString(), LoadAssetsFromServer);
@@ -239,14 +259,15 @@ namespace BoardItems
                         foreach (var uid in snapshot.Child("creators").Children)
                             pmd.creators.Add(uid.Value as string);
                     }
-                    pmd.thumb = new Texture2D(1, 1);
-                    pmd.thumb.LoadImage(System.Convert.FromBase64String(snapshot.Child("thumb").Value as string));
+                    
+                    FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.so.ToString(), pmd.id, (tex) => {
+                        pmd.thumb = tex;
+                        Events.OnPropMetadataAdded(pmd);
+                    }, pmd.userID);
                     metaData.Insert(0, pmd);
 
                     if (pmd.userID == Data.Instance.userData.userDataInDatabase.uid)
-                        userMetaData.Insert(0, pmd);
-
-                    Events.OnPropMetadataAdded(pmd);
+                        userMetaData.Insert(0, pmd);                    
                 }
             }
         }
@@ -277,13 +298,14 @@ namespace BoardItems
                 pmd.timestamp = child.Child("timestamp").Value as string;
             else
                 pmd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
-            pmd.thumb = new Texture2D(1, 1);
-            pmd.thumb.LoadImage(System.Convert.FromBase64String(child.Child("thumb").Value as string));
+
+            FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.so.ToString(), pmd.id, (tex) => {
+                pmd.thumb = tex;
+                Events.OnPropMetadataUpdated(pmd);
+            }, pmd.userID);
 
             metaData = metaData.OrderByDescending(x => x.timestamp).ToList();
-            userMetaData = userMetaData.OrderByDescending(x => x.timestamp).ToList();
-
-            Events.OnPropMetadataUpdated(pmd);
+            userMetaData = userMetaData.OrderByDescending(x => x.timestamp).ToList();            
 
         }
 

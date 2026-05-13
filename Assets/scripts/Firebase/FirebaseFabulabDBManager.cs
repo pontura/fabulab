@@ -314,7 +314,16 @@ namespace Yaguar.StoryMaker.DB
                                 if (child.HasChild("creators")) {
                                     foreach (var uid in child.Child("creators").Children)
                                         fd.creators.Add(uid.Value as string);
-                                }                                
+                                }
+
+                                if (child.HasChild("thumb")) {
+                                    fd.thumb = new Texture2D(1, 1);
+                                    fd.thumb.LoadImage(System.Convert.FromBase64String(child.Child("thumb").Value as string));
+                                } /*else {
+                                    DownloadTexture("characters", fd.id, (tex) => {
+                                        fd.thumb = tex;
+                                    }, fd.userID);
+                                }*/
                                                                 
                                 metas.Add(fd);
                             }
