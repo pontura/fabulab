@@ -208,13 +208,10 @@ namespace Yaguar.StoryMaker.DB
 
         public void LoadCharacterFromServer(string characterId, System.Action<bool, string, CharacterServerData> callback, string userId=null)
         {
-            string uid = _uid;
-            if (userId != null)
-            {
-                uid = userId;
-            }
+            if (userId == null)
+                userId = Data.Instance.userData.userDataInDatabase.uid;
 
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("characters/" + uid + "/" + characterId);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("characters/" + userId + "/" + characterId);
             reference.GetValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled)
                 {

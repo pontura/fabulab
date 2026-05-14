@@ -437,6 +437,10 @@ namespace BoardItems
         {
             return userCharacters.Find(x => x.id == id);
         }
+        public bool IsMyCharacter(string id)
+        {
+            return userCharactersMetaData.Find(x => x.id == id) != null;
+        }
 
         public void SetCurrentID(string id)
         {

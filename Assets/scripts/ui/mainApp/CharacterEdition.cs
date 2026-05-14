@@ -57,7 +57,7 @@ namespace UI.MainApp
         void Delayed()
         {
             string chID = Data.Instance.charactersData.GetCurrent();
-            isMyAvatar = Data.Instance.charactersData.GetUserCharacter(chID) != null;
+            isMyAvatar = Data.Instance.charactersData.IsMyCharacter(chID);
             bool isEditingCharacter = false;
 
             print("SetTogglePreview chID: " + chID + " isMyavatar: " + isMyAvatar);
