@@ -13,6 +13,7 @@ using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
 using static BoardItems.Characters.CharacterPartsHelper;
 using static Unity.Burst.Intrinsics.X86.Avx;
+using static UnityEngine.UI.Image;
 
 namespace BoardItems
 {
@@ -593,42 +594,62 @@ namespace BoardItems
             Debug.Log("# On Preset Reseted");
             loadedPresetId = "";
         }
+        System.Action<bool, string> OnDuplicated;
         public void Duplicate(string id, System.Action<bool, string> OnDuplicated)
         {
+            this.OnDuplicated = OnDuplicated;
             print("duplicate " + id);
+            string otherUserID;
             CharacterMetaData ch = charactersMetaData.Find(x => x.id == id);
-            if(ch == null)
+            otherUserID = ch.userID;
+            if (ch == null)
             {
                 Debug.LogError("No se ha encontrado el character a duplicar");
-                OnDuplicated(false, null);
                 return;
             }
-            userCharactersMetaData.Add(ch);
-
             FirebaseStoryMakerDBManager.Instance.LoadCharacterFromServer(id, (success, key, data) => {
                 if (success)
                 {
-                    CharacterData chD = othersCharacters.Find(x => x.id == key);
-                    if (chD != null)
-                    {
-                        Debug.Log("& CharacterData != null");
-                        return;
-                    }
-                    Debug.Log("& CharacterData == null");
-                    chD = new CharacterData();
-                    chD.id = key;
-                    chD.LoadServerData(data);
-                    chD.thumb = charactersMetaData.Find(x => x.id == chD.id)?.thumb;
+                    currentCharacter = new CharacterData();
+                    currentCharacter.id = key;
+                    currentCharacter.LoadServerData(data);
+                    currentCharacter.thumb = ch.thumb;
 
-                    userCharacters.Add(chD);
-                    FirebaseStoryMakerDBManager.Instance.SaveToServer(MetadataTypes.characters.ToString(), chD.GetServerData(), OnDuplicated);
+                    FirebaseStoryMakerDBManager.Instance.SaveToServer(MetadataTypes.characters.ToString(), currentCharacter.GetServerData(), OnDuplicatedSaved); 
+
                 }
                 else
                 {
                     Debug.Log("Fail getting Character Data");
                 }
 
-            }, null);
+            }, otherUserID);
+        }
+        void OnDuplicatedSaved(bool success, string id) {
+            if (success)
+            {
+                string tstamp = DateTime.UtcNow.ToString("o");
+
+                //userCharactersMetaData.Add(new CharacterMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentCharacter.thumb, timestamp = tstamp });
+               
+
+                userCharactersMetaData = userCharactersMetaData.OrderByDescending(x => x.timestamp).ToList();
+
+                currentCharacter.id = id;
+                currentID = id;
+
+                ServerCharacterMetaData swmd = new ServerCharacterMetaData();
+
+                swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
+                swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
+                swmd.timestamp = tstamp;
+                FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.characters.ToString(), currentID, swmd);
+
+                FirebaseStoryMakerDBManager.Instance.UploadTexture(currentCharacter.thumb, MetadataTypes.characters.ToString(), currentCharacter.id, Data.Instance.userData.userDataInDatabase.uid);
+
+                // OpenCharacterDetail(currentCharacter);
+            }
+            OnDuplicated?.Invoke(success, id);
         }
     }
 

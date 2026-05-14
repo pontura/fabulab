@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 namespace BoardItems.BoardData
 {
@@ -15,6 +16,10 @@ namespace BoardItems.BoardData
     public class PropMetaData : CharacterMetaData
     {
         public SObjectData.types type;
+
+        public PropMetaData() : base() { }
+
+        public PropMetaData(CharacterMetaData other, string newUserID) : base(other, newUserID) { }
     }
 
     [Serializable]
@@ -32,13 +37,27 @@ namespace BoardItems.BoardData
         public List<string> creators;
         public string timestamp;
 
-        public Sprite GetSprite() {
-            if (thumb == null) {
+        public Sprite GetSprite()
+        {
+            if (thumb == null)
+            {
                 Debug.LogError("No hay thumb para character id: " + id);
                 return null;
             }
             return Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), Vector2.zero);
-        }       
+        }
+
+        public CharacterMetaData() { }
+
+        public CharacterMetaData(CharacterMetaData other, string newUserID)
+        {
+            id = other.id;
+            thumb = other.thumb;
+            userID = newUserID;
+            creators = other.creators;
+            creators.Add(newUserID);
+            timestamp = other.timestamp;
+        }
     }
 
     [Serializable]

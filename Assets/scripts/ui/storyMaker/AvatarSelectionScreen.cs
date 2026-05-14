@@ -1,5 +1,6 @@
 ﻿using BoardItems.BoardData;
 using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
@@ -35,6 +36,7 @@ namespace UI.MainApp.Home.User
 
         public override void OpenWork(string id)
         {
+            print("OpenWork " + id);
             SOAvatarFabulabData data = new SOAvatarFabulabData();
             data.id = id;
             data.itemName = Utils.GetUniqueDateTimeId();
@@ -61,19 +63,49 @@ namespace UI.MainApp.Home.User
         {
             allCharactersScreen.gameObject.SetActive(false);
         }
-        void DuplicateCharacter(string id)
+        string duplicateID;
+        void DuplicateCharacter(string duplicateID)
+        {
+            this.duplicateID = duplicateID;
+            Events.OnLoadingParent(null, DuplicateAction);          
+        }
+        void DuplicateAction()
         {
             Events.OnLoading(true);
-            Data.Instance.charactersData.Duplicate(id, OnDuplicated);
+            Data.Instance.charactersData.Duplicate(duplicateID, OnDuplicated);
             GetComponent<AddNew>().Show(false, null);
-          //  UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);
+            //  UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);
             Cancel();
         }
-
-        private void OnDuplicated(bool arg1, string arg2)
+        float loops;
+        private void OnDuplicated(bool success, string duplicateID)
         {
-            Events.OnLoading(false);
-            throw new NotImplementedException();
+            this.duplicateID = duplicateID;
+            if (success)
+            {
+                loops = 0;
+                LoopTillMetaReady();
+            }
+            else
+                Events.OnLoading(false);
+        }
+        private void LoopTillMetaReady()
+        {
+            loops++;
+            CharacterMetaData c =  Data.Instance.charactersData.charactersMetaData.Find(x => x.id == duplicateID);
+            if(c != null)
+            {
+                print("Duplicate open: " + duplicateID);
+                Events.OnLoading(false);
+                OpenWork(duplicateID);
+            }
+            else
+            {
+                if(loops >100) //timeOut:
+                    Events.OnLoading(false);
+                else
+                    Invoke(nameof(LoopTillMetaReady), 0.25f);
+            }
         }
     }
 
