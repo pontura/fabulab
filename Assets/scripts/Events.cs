@@ -58,6 +58,7 @@ public static class Events
     public static System.Action<UIManager.screenType> ShowScreen = delegate { };
     public static System.Action<string> DuplicateCharacter = delegate { };
     public static System.Action<string> DuplicateSO = delegate { };
+    public static System.Action<string> DuplicateSOBG = delegate { };
 
     public static System.Action OnAllFilmMetadataLoadDone = delegate { };
 

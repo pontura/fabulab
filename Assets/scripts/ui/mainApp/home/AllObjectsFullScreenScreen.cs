@@ -10,6 +10,7 @@ namespace UI.MainApp.Home.User
     {
         public ItemSelectorBtn workBtn_prefab;
         public Transform container;
+        SObjectData.types type;
 
         public void Show(bool isOn)
         {
@@ -17,6 +18,7 @@ namespace UI.MainApp.Home.User
         }
         public void Init(SObjectData.types type)
         {
+            this.type = type;
             Utils.RemoveAllChildsIn(container);
 
             List<PropMetaData> all;
@@ -44,7 +46,17 @@ namespace UI.MainApp.Home.User
         public void OpenWork(string id)
         {
             if(StoryMakerEvents.isEditing)
-                Events.DuplicateSO(id);
+            {
+                switch (type)
+                {
+                    case SObjectData.types.generic:
+                        Events.DuplicateSO(id);
+                        break;
+                    case SObjectData.types.background:
+                        Events.DuplicateSOBG(id);
+                        break;
+                }
+            }
             else
                 UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
         }

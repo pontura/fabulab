@@ -13,11 +13,11 @@ namespace UI.MainApp.Home.User
         private void Start()
         {
             Cancel();
-            Events.DuplicateSO += DuplicateSO;
+            Events.DuplicateSOBG += DuplicateSOBG;
         }
         private void OnDestroy()
         {
-            Events.DuplicateSO -= DuplicateSO;
+            Events.DuplicateSOBG -= DuplicateSOBG;
         }
 
         protected override void LoadNext()
@@ -64,11 +64,53 @@ namespace UI.MainApp.Home.User
         {
             allObjectsScreen.gameObject.SetActive(false);
         }
-        void DuplicateSO(string id)
+
+
+
+        string duplicateID;
+        void DuplicateSOBG(string duplicateID)
         {
+            print("DuplicateSO open: " + duplicateID);
+            this.duplicateID = duplicateID;
+            Events.OnLoadingParent(null, DuplicateAction);
+        }
+        void DuplicateAction()
+        {
+            Events.OnLoading(true);
+            Data.Instance.sObjectsData.Duplicate(duplicateID, OnDuplicated);
             GetComponent<AddNew>().Show(false, null);
-            UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
+            //  UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);
             Cancel();
+        }
+        float loops;
+        private void OnDuplicated(bool success, string duplicateID)
+        {
+            this.duplicateID = duplicateID;
+            if (success)
+            {
+                loops = 0;
+                LoopTillMetaReady();
+            }
+            else
+                Events.OnLoading(false);
+        }
+        private void LoopTillMetaReady()
+        {
+            loops++;
+            CharacterMetaData c = Data.Instance.sObjectsData.metaData.Find(x => x.id == duplicateID);
+            if (c != null)
+            {
+                print("Duplicate open: " + duplicateID);
+                Events.OnLoading(false);
+                OpenWork(duplicateID);
+            }
+            else
+            {
+                if (loops > 100) //timeOut:
+                    Events.OnLoading(false);
+                else
+                    Invoke(nameof(LoopTillMetaReady), 0.25f);
+            }
         }
     }
 }
