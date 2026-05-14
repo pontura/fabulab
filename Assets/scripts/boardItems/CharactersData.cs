@@ -113,8 +113,10 @@ namespace BoardItems
             }
             LoadPresetsFromServer();
         }
-        public void SaveCharacter(Texture2D tex)
+        System.Action<bool, string> OnSaved;
+        public void SaveCharacter(Texture2D tex, System.Action<bool, string> OnSaved)
         {
+            this.OnSaved = OnSaved;
             CharacterData wd;
             if (currentID == "" || currentID == null)
             {
@@ -234,7 +236,8 @@ namespace BoardItems
 
             FirebaseStoryMakerDBManager.Instance.UploadTexture(currentCharacter.thumb, MetadataTypes.characters.ToString(), currentCharacter.id, Data.Instance.userData.userDataInDatabase.uid);
 
-            OpenCharacterDetail(currentCharacter);
+           // OpenCharacterDetail(currentCharacter);
+            OnSaved?.Invoke(succes, id);
         }
 
         void OnPresetSavedToServer(bool succes, string id, string partId) {
@@ -589,6 +592,43 @@ namespace BoardItems
         {
             Debug.Log("# On Preset Reseted");
             loadedPresetId = "";
+        }
+        public void Duplicate(string id, System.Action<bool, string> OnDuplicated)
+        {
+            print("duplicate " + id);
+            CharacterMetaData ch = charactersMetaData.Find(x => x.id == id);
+            if(ch == null)
+            {
+                Debug.LogError("No se ha encontrado el character a duplicar");
+                OnDuplicated(false, null);
+                return;
+            }
+            userCharactersMetaData.Add(ch);
+
+            FirebaseStoryMakerDBManager.Instance.LoadCharacterFromServer(id, (success, key, data) => {
+                if (success)
+                {
+                    CharacterData chD = othersCharacters.Find(x => x.id == key);
+                    if (chD != null)
+                    {
+                        Debug.Log("& CharacterData != null");
+                        return;
+                    }
+                    Debug.Log("& CharacterData == null");
+                    chD = new CharacterData();
+                    chD.id = key;
+                    chD.LoadServerData(data);
+                    chD.thumb = charactersMetaData.Find(x => x.id == chD.id)?.thumb;
+
+                    userCharacters.Add(chD);
+                    FirebaseStoryMakerDBManager.Instance.SaveToServer(MetadataTypes.characters.ToString(), chD.GetServerData(), OnDuplicated);
+                }
+                else
+                {
+                    Debug.Log("Fail getting Character Data");
+                }
+
+            }, null);
         }
     }
 

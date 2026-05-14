@@ -1,6 +1,7 @@
 using BoardItems;
 using BoardItems.BoardData;
 using BoardItems.Characters;
+using System;
 using UnityEngine;
 using Yaguar.StoryMaker.DB;
 using Yaguar.StoryMaker.Editor;
@@ -221,7 +222,12 @@ namespace UI.MainApp
             if(savingPart)
                 Data.Instance.charactersData.SavePartCharacter(tex, (CharacterPartsHelper.parts)(int)UIManager.Instance.zoomManager.currentZoom);
             else
-                Data.Instance.charactersData.SaveCharacter(tex);
+                Data.Instance.charactersData.SaveCharacter(tex, OnSaved);
+        }
+
+        private void OnSaved(bool arg1, string arg2)
+        {
+            Events.OnPopupTopSignalText("Personaje guardado");
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using BoardItems.BoardData;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
@@ -8,7 +9,7 @@ namespace UI.MainApp.Home.User
     public class AvatarSelectionScreen : ItemSelectionScreen
     {
         public AllCharactersScreen allCharactersScreen;
-        [SerializeField] Scrollbar scrollbar;   
+        [SerializeField] Scrollbar scrollbar;
 
         private void Start()
         {
@@ -32,18 +33,20 @@ namespace UI.MainApp.Home.User
             scrollbar.value = 0;
         }
 
-        public override void OpenWork(string id) {
+        public override void OpenWork(string id)
+        {
             SOAvatarFabulabData data = new SOAvatarFabulabData();
             data.id = id;
             data.itemName = Utils.GetUniqueDateTimeId();
             StoryMakerEvents.AddSceneObject(data);
         }
-        public override void New() {
+        public override void New()
+        {
             GetComponent<AddNew>().Show(true, Clicked);
         }
         public void Clicked(int id)
         {
-            switch(id)
+            switch (id)
             {
                 case 0:
                     UIManager.Instance.NewCharacter();
@@ -60,12 +63,18 @@ namespace UI.MainApp.Home.User
         }
         void DuplicateCharacter(string id)
         {
+            Events.OnLoading(true);
+            Data.Instance.charactersData.Duplicate(id, OnDuplicated);
             GetComponent<AddNew>().Show(false, null);
-            UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);
+          //  UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);
             Cancel();
         }
 
-
+        private void OnDuplicated(bool arg1, string arg2)
+        {
+            Events.OnLoading(false);
+            throw new NotImplementedException();
+        }
     }
 
 }
