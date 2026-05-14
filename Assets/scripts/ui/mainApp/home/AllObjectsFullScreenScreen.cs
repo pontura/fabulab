@@ -48,6 +48,7 @@ namespace UI.MainApp.Home.User
             else
                 UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
         }
+
     }
 
 }

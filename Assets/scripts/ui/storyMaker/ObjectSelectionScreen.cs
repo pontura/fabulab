@@ -68,12 +68,7 @@ namespace UI.MainApp.Home.User
         {
             allObjectsScreen.gameObject.SetActive(false);
         }
-        void DuplicateSO(string id)
-        {
-            GetComponent<AddNew>().Show(false, null);
-            UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
-            Cancel();
-        }
+       
         float maxZ = 50;
         float minZ = -50;
         float offsetZ = 1;
@@ -132,6 +127,54 @@ namespace UI.MainApp.Home.User
             {
                 sendFront.SetIsOnWithoutNotify(false);
                 sendBack.SetIsOnWithoutNotify(true);
+            }
+        }
+
+
+
+        string duplicateID;
+        void DuplicateSO(string duplicateID)
+        {
+            print("DuplicateSO open: " + duplicateID);
+            this.duplicateID = duplicateID;
+            Events.OnLoadingParent(null, DuplicateAction);
+        }
+        void DuplicateAction()
+        {
+            Events.OnLoading(true);
+            Data.Instance.sObjectsData.Duplicate(duplicateID, OnDuplicated);
+            GetComponent<AddNew>().Show(false, null);
+            //  UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);
+            Cancel();
+        }
+        float loops;
+        private void OnDuplicated(bool success, string duplicateID)
+        {
+            this.duplicateID = duplicateID;
+            if (success)
+            {
+                loops = 0;
+                LoopTillMetaReady();
+            }
+            else
+                Events.OnLoading(false);
+        }
+        private void LoopTillMetaReady()
+        {
+            loops++;
+            CharacterMetaData c = Data.Instance.sObjectsData.metaData.Find(x => x.id == duplicateID);
+            if (c != null)
+            {
+                print("Duplicate open: " + duplicateID);
+                Events.OnLoading(false);
+                OpenWork(duplicateID);
+            }
+            else
+            {
+                if (loops > 100) //timeOut:
+                    Events.OnLoading(false);
+                else
+                    Invoke(nameof(LoopTillMetaReady), 0.25f);
             }
         }
     }

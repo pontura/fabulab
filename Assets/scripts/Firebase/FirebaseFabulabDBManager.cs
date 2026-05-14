@@ -236,12 +236,11 @@ namespace Yaguar.StoryMaker.DB
         }
 
         public void LoadAssetFromServer(string assetId, System.Action<bool, string, SObjectServerData> callback, string userId = null) {
-            string uid = _uid;
-            if (userId != null) {
-                uid = userId;
-            }
 
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("so/" + uid + "/" + assetId);
+            if (userId == null)
+                userId = Data.Instance.userData.userDataInDatabase.uid;
+
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("so/" + userId + "/" + assetId);
             reference.GetValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#LoadCharacterFromServer FAIL");

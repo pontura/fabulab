@@ -451,6 +451,73 @@ namespace BoardItems
         {
             return data;
         }
+
+
+        System.Action<bool, string> OnDuplicated;
+        PropMetaData pdata;
+        public void Duplicate(string id, System.Action<bool, string> OnDuplicated)
+        {
+            this.OnDuplicated = OnDuplicated;
+            print("duplicate SO " + id);
+            string otherUserID;
+            pdata = metaData.Find(x => x.id == id);
+            otherUserID = pdata.userID;
+            if (data == null)
+            {
+                Debug.LogError("No se ha encontrado el character a duplicar");
+                return;
+            }
+            FirebaseStoryMakerDBManager.Instance.LoadAssetFromServer(id, (success, key, d) =>
+            {
+                if (success)
+                {
+                    currentSO = new SObjectData();
+                    currentSO.id = key;
+                    currentSO.LoadServerData(d);
+                    currentSO.thumb = pdata.thumb;
+                    currentSO.type = pdata.type;
+                    Type = pdata.type;
+                    data.Add(currentSO);
+                    FirebaseStoryMakerDBManager.Instance.SaveToServer(MetadataTypes.so.ToString(), currentSO.GetServerData(), OnDuplicatedSaved);
+                }
+                else
+                {
+                    Debug.Log("Fail getting Character Data");
+                }
+
+            }, otherUserID);
+
+
+
+
+        }
+        void OnDuplicatedSaved(bool success, string id)
+        {
+            if (success)
+            {
+                string tstamp = DateTime.UtcNow.ToString("o");
+
+                metaData = metaData.OrderByDescending(x => x.timestamp).ToList();
+
+                currentSO.id = id;
+                currentID = id;
+
+                ServerPropMetaData swmd = new ServerPropMetaData();
+
+                swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
+                swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
+                swmd.timestamp = tstamp;
+                FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), currentID, swmd);
+
+                FirebaseStoryMakerDBManager.Instance.UploadTexture(pdata.thumb, MetadataTypes.characters.ToString(), id, Data.Instance.userData.userDataInDatabase.uid);
+
+                // OpenCharacterDetail(currentCharacter);
+            }
+            OnDuplicated?.Invoke(success, id);
+        }
+
+
+
     }
 
 }
