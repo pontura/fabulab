@@ -198,6 +198,11 @@ namespace BoardItems
                 metaData.Add(pmd);
                 FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.so.ToString(), pmd.id, (tex) => {
                     pmd.thumb = tex;
+                    if (pmd.userID == Data.Instance.userData.userDataInDatabase.uid) {
+                        SObjectData od = data.Find(x => x.id == pmd.id);
+                        if (od != null)
+                            od.thumb = pmd.thumb;
+                    }
                 }, pmd.userID);
 
                 /* FirebaseStoryMakerDBManager.Instance.UploadTexture(sfd.thumb, MetadataTypes.so.ToString(), sfd.id, sfd.userID, () => {

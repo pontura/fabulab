@@ -89,6 +89,8 @@ namespace BoardItems
         public void OnLoadPresetMetadataFromServer(Dictionary<string, ServerPartMetaData> spmd) {
             Debug.Log("#OnLoadPresetMetadataFromServer");
             serverPartsMetaData = spmd;
+            /*ServerPartMetaData pmd = serverPartsMetaData["-OmL_M0khjttF0xQfdzF"];
+            FirebaseStoryMakerDBManager.Instance.UploadTexture(currentCharacter.thumb, MetadataTypes.presets.ToString() + "/bodypart/" + pmd.partID, "-OmL_M0khjttF0xQfdzF", Data.Instance.userData.userDataInDatabase.uid);*/
             LoadPresetsFromServer();
         }
 
@@ -250,6 +252,8 @@ namespace BoardItems
             swmd.timestamp = tstamp;
             FirebaseStoryMakerDBManager.Instance.SaveBodypartPresetMetadataToServer(id, swmd);
 
+            //FirebaseStoryMakerDBManager.Instance.UploadTexture(currentCharacter.thumb, MetadataTypes.presets.ToString()+ "/bodypart/" + partId, id, Data.Instance.userData.userDataInDatabase.uid);
+
             OpenCharacterDetail(currentCharacter);
         }
 
@@ -281,6 +285,11 @@ namespace BoardItems
             foreach (CharacterMetaData cmd in charactersMetaData) {
                 FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.characters.ToString(), cmd.id, (tex) => {
                     cmd.thumb = tex;
+                    if(cmd.userID == Data.Instance.userData.userDataInDatabase.uid) {
+                        CharacterData chd = userCharacters.Find(x => x.id == cmd.id);
+                        if (chd != null)
+                            chd.thumb=cmd.thumb;
+                    }
                 }, cmd.userID);
             }
             userCharactersMetaData = charactersMetaData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid);
@@ -419,6 +428,9 @@ namespace BoardItems
                 SOPartData wd = new SOPartData();
                 wd.id = e.Key;
                 wd.LoadServerData(e.Value);
+                /*FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.presets.ToString()+ "/bodypart/"+ wd.items[0].part, wd.id, (tex) => {
+                    wd.thumb = tex;
+                }, Data.Instance.adminData.GetFabulabId());*/
                 wd.thumb = new Texture2D(1, 1);
                 wd.thumb.LoadImage(System.Convert.FromBase64String(serverPartsMetaData[wd.id].thumb));
                 AddPart(wd.items[0].part, wd);
