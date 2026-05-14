@@ -1,6 +1,7 @@
 using BoardItems.Characters;
 using Common.UI;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI
 {
@@ -10,7 +11,8 @@ namespace UI
         [SerializeField] Transform dragAndDropContainer;
         [SerializeField] DragAndDropUI dragAndDropUI;
         [SerializeField] TabController tabs;
-        [SerializeField] GameObject[] togglesGO;
+        [SerializeField] Button tab1;
+        [SerializeField] Button tab2;
         [SerializeField] GameObject presetsDragAndDropToggleGO;
         [SerializeField] ToggleButton snapToggle;
         [SerializeField] GameObject deleteAll;
@@ -93,9 +95,9 @@ namespace UI
             presetsSelector.SetOn(true, id);
             Events.DragAndDropActive(false);
         }
-        public void Toggle()
+        public void Clicked(bool isPreset)
         {
-            isPreset = !isPreset;
+            this.isPreset = isPreset;
 
             SetToggle();
 
@@ -106,18 +108,18 @@ namespace UI
         }
         void SetToggle()
         {
-            togglesGO[0].SetActive(false);
-            togglesGO[1].SetActive(false);
 
             if (isPreset)
             {
                 snapToggle.Show(false);
-                togglesGO[0].SetActive(true);
+                tab1.interactable = false;
+                tab2.interactable = true;
             }
             else
             {
                 snapToggle.Show(true);
-                togglesGO[1].SetActive(true);
+                tab1.interactable = true;
+                tab2.interactable = false;
             } 
         }
         

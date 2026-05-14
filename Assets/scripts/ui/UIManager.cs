@@ -187,6 +187,7 @@ namespace UI
             switch (type)
             {
                 case editingTypes.CHARACTER:
+                    Data.Instance.charactersData.SetCurrentID(id);
                     Events.OnCharacterReset();
                     Events.ShowScreen(UIManager.screenType.Creation_Character);
                     break;

@@ -1,5 +1,7 @@
 using BoardItems;
+using BoardItems.BoardData;
 using BoardItems.Characters;
+using System;
 using UnityEngine;
 using Yaguar.StoryMaker.DB;
 using Yaguar.StoryMaker.Editor;
@@ -8,12 +10,15 @@ namespace UI.MainApp
 {
     public class CharacterEdition : MainScreen
     {
+        [SerializeField] bool isMyAvatar;
         public bool isPreview;
-        [SerializeField] GameObject savePanel;
-        [SerializeField] GameObject savePartButton;
-        [SerializeField] GameObject deletePartButton;
-        [SerializeField] GameObject saveNewCharacterButton;
-        [SerializeField] GameObject saveCharacterButton;
+        [SerializeField] GameObject pictureBtn;
+        [SerializeField] GameObject bgColorsBtn;
+        //[SerializeField] GameObject savePanel;
+        //[SerializeField] GameObject savePartButton;
+        //[SerializeField] GameObject deletePartButton;
+        //[SerializeField] GameObject saveNewCharacterButton;
+        //[SerializeField] GameObject saveCharacterButton;
         [SerializeField] GameObject[] togglePreviewParts;
         [SerializeField] PresetsUI presetsUI;
         [SerializeField] PreviewUI previewUI;
@@ -27,11 +32,10 @@ namespace UI.MainApp
                 case UIManager.screenType.WorkDetail:
                     break;
                 case UIManager.screenType.Creation_Character:
-                    Events.ShowUndo(true);
                     SetChangesMade(false);
-                    SetButtons();
+                  //  SetButtons();
                     Show(true);
-                    savePanel.SetActive(false);
+                   // savePanel.SetActive(false);
                     Invoke("Delayed", 0.1f);
                     break;
                 default:
@@ -42,43 +46,68 @@ namespace UI.MainApp
 
         private void Start()
         {
-            Events.ActivateUIButtons += OnActivateUIButtons;
+           // Events.ActivateUIButtons += OnActivateUIButtons;
             Events.SetChangesMade += SetChangesMade;
         }
         public override void OnDestroyed() 
         {
-            Events.ActivateUIButtons -= OnActivateUIButtons;
+           // Events.ActivateUIButtons -= OnActivateUIButtons;
             Events.SetChangesMade -= SetChangesMade;
         }   
         void Delayed()
         {
-            bool isEditingCharacter = (Data.Instance.charactersData.GetCurrent() != "");
-            isPreview = isEditingCharacter;
+            string chID = Data.Instance.charactersData.GetCurrent();
+            isMyAvatar = Data.Instance.charactersData.IsMyCharacter(chID);
+            bool isEditingCharacter = false;
+
+            print("SetTogglePreview chID: " + chID + " isMyavatar: " + isMyAvatar);
+
+            if (chID == "" || isMyAvatar)
+                isEditingCharacter = true;
+
+            isPreview = !isEditingCharacter;
+
             if (StoryMakerEvents.isEditing)
+            {
+                Events.ShowUndo(true);
+                DoneBtn.SetActive(true);            
                 Done();
+            }
             else
+            {
                 SetTogglePreview();
+                Events.ShowUndo(false);
+            }
 
         }
         public void TogglePreview()
         {
+            if (!isMyAvatar) DoneBtn.SetActive(true); // si venias viendo un character de otro te permite guardar una copia, pero si es tu avatar te muestra el boton de guardar desde el principio.
             isPreview = !isPreview;
             SetTogglePreview();
         }
         void SetTogglePreview()
         {
+            print("SetTogglePreview isPreview: " + isPreview + " isMyAvatar: " + isMyAvatar);
             if (!isPreview)
             {
+                pictureBtn.SetActive(false);
+                bgColorsBtn.SetActive(true);
                 togglePreviewParts[0].SetActive(false);
                 togglePreviewParts[1].SetActive(true);
+                presetsUI.gameObject.SetActive(true);
                 presetsUI.Init();
                 previewUI.SetOff();
             }
             else
             {
+                DoneBtn.SetActive(isMyAvatar);
+                pictureBtn.SetActive(isMyAvatar);
+                bgColorsBtn.SetActive(isMyAvatar);
                 togglePreviewParts[0].SetActive(true);
                 togglePreviewParts[1].SetActive(false);
                 previewUI.Init();
+                presetsUI.gameObject.SetActive(false);
                 presetsUI.SetOff();
             }
         }
@@ -88,28 +117,28 @@ namespace UI.MainApp
             UIManager.Instance.hasUnsavedChanges = this.changesMade;
         }
         
-        private void OnActivateUIButtons(bool isOn)
-        {
-            DoneBtn.SetActive(isOn);
-        }
+        //private void OnActivateUIButtons(bool isOn)
+        //{
+        //    DoneBtn.SetActive(isOn);
+        //}
         public void Done()
         {
             string anim = Data.Instance.characterAnimsManager.defaultEdit.name;
             Events.OnCharacterAnim("", anim);
-            savePanel.SetActive(true);
+           // savePanel.SetActive(true);
             //UIManager.Instance.boardUI.SaveWork();
             UIManager.Instance.boardUI.toolsMenu.SetOff();
             isPreview = true;
             SetTogglePreview();
-            OnActivateUIButtons(false);
-            SetButtons();
+          //  OnActivateUIButtons(false);
+           // SetButtons();
         }
         public void SavePart()
         {
             savingPart = true;
             Events.EmptyCharacterItemsButExlude((CharacterPartsHelper.parts)(int)UIManager.Instance.zoomManager.lastZoom);
             UIManager.Instance.zoomManager.ZoomToLastPart();
-            savePanel.SetActive(false);
+         //   savePanel.SetActive(false);
             Invoke("SavePartDelayed", 1);
         }
         void SavePartDelayed()
@@ -125,53 +154,54 @@ namespace UI.MainApp
         void OnPartDeleted(string result)
         {
             Debug.Log("DeletePart: " + result);
-            Cancel();
         }
-        public void SetButtons()
-        {
-            Debug.Log("Data.Instance.charactersData.GetCurrent() SetButtons: " + Data.Instance.charactersData.GetCurrent());
-            if (Data.Instance.userData.isAdmin)
-            {
-                savePartButton.SetActive(true);
-                deletePartButton.SetActive(Data.Instance.charactersData.PresetID != "");
-
-                savePartButton.GetComponentInChildren<TMPro.TMP_Text>().text = "Save " + UIManager.Instance.zoomManager.lastZoom.ToString();
-                deletePartButton.GetComponentInChildren<TMPro.TMP_Text>().text = "Delete " + UIManager.Instance.zoomManager.lastZoom.ToString();
-            } else
-            {
-                savePartButton.SetActive(false);
-                deletePartButton.SetActive(false);
-            }
-            saveCharacterButton.SetActive(Data.Instance.charactersData.GetCurrent() != "");
-
-            saveNewCharacterButton.GetComponentInChildren<TMPro.TMP_Text>().text = "Guardar nuevo";
-        }
-        public void Save()
+        void SaveNew()
         {
             savingPart = false;
             Events.SetCharacterIdle("");
-            savePanel.SetActive(false);
-            Data.Instance.charactersData.SetCurrentID("");// Resetea si hay un character elegido.
+          //  savePanel.SetActive(false);
+            Data.Instance.charactersData.SetCurrentID("");
             Invoke("SaveWork", 0.1f);
         }
-        public void Replace()// Guarda la version editada del personaje.
+        public void OnSaveClicked()// Guarda la version editada del personaje.
         {
-            savingPart = false;
-            Events.SetCharacterIdle("");
-            savePanel.SetActive(false);
-            SaveWork();
+            if (isPreview)
+            {
+                Save();
+            }
+            else
+            {
+                TogglePreview();
+                Invoke("Save", 0.5f);
+            }
         }
-        public void Cancel()
+        void Save()
         {
-            DoneBtn.SetActive(true);
-            savePanel.SetActive(false);
+            string chID = Data.Instance.charactersData.GetCurrent();
+            CharacterData ch = Data.Instance.charactersData.GetUserCharacter(chID);
+            if (ch != null)
+            {
+                savingPart = false;
+                Events.SetCharacterIdle("");
+                //   savePanel.SetActive(false);
+                SaveWork();
+            }
+            else
+            {
+                SaveNew();
+            }
+        }
+        void SaveWork()
+        {
+            Events.OnNewBodyPartSelected(null);
+            UIManager.Instance.boardUI.screenshot.TakeShot(Vector2Int.zero, OnTakeShotDone);
         }
         public void SaveProfilePic()
         {
             print("SaveProfilePic");
             Events.OnBodyPartActive(CharacterPartsHelper.parts.HEAD);
             Events.Zoom(ZoomStates.HEAD, true);
-            savePanel.SetActive(false);
+          //  savePanel.SetActive(false);
             Invoke("SaveProfilePicDelayed", 1);
         }
         void SaveProfilePicDelayed()
@@ -183,11 +213,7 @@ namespace UI.MainApp
             string thumb = System.Convert.ToBase64String(tex.EncodeToPNG());
             FirebaseStoryMakerDBManager.Instance.SaveProfilePicture(thumb);
         }
-        void SaveWork()
-        {
-            Events.OnNewBodyPartSelected(null);
-            UIManager.Instance.boardUI.screenshot.TakeShot(Vector2Int.zero, OnTakeShotDone);
-        }
+       
         bool savingPart = false;
         public void OnTakeShotDone(Texture2D tex)
         {
@@ -196,7 +222,12 @@ namespace UI.MainApp
             if(savingPart)
                 Data.Instance.charactersData.SavePartCharacter(tex, (CharacterPartsHelper.parts)(int)UIManager.Instance.zoomManager.currentZoom);
             else
-                Data.Instance.charactersData.SaveCharacter(tex);
+                Data.Instance.charactersData.SaveCharacter(tex, OnSaved);
+        }
+
+        private void OnSaved(bool arg1, string arg2)
+        {
+            Events.OnPopupTopSignalText("Personaje guardado");
         }
     }
 

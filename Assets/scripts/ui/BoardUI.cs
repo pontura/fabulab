@@ -177,30 +177,36 @@ namespace UI
         public IEnumerator CreateGif(string id, System.Action callback)
         {
             yield return new WaitForSeconds(1);
-            CharacterData wd = Data.Instance.charactersData.SetCurrentID(id);
-            // Data.Instance.galeriasData.SetGallery(wd.galleryID);
-            OpenWork(wd);
-            items.NextStepAnims(0, captureGifFramerate);
-            Events.CaptureGif(id, callback);
+            //CharacterData wd = Data.Instance.charactersData.SetCurrentID(id);
+            //// Data.Instance.galeriasData.SetGallery(wd.galleryID);
+            //OpenWork(wd);
+            //items.NextStepAnims(0, captureGifFramerate);
+            //Events.CaptureGif(id, callback);
         }
 
         public void LoadWork(string id)
         {
             items.DeleteAll();
-            SOPartData cd;
+            
             switch (editingType)
             {
                 case editingTypes.CHARACTER:
-                    cd = Data.Instance.charactersData.SetCurrentID(id);
+                    Data.Instance.charactersData.SetCurrentID(id);
+                    CharacterData ch = Data.Instance.charactersData.GetUserCharacter(id);
+                    if (ch != null)
+                        OpenWork(ch);
+                    else
+                        LoadOthersWork(id);
                     break;
                 default:
-                    cd = Data.Instance.sObjectsData.SetCurrentID(id);
+                    SOPartData cd = Data.Instance.sObjectsData.SetCurrentID(id);
+                    if (cd != null)
+                        OpenWork(cd);
+                    else
+                        LoadOthersWork(id);
                     break;
             }
-            if (cd != null)
-                OpenWork(cd);
-            else
-                LoadOthersWork(id);
+           
         }
 
         public void LoadOthersWork(string id)

@@ -534,7 +534,7 @@ namespace BoardItems
         {
             SOPartData pd = null;
             if (itemManager is CharacterManager) {
-                pd = Data.Instance.charactersData.SetCurrentID(id);
+                pd = Data.Instance.charactersData.GetUserCharacter(id);
                 if (pd == null) {
                     Data.Instance.charactersData.LoadOthersCharacter(id, (partData) => OpenWork(itemManager,partData));
                     return;

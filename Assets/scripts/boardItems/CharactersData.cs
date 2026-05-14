@@ -13,6 +13,7 @@ using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
 using static BoardItems.Characters.CharacterPartsHelper;
 using static Unity.Burst.Intrinsics.X86.Avx;
+using static UnityEngine.UI.Image;
 
 namespace BoardItems
 {
@@ -115,8 +116,10 @@ namespace BoardItems
             }
             LoadPresetsFromServer();
         }
-        public void SaveCharacter(Texture2D tex)
+        System.Action<bool, string> OnSaved;
+        public void SaveCharacter(Texture2D tex, System.Action<bool, string> OnSaved)
         {
+            this.OnSaved = OnSaved;
             CharacterData wd;
             if (currentID == "" || currentID == null)
             {
@@ -236,7 +239,8 @@ namespace BoardItems
 
             FirebaseStoryMakerDBManager.Instance.UploadTexture(currentCharacter.thumb, MetadataTypes.characters.ToString(), currentCharacter.id, Data.Instance.userData.userDataInDatabase.uid);
 
-            OpenCharacterDetail(currentCharacter);
+           // OpenCharacterDetail(currentCharacter);
+            OnSaved?.Invoke(succes, id);
         }
 
         void OnPresetSavedToServer(bool succes, string id, string partId) {
@@ -445,19 +449,21 @@ namespace BoardItems
         {
             return userCharacters.Find(x => x.id == id);
         }
+        public bool IsMyCharacter(string id)
+        {
+            return userCharactersMetaData.Find(x => x.id == id) != null;
+        }
 
-        public CharacterData SetCurrentID(string id)
+        public void SetCurrentID(string id)
         {
             if(id == "")
             {
                 currentID = "";
-                return null;
             }
-            CharacterData chd = userCharacters.Find(x => x.id == id);
-            if(chd != null)
+            //CharacterData chd = userCharacters.Find(x => x.id == id);
+            //if(chd != null)
                 currentID = id;
             //  Debug.Log(currentID);
-            return chd;
         }
 
         public void LoadOthersCharacter(string id, System.Action<CharacterData> OnDone) {
@@ -603,6 +609,63 @@ namespace BoardItems
         {
             Debug.Log("# On Preset Reseted");
             loadedPresetId = "";
+        }
+        System.Action<bool, string> OnDuplicated;
+        public void Duplicate(string id, System.Action<bool, string> OnDuplicated)
+        {
+            this.OnDuplicated = OnDuplicated;
+            print("duplicate " + id);
+            string otherUserID;
+            CharacterMetaData ch = charactersMetaData.Find(x => x.id == id);
+            otherUserID = ch.userID;
+            if (ch == null)
+            {
+                Debug.LogError("No se ha encontrado el character a duplicar");
+                return;
+            }
+            FirebaseStoryMakerDBManager.Instance.LoadCharacterFromServer(id, (success, key, data) => {
+                if (success)
+                {
+                    currentCharacter = new CharacterData();
+                    currentCharacter.id = key;
+                    currentCharacter.LoadServerData(data);
+                    currentCharacter.thumb = ch.thumb;
+
+                    FirebaseStoryMakerDBManager.Instance.SaveToServer(MetadataTypes.characters.ToString(), currentCharacter.GetServerData(), OnDuplicatedSaved); 
+
+                }
+                else
+                {
+                    Debug.Log("Fail getting Character Data");
+                }
+
+            }, otherUserID);
+        }
+        void OnDuplicatedSaved(bool success, string id) {
+            if (success)
+            {
+                string tstamp = DateTime.UtcNow.ToString("o");
+
+                //userCharactersMetaData.Add(new CharacterMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentCharacter.thumb, timestamp = tstamp });
+               
+
+                userCharactersMetaData = userCharactersMetaData.OrderByDescending(x => x.timestamp).ToList();
+
+                currentCharacter.id = id;
+                currentID = id;
+
+                ServerCharacterMetaData swmd = new ServerCharacterMetaData();
+
+                swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
+                swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
+                swmd.timestamp = tstamp;
+                FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.characters.ToString(), currentID, swmd);
+
+                FirebaseStoryMakerDBManager.Instance.UploadTexture(currentCharacter.thumb, MetadataTypes.characters.ToString(), currentCharacter.id, Data.Instance.userData.userDataInDatabase.uid);
+
+                // OpenCharacterDetail(currentCharacter);
+            }
+            OnDuplicated?.Invoke(success, id);
         }
     }
 
