@@ -434,18 +434,16 @@ namespace BoardItems
             return userCharacters.Find(x => x.id == id);
         }
 
-        public CharacterData SetCurrentID(string id)
+        public void SetCurrentID(string id)
         {
             if(id == "")
             {
                 currentID = "";
-                return null;
             }
-            CharacterData chd = userCharacters.Find(x => x.id == id);
-            if(chd != null)
+            //CharacterData chd = userCharacters.Find(x => x.id == id);
+            //if(chd != null)
                 currentID = id;
             //  Debug.Log(currentID);
-            return chd;
         }
 
         public void LoadOthersCharacter(string id, System.Action<CharacterData> OnDone) {
