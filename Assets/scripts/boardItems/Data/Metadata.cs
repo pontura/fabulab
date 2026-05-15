@@ -74,7 +74,8 @@ namespace BoardItems.BoardData
             }
             if (!creators.Contains(uid))
             {
-                creators.Add(uid);
+                if(userID != uid)
+                    creators.Add(uid);
             }
         }
     }
