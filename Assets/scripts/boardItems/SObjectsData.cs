@@ -1,6 +1,5 @@
 ﻿using BoardItems.BoardData;
 using Firebase.Database;
-using Firebase.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,6 @@ using UI;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
-using static Unity.Burst.Intrinsics.X86.Avx;
 
 namespace BoardItems
 {
@@ -153,9 +151,9 @@ namespace BoardItems
             string tstamp = DateTime.UtcNow.ToString("o");
             if (currentSO.id == "") // is new
             {                
-                if (Data.Instance.userData.isAdmin)  
-                    metaData.Add(new PropMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentSO.thumb, type = currentSO.type, timestamp=tstamp });
-                userMetaData.Add(new PropMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentSO.thumb, type = currentSO.type, timestamp = tstamp });
+                //if (Data.Instance.userData.isAdmin)  
+                //    metaData.Add(new PropMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentSO.thumb, type = currentSO.type, timestamp=tstamp });
+                //userMetaData.Add(new PropMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentSO.thumb, type = currentSO.type, timestamp = tstamp });
 
             }
             else
@@ -174,7 +172,6 @@ namespace BoardItems
             userMetaData = userMetaData.OrderByDescending(x => x.timestamp).ToList();
 
             currentSO.id = id;
-            currentID = id;
 
             ServerPropMetaData swmd = new ServerPropMetaData();
             swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
@@ -183,7 +180,7 @@ namespace BoardItems
             swmd.timestamp = tstamp;
 
 
-            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), currentID, swmd);
+            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), currentSO.id, swmd);
 
             FirebaseStoryMakerDBManager.Instance.UploadTexture(currentSO.thumb, MetadataTypes.so.ToString(), currentSO.id, Data.Instance.userData.userDataInDatabase.uid);
 
@@ -351,6 +348,11 @@ namespace BoardItems
         {
             return currentID;
         }
+        public bool IsMyObject()
+        {
+            PropMetaData d = metaData.Find(x => x.id == currentID);
+            return d.userID == Data.Instance.userData.userDataInDatabase.uid;
+        }
         public SObjectData GetSO(string id)
         {
             return data.Find(x => x.id == id);
@@ -358,23 +360,19 @@ namespace BoardItems
 
         public SObjectData SetCurrentID(string id)
         {
+            print("current id: " + id);
             currentID = id;
             SObjectData o = data.Find(x => x.id == id);
-            if (o != null)
-                Type = o.type;
             return o;
         }
 
         public void LoadOthersObject(string id, System.Action<SObjectData> OnDone)
         {
-            currentID = "";
-            //  Debug.Log(currentID);
             if (othersData == null)
                 othersData = new List<SObjectData>();
             SObjectData chd = othersData.Find(x => x.id == id);
             if (chd != null)
             {
-                Type = chd.type;
                 OnDone(chd);
             }
             else
@@ -395,7 +393,6 @@ namespace BoardItems
                         if (chD != null)
                         {
                             Debug.Log("& othersData != null");
-                            Type = chD.type;
                             OnDone(chD);
                             return;
                         }
@@ -423,6 +420,7 @@ namespace BoardItems
 
         public void ResetCurrentID()
         {
+            Debug.Log("ResetCurrentID ");
             currentID = "";
         }
 
@@ -498,16 +496,15 @@ namespace BoardItems
                 metaData = metaData.OrderByDescending(x => x.timestamp).ToList();
 
                 currentSO.id = id;
-                currentID = id;
 
                 ServerPropMetaData swmd = new ServerPropMetaData();
-
+                swmd.type = currentSO.type;
                 swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
                 swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
                 swmd.timestamp = tstamp;
-                FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), currentID, swmd);
+                FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), currentSO.id, swmd);
 
-                FirebaseStoryMakerDBManager.Instance.UploadTexture(pdata.thumb, MetadataTypes.characters.ToString(), id, Data.Instance.userData.userDataInDatabase.uid);
+                FirebaseStoryMakerDBManager.Instance.UploadTexture(currentSO.thumb, MetadataTypes.characters.ToString(), id, Data.Instance.userData.userDataInDatabase.uid);
 
                 // OpenCharacterDetail(currentCharacter);
             }

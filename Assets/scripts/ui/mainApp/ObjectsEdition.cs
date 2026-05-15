@@ -6,11 +6,9 @@ namespace UI.MainApp
 {
     public class ObjectsEdition : MainScreen
     {
+        bool MyObject;
         [SerializeField] SceneObjectsPanel sceneObjectsPanel;
         [SerializeField] DragAndDropUI dragAndDropUI;
-        [SerializeField] GameObject savePanel;
-        [SerializeField] GameObject saveButton;
-        [SerializeField] GameObject replaceButton;
         [SerializeField] GameObject DoneBtn;
         [SerializeField] bool changesMade;
 
@@ -41,12 +39,11 @@ namespace UI.MainApp
                     UIManager.Instance.boardUI.activeBoardItem.Init();
                     SetChangesMade(false);
                     changesMade = false;
-                    SetButtons();
                     Show(true);
-                    savePanel.SetActive(false);
+                  //  savePanel.SetActive(false);
                     dragAndDropUI.SetOn(true);
                     dragAndDropUI.Init();
-                    if (StoryMakerEvents.isEditing)  Done(); // por si llegas desde la historia te manda al Save directamente.
+                    //if (StoryMakerEvents.isEditing)  Done(); // por si llegas desde la historia te manda al Save directamente.
                     break;
                 default:
                     Show(false);
@@ -55,12 +52,12 @@ namespace UI.MainApp
         }
         private void Start()
         {
-            Events.ActivateUIButtons += OnActivateUIButtons;
+          //  Events.ActivateUIButtons += OnActivateUIButtons;
             Events.SetChangesMade += SetChangesMade;
         }
         public override void OnDestroyed() 
         {
-            Events.ActivateUIButtons -= OnActivateUIButtons;
+          //  Events.ActivateUIButtons -= OnActivateUIButtons;
             Events.SetChangesMade -= SetChangesMade;
         }   
         void SetChangesMade(bool _changesMade)
@@ -69,35 +66,28 @@ namespace UI.MainApp
             UIManager.Instance.hasUnsavedChanges = this.changesMade;
         }
         
-        private void OnActivateUIButtons(bool isOn)
-        {
-            DoneBtn.SetActive(isOn);
-        }
+        //private void OnActivateUIButtons(bool isOn)
+        //{
+        //    DoneBtn.SetActive(isOn);
+        //}
         public void Done()
         {
-            savePanel.SetActive(true);
+            if (Data.Instance.sObjectsData.IsMyObject())
+                Replace();
+            else
+                Save();
+
             UIManager.Instance.boardUI.toolsMenu.SetOff();
-            OnActivateUIButtons(false);
         }
-        public void SetButtons() {
-            saveButton.SetActive(true);
-            replaceButton.SetActive(Data.Instance.sObjectsData.GetCurrent() != "");
-        }
+       
         public void Save()
         {
-            savePanel.SetActive(false);
             Data.Instance.sObjectsData.SetCurrentID("");// Resetea si hay un character elegido.
             SaveWork();
         }
         public void Replace()// Guarda la version editada del personaje.
         {
-            savePanel.SetActive(false);
-            SaveWork();
-        }
-        public void Cancel()
-        {
-            DoneBtn.SetActive(true);
-            savePanel.SetActive(false);
+            SaveWork(); 
         }        
         
         void SaveWork()
