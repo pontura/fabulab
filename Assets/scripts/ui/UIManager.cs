@@ -182,9 +182,9 @@ namespace UI
         }
         public void LoadWork(editingTypes type, string id)
         {
+            boardUI.SetEditingType(type);
             boardUI.LoadWork(id);
             if (StoryMakerEvents.isEditing) return;
-            boardUI.SetEditingType(type);
             switch (type)
             {
                 case editingTypes.CHARACTER:

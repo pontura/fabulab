@@ -25,9 +25,11 @@ namespace UI.MainApp.Home.User
             switch(type)
             {
                 case SObjectData.types.generic:
+                    Data.Instance.sObjectsData.Type = SObjectData.types.generic;
                     all = Data.Instance.sObjectsData.GetMetadataByType(SObjectData.types.generic);
                     break;
                 case SObjectData.types.background:
+                    Data.Instance.sObjectsData.Type = SObjectData.types.background;
                     all = Data.Instance.sObjectsData.GetMetadataByType(SObjectData.types.background);
                     break;
                 default:

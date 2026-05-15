@@ -634,7 +634,6 @@ namespace BoardItems
                 Events.ColorizeLegs(cascade ? "" : wd.id, characterData.legsColor);
                 Events.ColorizeEyebrows(cascade ? "" : wd.id, characterData.eyebrowsColor);
             }
-
             print("open work boardItemManager: " + boardItemManager.name + " id: " + wd.id + " cascade: " + cascade);
 
             foreach (SavedIData itemData in wd.items)

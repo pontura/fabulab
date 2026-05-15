@@ -9,10 +9,11 @@ namespace UI.MainApp.Home.User
     public class UserObjectsScreen : MonoBehaviour
     {
         public ItemSelectorBtn workBtn_prefab;
+        public Button[] buttons;
+        public SObjectData.types type;
+        public List<PropMetaData> all;
+
         public Transform container;
-        public Transform backgroundsContainer;
-        public Transform objectsContainer;
-        [SerializeField] protected TitleScrollView[] titleScrollView;
 
         protected bool firstLoad;
 
@@ -20,6 +21,11 @@ namespace UI.MainApp.Home.User
             Events.OnPropMetadataUpdated += OnPropMetadataUpdated;
             Events.OnPropMetadataAdded += OnPropMetadataAdded;
             Events.OnPropMetadataRemoved += OnPropMetadataRemoved;
+            InitTabs();
+        }
+        public virtual void InitTabs()
+        {
+            SetTabs();
         }
         protected virtual void OnDestroy() {
             Events.OnPropMetadataUpdated += OnPropMetadataUpdated;
@@ -29,27 +35,17 @@ namespace UI.MainApp.Home.User
 
         void OnPropMetadataAdded(PropMetaData fd) {
             AddPropMetadata(fd);
-            Transform t = objectsContainer;
-            if (fd.type == SObjectData.types.background)
-                t = backgroundsContainer;
-            t.GetChild(t.childCount - 1).SetAsFirstSibling();
+            container.GetChild(container.childCount - 1).SetAsFirstSibling();
         }
 
         protected void AddPropMetadata(PropMetaData fd) {
-            Debug.Log("% AddCharacterMetadata");
-            Transform t = objectsContainer;
-            if (fd.type == SObjectData.types.background)
-                t = backgroundsContainer;
-            ItemSelectorBtn go = Instantiate(workBtn_prefab, t);
+            ItemSelectorBtn go = Instantiate(workBtn_prefab, container);
             go.Init(fd);
             go.GetComponent<Button>().onClick.AddListener(() => OpenWork(fd.id));
         }
 
         void OnPropMetadataUpdated(PropMetaData fd) {
-            Transform t = objectsContainer;
-            if (fd.type == SObjectData.types.background)
-                t = backgroundsContainer;
-            ItemSelectorBtn[] itemBtns = t.GetComponentsInChildren<ItemSelectorBtn>();
+            ItemSelectorBtn[] itemBtns = container.GetComponentsInChildren<ItemSelectorBtn>();
             ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
             if (btn != null) {
                 btn.Init(fd);
@@ -58,10 +54,7 @@ namespace UI.MainApp.Home.User
         }
 
         void OnPropMetadataRemoved(PropMetaData fd) {
-            Transform t = objectsContainer;
-            if (fd.type == SObjectData.types.background)
-                t = backgroundsContainer;
-            ItemSelectorBtn[] itemBtns = t.GetComponentsInChildren<ItemSelectorBtn>();
+            ItemSelectorBtn[] itemBtns = container.GetComponentsInChildren<ItemSelectorBtn>();
             ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
             if (btn != null) {
                 Destroy(btn.gameObject);
@@ -77,38 +70,39 @@ namespace UI.MainApp.Home.User
         }
         public virtual void Init()
         {
-            Events.OnLoadingParent(transform, LoadingDone);
+            type = SObjectData.types.generic;
+            SetTabs();
+            Events.OnLoadingParent(container.parent, LoadingDone);
         }
         void LoadingDone()
         {
             Events.OnLoading(true);
 
-            Utils.RemoveAllChildsIn(backgroundsContainer);
-            Utils.RemoveAllChildsIn(objectsContainer);
+            Utils.RemoveAllChildsIn(container);
 
-            List<PropMetaData> generics = Data.Instance.sObjectsData.GetUserMetadataByType(SObjectData.types.generic);
-            List<PropMetaData> backgrounds  = Data.Instance.sObjectsData.GetUserMetadataByType(SObjectData.types.background);
-
-            AddTitle(0, "Generic Objects (" + generics.Count + ")");
-            foreach (PropMetaData cd in generics)
-            {
+            all = new List<PropMetaData>();
+            OnLoadData();
+            foreach (PropMetaData cd in all)
                 AddPropMetadata(cd);
-            }
-            AddTitle(1, "Backgrounds (" + backgrounds.Count + ")");
-            foreach (PropMetaData cd in backgrounds)
-            {
-                AddPropMetadata(cd);
-            }
 
             if (Data.Instance.sObjectsData.userMetaData.Count > 0)
                 firstLoad = true;
 
             Events.OnLoading(false);
         }
-        protected virtual void AddTitle(int id, string s)
+        public virtual void OnLoadData()
         {
-            TitleScrollView t = titleScrollView[id];
-            t.Init(s);
+            switch (type)
+            {
+                default:
+                    Data.Instance.sObjectsData.Type = SObjectData.types.generic;
+                    all = Data.Instance.sObjectsData.GetUserMetadataByType(SObjectData.types.generic);
+                    break;
+                case SObjectData.types.background:
+                    Data.Instance.sObjectsData.Type = SObjectData.types.background;
+                    all = Data.Instance.sObjectsData.GetUserMetadataByType(SObjectData.types.background);
+                    break;
+            }
         }
         public virtual void OpenWork(string id)
         {
@@ -117,8 +111,30 @@ namespace UI.MainApp.Home.User
 
         public virtual void New()
         {
-            print("New Object");
             UIManager.Instance.NewCharacter();
+        }
+        public void TabClicked(int id)
+        {
+            if(id == 0)
+                type = SObjectData.types.generic;
+            else
+                type = SObjectData.types.background;
+            SetTabs();
+            Events.OnLoadingParent(transform, LoadingDone);
+        }
+        void SetTabs()
+        {
+            switch(type)
+            {
+                case SObjectData.types.generic:
+                    buttons[0].interactable = false;
+                    buttons[1].interactable = true;
+                    break;
+                case SObjectData.types.background:
+                    buttons[0].interactable = true;
+                    buttons[1].interactable = false;
+                    break;
+            }
         }
     }
 

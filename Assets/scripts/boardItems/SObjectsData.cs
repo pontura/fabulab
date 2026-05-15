@@ -404,7 +404,6 @@ namespace BoardItems
                         chD.LoadServerData(data);
                         chD.thumb = chmd.thumb;
                         chD.type = chmd.type;
-                        Type = chmd.type;
                         othersData.Add(chD);
                         OnDone(chD);
                     }
@@ -476,7 +475,6 @@ namespace BoardItems
                     currentSO.LoadServerData(d);
                     currentSO.thumb = pdata.thumb;
                     currentSO.type = pdata.type;
-                    Type = pdata.type;
                     data.Add(currentSO);
                     FirebaseStoryMakerDBManager.Instance.SaveToServer(MetadataTypes.so.ToString(), currentSO.GetServerData(), OnDuplicatedSaved);
                 }

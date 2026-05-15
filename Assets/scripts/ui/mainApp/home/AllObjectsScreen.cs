@@ -1,6 +1,5 @@
 ﻿using BoardItems.BoardData;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
 
@@ -8,43 +7,42 @@ namespace UI.MainApp.Home.User
 {
     public class AllObjectsScreen : UserObjectsScreen
     {
-        public override void Init()
+        public override void OnLoadData()
         {
-            Events.OnLoadingParent(transform, LoadingDone);
-        } 
-        void LoadingDone()
-        { 
-            Events.OnLoading(true);
-
-            Utils.RemoveAllChildsIn(backgroundsContainer);
-            Utils.RemoveAllChildsIn(objectsContainer);
-
-            List<PropMetaData> generics = Data.Instance.sObjectsData.GetMetadataByType(SObjectData.types.generic);
-            List<PropMetaData> backgrounds  = Data.Instance.sObjectsData.GetMetadataByType(SObjectData.types.background);
-
-            AddTitle(0, "Objectos (" + generics.Count + ")");
-            foreach (PropMetaData cd in generics)
+            switch (type)
             {
-                AddPropMetadata(cd);
+                default:
+                    Data.Instance.sObjectsData.Type = SObjectData.types.generic;
+                    all = Data.Instance.sObjectsData.GetMetadataByType(SObjectData.types.generic);
+                    break;
+                case SObjectData.types.background:
+                    Data.Instance.sObjectsData.Type = SObjectData.types.background;
+                    all = Data.Instance.sObjectsData.GetMetadataByType(SObjectData.types.background);
+                    break;
             }
-            AddTitle(1, "Fondos (" + backgrounds.Count + ")");
-            foreach (PropMetaData cd in backgrounds)
-            {
-                AddPropMetadata(cd);
-            }
-
-            if (Data.Instance.sObjectsData.metaData.Count > 0)
-                firstLoad = true;
-
-            Events.OnLoading(false);
         }
-        
+        public override void InitTabs()
+        {
+            if (buttons.Length == 0)
+            {
+                foreach (Button b in buttons)
+                {
+                    b.gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+                base.InitTabs();
+            }
+        }
         public override void OpenWork(string id)
         {
             if(StoryMakerEvents.isEditing)
                 Events.DuplicateSO(id);
             else
-                UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
+            {
+                base.OpenWork(id);
+            }
         }        
     }
 
