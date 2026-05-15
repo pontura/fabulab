@@ -72,23 +72,9 @@ namespace UI.MainApp
         //}
         public void Done()
         {
-            if (Data.Instance.sObjectsData.IsMyObject())
-                Replace();
-            else
-                Save();
-
-            UIManager.Instance.boardUI.toolsMenu.SetOff();
-        }
-       
-        public void Save()
-        {
-            Data.Instance.sObjectsData.SetCurrentID("");// Resetea si hay un character elegido.
             SaveWork();
-        }
-        public void Replace()// Guarda la version editada del personaje.
-        {
-            SaveWork(); 
-        }        
+            UIManager.Instance.boardUI.toolsMenu.SetOff();
+        }       
         
         void SaveWork()
         {

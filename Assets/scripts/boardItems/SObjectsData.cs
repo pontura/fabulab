@@ -79,17 +79,16 @@ namespace BoardItems
             metaData = new List<PropMetaData>();
             FirebaseStoryMakerDBManager.Instance.LoadMetadataFromServer(MetadataTypes.so.ToString(), OnLoadSODataFromServer);
         }
-
+        string lastID = "";
         public void SaveSO(Texture2D tex)
         {
-            SObjectData wd;
-            if (currentID == "" || currentID == null)
+            lastID = currentID;
+            SObjectData wd = GetSO(currentID);
+            if (wd == null)
             {
                 wd = new SObjectData();
                 wd.id = "";
             }
-            else
-                wd = GetSO(currentID);
 
             wd.bg = Data.Instance.palettesManager.bgColorName;
             wd.type = currentType;
@@ -136,7 +135,7 @@ namespace BoardItems
             }
             currentSO = wd;
 
-            if (wd.id == "")
+            if (currentSO.id == "")
             {
                 data.Add(wd);
                 FirebaseStoryMakerDBManager.Instance.SaveToServer(MetadataTypes.so.ToString(), wd.GetServerData(), OnSavedToServer);
@@ -149,24 +148,17 @@ namespace BoardItems
         void OnSavedToServer(bool succes, string id)
         {
             string tstamp = DateTime.UtcNow.ToString("o");
-            if (currentSO.id == "") // is new
-            {                
-                //if (Data.Instance.userData.isAdmin)  
-                //    metaData.Add(new PropMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentSO.thumb, type = currentSO.type, timestamp=tstamp });
-                //userMetaData.Add(new PropMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentSO.thumb, type = currentSO.type, timestamp = tstamp });
-
-            }
-            else
-            {
-                    if (Data.Instance.userData.isAdmin) {
-                        PropMetaData md = metaData.Find(x => x.id == currentSO.id);
-                        md.thumb = currentSO.thumb;
-                        md.timestamp = tstamp;
-                    }
-                    PropMetaData umd = userMetaData.Find(x => x.id == currentSO.id);
-                    umd.thumb = currentSO.thumb;
-                    umd.timestamp = tstamp;
-            }
+            //if (currentSO.id != "")
+            //{   
+            //    if (Data.Instance.userData.isAdmin) {
+                    
+            //        md.thumb = currentSO.thumb;
+            //        md.timestamp = tstamp;
+            //    }
+            //    PropMetaData umd = userMetaData.Find(x => x.id == currentSO.id);
+            //    umd.thumb = currentSO.thumb;
+            //    umd.timestamp = tstamp;
+            //}
 
             metaData = metaData.OrderByDescending(x => x.timestamp).ToList();
             userMetaData = userMetaData.OrderByDescending(x => x.timestamp).ToList();
@@ -175,7 +167,12 @@ namespace BoardItems
 
             ServerPropMetaData swmd = new ServerPropMetaData();
             swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
-            swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
+
+            PropMetaData md = metaData.Find(x => x.id == lastID);
+            if (md != null) swmd.AddCreator(md.userID);
+
+            print("OnSavedToServer " + md + "   new id: " + id + " lastID:" + lastID);
+
             swmd.type = currentSO.type;
             swmd.timestamp = tstamp;
 
