@@ -11,10 +11,10 @@ namespace UI.MainApp
         public void Init(List<string> uids)
         {
             if (uids == null) return;
-            print("uids count: " + uids.Count);
+          //  print("uids count: " + uids.Count);
             foreach(string uid in uids)
             {
-                print("uid: " + uid);
+                //print("uid: " + uid);
                 ProfilePicture p = Instantiate(profilePicture, container);
                 p.Init(uid);
             }

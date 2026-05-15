@@ -120,7 +120,7 @@ namespace UI.MainApp.Home.User
             else
                 type = SObjectData.types.background;
             SetTabs();
-            Events.OnLoadingParent(transform, LoadingDone);
+            Events.OnLoadingParent(container.parent, LoadingDone);
         }
         void SetTabs()
         {

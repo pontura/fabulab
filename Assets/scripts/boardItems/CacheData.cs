@@ -69,7 +69,7 @@ public class CacheData : MonoBehaviour
     }
     public void GetUser(string uid, System.Action<UserData> OnReady)
     {
-        print("GET user: " + uid);
+        //print("GET user: " + uid);
         foreach (UserData u in users)
         {
             if (u.uid == uid)

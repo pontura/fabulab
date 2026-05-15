@@ -55,7 +55,6 @@ namespace BoardItems.BoardData
             thumb = other.thumb;
             userID = newUserID;
             creators = other.creators;
-            creators.Add(newUserID);
             timestamp = other.timestamp;
         }
     }
