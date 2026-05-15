@@ -472,7 +472,6 @@ namespace Yaguar.StoryMaker.DB
                         //Debug.Log(child.Key + " => " + child.Child("name").Value);
                         ServerPartMetaData spmd = new ServerPartMetaData();
                         spmd.partID = child.Child("partID").Value as string;
-                        spmd.thumb = child.Child("thumb").Value as string;
                         if (child.HasChild("timestamp"))
                             spmd.timestamp = child.Child("timestamp").Value as string;
                         else

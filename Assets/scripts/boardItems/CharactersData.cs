@@ -1,19 +1,15 @@
 ﻿using BoardItems.BoardData;
 using BoardItems.Characters;
 using Firebase.Database;
-using Firebase.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using UI;
-using UnityEditor;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
 using static BoardItems.Characters.CharacterPartsHelper;
-using static Unity.Burst.Intrinsics.X86.Avx;
-using static UnityEngine.UI.Image;
 
 namespace BoardItems
 {
@@ -89,9 +85,7 @@ namespace BoardItems
 
         public void OnLoadPresetMetadataFromServer(Dictionary<string, ServerPartMetaData> spmd) {
             Debug.Log("#OnLoadPresetMetadataFromServer");
-            serverPartsMetaData = spmd;
-            /*ServerPartMetaData pmd = serverPartsMetaData["-OmL_M0khjttF0xQfdzF"];
-            FirebaseStoryMakerDBManager.Instance.UploadTexture(currentCharacter.thumb, MetadataTypes.presets.ToString() + "/bodypart/" + pmd.partID, "-OmL_M0khjttF0xQfdzF", Data.Instance.userData.userDataInDatabase.uid);*/
+            serverPartsMetaData = spmd;            
             LoadPresetsFromServer();
         }
 
@@ -251,12 +245,12 @@ namespace BoardItems
                 return;
             }
             ServerPartMetaData swmd = new ServerPartMetaData();
-            swmd.thumb = System.Convert.ToBase64String(currentCharacter.thumb.EncodeToPNG());
+            //swmd.thumb = System.Convert.ToBase64String(currentCharacter.thumb.EncodeToPNG());
             swmd.partID = partId;
             swmd.timestamp = tstamp;
             FirebaseStoryMakerDBManager.Instance.SaveBodypartPresetMetadataToServer(id, swmd);
 
-            //FirebaseStoryMakerDBManager.Instance.UploadTexture(currentCharacter.thumb, MetadataTypes.presets.ToString()+ "/bodypart/" + partId, id, Data.Instance.userData.userDataInDatabase.uid);
+            FirebaseStoryMakerDBManager.Instance.UploadTexture(currentCharacter.thumb, MetadataTypes.presets.ToString()+ "/bodypart/" + partId, id, Data.Instance.adminData.GetFabulabId());
 
             OpenCharacterDetail(currentCharacter);
         }
@@ -432,11 +426,13 @@ namespace BoardItems
                 SOPartData wd = new SOPartData();
                 wd.id = e.Key;
                 wd.LoadServerData(e.Value);
-                /*FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.presets.ToString()+ "/bodypart/"+ wd.items[0].part, wd.id, (tex) => {
+                FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.presets.ToString()+ "/bodypart/"+ BoardItems.Characters.CharacterPartsHelper.GetServerUniquePartsId(wd.items[0].part), wd.id, (tex) => {
                     wd.thumb = tex;
-                }, Data.Instance.adminData.GetFabulabId());*/
-                wd.thumb = new Texture2D(1, 1);
-                wd.thumb.LoadImage(System.Convert.FromBase64String(serverPartsMetaData[wd.id].thumb));
+                }, Data.Instance.adminData.GetFabulabId());
+                
+                //wd.thumb = new Texture2D(1, 1);
+                //wd.thumb.LoadImage(System.Convert.FromBase64String(serverPartsMetaData[wd.id].thumb));
+                
                 AddPart(wd.items[0].part, wd);
             }
         }

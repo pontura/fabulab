@@ -82,7 +82,6 @@ namespace BoardItems.BoardData
     [Serializable]
     public class ServerPartMetaData
     {
-        public string thumb;
         public string partID;
         public List<string> creators;
         public string timestamp;
