@@ -12,6 +12,7 @@ namespace UI.MainApp
     {
         [SerializeField] bool isMyAvatar;
         public bool isPreview;
+        [SerializeField] GameObject adminSavePreset;
         [SerializeField] GameObject pictureBtn;
         [SerializeField] GameObject bgColorsBtn;
         //[SerializeField] GameObject savePanel;
@@ -56,6 +57,8 @@ namespace UI.MainApp
         }   
         void Delayed()
         {
+            adminSavePreset.SetActive( Data.Instance.userData.isAdmin );
+
             string chID = Data.Instance.charactersData.GetCurrent();
             isMyAvatar = Data.Instance.charactersData.IsMyCharacter(chID);
             bool isEditingCharacter = false;
