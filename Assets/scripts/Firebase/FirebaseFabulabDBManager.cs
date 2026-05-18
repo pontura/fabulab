@@ -855,6 +855,9 @@ namespace Yaguar.StoryMaker.DB
         }
 
         public void DownloadTexture(string folder, string fileName, System.Action<Texture2D> onComplete, string userId = null) {
+
+            onComplete(null);  return; //To-DO:
+
             string uid = _uid;
             if (userId != null) {
                 uid = userId;
