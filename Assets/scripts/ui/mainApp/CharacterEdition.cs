@@ -12,7 +12,6 @@ namespace UI.MainApp
     {
         [SerializeField] bool isMyAvatar;
         public bool isPreview;
-        [SerializeField] GameObject adminSavePreset;
         [SerializeField] GameObject pictureBtn;
         [SerializeField] GameObject bgColorsBtn;
         //[SerializeField] GameObject savePanel;
@@ -57,8 +56,6 @@ namespace UI.MainApp
         }   
         void Delayed()
         {
-            adminSavePreset.SetActive( Data.Instance.userData.isAdmin );
-
             string chID = Data.Instance.charactersData.GetCurrent();
             isMyAvatar = Data.Instance.charactersData.IsMyCharacter(chID);
             bool isEditingCharacter = false;
@@ -139,8 +136,8 @@ namespace UI.MainApp
         public void SavePart()
         {
             savingPart = true;
-            Events.EmptyCharacterItemsButExlude((CharacterPartsHelper.parts)(int)UIManager.Instance.zoomManager.lastZoom);
-            UIManager.Instance.zoomManager.ZoomToLastPart();
+            Events.EmptyCharacterItemsButExlude((CharacterPartsHelper.parts)(int)UIManager.Instance.zoomManager.currentZoom);
+            UIManager.Instance.zoomManager.Zoom(UIManager.Instance.zoomManager.currentZoom);
          //   savePanel.SetActive(false);
             Invoke("SavePartDelayed", 1);
         }

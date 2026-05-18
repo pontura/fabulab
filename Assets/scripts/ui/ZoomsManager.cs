@@ -38,6 +38,7 @@ namespace UI
         }
         public void Zoom(ZoomStates _part, bool saving = false)
         {
+            print("Zoom " + _part);
             animator.enabled = true;
             this.lastZoom = currentZoom;
             this.currentZoom = _part;

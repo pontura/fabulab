@@ -7,6 +7,7 @@ namespace UI
 {
     public class PresetsUI : MonoBehaviour
     {
+        [SerializeField] GameObject adminSavePreset;
         [SerializeField] PresetsSelector presetsSelector;
         [SerializeField] Transform dragAndDropContainer;
         [SerializeField] DragAndDropUI dragAndDropUI;
@@ -28,7 +29,8 @@ namespace UI
         {
             deleteAll.gameObject.SetActive(false);
             snapToggle.Show(false);
-            Events.ShowUndo(false);
+            Events.ShowUndo(false); 
+            adminSavePreset.SetActive(false);
         }
         string characterEditorID = "";
         public void Init()
@@ -63,6 +65,7 @@ namespace UI
             if (id > 4) id += 2; // porque las manos y los pies ocupan 2 ids:
             if(id == 9) // arms and legs
             {
+                adminSavePreset.SetActive(false);
                 isPreset = true;
                 presetsDragAndDropToggleGO.SetActive(false);
                 Events.Zoom(0, false);
@@ -71,6 +74,8 @@ namespace UI
             }
             else
             {
+                if(Data.Instance.userData.isAdmin)
+                    adminSavePreset.SetActive(true);
                 ZoomStates part = (ZoomStates)id;
                 Events.OnBodyPartActive((CharacterPartsHelper.parts) id);
                 Events.Zoom(part, false);
