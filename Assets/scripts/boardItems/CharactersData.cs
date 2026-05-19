@@ -280,7 +280,9 @@ namespace BoardItems
                 }
                 count++;
             }*/
-            foreach (CharacterMetaData cmd in charactersMetaData) {
+
+
+            /*foreach (CharacterMetaData cmd in charactersMetaData) {
                 FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.characters.ToString(), cmd.id, (tex) => {
                     cmd.thumb = tex;
                     if(cmd.userID == Data.Instance.userData.userDataInDatabase.uid) {
@@ -289,7 +291,8 @@ namespace BoardItems
                             chd.thumb=cmd.thumb;
                     }
                 }, cmd.userID);
-            }
+            }*/
+
             userCharactersMetaData = charactersMetaData.FindAll(x => x.userID == Data.Instance.userData.userDataInDatabase.uid);
             userCharacters = new();
             FirebaseStoryMakerDBManager.Instance.LoadUserAssetsFromServer(MetadataTypes.characters.ToString(), LoadCharactersFromServer);
@@ -426,9 +429,10 @@ namespace BoardItems
                 SOPartData wd = new SOPartData();
                 wd.id = e.Key;
                 wd.LoadServerData(e.Value);
+                /*
                 FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.presets.ToString()+ "/bodypart/"+ BoardItems.Characters.CharacterPartsHelper.GetServerUniquePartsId(wd.items[0].part), wd.id, (tex) => {
                     wd.thumb = tex;
-                }, Data.Instance.adminData.GetFabulabId());
+                }, Data.Instance.adminData.GetFabulabId());*/
                 
                 //wd.thumb = new Texture2D(1, 1);
                 //wd.thumb.LoadImage(System.Convert.FromBase64String(serverPartsMetaData[wd.id].thumb));

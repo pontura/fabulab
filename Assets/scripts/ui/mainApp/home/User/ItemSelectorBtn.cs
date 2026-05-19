@@ -25,5 +25,9 @@ namespace UI.MainApp.Home.User
             thumb.sprite = sprite;
             Id = id;
         }
+
+        public void SetSprite(Texture2D tex) {
+            thumb.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
+        }
     }
 }

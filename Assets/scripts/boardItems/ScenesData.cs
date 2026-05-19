@@ -184,12 +184,12 @@ namespace BoardItems
                             Events.OnAllFilmMetadataLoadDone();
                     }, "stories", fd.id, fd.userID);*/
 
-                    FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.stories.ToString(), fd.id, (tex) => {
+                    /*FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.stories.ToString(), fd.id, (tex) => {
                         fd.thumb = tex;
                         count++;
                         if(count>= sfds.Count)
                             Events.OnAllFilmMetadataLoadDone();
-                    }, fd.userID);
+                    }, fd.userID);*/
 
                     //fd.thumb = new Texture2D(1, 1);
                     //fd.thumb.LoadImage(System.Convert.FromBase64String(e.Value.thumb));
@@ -201,9 +201,10 @@ namespace BoardItems
                     filmsData.Add(fd);
                 }
             }
+            Events.OnAllFilmMetadataLoadDone();
             //Events.OnUpdateFilmIcon();
 
-        }        
+        }
 
         public void OnAddFilmDataFromServer(Dictionary<string, ServerFilmData> usfds, int pageId) {
             if (usfds != null) {

@@ -1,13 +1,17 @@
 ﻿using BoardItems;
 using UnityEngine;
 using UnityEngine.UI;
+using Yaguar.StoryMaker.DB;
 using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
 {
     public class AllStoriesScreen : UserStoriesScreen
-    {        
-        
+    {
+
+        bool firstImageCache;
+        int count;
+
         protected override void LoadNext()
         {
             Debug.Log("% AllStoriesScreen LoadNext");
@@ -16,16 +20,15 @@ namespace UI.MainApp.Home.User
                 AddFilmMetadata(cd);
             }
 
-            if (Data.Instance.scenesData.filmsData.Count > 0) {
-                firstLoad = true;
-                Events.OnLoading(false);
-            }
+            scrollRect.onValueChanged.AddListener(OnScrollChanged);
         }
 
         protected override void AddFilmMetadata(FilmDataFabulab fd) {
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-            go.Init(fd.id, fd.GetSprite());
+            go.Init(fd.id, null);
             go.GetComponent<ItemSelectorStory>().SetContent(fd, this, false);
+            count++;
+            Debug.Log("$ Thumbs Count: " + count);
         }
 
         string id;
@@ -48,6 +51,25 @@ namespace UI.MainApp.Home.User
             StoryMakerEvents.EnableInputManager(false);
         }
 
+        protected override void LoadImage(int index, ItemSelectorBtn isb) {
+            FilmDataFabulab fd = Data.Instance.scenesData.filmsData.Find(x => x.id == isb.Id);
+            if (fd!=null) {
+                downloading.Add(index);
+                Debug.Log($"$ DownloadTexture index: {index} Id: {fd.id}");
+                FirebaseStoryMakerDBManager.Instance.DownloadTexture(BoardItems.BoardData.MetadataTypes.stories.ToString(), fd.id, (tex) => {
+                    downloading.Remove(index);
+                    isb.SetSprite(tex);
+                    imageCache[index] = tex;
+                    Debug.Log($"ImageCache: {imageCache.Count}");
+                    if (!firstImageCache && imageCache.Count >= (visibleRows*itemsPerRows)) {
+                        firstImageCache = true;
+                        Events.OnLoading(false);
+                    }
+                }, fd.userID);
+            } else {
+                Debug.LogError("Couldn´t find Film Metadata with ID " + isb.Id);
+            }            
+        }
     }
 
 }

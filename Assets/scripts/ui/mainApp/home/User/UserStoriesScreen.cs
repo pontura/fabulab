@@ -1,9 +1,14 @@
 ﻿using BoardItems;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.WSA;
 using Yaguar.StoryMaker.DB;
 using Yaguar.StoryMaker.Editor;
+using static UnityEditor.PlayerSettings;
 
 namespace UI.MainApp.Home.User
 {
@@ -12,13 +17,25 @@ namespace UI.MainApp.Home.User
         public ItemSelectorBtn workBtn_prefab;
         public Transform worksContainer;
 
+        [SerializeField] protected ScrollRect scrollRect;
+        [SerializeField] protected int itemsPerRows;
+        [SerializeField] protected int visibleRows = 5;
+        [SerializeField] protected int cacheSize = 15;
+        [SerializeField] protected int cacheExtraItemsCount = 5;
+        protected Dictionary<int, Texture2D> imageCache;
+        protected HashSet<int> downloading = new HashSet<int>();
+
         protected int artID = 0;
         protected bool firstLoad;
+
+        
 
         protected virtual void Start() {
             Events.OnFilmMetadataUpdated += OnFilmMetadataUpdated;
             Events.OnFilmMetadataAdded += OnFilmMetadataAdded;
             Events.OnFilmMetadataRemoved += OnFilmMetadataRemoved;
+
+            imageCache = new Dictionary<int, Texture2D>();
         }
         protected virtual void OnDestroy() {
             Events.OnFilmMetadataUpdated -= OnFilmMetadataUpdated;
@@ -60,25 +77,30 @@ namespace UI.MainApp.Home.User
         }
 
         public void Init() {
-            Events.OnLoadingParent(transform, LoadNext);
-            artID = 0;
+            Debug.Log("$ Init: " + firstLoad);
+            if(Data.Instance.scenesData.filmsData.Count > 0) {
+                firstLoad = true;
+                Events.OnLoadingParent(transform, LoadNext);
+                artID = 0;
 
-            foreach (Transform child in worksContainer) {
-                if (child.tag != "Persistent")
-                    Destroy(child.gameObject);
+                foreach (Transform child in worksContainer) {
+                    if (child.tag != "Persistent")
+                        Destroy(child.gameObject);
+                }
             }
         }        
         
         protected virtual void LoadNext()
         {
-            foreach(FilmDataFabulab cd in Data.Instance.scenesData.userFilmsData)
+            Debug.Log("$ LoadNext ");
+            foreach (FilmDataFabulab cd in Data.Instance.scenesData.userFilmsData)
             {
                 AddFilmMetadata(cd);                
             }
-            if (Data.Instance.scenesData.userFilmsData.Count > 0) {
-                firstLoad = true;
-                Events.OnLoading(false);
-            }
+            
+            SetCurrentScrollIndex(scrollRect.normalizedPosition);
+            Events.OnLoading(false);
+            
         }
 
         protected virtual void AddFilmMetadata(FilmDataFabulab fd) {
@@ -125,6 +147,67 @@ namespace UI.MainApp.Home.User
             Data.Instance.scenesData.RemoveFD(filmId);
             Events.OnFilmMetadataRemoved(filmId);
         }
+
+        protected void OnScrollChanged(Vector2 pos) {
+            // Calcular el índice actual visible según posición del scroll
+            SetCurrentScrollIndex(pos);
+        }
+
+        void SetCurrentScrollIndex(Vector2 pos) {
+            int currentIndex = CalculateCurrentIndex(pos);
+            UpdateCacheOnScroll(currentIndex);
+        }
+
+        int CalculateCurrentIndex(Vector2 pos) {
+            // Ejemplo simple para scroll horizontal:
+            Debug.Log("$ " + pos);
+            float normalizedPos = 1f - pos.y; // 0 = inicio, 1 = final
+            Debug.Log($"$ {normalizedPos} * ({worksContainer.childCount}  - ({visibleRows} * {itemsPerRows}))");
+            int currentIndex = Mathf.FloorToInt(normalizedPos * (worksContainer.childCount - (visibleRows * itemsPerRows)));
+            return Mathf.Clamp(currentIndex, 0, (worksContainer.childCount - (visibleRows * itemsPerRows)));
+        }
+
+        void UpdateCacheOnScroll(int currentIndex) {
+            
+
+            // Calcular rango simétrico: 5 antes + visibles + 5 después
+            int startIndex = Mathf.Max(0, currentIndex - cacheExtraItemsCount);
+            int endIndex = Mathf.Min(worksContainer.childCount - 1, currentIndex + (visibleRows * itemsPerRows) - 1 + cacheExtraItemsCount);
+
+            Debug.Log($"$ startIndex: {startIndex} endIndex: {endIndex}");
+
+            // Eliminar las que ya no están en rango
+            var keysToRemove = imageCache.Keys
+                .Where(k => k < startIndex || k > endIndex)
+                .ToList();
+
+            foreach (var key in keysToRemove) {
+                Destroy(imageCache[key]);
+                imageCache.Remove(key);
+            }
+
+            // Cargar nuevas imágenes en el rango
+            for (int i = startIndex; i <= endIndex; i++) {
+                if (!imageCache.ContainsKey(i) && !downloading.Contains(i)) {
+                    ItemSelectorBtn isb = worksContainer.GetChild(i).GetComponent<ItemSelectorBtn>();
+                    if (isb != null) {
+                        LoadImage(i, isb);
+                    } else {
+                        Debug.LogError("Couldn´t find ItemSelectorBtn with index " + i);
+                    }
+                }
+            }
+        }
+
+        protected virtual void LoadImage(int index, ItemSelectorBtn isb) {
+            downloading.Add(index);
+            FirebaseStoryMakerDBManager.Instance.DownloadTexture(BoardItems.BoardData.MetadataTypes.stories.ToString(), isb.Id, (tex) => {
+                downloading.Remove(index);
+                isb.SetSprite(tex);
+                imageCache[index] = tex;
+            });
+        }
+
     }
 
 }

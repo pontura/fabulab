@@ -190,6 +190,7 @@ namespace BoardItems
             foreach (CharacterMetaData sfd in sfds.OrderByDescending(x => x.timestamp).ToList()) {
                 PropMetaData pmd = sfd as PropMetaData;
                 metaData.Add(pmd);
+                /*
                 FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.so.ToString(), pmd.id, (tex) => {
                     pmd.thumb = tex;
                     if (pmd.userID == Data.Instance.userData.userDataInDatabase.uid) {
@@ -197,7 +198,7 @@ namespace BoardItems
                         if (od != null)
                             od.thumb = pmd.thumb;
                     }
-                }, pmd.userID);
+                }, pmd.userID);*/
 
                 /* FirebaseStoryMakerDBManager.Instance.UploadTexture(sfd.thumb, MetadataTypes.so.ToString(), sfd.id, sfd.userID, () => {
                      DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/so/" + sfd.id + "/thumb");
