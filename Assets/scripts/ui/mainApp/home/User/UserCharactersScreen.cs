@@ -28,7 +28,10 @@ namespace UI.MainApp.Home.User
         {
             gameObject.SetActive(isOn);
             if (isOn && !firstLoad) {
-                Init();
+                Events.OnLoadingParent(transform, () => {
+                    Events.OnLoading(true);
+                    Data.Instance.charactersData.LoadCharacterMetadataFromServer(LoadingDone);
+                });                
             }
         }
 
@@ -63,10 +66,12 @@ namespace UI.MainApp.Home.User
 
         public void Init()
         {
-            Events.OnLoadingParent(transform, LoadingDone);
+            if(!firstLoad)
+                Events.OnLoadingParent(transform, LoadingDone);
         }
-        void LoadingDone()
+        protected void LoadingDone()
         {
+            Debug.Log("$ LoadingDone");
             Events.OnLoading(true);
             artID = 0;
 

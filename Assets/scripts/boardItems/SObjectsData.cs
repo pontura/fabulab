@@ -68,13 +68,15 @@ namespace BoardItems
             if (Data.Instance.userData.IsLogged())
             {
                 CancelInvoke();
-                LoadSOMetadataFromServer();
+                //LoadSOMetadataFromServer();
             }
             else
                 Invoke("OnTokenUpdated", 1);
         }
-        void LoadSOMetadataFromServer()
-        {
+
+        System.Action OnMetadataLoaded;
+        public void LoadSOMetadataFromServer(System.Action onDone) {
+            OnMetadataLoaded = onDone;
             Debug.Log("#Load SO MetadataFromServer");
             metaData = new List<PropMetaData>();
             FirebaseStoryMakerDBManager.Instance.LoadMetadataFromServer(MetadataTypes.so.ToString(), OnLoadSODataFromServer);
@@ -187,15 +189,22 @@ namespace BoardItems
         public void OnLoadSODataFromServer(List<CharacterMetaData> sfds)
         {
             //Debug.Log("% OnLoadSODataFromServer !!");
+            int count = 0;
             foreach (CharacterMetaData sfd in sfds.OrderByDescending(x => x.timestamp).ToList()) {
                 PropMetaData pmd = sfd as PropMetaData;
                 metaData.Add(pmd);
                 FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.so.ToString(), pmd.id, (tex) => {
                     pmd.thumb = tex;
+                    count++;
                     if (pmd.userID == Data.Instance.userData.userDataInDatabase.uid) {
                         SObjectData od = data.Find(x => x.id == pmd.id);
                         if (od != null)
-                            od.thumb = pmd.thumb;
+                            od.thumb = pmd.thumb;                        
+                    }
+                    Debug.Log($"count: {count} charactersMetaData Count: {sfds.Count}");
+                    if (count >= sfds.Count) {
+                        if (OnMetadataLoaded != null)
+                            OnMetadataLoaded();
                     }
                 }, pmd.userID);
 
@@ -220,7 +229,7 @@ namespace BoardItems
             var partMetadata = FirebaseDatabase.DefaultInstance.GetReference("metadata/so/");
             partMetadata.ChildAdded += OnPropAdded;
             partMetadata.ChildChanged += OnPropChanged;
-            partMetadata.ChildRemoved += OnPropRemoved;
+            partMetadata.ChildRemoved += OnPropRemoved;            
         }
 
         void OnPropAdded(object sender, ChildChangedEventArgs args) {
