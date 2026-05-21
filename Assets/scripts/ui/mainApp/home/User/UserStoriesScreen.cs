@@ -28,7 +28,8 @@ namespace UI.MainApp.Home.User
         protected int artID = 0;
         protected bool firstLoad;
 
-        
+        protected bool firstImageCache;
+        protected int count;
 
         protected virtual void Start() {
             Events.OnFilmMetadataUpdated += OnFilmMetadataUpdated;
@@ -200,12 +201,23 @@ namespace UI.MainApp.Home.User
         }
 
         protected virtual void LoadImage(int index, ItemSelectorBtn isb) {
-            downloading.Add(index);
-            FirebaseStoryMakerDBManager.Instance.DownloadTexture(BoardItems.BoardData.MetadataTypes.stories.ToString(), isb.Id, (tex) => {
-                downloading.Remove(index);
-                isb.SetSprite(tex);
-                imageCache[index] = tex;
-            });
+            FilmDataFabulab fd = Data.Instance.scenesData.filmsData.Find(x => x.id == isb.Id);
+            if (fd != null) {
+                downloading.Add(index);
+                Debug.Log($"$ DownloadTexture index: {index} Id: {fd.id}");
+                Data.Instance.cacheData.LoadImage(BoardItems.BoardData.MetadataTypes.stories.ToString(), fd.id, (tex) => {
+                    downloading.Remove(index);
+                    isb.SetSprite(tex);
+                    imageCache[index] = tex;
+                    Debug.Log($"ImageCache: {imageCache.Count}");
+                    if (!firstImageCache && imageCache.Count >= (visibleRows * itemsPerRows)) {
+                        firstImageCache = true;
+                        Events.OnLoading(false);
+                    }
+                }, fd.timestamp, fd.userID);
+            } else {
+                Debug.LogError("Couldn´t find Film Metadata with ID " + isb.Id);
+            }
         }
 
     }

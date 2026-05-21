@@ -7,10 +7,7 @@ using Yaguar.StoryMaker.Editor;
 namespace UI.MainApp.Home.User
 {
     public class AllStoriesScreen : UserStoriesScreen
-    {
-
-        bool firstImageCache;
-        int count;
+    {       
 
         protected override void LoadNext()
         {
@@ -49,27 +46,6 @@ namespace UI.MainApp.Home.User
         void SetStoryEditionState() {
             StoryMakerEvents.EnableStoryEdition(false);
             StoryMakerEvents.EnableInputManager(false);
-        }
-
-        protected override void LoadImage(int index, ItemSelectorBtn isb) {
-            FilmDataFabulab fd = Data.Instance.scenesData.filmsData.Find(x => x.id == isb.Id);
-            if (fd!=null) {
-                downloading.Add(index);
-                Debug.Log($"$ DownloadTexture index: {index} Id: {fd.id}");
-                FirebaseStoryMakerDBManager.Instance.DownloadTexture(BoardItems.BoardData.MetadataTypes.stories.ToString(), fd.id, (tex) => {
-                    downloading.Remove(index);
-                    isb.SetSprite(tex);
-                    imageCache[index] = tex;
-                    Debug.Log($"ImageCache: {imageCache.Count}");
-                    if (!firstImageCache && imageCache.Count >= (visibleRows*itemsPerRows)) {
-                        firstImageCache = true;
-                        Events.OnLoading(false);
-                    }
-                }, fd.userID);
-            } else {
-                Debug.LogError("Couldn´t find Film Metadata with ID " + isb.Id);
-            }            
-        }
+        }        
     }
-
 }

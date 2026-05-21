@@ -854,7 +854,7 @@ namespace Yaguar.StoryMaker.DB
             //return texture;
         }
 
-        public void DownloadTexture(string folder, string fileName, System.Action<Texture2D> onComplete, string userId = null) {
+        public void DownloadTexture(string folder, string fileName, System.Action<Texture2D> onComplete, string serverTimestamp = null, string userId = null) {
             string uid = _uid;
             if (userId != null) {
                 uid = userId;
@@ -877,9 +877,9 @@ namespace Yaguar.StoryMaker.DB
                          byte[] fileContents = task.Result;
                          Texture2D texture = new Texture2D(2, 2);
                          texture.LoadImage(fileContents);
-
                          Debug.Log("Imagen descargada correctamente");
                          onComplete?.Invoke(texture);
+                         Data.Instance.cacheData.SaveImageCache(folder, fileName, fileContents,serverTimestamp);
                      } catch (Exception ex) {
                          Debug.LogError($"Error en callback: {ex}");
                      }

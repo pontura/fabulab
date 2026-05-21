@@ -342,7 +342,7 @@ namespace BoardItems
                     FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.characters.ToString(), cmd.id, (tex) => {
                         cmd.thumb = tex;
                         Events.OnCharacterMetadataAdded(cmd);
-                    }, cmd.userID);
+                    }, userId:cmd.userID);
                     charactersMetaData.Insert(0, cmd);
 
                     if (cmd.userID == Data.Instance.userData.userDataInDatabase.uid)

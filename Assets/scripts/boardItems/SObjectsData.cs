@@ -263,7 +263,7 @@ namespace BoardItems
                     FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.so.ToString(), pmd.id, (tex) => {
                         pmd.thumb = tex;
                         Events.OnPropMetadataAdded(pmd);
-                    }, pmd.userID);
+                    }, userId:pmd.userID);
                     metaData.Insert(0, pmd);
 
                     if (pmd.userID == Data.Instance.userData.userDataInDatabase.uid)
@@ -302,7 +302,7 @@ namespace BoardItems
             FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.so.ToString(), pmd.id, (tex) => {
                 pmd.thumb = tex;
                 Events.OnPropMetadataUpdated(pmd);
-            }, pmd.userID);
+            }, userId:pmd.userID);
 
             metaData = metaData.OrderByDescending(x => x.timestamp).ToList();
             userMetaData = userMetaData.OrderByDescending(x => x.timestamp).ToList();            
