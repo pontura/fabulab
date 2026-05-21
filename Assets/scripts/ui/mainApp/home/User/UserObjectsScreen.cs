@@ -65,19 +65,14 @@ namespace UI.MainApp.Home.User
         {
             gameObject.SetActive(isOn);
             if (isOn && !firstLoad) {
-                Events.OnLoadingParent(container.parent, () => {
-                    Events.OnLoading(true);
-                    Data.Instance.sObjectsData.LoadSOMetadataFromServer(Init);
-                });                
+                Init();
             }
         }
         public virtual void Init()
         {
-            if (firstLoad)
-                return;
             type = SObjectData.types.generic;
             SetTabs();
-            LoadingDone();
+            Events.OnLoadingParent(container.parent, LoadingDone);
         }
         void LoadingDone()
         {
@@ -90,7 +85,7 @@ namespace UI.MainApp.Home.User
             foreach (PropMetaData cd in all)
                 AddPropMetadata(cd);
 
-            if (Data.Instance.sObjectsData.metaData.Count > 0)
+            if (Data.Instance.sObjectsData.userMetaData.Count > 0)
                 firstLoad = true;
 
             Events.OnLoading(false);

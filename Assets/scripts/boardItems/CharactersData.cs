@@ -63,15 +63,11 @@ namespace BoardItems
             Debug.Log("#OnTokenUpdated");
             if (Data.Instance.userData.IsLogged()) {
                 CancelInvoke();
-                LoadPartMetadataFromServer();
-                //LoadCharacterMetadataFromServer();                
+                LoadCharacterMetadataFromServer();                
             } else
                 Invoke("OnTokenUpdated", 1);
         }
-
-        System.Action OnMetadataLoaded;
-        public void LoadCharacterMetadataFromServer(System.Action onDone) {
-            OnMetadataLoaded = onDone;
+        void LoadCharacterMetadataFromServer() {
             Debug.Log("#LoadUserCharacterMetadataFromServer");
             //if (Data.Instance.userData.IsLogged()) {
                 Debug.Log("#is Logged");
@@ -263,9 +259,9 @@ namespace BoardItems
         {
             UIManager.Instance.ShowWorkDetail(wd);            
         }
-
+      
         public void OnLoadCharacterDataFromServer(List<CharacterMetaData> sfds)
-        {
+        {            
             charactersMetaData = sfds.OrderByDescending(x => x.timestamp).ToList();
             /*int count = 0;
             foreach (CharacterMetaData uc in charactersMetaData) {
@@ -284,20 +280,13 @@ namespace BoardItems
                 }
                 count++;
             }*/
-            int count = 0;
             foreach (CharacterMetaData cmd in charactersMetaData) {
                 FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.characters.ToString(), cmd.id, (tex) => {
                     cmd.thumb = tex;
-                    count++;
-                    if (cmd.userID == Data.Instance.userData.userDataInDatabase.uid) {
+                    if(cmd.userID == Data.Instance.userData.userDataInDatabase.uid) {
                         CharacterData chd = userCharacters.Find(x => x.id == cmd.id);
                         if (chd != null)
-                            chd.thumb = cmd.thumb;                        
-                    }
-                    Debug.Log($"count: {count} charactersMetaData Count: {charactersMetaData.Count}");
-                    if (count >= charactersMetaData.Count) {
-                        if (OnMetadataLoaded != null)
-                            OnMetadataLoaded();
+                            chd.thumb=cmd.thumb;
                     }
                 }, cmd.userID);
             }
@@ -309,7 +298,7 @@ namespace BoardItems
             var charactersMetadata = FirebaseDatabase.DefaultInstance.GetReference("metadata/characters/");
             charactersMetadata.ChildAdded += OnCharacterAdded;
             charactersMetadata.ChildChanged += OnCharacterChanged;
-            charactersMetadata.ChildRemoved += OnCharacterRemoved;            
+            charactersMetadata.ChildRemoved += OnCharacterRemoved;
         }
 
         void OnCharacterAdded(object sender, ChildChangedEventArgs args) {
@@ -428,6 +417,7 @@ namespace BoardItems
                 wd.thumb = userCharactersMetaData.Find(x => x.id == wd.id)?.thumb;
                 userCharacters.Add(wd);
             }
+            LoadPartMetadataFromServer();
         }
 
         void LoadBodyPartsFromServer(Dictionary<string, SOPartServerData> data) {
