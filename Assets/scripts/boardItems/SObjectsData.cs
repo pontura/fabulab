@@ -55,11 +55,18 @@ namespace BoardItems
         private void Start()
         {
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
+            Events.OnPropReset += OnPropReset;
         }
 
         private void OnDestroy()
         {
             FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
+            Events.OnPropReset -= OnPropReset;
+        }
+
+        void OnPropReset() {
+            Debug.Log("# OnProp");
+            currentID = "";
         }
 
         void OnTokenUpdated()
