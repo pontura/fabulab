@@ -51,6 +51,7 @@ public static class Events
     public static System.Action<CharacterPartsHelper.parts> OnBodyPartActive = delegate { };
     public static System.Action<ZoomStates, bool> Zoom = delegate { };
 
+    public static System.Action OnPropReset = delegate { };
     public static System.Action OnCharacterReset = delegate { }; // si hay un preset abierto lo resetea:
     public static System.Action OnPresetReset = delegate { }; // si hay un preset abierto lo resetea:
     public static System.Action<string> OnPresetLoaded = delegate { };

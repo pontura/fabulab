@@ -171,6 +171,7 @@ namespace UI
             Data.Instance.sObjectsData.SetType(type);
             boardUI.SetEditingType(editingTypes.OBJECT);
             Events.OnCharacterReset();
+            Events.OnPropReset();
             Events.OnPresetReset();
             GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(1);
             Events.InitGallery(gd, true, InitObjectsScreen);
