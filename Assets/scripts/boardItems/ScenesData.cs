@@ -161,7 +161,7 @@ namespace BoardItems
         public void OnAddFilmDataFromServer(List<FilmDataFabulab> filmsData, Dictionary<string, ServerFilmData> sfds) {
             if (sfds == null) return;
 
-            int count = 0;
+            //int count = 0;
             foreach (KeyValuePair<string, ServerFilmData> e in sfds.OrderByDescending(x => x.Value.timestamp).ToList()) {
                 if (filmsData.Find(x => x.id == e.Key) == null) {
                     FilmDataFabulab fd = new FilmDataFabulab();

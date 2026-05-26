@@ -1,37 +1,24 @@
-﻿using BoardItems;
-using BoardItems.BoardData;
+﻿using BoardItems.BoardData;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI.MainApp.Home.User
 {
-    public class UserCharactersScreen : MonoBehaviour
+    public class UserCharactersScreen : ThumbsScreen
     {
-        public ItemSelectorBtn workBtn_prefab;
-        public Transform worksContainer;
-
-        protected int artID = 0;
-        protected bool firstLoad;
-
-        protected virtual void Start() {
+        protected override void Start() {
+            base.Start();
             Events.OnCharacterMetadataUpdated += OnCharacterMetadataUpdated;
             Events.OnCharacterMetadataAdded += OnCharacterMetadataAdded;
             Events.OnCharacterMetadataRemoved += OnCharacterMetadataRemoved;
         }
         protected virtual void OnDestroy() {
-            Events.OnCharacterMetadataUpdated += OnCharacterMetadataUpdated;
+            Events.OnCharacterMetadataUpdated -= OnCharacterMetadataUpdated;
             Events.OnCharacterMetadataAdded -= OnCharacterMetadataAdded;
-            Events.OnCharacterMetadataRemoved += OnCharacterMetadataRemoved;
+            Events.OnCharacterMetadataRemoved -= OnCharacterMetadataRemoved;
         }
-        public void Show(bool isOn)
-        {
-            gameObject.SetActive(isOn);
-            if (isOn && !firstLoad) {
-                Init();
-            }
-        }
-
+        
         void OnCharacterMetadataAdded(CharacterMetaData fd) {
             AddCharacterMetadata(fd);
             worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
@@ -61,14 +48,13 @@ namespace UI.MainApp.Home.User
             }
         }
 
-        public void Init()
+        /*public void Init()
         {
             Events.OnLoadingParent(transform, LoadingDone);
         }
         void LoadingDone()
         {
             Events.OnLoading(true);
-            artID = 0;
 
             foreach (Transform child in worksContainer)
             {
@@ -77,21 +63,19 @@ namespace UI.MainApp.Home.User
             }
 
             LoadNext();
-        }
+        }*/
 
-        protected virtual void LoadNext()
+        protected override void LoadNext()
         {
             foreach(CharacterMetaData chmd in Data.Instance.charactersData.userCharactersMetaData)
             {
                 AddCharacterMetadata(chmd);                
             }
-            if (Data.Instance.charactersData.userCharactersMetaData.Count > 0)
-                firstLoad = true;
 
-            Events.OnLoading(false);
+            OnLoadedDone();
         }
 
-        public virtual void OpenWork(string id) { 
+        public override void OpenWork(string id) { 
             UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);    
         }
 
@@ -99,6 +83,26 @@ namespace UI.MainApp.Home.User
         {
             print("New Character");
             UIManager.Instance.NewCharacter();
+        }
+
+        protected override void LoadImage(int index, ItemSelectorBtn isb) {
+            CharacterMetaData chMD = Data.Instance.charactersData.charactersMetaData.Find(x => x.id == isb.Id);
+            if (chMD != null) {
+                downloading.Add(index);
+                Debug.Log($"$ DownloadTexture index: {index} Id: {chMD.id}");
+                Data.Instance.cacheData.LoadImage(BoardItems.BoardData.MetadataTypes.characters.ToString(), chMD.id, (tex) => {
+                    downloading.Remove(index);
+                    isb.SetSprite(tex);
+                    imageCache[index] = tex;
+                    Debug.Log($"ImageCache: {imageCache.Count}");
+                    if (!firstImageCache && imageCache.Count >= (visibleRows * itemsPerRows)) {
+                        firstImageCache = true;
+                        Events.OnLoading(false);
+                    }
+                }, chMD.timestamp, chMD.userID);
+            } else {
+                Debug.LogError("Couldn´t find Film Metadata with ID " + isb.Id);
+            }
         }
     }
 

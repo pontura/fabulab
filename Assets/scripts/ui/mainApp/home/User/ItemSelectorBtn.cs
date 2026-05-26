@@ -12,12 +12,12 @@ namespace UI.MainApp.Home.User
 
         public void Init(SOPartData cd)
         {
-            thumb.sprite = cd.GetSprite();
+            //thumb.sprite = cd.GetSprite();
             Id = cd.id;
         }        
 
         public void Init(CharacterMetaData cd) {
-            thumb.sprite = cd.GetSprite();
+            //thumb.sprite = cd.GetSprite();
             creatorList.Init(cd.creators);
             Id = cd.id;
         }

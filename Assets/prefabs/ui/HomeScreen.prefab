@@ -723,6 +723,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI.MainApp.Home.User.AllCharactersScreen
   workBtn_prefab: {fileID: 8509828674426686842, guid: db58be10723a5044c9a6ab80ffca998c, type: 3}
   worksContainer: {fileID: 3692860211972026637}
+  invertScrollOrder: 1
+  scrollRect: {fileID: 1340680764645086159}
+  itemsPerRows: 3
+  visibleRows: 4
+  cacheSize: 24
+  cacheExtraItemsCount: 6
 --- !u!222 &9156895827546929865
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1877,9 +1883,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI.MainApp.Home.User.AllStoriesScreen
   workBtn_prefab: {fileID: 2599023843979026749, guid: 8b09fe429a5e07241a350965f54ca043, type: 3}
   worksContainer: {fileID: 315748586534121545}
+  invertScrollOrder: 1
   scrollRect: {fileID: 3024007191068274051}
-  totalRows: 1
   itemsPerRows: 1
+  visibleRows: 5
+  cacheSize: 15
+  cacheExtraItemsCount: 5
 --- !u!1 &1249530092936462889
 GameObject:
   m_ObjectHideFlags: 0
@@ -6354,10 +6363,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.MainApp.Home.User.AllObjectsScreen
   workBtn_prefab: {fileID: 8509828674426686842, guid: db58be10723a5044c9a6ab80ffca998c, type: 3}
+  worksContainer: {fileID: 509056265495751471}
+  invertScrollOrder: 0
+  scrollRect: {fileID: 7719073602558390420}
+  itemsPerRows: 3
+  visibleRows: 4
+  cacheSize: 24
+  cacheExtraItemsCount: 6
   buttons: []
   type: 0
   all: []
-  container: {fileID: 509056265495751471}
+  scrollbar: {fileID: 0}
 --- !u!1 &5827065510059390485
 GameObject:
   m_ObjectHideFlags: 0
@@ -9934,7 +9950,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5596035137731309516}
   m_HandleRect: {fileID: 7505776443912533044}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

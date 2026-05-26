@@ -1,7 +1,5 @@
 ﻿using BoardItems;
 using UnityEngine;
-using UnityEngine.UI;
-using Yaguar.StoryMaker.DB;
 using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
@@ -17,15 +15,13 @@ namespace UI.MainApp.Home.User
                 AddFilmMetadata(cd);
             }
 
-            scrollRect.onValueChanged.AddListener(OnScrollChanged);
+            OnLoadedDone();
         }
 
         protected override void AddFilmMetadata(FilmDataFabulab fd) {
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
             go.Init(fd.id, null);
             go.GetComponent<ItemSelectorStory>().SetContent(fd, this, false);
-            count++;
-            Debug.Log("$ Thumbs Count: " + count);
         }
 
         string id;

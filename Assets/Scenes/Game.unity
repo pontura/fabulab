@@ -3575,6 +3575,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1309567267 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3676839075969781587, guid: 9f7e3cbc92926fd41a0326b647e260a3, type: 3}
+  m_PrefabInstance: {fileID: 4672227854957860115}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ScrollRect
+--- !u!224 &1341611783 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7156484155107675061, guid: 9f7e3cbc92926fd41a0326b647e260a3, type: 3}
+  m_PrefabInstance: {fileID: 4672227854957860115}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1344991192
 GameObject:
   m_ObjectHideFlags: 0
@@ -5236,7 +5252,6 @@ MonoBehaviour:
   panel: {fileID: 1599406802}
   isMyAvatar: 0
   isPreview: 0
-  adminSavePreset: {fileID: 4401953425196259126}
   pictureBtn: {fileID: 1480540782}
   bgColorsBtn: {fileID: 1802673707}
   togglePreviewParts:
@@ -5379,6 +5394,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+--- !u!114 &2049468523 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2369751834506221414, guid: 9f7e3cbc92926fd41a0326b647e260a3, type: 3}
+  m_PrefabInstance: {fileID: 4672227854957860115}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a4db7a114972834c8e4117be1d82ba3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Scrollbar
 --- !u!4 &2066717050 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6420313576386189202, guid: 884f2c54debf4c14cae0bdcf15b15c69, type: 3}
@@ -13835,11 +13861,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f8a79028d5d14b48a00286380b45386, type: 3}
---- !u!1 &4401953425196259126 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2338614331058774114, guid: b1856c14e3ceef14b9f7d1e36c285c4b, type: 3}
-  m_PrefabInstance: {fileID: 7258396981532460582}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4419859953777190865
 GameObject:
   m_ObjectHideFlags: 0
@@ -14939,6 +14960,38 @@ PrefabInstance:
     - target: {fileID: 7948158284019445564, guid: 9f7e3cbc92926fd41a0326b647e260a3, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7956405250026761791, guid: 9f7e3cbc92926fd41a0326b647e260a3, type: 3}
+      propertyPath: cacheSize
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 7956405250026761791, guid: 9f7e3cbc92926fd41a0326b647e260a3, type: 3}
+      propertyPath: scrollbar
+      value: 
+      objectReference: {fileID: 2049468523}
+    - target: {fileID: 7956405250026761791, guid: 9f7e3cbc92926fd41a0326b647e260a3, type: 3}
+      propertyPath: scrollRect
+      value: 
+      objectReference: {fileID: 1309567267}
+    - target: {fileID: 7956405250026761791, guid: 9f7e3cbc92926fd41a0326b647e260a3, type: 3}
+      propertyPath: visibleRows
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7956405250026761791, guid: 9f7e3cbc92926fd41a0326b647e260a3, type: 3}
+      propertyPath: itemsPerRows
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7956405250026761791, guid: 9f7e3cbc92926fd41a0326b647e260a3, type: 3}
+      propertyPath: worksContainer
+      value: 
+      objectReference: {fileID: 1341611783}
+    - target: {fileID: 7956405250026761791, guid: 9f7e3cbc92926fd41a0326b647e260a3, type: 3}
+      propertyPath: invertScrollOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7956405250026761791, guid: 9f7e3cbc92926fd41a0326b647e260a3, type: 3}
+      propertyPath: cacheExtraItemsCount
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8054339102566855586, guid: 9f7e3cbc92926fd41a0326b647e260a3, type: 3}
       propertyPath: m_AnchorMax.x

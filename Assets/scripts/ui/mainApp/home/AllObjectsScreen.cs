@@ -7,7 +7,7 @@ namespace UI.MainApp.Home.User
 {
     public class AllObjectsScreen : UserObjectsScreen
     {
-        public override void OnLoadData()
+        public override void SetType()
         {
             switch (type)
             {

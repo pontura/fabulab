@@ -54,8 +54,10 @@ MonoBehaviour:
   workBtn_prefab: {fileID: 8509828674426686842, guid: db58be10723a5044c9a6ab80ffca998c, type: 3}
   worksContainer: {fileID: 5945280164012259372}
   scrollRect: {fileID: 4227407283322274396}
-  totalRows: 1
   itemsPerRows: 1
+  visibleRows: 5
+  cacheSize: 15
+  cacheExtraItemsCount: 5
 --- !u!222 &591560532239880126
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -594,6 +596,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   workBtn_prefab: {fileID: 8509828674426686842, guid: db58be10723a5044c9a6ab80ffca998c, type: 3}
   worksContainer: {fileID: 2234785003487440638}
+  scrollRect: {fileID: 5899368821662302260}
+  itemsPerRows: 3
+  visibleRows: 4
+  cacheSize: 24
+  cacheExtraItemsCount: 6
 --- !u!222 &3694827439390062338
 CanvasRenderer:
   m_ObjectHideFlags: 0
