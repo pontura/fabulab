@@ -522,10 +522,23 @@ namespace BoardItems
             Debug.Log("& Count: "+elementsIds.Count);
             for(int i = elementsIds.Count-1; i > -1 ; i--) {            
                 Debug.Log("& " + elementsIds[i].id + " "+ elementsIds[i].type);
-                if (elementsIds[i].type == SceneElementType.AVATAR)
-                    Data.Instance.charactersData.LoadOthersCharacter(elementsIds[i].id, OnGetAllElements);
-                else if (elementsIds[i].type == SceneElementType.PROP)
-                    Data.Instance.sObjectsData.LoadOthersObject(elementsIds[i].id, OnGetAllElements);
+                if (elementsIds[i].type == SceneElementType.AVATAR) {
+                    Data.Instance.charactersData.LoadOthersCharacter(elementsIds[i].id, (sOPart) => {
+                        if (sOPart == null) {
+                            elementsIds.Remove(elementsIds[i]);
+                            CheckAllElementsDone();
+                        }
+                        OnGetAllElements(sOPart);
+                    });
+                } else if (elementsIds[i].type == SceneElementType.PROP) {
+                    Data.Instance.sObjectsData.LoadOthersObject(elementsIds[i].id, (sOPart) => {
+                        if (sOPart == null) {
+                            elementsIds.Remove(elementsIds[i]);
+                            CheckAllElementsDone();
+                        }
+                        OnGetAllElements(sOPart);
+                    });
+                }
             }
         }
 
@@ -537,6 +550,10 @@ namespace BoardItems
             if (sOPart is BoardData.SObjectData)
                 type = SceneElementType.PROP;
             elementsIds.Remove((sOPart.id,type));
+            CheckAllElementsDone();
+        }
+
+        void CheckAllElementsDone() {
             if (elementsIds.Count <= 0) {
                 InitLoadedFilm();
                 loadedDone = true;

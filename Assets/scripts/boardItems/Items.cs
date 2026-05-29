@@ -625,6 +625,9 @@ namespace BoardItems
         List<SavedIData> soIDs;
         public void OpenWork(BoardItemManager boardItemManager, SOPartData wd, bool cascade = false)
         {
+            if (wd == null) // para el caso de elementos borrados en historias de otros
+                    return;
+
             soIDs = new List<SavedIData>();
             if (Data.Instance.charactersData.PresetID == "" && cascade)
                 Events.ColorizeBG(wd.bg);
@@ -658,7 +661,10 @@ namespace BoardItems
                 StartCoroutine(Cascade(boardItemManager, wd));            
         }
 
-        void LoadBgSos(BoardItemManager boardItemManager, Transform bgContainer, Transform container) {            
+        void LoadBgSos(BoardItemManager boardItemManager, Transform bgContainer, Transform container) {
+            if (soIDs == null) // para el caso de elementos borrados en historias de otros
+                return;
+
             foreach (SavedIData soID in soIDs) {
              //   print("open SO in background soID: " + soID.soID);
                 SOPartData soPartData = Data.Instance.sObjectsData.GetSO(soID.soID);

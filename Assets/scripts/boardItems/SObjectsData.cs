@@ -385,7 +385,7 @@ namespace BoardItems
                 PropMetaData chmd = metaData.Find(x => x.id == id);
                 if (chmd == null)
                 {
-                    Debug.Log("Fail getting Prop Meta Data");
+                    Debug.Log("Fail getting Prop Meta Data: "+id);
                     OnDone(null);
                     return;
                 }

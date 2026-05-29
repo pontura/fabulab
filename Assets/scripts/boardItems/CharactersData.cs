@@ -477,7 +477,7 @@ namespace BoardItems
             else {
                 CharacterMetaData chmd = charactersMetaData.Find(x => x.id == id);
                 if (chmd == null) {
-                    Debug.Log("Fail getting Character Meta Data");
+                    Debug.Log("Fail getting Character Meta Data: "+id);
                     OnDone(null);
                     return;
                 }
