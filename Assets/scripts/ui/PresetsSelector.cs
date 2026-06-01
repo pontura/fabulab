@@ -35,10 +35,15 @@ namespace UI
                     artID++;
                     foreach (SOPartData wd in all)
                     {
-                        if (wd.thumb != null)
-                        {
+                        if (wd.thumb != null) {
                             PresetButton b = Instantiate(itemButton, container);
                             b.Init(OnClicked, wd);
+                        } else {
+                            Data.Instance.cacheData.LoadImage(MetadataTypes.presets.ToString() + "/bodypart/" + BoardItems.Characters.CharacterPartsHelper.GetServerUniquePartsId(wd.items[0].part), wd.id, (tex) => {
+                                wd.thumb = tex;
+                                PresetButton b = Instantiate(itemButton, container);
+                                b.Init(OnClicked, wd);
+                            }, Data.Instance.charactersData.serverPartsMetaData[wd.id].timestamp, Data.Instance.adminData.GetFabulabId());
                         }
                     }
                 }

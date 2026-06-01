@@ -36,7 +36,7 @@ namespace BoardItems
         [SerializeField] string currentID;
 
         CharacterData currentCharacter;
-        Dictionary<string, ServerPartMetaData> serverPartsMetaData;
+        public Dictionary<string, ServerPartMetaData> serverPartsMetaData {  get; private set; }
 
         [SerializeField] string loadedPresetId;
         public string PresetID { get { return loadedPresetId; } }
@@ -430,10 +430,10 @@ namespace BoardItems
                 wd.id = e.Key;
                 wd.LoadServerData(e.Value);                
 
-                Data.Instance.cacheData.LoadImage(MetadataTypes.presets.ToString() + "/bodypart/" + BoardItems.Characters.CharacterPartsHelper.GetServerUniquePartsId(wd.items[0].part), wd.id, (tex) => {
+                /*Data.Instance.cacheData.LoadImage(MetadataTypes.presets.ToString() + "/bodypart/" + BoardItems.Characters.CharacterPartsHelper.GetServerUniquePartsId(wd.items[0].part), wd.id, (tex) => {
                     //FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.presets.ToString()+ "/bodypart/"+ BoardItems.Characters.CharacterPartsHelper.GetServerUniquePartsId(wd.items[0].part), wd.id, (tex) => {
                     wd.thumb = tex;
-                }, serverPartsMetaData[e.Key].timestamp, Data.Instance.adminData.GetFabulabId());
+                }, serverPartsMetaData[e.Key].timestamp, Data.Instance.adminData.GetFabulabId());*/
                 
                 //wd.thumb = new Texture2D(1, 1);
                 //wd.thumb.LoadImage(System.Convert.FromBase64String(serverPartsMetaData[wd.id].thumb));
