@@ -8,13 +8,13 @@ namespace UI.MainApp.Home.User
     public class ObjectSelectionScreen : ItemSelectionScreen
     {
         public AllObjectsFullScreenScreen allObjectsScreen;
-        [SerializeField] Scrollbar scrollbar;
 
         [SerializeField] Toggle sendFront;
         [SerializeField] Toggle sendBack;
 
-        private void Start()
-        {
+        protected override void Start() {
+            base.Start();
+            minIndex = 1;
             Cancel();
             Events.DuplicateSO += DuplicateSO;
             StoryMakerEvents.ShowSoButtons += ShowSoButtons;
@@ -36,8 +36,8 @@ namespace UI.MainApp.Home.User
                     go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
                 }
             }
-            scrollbar.value = 0;
             SetFrontBack();
+            OnLoadedDone();
         }        
 
         public override void OpenWork(string id)
@@ -175,6 +175,26 @@ namespace UI.MainApp.Home.User
                     Events.OnLoading(false);
                 else
                     Invoke(nameof(LoopTillMetaReady), 0.25f);
+            }
+        }
+
+        protected override void LoadImage(int index, ItemSelectorBtn isb) {
+            PropMetaData pMD = Data.Instance.sObjectsData.metaData.Find(x => x.id == isb.Id);
+            if (pMD != null) {
+                downloading.Add(index);
+                Debug.Log($"$ DownloadTexture index: {index} Id: {pMD.id}");
+                Data.Instance.cacheData.LoadImage(BoardItems.BoardData.MetadataTypes.so.ToString(), pMD.id, (tex) => {
+                    downloading.Remove(index);
+                    isb.SetSprite(tex);
+                    imageCache[index] = tex;
+                    Debug.Log($"ImageCache: {imageCache.Count}");
+                    if (!firstImageCache && imageCache.Count >= (visibleRows * itemsPerRows)) {
+                        firstImageCache = true;
+                        Events.OnLoading(false);
+                    }
+                }, pMD.timestamp, pMD.userID);
+            } else {
+                Debug.LogError("Couldn´t find Film Metadata with ID " + isb.Id);
             }
         }
     }

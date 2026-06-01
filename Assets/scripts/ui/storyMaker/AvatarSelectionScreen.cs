@@ -10,19 +10,21 @@ namespace UI.MainApp.Home.User
     public class AvatarSelectionScreen : ItemSelectionScreen
     {
         public AllCharactersScreen allCharactersScreen;
-        [SerializeField] Scrollbar scrollbar;
+        
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
+            minIndex = 1;
             Cancel();
             Events.DuplicateCharacter += DuplicateCharacter;
         }
-        private void OnDestroy()
-        {
+        protected virtual void OnDestroy() {
             Events.DuplicateCharacter -= DuplicateCharacter;
         }
         protected override void LoadNext()
         {
+            scrollbar.value = 0;
             AddBtn();
             foreach (CharacterData cd in Data.Instance.charactersData.userCharacters)
             {
@@ -30,8 +32,8 @@ namespace UI.MainApp.Home.User
                 print("go " + go);
                 go.Init(cd);
                 go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
-            }
-            scrollbar.value = 0;
+            }            
+            OnLoadedDone();
         }
 
         public override void OpenWork(string id)
@@ -105,6 +107,26 @@ namespace UI.MainApp.Home.User
                     Events.OnLoading(false);
                 else
                     Invoke(nameof(LoopTillMetaReady), 0.25f);
+            }
+        }
+
+        protected override void LoadImage(int index, ItemSelectorBtn isb) {
+            CharacterMetaData chMD = Data.Instance.charactersData.charactersMetaData.Find(x => x.id == isb.Id);
+            if (chMD != null) {
+                downloading.Add(index);
+                Debug.Log($"$ DownloadTexture index: {index} Id: {chMD.id}");
+                Data.Instance.cacheData.LoadImage(BoardItems.BoardData.MetadataTypes.characters.ToString(), chMD.id, (tex) => {
+                    downloading.Remove(index);
+                    isb.SetSprite(tex);
+                    imageCache[index] = tex;
+                    Debug.Log($"ImageCache: {imageCache.Count}");
+                    if (!firstImageCache && imageCache.Count >= (visibleRows * itemsPerRows)) {
+                        firstImageCache = true;
+                        Events.OnLoading(false);
+                    }
+                }, chMD.timestamp, chMD.userID);
+            } else {
+                Debug.LogError("Couldn´t find Film Metadata with ID " + isb.Id);
             }
         }
     }

@@ -159,30 +159,42 @@ namespace UI.MainApp
                 case 0:
                     timeline.SetActive(false);
                     itemList.SetActive(true);
-                    backgroundScreen.Init();
+                    backgroundScreen.Show(true);
+                    objectsScreen.Show(false);
+                    characterScreen.Show(false);
                     Events.OnPopupTopSignalText("Fondos");
                     break;
                 case 1:
                     timeline.SetActive(false);
                     itemList.SetActive(true);
-                    characterScreen.Init();
+                    characterScreen.Show(true);
+                    backgroundScreen.Show(false);
+                    objectsScreen.Show(false);
                     Events.OnPopupTopSignalText("Personajes");
                     break;
                 case 2:
                     timeline.SetActive(false);
                     itemList.SetActive(true);
-                    objectsScreen.Init();
+                    characterScreen.Show(false);
+                    backgroundScreen.Show(false);
+                    objectsScreen.Show(true);
                     Events.OnPopupTopSignalText("Objetos");
                     break;
                 case 3:
                     timeline.SetActive(false);
                     itemList.SetActive(true);
+                    characterScreen.Show(false);
+                    backgroundScreen.Show(false);
+                    objectsScreen.Show(false);
                     textsScreen.Init();
                     Events.OnPopupTopSignalText("Diálogos");
                     break;
                 case 4:
                     timeline.SetActive(true);
                     itemList.SetActive(false);
+                    characterScreen.Show(false);
+                    backgroundScreen.Show(false);
+                    objectsScreen.Show(false);
                     Events.OnPopupTopSignalText("Film   ");
                     break;                    
             }   

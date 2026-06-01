@@ -10,7 +10,8 @@ namespace UI.MainApp.Home.User
         [SerializeField] protected ItemSelectorBtn workBtn_prefab;
         [SerializeField] protected Transform worksContainer;
 
-        [SerializeField] bool invertScrollOrder;
+        [SerializeField] protected bool isHorizontal;
+        [SerializeField] protected bool invertScrollOrder;
         [SerializeField] protected ScrollRect scrollRect;
         [SerializeField] protected int itemsPerRows;
         [SerializeField] protected int visibleRows = 5;
@@ -21,20 +22,24 @@ namespace UI.MainApp.Home.User
         protected bool firstImageCache;
         protected bool firstLoadDone;
 
+        protected int minIndex = 0;
+        protected bool isActive;
+
         protected virtual void Start() {            
             imageCache = new Dictionary<int, Texture2D>();
         }
         
-        public void Show(bool isOn)
+        public virtual void Show(bool isOn)
         {
+            isActive = isOn;
             gameObject.SetActive(isOn);
             if (isOn && !firstLoadDone) {                
                 Init();
             }
         }        
 
-        public void Init() {
-            Debug.Log("$ Init: " + firstLoadDone);
+        public virtual void Init() {
+            //Debug.Log("$ Init: " + firstLoadDone);
 
             if (firstLoadDone)
                 return;
@@ -68,32 +73,37 @@ namespace UI.MainApp.Home.User
 
         protected void OnScrollChanged(Vector2 pos) {
             // Calcular el índice actual visible según posición del scroll
-            SetCurrentScrollIndex(pos);
+            if(isActive)
+                SetCurrentScrollIndex(pos);
         }
 
         void SetCurrentScrollIndex(Vector2 pos) {
+            //Debug.Log("% SetCurrentScrollIndex: "+pos);
             int currentIndex = CalculateCurrentIndex(pos);
             UpdateCacheOnScroll(currentIndex);
         }
 
         int CalculateCurrentIndex(Vector2 pos) {
             // Ejemplo simple para scroll horizontal:
-            Debug.Log("$ " + pos);
-            float normalizedPos = pos.y; // 0 = inicio, 1 = final
+            //Debug.Log("$ " + pos);
+            float position = pos.y;
+            if (isHorizontal)
+                position = pos.x;
+            float normalizedPos = position; // 0 = inicio, 1 = final
             if (invertScrollOrder)
-                normalizedPos = 1f - pos.y; // 0 = inicio, 1 = final
-            Debug.Log($"$ {normalizedPos} * ({worksContainer.childCount}  - ({visibleRows} * {itemsPerRows}))");
+                normalizedPos = 1f - position; // 0 = inicio, 1 = final
+            //Debug.Log($"$ {normalizedPos} * ({worksContainer.childCount}  - ({visibleRows} * {itemsPerRows}))");
             int currentIndex = Mathf.FloorToInt(normalizedPos * (worksContainer.childCount - (visibleRows * itemsPerRows)));
-            return Mathf.Clamp(currentIndex, 0, (worksContainer.childCount - (visibleRows * itemsPerRows)));
+            return Mathf.Clamp(currentIndex, minIndex, (worksContainer.childCount - (visibleRows * itemsPerRows)));
         }
 
         void UpdateCacheOnScroll(int currentIndex) {            
 
             // Calcular rango simétrico: 5 antes + visibles + 5 después
-            int startIndex = Mathf.Max(0, currentIndex - cacheExtraItemsCount);
+            int startIndex = Mathf.Max(minIndex, currentIndex - cacheExtraItemsCount);
             int endIndex = Mathf.Min(worksContainer.childCount - 1, currentIndex + (visibleRows * itemsPerRows) - 1 + cacheExtraItemsCount);
 
-            Debug.Log($"$ startIndex: {startIndex} endIndex: {endIndex}");
+            //Debug.Log($"$ startIndex: {startIndex} endIndex: {endIndex}");
 
             // Eliminar las que ya no están en rango
             var keysToRemove = imageCache.Keys
