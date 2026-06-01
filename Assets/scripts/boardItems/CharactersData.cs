@@ -428,11 +428,12 @@ namespace BoardItems
                 //Debug.Log("#LoadCharactersFromServer " + e.Key + ": " + e.Value);
                 SOPartData wd = new SOPartData();
                 wd.id = e.Key;
-                wd.LoadServerData(e.Value);
-                /*
-                FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.presets.ToString()+ "/bodypart/"+ BoardItems.Characters.CharacterPartsHelper.GetServerUniquePartsId(wd.items[0].part), wd.id, (tex) => {
+                wd.LoadServerData(e.Value);                
+
+                Data.Instance.cacheData.LoadImage(MetadataTypes.presets.ToString() + "/bodypart/" + BoardItems.Characters.CharacterPartsHelper.GetServerUniquePartsId(wd.items[0].part), wd.id, (tex) => {
+                    //FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.presets.ToString()+ "/bodypart/"+ BoardItems.Characters.CharacterPartsHelper.GetServerUniquePartsId(wd.items[0].part), wd.id, (tex) => {
                     wd.thumb = tex;
-                }, Data.Instance.adminData.GetFabulabId());*/
+                }, serverPartsMetaData[e.Key].timestamp, Data.Instance.adminData.GetFabulabId());
                 
                 //wd.thumb = new Texture2D(1, 1);
                 //wd.thumb.LoadImage(System.Convert.FromBase64String(serverPartsMetaData[wd.id].thumb));
