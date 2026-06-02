@@ -13,7 +13,7 @@ namespace UI.MainApp.Home.User
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
-                go.Init(cd);
+                go.Init(cd, MetadataTypes.characters);
 
                 if (StoryMakerEvents.isEditing)
                     go.GetComponent<Button>().onClick.AddListener(() => Duplicate(cd.id));

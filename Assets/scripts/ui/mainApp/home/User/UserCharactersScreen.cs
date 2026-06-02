@@ -27,7 +27,7 @@ namespace UI.MainApp.Home.User
         void AddCharacterMetadata(CharacterMetaData fd) {
             Debug.Log("% AddCharacterMetadata");
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-            go.Init(fd);
+            go.Init(fd, MetadataTypes.characters);
             go.GetComponent<Button>().onClick.AddListener(() => OpenWork(fd.id));
         }
 

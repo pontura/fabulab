@@ -1,4 +1,5 @@
 ﻿using BoardItems.BoardData;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,20 +7,72 @@ using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
 {
-    public class AllObjectsFullScreenScreen : MonoBehaviour
+    public class AllObjectsFullScreenScreen : ThumbsScreen
     {
-        public ItemSelectorBtn workBtn_prefab;
-        public Transform container;
+        [SerializeField] Scrollbar scrollbar;
         SObjectData.types type;
 
-        public void Show(bool isOn)
-        {
-            gameObject.SetActive(isOn);
+        protected override void Start() {
+            base.Start();
+            Events.OnPropMetadataUpdated += OnPropMetadataUpdated;
+            Events.OnPropMetadataAdded += OnPropMetadataAdded;
+            Events.OnPropMetadataRemoved += OnPropMetadataRemoved;
         }
+
+        protected virtual void OnDestroy() {
+            Events.OnPropMetadataUpdated -= OnPropMetadataUpdated;
+            Events.OnPropMetadataAdded -= OnPropMetadataAdded;
+            Events.OnPropMetadataRemoved -= OnPropMetadataRemoved;
+        }
+
+        void OnPropMetadataAdded(PropMetaData fd) {
+            if (fd.type == type) {
+                AddPropMetadata(fd);
+                worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
+            }
+        }
+
+        protected void AddPropMetadata(PropMetaData fd) {
+            ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
+            go.Init(fd, MetadataTypes.so);
+            go.GetComponent<Button>().onClick.AddListener(() => OpenWork(fd.id));
+        }
+
+        void OnPropMetadataUpdated(PropMetaData fd) {
+            if (fd.type == type) {
+                ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
+                ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
+                if (btn != null) {
+                    btn.Init(fd, MetadataTypes.so);
+                    btn.transform.SetAsFirstSibling();
+                }
+            }
+        }
+
+        void OnPropMetadataRemoved(string id) {
+            ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
+            ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == id);
+            if (btn != null) {
+                Destroy(btn.gameObject);
+            }
+        }
+                
         public void Init(SObjectData.types type)
         {
+            if (this.type == type && isActive)
+                return;
+            
             this.type = type;
-            Utils.RemoveAllChildsIn(container);
+
+            firstImageCache = false;
+            if(imageCache== null) 
+                imageCache = new Dictionary<int, Texture2D>();
+            imageCache.Clear();
+            downloading.Clear();
+            scrollbar.value = 1f;
+            Init();
+
+            Utils.RemoveAllChildsIn(worksContainer);
 
             List<PropMetaData> all;
             switch(type)
@@ -37,15 +90,13 @@ namespace UI.MainApp.Home.User
                     break;
             }
             foreach (PropMetaData cd in all)
-            {
-                ItemSelectorBtn go = Instantiate(workBtn_prefab, container);
-                print("go " + go);
-                go.Init(cd);
-                go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
-            }
+                AddPropMetadata(cd);
+
+            isActive = true;
+            OnLoadedDone();
         }
        
-        public void OpenWork(string id)
+        public override void OpenWork(string id)
         {
             if(StoryMakerEvents.isEditing)
             {
@@ -63,6 +114,25 @@ namespace UI.MainApp.Home.User
                 UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
         }
 
+        protected override void LoadImage(int index, ItemSelectorBtn isb) {
+            PropMetaData pMD = Data.Instance.sObjectsData.metaData.Find(x => x.id == isb.Id);
+            if (pMD != null) {
+                downloading.Add(index);
+                Debug.Log($"$ DownloadTexture index: {index} Id: {pMD.id}");
+                Data.Instance.cacheData.LoadImage(BoardItems.BoardData.MetadataTypes.so.ToString(), pMD.id, (tex) => {
+                    downloading.Remove(index);
+                    isb.SetSprite(tex);
+                    imageCache[index] = tex;
+                    Debug.Log($"ImageCache: {imageCache.Count}");
+                    if (!firstImageCache && imageCache.Count >= (visibleRows * itemsPerRows)) {
+                        firstImageCache = true;
+                        Events.OnLoading(false);
+                    }
+                }, pMD.timestamp, pMD.userID);
+            } else {
+                Debug.LogError("Couldn´t find Film Metadata with ID " + isb.Id);
+            }
+        }
     }
 
 }

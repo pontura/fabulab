@@ -38,7 +38,7 @@ namespace UI.MainApp.Home.User
             }
         }        
 
-        public virtual void Init() {
+        protected virtual void Init() {
             //Debug.Log("$ Init: " + firstLoadDone);
 
             if (firstLoadDone)

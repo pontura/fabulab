@@ -57,7 +57,7 @@ namespace UI.MainApp.Home.User
                     break;
                 case 1:
                     allCharactersScreen.gameObject.SetActive(true);
-                    allCharactersScreen.Init();
+                    allCharactersScreen.Show(true);
                     break;
             }
         }

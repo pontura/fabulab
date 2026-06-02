@@ -9,6 +9,7 @@ using UI;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
+using Yaguar.StoryMaker.Editor;
 using static BoardItems.Characters.CharacterPartsHelper;
 
 namespace BoardItems
@@ -523,6 +524,11 @@ namespace BoardItems
            // PlayerPrefs.DeleteKey("Work_" + id);
             //  PlayerPrefs.DeleteKey("PkpkShared_" + id);
            // PersistWorksIds();
+        }
+
+        public void RemoveCharacter(string id) {
+            userCharacters.RemoveAll(x => x.id == id);
+            othersCharacters.RemoveAll(x => x.id == id);
         }
 
 

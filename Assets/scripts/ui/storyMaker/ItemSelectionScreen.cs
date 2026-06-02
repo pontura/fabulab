@@ -19,6 +19,8 @@ namespace UI.MainApp.Home.User
         }
 
         public override void Show(bool isOn) {
+            if (isActive == isOn)
+                return;
             isActive = isOn;
             if (isOn) {
                 scrollRect.StopMovement();
@@ -30,7 +32,7 @@ namespace UI.MainApp.Home.User
             }
         }
 
-        public override void Init() {
+        protected override void Init() {
             Events.OnLoadingParent(transform, LoadNext);
             foreach (Transform child in worksContainer) {
                 if (child.tag != "Persistent")

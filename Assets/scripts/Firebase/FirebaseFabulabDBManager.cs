@@ -105,26 +105,42 @@ namespace Yaguar.StoryMaker.DB
                     }
                 }
             });
-            Debug.Log("Server:" + type + "ToServer");
+            Debug.Log("SaveToServer:" + type + " ToServer");
         }
 
-        public void DeleteCharacter(string presetId, System.Action<string> callback) {
+        public void DeletePart(string type, string id, System.Action<string> callback, string userId) {
+            if (!Data.Instance.userData.isAdmin)
+                return;
 
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("characters/" + _uid + "/" + presetId);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference(type + "/" + userId + "/" + id);
             reference.RemoveValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#DeleteCharacter FAIL");
                     Debug.Log(task.Exception);
                 } else {
-                    //DeleteCharacterMetadataFromServer(characterId);
+                    DeletePartMetadataFromServer(type,id);
+                    DeleteImage(type, id, userId);
                     try { 
-                        callback(presetId);
+                        callback(id);
                     } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");
                     }
                 }
             });
-            Debug.Log("Server: DeleteCharacter");
+            Debug.Log("Server: DeletePart "+type+" "+id);
+            //Debug.Log(url);
+        }
+
+        public void DeletePartMetadataFromServer(string type, string id) {
+            //Debug.Log("ACA");
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/"+ type+"/" + id);
+            reference.RemoveValueAsync().ContinueWithOnMainThread(task => {
+                if (task.IsFaulted || task.IsCanceled) {
+                    Debug.Log("#DeletePartMetadataFromServer FAIL");
+                    Debug.Log(task.Exception);
+                }
+            });
+            Debug.Log("Server: DeletePartMetadataFromServer");
             //Debug.Log(url);
         }
         public void LoadUserAssetsFromServer(string type, System.Action<Dictionary<string, CharacterServerData>> callback)
@@ -809,6 +825,27 @@ namespace Yaguar.StoryMaker.DB
             //print("SaveInventoryItem url : " + url);
         }
 
+        public async Task DeleteImage(string folder, string fileName, string userId = null, System.Action onDone = null) {
+            string uid = _uid;
+            if (userId != null) {
+                uid = userId;
+            }
+
+            // Ruta en Storage: userImages/{uid}/{fileName}.jpg
+            StorageReference storageRef = FirebaseStorage.DefaultInstance.GetReference($"images/{uid}/{folder}/{fileName}.jpg");
+
+            // Subir archivo
+            await storageRef.DeleteAsync();/*.ContinueWithOnMainThread(task => {
+                if (task.IsFaulted || task.IsCanceled) {
+                    Debug.Log("#UploadTexture FAIL " + task.Exception);
+                }
+                Debug.Log("Imagen subida correctamente");
+            });*/
+            Debug.Log("Imagen eliminada correctamente: "+ fileName);
+            if (onDone != null)
+                onDone();
+        }
+
         public async Task UploadTexture(Texture2D texture, string folder, string fileName, string userId = null, System.Action onDone=null) {
             string uid = _uid;
             if (userId != null) {
@@ -828,7 +865,7 @@ namespace Yaguar.StoryMaker.DB
                 }
                 Debug.Log("Imagen subida correctamente");
             });*/
-            Debug.Log("Imagen subida correctamente");
+            Debug.Log("Imagen subida correctamente: "+fileName);
             if (onDone != null)
                 onDone();
         }

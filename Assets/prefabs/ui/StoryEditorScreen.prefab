@@ -1839,7 +1839,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.MainApp.Home.User.AllObjectsFullScreenScreen
   workBtn_prefab: {fileID: 8509828674426686842, guid: db58be10723a5044c9a6ab80ffca998c, type: 3}
-  container: {fileID: 4619172402408904122}
+  worksContainer: {fileID: 4619172402408904122}
+  isHorizontal: 0
+  invertScrollOrder: 1
+  scrollRect: {fileID: 1594633522444193416}
+  itemsPerRows: 3
+  visibleRows: 4
+  cacheSize: 24
+  cacheExtraItemsCount: 6
+  scrollbar: {fileID: 7729013744446463433}
 --- !u!1 &1517582792761479125
 GameObject:
   m_ObjectHideFlags: 0
@@ -7365,8 +7373,8 @@ MonoBehaviour:
   cacheSize: 20
   cacheExtraItemsCount: 5
   addBtn: {fileID: 2275590784638420739, guid: 4000befff0c182d49855075c1682319b, type: 3}
-  allCharactersScreen: {fileID: 908304664211246657}
   scrollbar: {fileID: 1281123727645604543}
+  allCharactersScreen: {fileID: 908304664211246657}
 --- !u!114 &1075896043714124299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7389,8 +7397,8 @@ MonoBehaviour:
   cacheSize: 20
   cacheExtraItemsCount: 5
   addBtn: {fileID: 2275590784638420739, guid: 4000befff0c182d49855075c1682319b, type: 3}
-  allObjectsScreen: {fileID: 1633129976061088045}
   scrollbar: {fileID: 1281123727645604543}
+  allObjectsScreen: {fileID: 1633129976061088045}
   sendFront: {fileID: 6687811396996988797}
   sendBack: {fileID: 8389124379672963773}
 --- !u!114 &8190272435469547263
@@ -7415,8 +7423,8 @@ MonoBehaviour:
   cacheSize: 20
   cacheExtraItemsCount: 5
   addBtn: {fileID: 2275590784638420739, guid: 4000befff0c182d49855075c1682319b, type: 3}
-  allObjectsScreen: {fileID: 1633129976061088045}
   scrollbar: {fileID: 1281123727645604543}
+  allObjectsScreen: {fileID: 1633129976061088045}
 --- !u!114 &2704856175571224228
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7439,6 +7447,7 @@ MonoBehaviour:
   cacheSize: 15
   cacheExtraItemsCount: 5
   addBtn: {fileID: 0}
+  scrollbar: {fileID: 0}
   wballon_prefab: {fileID: 1339486524954954273, guid: 447a7e5dad58c104e93ef92d2abffab1, type: 3}
 --- !u!114 &7345175595186863621
 MonoBehaviour:

@@ -34,28 +34,32 @@ namespace UI.MainApp.Home.User
         }
 
         void OnPropMetadataAdded(PropMetaData fd) {
-            AddPropMetadata(fd);
-            worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
+            if (fd.type == type) {
+                AddPropMetadata(fd);
+                worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
+            }
         }
 
         protected void AddPropMetadata(PropMetaData fd) {
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-            go.Init(fd);
+            go.Init(fd, MetadataTypes.so);
             go.GetComponent<Button>().onClick.AddListener(() => OpenWork(fd.id));
         }
 
         void OnPropMetadataUpdated(PropMetaData fd) {
-            ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
-            ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
-            if (btn != null) {
-                btn.Init(fd);
-                btn.transform.SetAsFirstSibling();
+            if (fd.type == type) {
+                ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
+                ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
+                if (btn != null) {
+                    btn.Init(fd, MetadataTypes.so);
+                    btn.transform.SetAsFirstSibling();
+                }
             }
         }
 
-        void OnPropMetadataRemoved(PropMetaData fd) {
+        void OnPropMetadataRemoved(string id) {
             ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
-            ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
+            ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == id);
             if (btn != null) {
                 Destroy(btn.gameObject);
             }
