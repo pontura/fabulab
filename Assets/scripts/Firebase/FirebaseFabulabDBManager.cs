@@ -642,8 +642,10 @@ namespace Yaguar.StoryMaker.DB
         }
 
         public void DeleteFilm(FilmDataFabulab fd, System.Action<string> callback) {
+            if (fd.userID != _uid && !Data.Instance.userData.isAdmin)
+                return;
 
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("stories/" + _uid + "/" + fd.id);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("stories/" + fd.userID + "/" + fd.id);
             reference.RemoveValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#DeleteFilm FAIL");
@@ -651,6 +653,7 @@ namespace Yaguar.StoryMaker.DB
                 } else {
                     try { 
                         DeleteFilmData(fd.id);
+                        DeleteImage("stories", fd.id, fd.userID);
                         callback(fd.id);
                     } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");

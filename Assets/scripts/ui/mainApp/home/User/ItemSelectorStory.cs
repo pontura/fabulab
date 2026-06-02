@@ -1,6 +1,7 @@
 using BoardItems;
 using UnityEngine;
 using UnityEngine.UI;
+using Yaguar.StoryMaker.DB;
 
 namespace UI.MainApp.Home.User
 {
@@ -54,9 +55,20 @@ namespace UI.MainApp.Home.User
         {
             userStoriesScreen.Duplicate(content.id);
         }
-        public void Delete()
+        public override void Delete()
         {
-            userStoriesScreen.Delete(content.id);
+            print("Delete ID: " + content.id);
+            Events.OnConfirm("Confirmás que querés borrar esta historia?", "SI", "NO", OnConfirm);
+        }
+        protected override void OnConfirm(bool ok) {
+            if (ok) {
+                FirebaseStoryMakerDBManager.Instance.DeleteFilm(Data.Instance.scenesData.filmsData.Find(x => x.id == content.id), OnDeleted);
+            }
+        }
+        protected override void OnDeleted(string filmId) {
+            Data.Instance.scenesData.RemoveFD(filmId);
+            Events.OnFilmMetadataRemoved(filmId);
+            Destroy(gameObject);
         }
     }
 }

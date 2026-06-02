@@ -89,23 +89,7 @@ namespace UI.MainApp.Home.User
             this.iD = id;
             print("Duplica ID: " + id);
         }
-        public void Delete(string id)
-        {
-            this.iD = id;
-            print("Delete ID: " + id);        
-            Events.OnConfirm("Confirmás que querés borrar esta historia?", "SI", "NO", OnConfirm);
-        }
-        void OnConfirm(bool ok) {
-            if (ok) {
-                FirebaseStoryMakerDBManager.Instance.DeleteFilm(Data.Instance.scenesData.userFilmsData.Find(x => x.id == iD), OnDeleted);
-                this.iD = null;
-            }
-        }
-        public void OnDeleted(string filmId) {            
-            Data.Instance.scenesData.RemoveFD(filmId);
-            Events.OnFilmMetadataRemoved(filmId);
-        }        
-
+        
         protected override void LoadImage(int index, ItemSelectorBtn isb) {
             FilmDataFabulab fd = Data.Instance.scenesData.filmsData.Find(x => x.id == isb.Id);
             if (fd != null) {
