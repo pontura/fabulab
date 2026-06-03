@@ -35,7 +35,7 @@ namespace UI.MainApp.Home.User
         protected void AddPropMetadata(PropMetaData fd, bool userView) {
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
             go.Init(fd, MetadataTypes.so);
-            go.GetComponent<Button>().onClick.AddListener(() => OpenWork(fd.id));
+            go.AddOnClick(OpenWork);
         }
 
         void OnPropMetadataUpdated(PropMetaData fd) {
