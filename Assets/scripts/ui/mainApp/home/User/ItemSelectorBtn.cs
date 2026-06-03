@@ -35,7 +35,8 @@ namespace UI.MainApp.Home.User
                 bool isPublic = Data.Instance.sObjectsData.GetMeta(cd.id).isPublic;
                 print("ItemSelectorBtn id: " + cd.id + " isPublic: " + isPublic);   
                 shareBtn.Init(isPublic,OnSharedChanged);   
-            }        
+            }  else            
+                shareBtn.Show(false);      
             transform.GetComponentInChildren<Button>().onClick.AddListener(() => OnClicked?.Invoke(Id));
         }        
 
