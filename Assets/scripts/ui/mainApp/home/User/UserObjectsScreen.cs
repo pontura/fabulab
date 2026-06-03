@@ -43,25 +43,18 @@ namespace UI.MainApp.Home.User
         }
 
         void OnPropMetadataAdded(PropMetaData fd) {
-//<<<<<<< HEAD
- //           AddPropMetadata(fd, userView);
- //           worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
-//=======
             if (fd.type == type) {
-                AddPropMetadata(fd);
+                AddPropMetadata(fd, userView);
                 worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
             }
-//>>>>>>> 15ff1f4cc7177252b94f3167a54e253a1455899f
         }
 
         protected void AddPropMetadata(PropMetaData fd, bool userViews) {
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-//<<<<<<< HEAD
+
             go.Init(fd, OpenWork, userViews);
-//=======
             go.Init(fd, MetadataTypes.so);
-            go.GetComponent<Button>().onClick.AddListener(() => OpenWork(fd.id));
-//>>>>>>> 15ff1f4cc7177252b94f3167a54e253a1455899f
+
         }
 
         void OnPropMetadataUpdated(PropMetaData fd) {
@@ -84,6 +77,7 @@ namespace UI.MainApp.Home.User
         }
 
         protected override void LoadNext() {
+            
             foreach (PropMetaData cd in all)
                 AddPropMetadata(cd, userView);
 

@@ -30,16 +30,9 @@ namespace UI.MainApp.Home.User
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
-//<<<<<<< HEAD
                 go.Init(cd, OpenWork);
             }            
-            OnLoadedDone();
-//=======
-                go.Init(cd);
-                go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
-            }
             Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
-//>>>>>>> 15ff1f4cc7177252b94f3167a54e253a1455899f
         }
 
         public override void OpenWork(string id)

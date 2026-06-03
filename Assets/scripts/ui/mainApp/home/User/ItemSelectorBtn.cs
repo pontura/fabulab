@@ -13,7 +13,7 @@ namespace UI.MainApp.Home.User
         [SerializeField] ShareBtn shareBtn;
 
         public string Id { get; private set; }
-        public void Init(SOPartData cd, System.Action<string> OnClicked)
+        
 
         [SerializeField] protected Button deleteBtn;
         [SerializeField] protected GameObject loading;
@@ -21,21 +21,15 @@ namespace UI.MainApp.Home.User
         protected MetadataTypes metadataType;
         string itemUserId;
 
-        public string Id { get; private set; }
 
         public override void Init(Sprite sprite) {
             base.Init(sprite);
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
             loading.SetActive(false);
         }
-
-        public void Init(SOPartData cd)
-//>>>>>>> 15ff1f4cc7177252b94f3167a54e253a1455899f
-//        {
- //           print("SHOW");
- //           //thumb.sprite = cd.GetSprite();
+        public void Init(SOPartData cd, System.Action<string> OnClicked)
+        {
             Id = cd.id;
-//<<<<<<< HEAD
             bool isPublic = Data.Instance.sObjectsData.GetMeta(cd.id).isPublic;
             print("ItemSelectorBtn id: " + cd.id + " isPublic: " + isPublic);   
             shareBtn.Init(isPublic,OnSharedChanged);           
@@ -64,14 +58,9 @@ namespace UI.MainApp.Home.User
             Data.Instance.sObjectsData.ChangePublic(Id, isPublic);
         }
 
-        public void Init(CharacterMetaData cd) {
-//=======
-//            deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
-//        }        
-//
-//        public void Init(CharacterMetaData cd, MetadataTypes type) {
- //           //thumb.sprite = cd.GetSprite();
-//>>>>>>> 15ff1f4cc7177252b94f3167a54e253a1455899f
+       public void Init(CharacterMetaData cd, MetadataTypes type) {
+            deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
+            thumb.sprite = cd.GetSprite();
             creatorList.Init(cd.creators);
             Id = cd.id;
             metadataType = type;
@@ -92,7 +81,7 @@ namespace UI.MainApp.Home.User
         public virtual void Delete() {
             if (Id != null && Id != "") {
                 print("Delete ID: " + Id);
-                Events.OnConfirm($"¿Confirmás que querés borrar id: {Id}?", "SI", "NO", OnConfirm);
+                Events.OnConfirm($"ï¿½Confirmï¿½s que querï¿½s borrar id: {Id}?", "SI", "NO", OnConfirm);
             }
         }
         protected virtual void OnConfirm(bool ok) {

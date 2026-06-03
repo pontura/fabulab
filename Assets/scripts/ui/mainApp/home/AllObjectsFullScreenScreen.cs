@@ -27,12 +27,12 @@ namespace UI.MainApp.Home.User
 
         void OnPropMetadataAdded(PropMetaData fd) {
             if (fd.type == type) {
-                AddPropMetadata(fd);
+                AddPropMetadata(fd, false);
                 worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
             }
         }
 
-        protected void AddPropMetadata(PropMetaData fd) {
+        protected void AddPropMetadata(PropMetaData fd, bool userView) {
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
             go.Init(fd, MetadataTypes.so);
             go.GetComponent<Button>().onClick.AddListener(() => OpenWork(fd.id));
@@ -90,18 +90,15 @@ namespace UI.MainApp.Home.User
                     break;
             }
             foreach (PropMetaData cd in all)
-//<<<<<<< HEAD
             {
-                ItemSelectorBtn go = Instantiate(workBtn_prefab, container);
+                ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
                 go.Init(cd, OpenWork);
+                AddPropMetadata(cd, true);
             }
-//=======
-                AddPropMetadata(cd);
 
             isActive = true;
             Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
-//>>>>>>> 15ff1f4cc7177252b94f3167a54e253a1455899f
         }
        
         public override void OpenWork(string id)
