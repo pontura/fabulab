@@ -32,8 +32,7 @@ namespace UI.MainApp.Home.User
                 if (cd.type != SObjectData.types.background) {
                     ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                     print("go " + go);
-                    go.Init(cd);
-                    go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
+                    go.Init(cd, OpenWork);
                 }
             }
             SetFrontBack();

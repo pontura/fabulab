@@ -35,7 +35,10 @@ namespace BoardItems
         {
             return data.FindAll(x => x.type == type);
         }
-
+        public PropMetaData GetMeta(string id)
+        {
+            return metaData.Find(x => x.id == id);
+        }
         public List<PropMetaData> GetMetadataByType(SObjectData.types type)
         {
             return metaData.FindAll(x => x.type == type);
@@ -182,7 +185,7 @@ namespace BoardItems
 
             swmd.type = currentSO.type;
             swmd.timestamp = tstamp;
-
+            swmd.isPublic = md != null ? md.isPublic : false;
 
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), currentSO.id, swmd);
 
@@ -190,6 +193,18 @@ namespace BoardItems
 
             UIManager.Instance.ShowWorkDetail(currentSO);
 
+        }
+        public void ChangePublic(string id, bool isPublic)
+        {
+            string tstamp = DateTime.UtcNow.ToString("o");
+            ServerPropMetaData swmd = new ServerPropMetaData();
+            swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
+            PropMetaData md = metaData.Find(x => x.id == id);
+            swmd.type = md.type;
+            swmd.timestamp = tstamp;
+            swmd.isPublic = isPublic;
+            swmd.creators = md.creators;
+            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), id, swmd);
         }
         public void OnLoadSODataFromServer(List<CharacterMetaData> sfds)
         {
@@ -257,6 +272,7 @@ namespace BoardItems
                     pmd.id = snapshot.Key;
                     pmd.userID = snapshot.Child("userID").Value as string;
                     pmd.creators = new List<string>();
+                    pmd.isPublic = snapshot.HasChild("isPublic") ? (bool)snapshot.Child("isPublic").Value : false;
                     if (snapshot.HasChild("timestamp"))
                         pmd.timestamp = snapshot.Child("timestamp").Value as string;
                     else
@@ -305,6 +321,8 @@ namespace BoardItems
                 pmd.timestamp = child.Child("timestamp").Value as string;
             else
                 pmd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
+
+            pmd.isPublic = child.HasChild("isPublic") ? (bool)child.Child("isPublic").Value : false;
 
             FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.so.ToString(), pmd.id, (tex) => {
                 pmd.thumb = tex;
@@ -507,6 +525,7 @@ namespace BoardItems
                 swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
                 swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
                 swmd.timestamp = tstamp;
+                swmd.isPublic = false;
                 FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), currentSO.id, swmd);
 
                 FirebaseStoryMakerDBManager.Instance.UploadTexture(currentSO.thumb, MetadataTypes.characters.ToString(), id, Data.Instance.userData.userDataInDatabase.uid);

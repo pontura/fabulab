@@ -12,13 +12,11 @@ namespace UI.MainApp.Home.User
             foreach(CharacterMetaData cd in Data.Instance.charactersData.charactersMetaData)
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-                print("go " + go);
-                go.Init(cd);
 
                 if (StoryMakerEvents.isEditing)
-                    go.GetComponent<Button>().onClick.AddListener(() => Duplicate(cd.id));
+                    go.Init(cd, Duplicate);
                 else
-                    go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
+                    go.Init(cd, OpenWork);
             }
 
             OnLoadedDone();

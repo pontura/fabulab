@@ -329,6 +329,7 @@ namespace BoardItems
                     cmd.id = snapshot.Key;
                     cmd.userID = snapshot.Child("userID").Value as string;
                     cmd.creators = new List<string>();
+                    cmd.isPublic = snapshot.HasChild("isPublic") ? (bool)snapshot.Child("isPublic").Value : false;
                     if (snapshot.HasChild("timestamp"))
                         cmd.timestamp = snapshot.Child("timestamp").Value as string;
                     else

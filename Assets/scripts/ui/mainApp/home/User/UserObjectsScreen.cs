@@ -8,10 +8,12 @@ namespace UI.MainApp.Home.User
 {
     public class UserObjectsScreen : ThumbsScreen
     {
+        [SerializeField] protected bool userView;
         [SerializeField] protected Button[] buttons;
         [SerializeField] protected SObjectData.types type;
         [SerializeField] protected List<PropMetaData> all;
         [SerializeField] protected Scrollbar scrollbar;
+        [SerializeField] protected TagsSelector tagsSelector;
 
         protected override void Start() {
             base.Start();
@@ -22,7 +24,14 @@ namespace UI.MainApp.Home.User
             type = SObjectData.types.generic;
             InitTabs();
             SetType();
+            tagsSelector.Init(OnTagSelected);
         }
+
+        private void OnTagSelected(string obj)
+        {
+            print("Tag seleccionado: " + obj);
+        }
+
         public virtual void InitTabs()
         {
             SetTabs();
@@ -34,14 +43,13 @@ namespace UI.MainApp.Home.User
         }
 
         void OnPropMetadataAdded(PropMetaData fd) {
-            AddPropMetadata(fd);
+            AddPropMetadata(fd, userView);
             worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
         }
 
-        protected void AddPropMetadata(PropMetaData fd) {
+        protected void AddPropMetadata(PropMetaData fd, bool userViews) {
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-            go.Init(fd);
-            go.GetComponent<Button>().onClick.AddListener(() => OpenWork(fd.id));
+            go.Init(fd, OpenWork, userViews);
         }
 
         void OnPropMetadataUpdated(PropMetaData fd) {
@@ -63,7 +71,7 @@ namespace UI.MainApp.Home.User
 
         protected override void LoadNext() {
             foreach (PropMetaData cd in all)
-                AddPropMetadata(cd);
+                AddPropMetadata(cd, userView);
 
             OnLoadedDone();
         }

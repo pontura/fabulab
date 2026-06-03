@@ -38,8 +38,7 @@ namespace UI
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, container);
                 print("go " + go);
-                go.Init(cd);
-                go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
+                go.Init(cd, OpenWork);
             }
         }
         public void OpenWork(string id)

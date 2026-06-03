@@ -262,15 +262,15 @@ namespace Yaguar.StoryMaker.DB
         }
 
 
-        public void SaveMetadataToServer(string type, string characterId, ServerCharacterMetaData swmd)
+        public void SaveMetadataToServer(string type, string id, ServerCharacterMetaData swmd)
         {
-            Debug.Log("#Save Metadata To Server" + type);
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/" + type  + "/" + characterId);            
+            Debug.Log("#Save Metadata To Server type: " + type + ", id: " + id);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/" + type  + "/" + id);            
             string s = JsonConvert.SerializeObject(swmd);
             if (type == "so")
                 s = JsonConvert.SerializeObject(swmd as ServerPropMetaData);
             reference.SetRawJsonValueAsync(s);
-            Debug.Log("Server: SaveCharacterMetadataToServer "+ characterId);           
+            Debug.Log("Server: SaveMetadataToServer "+ id);           
         }
 
 
@@ -302,6 +302,14 @@ namespace Yaguar.StoryMaker.DB
                                 fd.id = child.Key;
                                 fd.userID = child.Child("userID").Value as string;
                                 fd.creators = new List<string>();
+
+                                Debug.Log("______________isPublic " +child.HasChild("isPublic"));     
+                                if (child.HasChild("isPublic"))
+                                {              
+                                    Debug.Log("______________tiene isPublic " + (bool)child.Child("isPublic").Value );                      
+                                    fd.isPublic = (bool)child.Child("isPublic").Value;
+                                }
+
                                 if (child.HasChild("timestamp"))
                                     fd.timestamp = child.Child("timestamp").Value as string;
                                 else

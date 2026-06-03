@@ -1,5 +1,7 @@
 ﻿using BoardItems;
+using System;
 using System.Collections.Generic;
+using UI.MainApp.Home;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +17,8 @@ namespace UI.MainApp
         public GameObject sendingSign;
        // public SharePanel sharePanel;
         public Animation pkpkAnim;
+        [SerializeField] TagsSelector tagsSelector;
+        [SerializeField] ShareBtn shareBtn;
         string id;
 
         protected override void ShowScreen(UIManager.screenType type)
@@ -23,11 +27,24 @@ namespace UI.MainApp
             {
                 case UIManager.screenType.WorkDetail:
                     Show(true);
+                    tagsSelector.Init(OnTagSelected);
+                    shareBtn.Init(false, OnSharedChanged);
                     break;
                 default:
                     Show(false);
                     break;
             }
+        }
+
+          public void OnSharedChanged(bool isPublic)
+        {
+            print("Shared changed isPublic: " + isPublic);
+            Data.Instance.sObjectsData.ChangePublic(id, isPublic);
+        }
+
+        private void OnTagSelected(string obj)
+        {
+            print("Tag seleccionado: " + obj);  
         }
 
         public void SetTexture(Texture2D tex) {

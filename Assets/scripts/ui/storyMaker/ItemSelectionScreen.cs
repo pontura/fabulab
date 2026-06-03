@@ -44,8 +44,7 @@ namespace UI.MainApp.Home.User
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
-                go.Init(cd);
-                go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
+                go.Init(cd, OpenWork);
             }
 
             OnLoadedDone();

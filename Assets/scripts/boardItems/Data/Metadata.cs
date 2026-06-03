@@ -36,6 +36,7 @@ namespace BoardItems.BoardData
         public string userID;
         public List<string> creators;
         public string timestamp;
+        public bool isPublic;
 
         public Sprite GetSprite()
         {
@@ -55,7 +56,7 @@ namespace BoardItems.BoardData
             thumb = other.thumb;
             userID = newUserID;
             creators = other.creators;
-            timestamp = other.timestamp;
+            isPublic = other.isPublic;
         }
     }
 
@@ -65,6 +66,7 @@ namespace BoardItems.BoardData
         public string userID;
         public List<string> creators;
         public string timestamp;
+        public bool isPublic;
         public void AddCreator(string uid)
         {
             if (creators == null)
