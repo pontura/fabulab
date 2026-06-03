@@ -27,12 +27,15 @@ namespace UI.MainApp.Home.User
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
             loading.SetActive(false);
         }
-        public void Init(SOPartData cd, System.Action<string> OnClicked)
+        public void Init(SOPartData cd, System.Action<string> OnClicked, bool userView = false)
         {
             Id = cd.id;
-            bool isPublic = Data.Instance.sObjectsData.GetMeta(cd.id).isPublic;
-            print("ItemSelectorBtn id: " + cd.id + " isPublic: " + isPublic);   
-            shareBtn.Init(isPublic,OnSharedChanged);           
+            if(userView)
+            {
+                bool isPublic = Data.Instance.sObjectsData.GetMeta(cd.id).isPublic;
+                print("ItemSelectorBtn id: " + cd.id + " isPublic: " + isPublic);   
+                shareBtn.Init(isPublic,OnSharedChanged);   
+            }        
             transform.GetComponentInChildren<Button>().onClick.AddListener(() => OnClicked?.Invoke(Id));
         }        
 
