@@ -27,8 +27,10 @@ namespace UI.MainApp.Home.User
             foreach (WordBalloon.balloonTypes balloonType in Enum.GetValues(typeof(WordBalloon.balloonTypes)))
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-                go.Init(wballon_prefab.balloonIcons[(int)balloonType]);
-                go.GetComponent<Button>().onClick.AddListener(() => OpenWordBalloon(balloonType.ToString()));                
+                print(balloonType + " go " + go);
+                int a = (int)balloonType;
+                Sprite s = wballon_prefab.balloonIcons[a];
+                go.Init(s, OpenWordBalloon);         
             }
             Events.OnLoading(false);
         }        

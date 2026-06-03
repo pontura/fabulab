@@ -22,10 +22,11 @@ namespace UI.MainApp.Home.User
         string itemUserId;
 
 
-        public override void Init(Sprite sprite) {
+        public void Init(Sprite sprite, System.Action<string> OnClicked) {
             base.Init(sprite);
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
-            loading.SetActive(false);
+            loading.SetActive(false);     
+            AddOnClick(OnClicked);
         }
         public void Init(SOPartData cd, System.Action<string> OnClicked, bool userView = false)
         {
@@ -37,7 +38,7 @@ namespace UI.MainApp.Home.User
                 shareBtn.Init(isPublic,OnSharedChanged);   
             }  else            
                 shareBtn.Show(false);      
-            transform.GetComponentInChildren<Button>().onClick.AddListener(() => OnClicked?.Invoke(Id));
+            AddOnClick(OnClicked);
         }        
 
         public void Init(CharacterMetaData cd, System.Action<string> OnClicked, bool userView = false) {
@@ -53,7 +54,11 @@ namespace UI.MainApp.Home.User
 
             creatorList.Init(cd.creators);
             Id = cd.id;
-            transform.GetComponentInChildren<Button>().onClick.AddListener(() => OnClicked?.Invoke(Id));
+            AddOnClick(OnClicked);
+        }
+        public void AddOnClick(System.Action<string> OnClicked)
+        {
+            transform.GetComponentInChildren<Button>().onClick.AddListener(() => OnClicked?.Invoke(Id));            
         }
 
         public void OnSharedChanged(bool isPublic)
