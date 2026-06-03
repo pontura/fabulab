@@ -17,6 +17,11 @@ namespace UI.MainApp.Home.User
         UserStoriesScreen userStoriesScreen;
         FilmDataFabulab content;
 
+        override public void Init(string id, Sprite sprite) {
+            base.Init(id, sprite);
+            deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
+        }
+
         public void SetContent(FilmDataFabulab content, UserStoriesScreen userStoriesScreen, bool isEdition)
         {
             this.content = content;

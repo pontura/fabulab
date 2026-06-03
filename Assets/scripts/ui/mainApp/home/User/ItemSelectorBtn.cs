@@ -1,5 +1,4 @@
 using BoardItems.BoardData;
-using Mono.Cecil;
 using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.DB;
@@ -9,7 +8,7 @@ namespace UI.MainApp.Home.User
     public class ItemSelectorBtn : SimpleButton
     {
         [SerializeField] CreatorsList creatorList;
-        [SerializeField] Button deleteBtn; 
+        [SerializeField] protected Button deleteBtn; 
 
         protected MetadataTypes metadataType;
         string itemUserId;
@@ -30,7 +29,7 @@ namespace UI.MainApp.Home.User
             itemUserId = cd.userID;
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
         }
-        public void Init(string id, Sprite sprite) {
+        virtual public void Init(string id, Sprite sprite) {
             thumb.sprite = sprite;
             Id = id;
         }
