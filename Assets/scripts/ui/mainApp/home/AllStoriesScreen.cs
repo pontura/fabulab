@@ -15,7 +15,7 @@ namespace UI.MainApp.Home.User
                 AddFilmMetadata(cd);
             }
 
-            OnLoadedDone();
+            Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
         }
 
         protected override void AddFilmMetadata(FilmDataFabulab fd) {

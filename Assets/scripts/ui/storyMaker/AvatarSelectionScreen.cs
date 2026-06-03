@@ -30,9 +30,16 @@ namespace UI.MainApp.Home.User
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
+//<<<<<<< HEAD
                 go.Init(cd, OpenWork);
             }            
             OnLoadedDone();
+//=======
+                go.Init(cd);
+                go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
+            }
+            Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
+//>>>>>>> 15ff1f4cc7177252b94f3167a54e253a1455899f
         }
 
         public override void OpenWork(string id)
@@ -56,7 +63,7 @@ namespace UI.MainApp.Home.User
                     break;
                 case 1:
                     allCharactersScreen.gameObject.SetActive(true);
-                    allCharactersScreen.Init();
+                    allCharactersScreen.Show(true);
                     break;
             }
         }
@@ -119,7 +126,7 @@ namespace UI.MainApp.Home.User
                     isb.SetSprite(tex);
                     imageCache[index] = tex;
                     Debug.Log($"ImageCache: {imageCache.Count}");
-                    if (!firstImageCache && imageCache.Count >= (visibleRows * itemsPerRows)) {
+                    if (!firstImageCache && imageCache.Count >= (cacheSize - cacheExtraItemsCount)) {
                         firstImageCache = true;
                         Events.OnLoading(false);
                     }

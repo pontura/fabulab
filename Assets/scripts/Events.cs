@@ -73,6 +73,6 @@ public static class Events
 
     public static System.Action<PropMetaData> OnPropMetadataAdded = delegate { };
     public static System.Action<PropMetaData> OnPropMetadataUpdated = delegate { };
-    public static System.Action<PropMetaData> OnPropMetadataRemoved = delegate { };
+    public static System.Action<string> OnPropMetadataRemoved = delegate { };
 }
    

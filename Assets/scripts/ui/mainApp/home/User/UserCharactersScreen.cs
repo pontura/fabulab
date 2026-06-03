@@ -27,7 +27,12 @@ namespace UI.MainApp.Home.User
         void AddCharacterMetadata(CharacterMetaData fd) {
             Debug.Log("% AddCharacterMetadata");
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
+
             go.Init(fd, OpenWork);
+
+       //pelu     go.Init(fd, MetadataTypes.characters);
+       //pelu     go.GetComponent<Button>().onClick.AddListener(() => OpenWork(fd.id));
+
         }
 
         void OnCharacterMetadataUpdated(CharacterMetaData fd) {
@@ -71,7 +76,7 @@ namespace UI.MainApp.Home.User
                 AddCharacterMetadata(chmd);                
             }
 
-            OnLoadedDone();
+            Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
         }
 
         public override void OpenWork(string id) { 
@@ -94,7 +99,7 @@ namespace UI.MainApp.Home.User
                     isb.SetSprite(tex);
                     imageCache[index] = tex;
                     Debug.Log($"ImageCache: {imageCache.Count}");
-                    if (!firstImageCache && imageCache.Count >= (visibleRows * itemsPerRows)) {
+                    if (!firstImageCache && imageCache.Count >= (cacheSize - cacheExtraItemsCount)) {
                         firstImageCache = true;
                         Events.OnLoading(false);
                     }

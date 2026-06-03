@@ -186,7 +186,7 @@ namespace UI.MainApp
                     characterScreen.Show(false);
                     backgroundScreen.Show(false);
                     objectsScreen.Show(false);
-                    textsScreen.Init();
+                    textsScreen.Show(true);
                     Events.OnPopupTopSignalText("Diálogos");
                     break;
                 case 4:

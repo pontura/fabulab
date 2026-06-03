@@ -348,7 +348,7 @@ namespace BoardItems
                 if (pmd != null) {
                     metaData.Remove(pmd);
                     userMetaData.Remove(pmd);
-                    Events.OnPropMetadataRemoved(pmd);
+                    Events.OnPropMetadataRemoved(pmd.id);
                 }
             }
         }
@@ -447,15 +447,10 @@ namespace BoardItems
             currentID = "";
         }
 
-        public void DeleteCharacter(string id)
-        {
-            //CharacterData wd = characters.Find(x => x.id == id);
-            //characters.Remove(wd);
-            // PlayerPrefs.DeleteKey("Work_" + id);
-            //  PlayerPrefs.DeleteKey("PkpkShared_" + id);
-            // PersistWorksIds();
+        public void RemoveSO(string id) {
+            data.RemoveAll(x => x.id == id);
+            othersData.RemoveAll(x => x.id == id);
         }
-
 
         public bool HasAnims(string id)
         {

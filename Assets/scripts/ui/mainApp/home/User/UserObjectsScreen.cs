@@ -43,27 +43,41 @@ namespace UI.MainApp.Home.User
         }
 
         void OnPropMetadataAdded(PropMetaData fd) {
-            AddPropMetadata(fd, userView);
-            worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
+//<<<<<<< HEAD
+ //           AddPropMetadata(fd, userView);
+ //           worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
+//=======
+            if (fd.type == type) {
+                AddPropMetadata(fd);
+                worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
+            }
+//>>>>>>> 15ff1f4cc7177252b94f3167a54e253a1455899f
         }
 
         protected void AddPropMetadata(PropMetaData fd, bool userViews) {
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
+//<<<<<<< HEAD
             go.Init(fd, OpenWork, userViews);
+//=======
+            go.Init(fd, MetadataTypes.so);
+            go.GetComponent<Button>().onClick.AddListener(() => OpenWork(fd.id));
+//>>>>>>> 15ff1f4cc7177252b94f3167a54e253a1455899f
         }
 
         void OnPropMetadataUpdated(PropMetaData fd) {
-            ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
-            ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
-            if (btn != null) {
-                btn.Init(fd);
-                btn.transform.SetAsFirstSibling();
+            if (fd.type == type) {
+                ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
+                ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
+                if (btn != null) {
+                    btn.Init(fd, MetadataTypes.so);
+                    btn.transform.SetAsFirstSibling();
+                }
             }
         }
 
-        void OnPropMetadataRemoved(PropMetaData fd) {
+        void OnPropMetadataRemoved(string id) {
             ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
-            ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
+            ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == id);
             if (btn != null) {
                 Destroy(btn.gameObject);
             }
@@ -73,7 +87,7 @@ namespace UI.MainApp.Home.User
             foreach (PropMetaData cd in all)
                 AddPropMetadata(cd, userView);
 
-            OnLoadedDone();
+            Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
         }
         public virtual void SetType()
         {
@@ -138,7 +152,7 @@ namespace UI.MainApp.Home.User
                     isb.SetSprite(tex);
                     imageCache[index] = tex;
                     Debug.Log($"ImageCache: {imageCache.Count}");
-                    if (!firstImageCache && imageCache.Count >= (visibleRows * itemsPerRows)) {
+                    if (!firstImageCache && imageCache.Count >= (cacheSize - cacheExtraItemsCount)) {
                         firstImageCache = true;
                         Events.OnLoading(false);
                     }

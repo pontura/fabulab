@@ -1,4 +1,5 @@
 ﻿using BoardItems.BoardData;
+using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
 
@@ -13,13 +14,16 @@ namespace UI.MainApp.Home.User
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
 
-                if (StoryMakerEvents.isEditing)
-                    go.Init(cd, Duplicate);
-                else
-                    go.Init(cd, OpenWork);
+                print("go " + go);
+                go.Init(cd, MetadataTypes.characters);
+
+                // if (StoryMakerEvents.isEditing)
+                    // go.Init(cd, Duplicate);
+                // else
+                    // go.Init(cd, OpenWork);
             }
 
-            OnLoadedDone();
+            Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
         }
         public void Duplicate(string soID)
         {

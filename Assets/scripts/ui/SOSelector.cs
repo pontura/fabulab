@@ -9,12 +9,10 @@ using static PalettesManager;
 
 namespace UI
 {
-    public class SOSelector : MonoBehaviour
+    public class SOSelector : ThumbsScreen
     {
         [SerializeField] Transform target;
-        [SerializeField] Transform container;
         [SerializeField] PresetButton itemButton;
-        [SerializeField] ItemSelectorBtn workBtn_prefab;
         [SerializeField] Dictionary<ItemData, ItemButton> all;
         private void Awake()
         {
@@ -22,26 +20,35 @@ namespace UI
         }
         public void SetOn(bool isOn)
         {
-            int artID = 0;
             gameObject.SetActive(isOn);
         }
         public void SetColores()
         {
-            Utils.RemoveAllChildsIn(container);
+            isActive = false;
+            Utils.RemoveAllChildsIn(worksContainer);
             OpenColors();
         }
         public void SetObjects()
         {
-            Utils.RemoveAllChildsIn(container);
+            firstImageCache = false;
+            if (imageCache == null)
+                imageCache = new Dictionary<int, Texture2D>();
+            imageCache.Clear();
+            downloading.Clear();
+            Init();
+
+            Utils.RemoveAllChildsIn(worksContainer);
             List<SObjectData> generics = Data.Instance.sObjectsData.GetDataByType(SObjectData.types.generic);
             foreach (SObjectData cd in generics)
             {
-                ItemSelectorBtn go = Instantiate(workBtn_prefab, container);
+                ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
                 go.Init(cd, OpenWork);
             }
+            isActive = true;
+            Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
         }
-        public void OpenWork(string id)
+        public override void OpenWork(string id)
         {
             print("abre " + id);
             SOPartData o = Data.Instance.sObjectsData.GetSO(id);
@@ -53,7 +60,7 @@ namespace UI
         public void Reset()
         {
             all = new Dictionary<ItemData, ItemButton>();
-            Utils.RemoveAllChildsIn(container);
+            Utils.RemoveAllChildsIn(worksContainer);
         }
         public void OnClicked(PresetButton pb)
         {
@@ -63,8 +70,28 @@ namespace UI
         {
             foreach (colorNames s in Data.Instance.palettesManager.backgrounds)
             {
-                PresetButton b = Instantiate(itemButton, container);
+                PresetButton b = Instantiate(itemButton, worksContainer);
                 b.Init(OnClicked, s);
+            }
+        }
+
+        protected override void LoadImage(int index, ItemSelectorBtn isb) {
+            PropMetaData pMD = Data.Instance.sObjectsData.metaData.Find(x => x.id == isb.Id);
+            if (pMD != null) {
+                downloading.Add(index);
+                Debug.Log($"$ DownloadTexture index: {index} Id: {pMD.id}");
+                Data.Instance.cacheData.LoadImage(BoardItems.BoardData.MetadataTypes.so.ToString(), pMD.id, (tex) => {
+                    downloading.Remove(index);
+                    isb.SetSprite(tex);
+                    imageCache[index] = tex;
+                    Debug.Log($"ImageCache: {imageCache.Count}");
+                    if (!firstImageCache && imageCache.Count >= (cacheSize - cacheExtraItemsCount)) {
+                        firstImageCache = true;
+                        Events.OnLoading(false);
+                    }
+                }, pMD.timestamp, pMD.userID);
+            } else {
+                Debug.LogError("Couldn´t find Film Metadata with ID " + isb.Id);
             }
         }
     }
