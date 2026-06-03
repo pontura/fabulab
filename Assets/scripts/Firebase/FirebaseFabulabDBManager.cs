@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.DB;
