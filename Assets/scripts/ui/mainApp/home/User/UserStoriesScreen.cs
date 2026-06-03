@@ -57,9 +57,9 @@ namespace UI.MainApp.Home.User
             {
                 AddFilmMetadata(cd);                
             }
-            
-            OnLoadedDone();
-            
+
+            Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
+
         }
 
         protected virtual void AddFilmMetadata(FilmDataFabulab fd) {
@@ -100,7 +100,7 @@ namespace UI.MainApp.Home.User
                     isb.SetSprite(tex);
                     imageCache[index] = tex;
                     Debug.Log($"ImageCache: {imageCache.Count}");
-                    if (!firstImageCache && imageCache.Count >= (visibleRows * itemsPerRows)) {
+                    if (!firstImageCache && imageCache.Count >= (cacheSize - cacheExtraItemsCount)) {
                         firstImageCache = true;
                         Events.OnLoading(false);
                     }

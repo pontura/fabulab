@@ -1,4 +1,5 @@
 ﻿using BoardItems.BoardData;
+using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
 
@@ -21,7 +22,7 @@ namespace UI.MainApp.Home.User
                     go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
             }
 
-            OnLoadedDone();
+            Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
         }
         public void Duplicate(string soID)
         {

@@ -50,7 +50,7 @@ namespace UI.MainApp.Home.User
                 go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
             }
 
-            OnLoadedDone();
+            Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
         }
         public virtual void New(){ }
         public override void OpenWork(string id) {

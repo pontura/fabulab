@@ -32,8 +32,8 @@ namespace UI.MainApp.Home.User
                 print("go " + go);
                 go.Init(cd);
                 go.GetComponent<Button>().onClick.AddListener(() => OpenWork(cd.id));
-            }            
-            OnLoadedDone();
+            }
+            Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
         }
 
         public override void OpenWork(string id)
@@ -120,7 +120,7 @@ namespace UI.MainApp.Home.User
                     isb.SetSprite(tex);
                     imageCache[index] = tex;
                     Debug.Log($"ImageCache: {imageCache.Count}");
-                    if (!firstImageCache && imageCache.Count >= (visibleRows * itemsPerRows)) {
+                    if (!firstImageCache && imageCache.Count >= (cacheSize - cacheExtraItemsCount)) {
                         firstImageCache = true;
                         Events.OnLoading(false);
                     }
