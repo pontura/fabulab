@@ -93,7 +93,7 @@ namespace UI.MainApp.Home.User
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
-                go.Init(cd, OpenWork);
+                go.Init(cd, MetadataTypes.so, OpenWork);
                 AddPropMetadata(cd, true);
             }
 

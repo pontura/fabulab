@@ -9,14 +9,10 @@ namespace UI.MainApp.Home.User
     public class ItemSelectorBtn : SimpleButton
     {
         [SerializeField] CreatorsList creatorList;
-
-        [SerializeField] ShareBtn shareBtn;
-
-        public string Id { get; private set; }
-        
-
         [SerializeField] protected Button deleteBtn;
         [SerializeField] protected GameObject loading;
+        [SerializeField] ShareBtn shareBtn;
+        public string Id { get; private set; }
 
         protected MetadataTypes metadataType;
         string itemUserId;
@@ -25,7 +21,8 @@ namespace UI.MainApp.Home.User
         public void Init(Sprite sprite, System.Action<string> OnClicked) {
             base.Init(sprite);
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
-            loading.SetActive(false);     
+            loading.SetActive(false);
+            shareBtn.Show(false);
             AddOnClick(OnClicked);
         }
         public void Init(SOPartData cd, System.Action<string> OnClicked, bool userView = false)
@@ -37,11 +34,12 @@ namespace UI.MainApp.Home.User
                 print("ItemSelectorBtn id: " + cd.id + " isPublic: " + isPublic);   
                 shareBtn.Init(isPublic,OnSharedChanged);   
             }  else            
-                shareBtn.Show(false);      
+                shareBtn.Show(false);
+            deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
             AddOnClick(OnClicked);
         }        
 
-        public void Init(CharacterMetaData cd, System.Action<string> OnClicked, bool userView = false) {
+        public void Init(CharacterMetaData cd, MetadataTypes type, System.Action<string> OnClicked, bool userView = false) {
             print("SHOW userView " + userView);
             if(userView)
             {
@@ -51,25 +49,13 @@ namespace UI.MainApp.Home.User
                 shareBtn.Show(true);
             } else            
                 shareBtn.Show(false);
-
-            creatorList.Init(cd.creators);
-            Id = cd.id;
+                        
             AddOnClick(OnClicked);
-        }
-        public void AddOnClick(System.Action<string> OnClicked)
-        {
-            transform.GetComponentInChildren<Button>().onClick.AddListener(() => OnClicked?.Invoke(Id));            
+            Init(cd, type);
         }
 
-        public void OnSharedChanged(bool isPublic)
-        {
-            print("Shared changed isPublic: " + isPublic);
-            Data.Instance.sObjectsData.ChangePublic(Id, isPublic);
-        }
-
-       public void Init(CharacterMetaData cd, MetadataTypes type) {
-            deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
-            thumb.sprite = cd.GetSprite();
+        public void Init(CharacterMetaData cd, MetadataTypes type) {
+            //thumb.sprite = cd.GetSprite();
             creatorList.Init(cd.creators);
             Id = cd.id;
             metadataType = type;
@@ -81,6 +67,17 @@ namespace UI.MainApp.Home.User
             Id = id;
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
         }
+
+        public void AddOnClick(System.Action<string> OnClicked)
+        {
+            transform.GetComponentInChildren<Button>().onClick.AddListener(() => OnClicked?.Invoke(Id));            
+        }
+
+        public void OnSharedChanged(bool isPublic)
+        {
+            print("Shared changed isPublic: " + isPublic);
+            Data.Instance.sObjectsData.ChangePublic(Id, isPublic);
+        }       
 
         public void SetSprite(Texture2D tex) {
             thumb.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);

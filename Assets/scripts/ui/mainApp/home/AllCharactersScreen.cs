@@ -15,12 +15,11 @@ namespace UI.MainApp.Home.User
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
 
                 print("go " + go);
-              //  go.Init(cd, MetadataTypes.characters);
 
                 if (StoryMakerEvents.isEditing)
-                     go.Init(cd, Duplicate);
+                     go.Init(cd, MetadataTypes.characters, Duplicate);
                 else
-                    go.Init(cd, OpenWork);
+                    go.Init(cd, MetadataTypes.characters, OpenWork);
             }
 
             Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);

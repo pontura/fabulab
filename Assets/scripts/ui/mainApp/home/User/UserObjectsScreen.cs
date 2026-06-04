@@ -52,8 +52,8 @@ namespace UI.MainApp.Home.User
         protected void AddPropMetadata(PropMetaData fd, bool userViews) {
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
 
-            go.Init(fd, OpenWork, userViews);
-            go.Init(fd, MetadataTypes.so);
+            go.Init(fd, MetadataTypes.so, OpenWork, userViews);
+            //go.Init(fd, MetadataTypes.so);
 
         }
 
