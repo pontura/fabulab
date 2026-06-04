@@ -11,7 +11,7 @@ namespace UI.MainApp.Home.User
         [SerializeField] CreatorsList creatorList;
         [SerializeField] protected Button deleteBtn;
         [SerializeField] protected GameObject loading;
-        [SerializeField] ShareBtn shareBtn;
+        [SerializeField] protected ToggleButton infoBtn;
         public string Id { get; private set; }
 
         protected MetadataTypes metadataType;
@@ -22,7 +22,7 @@ namespace UI.MainApp.Home.User
             base.Init(sprite);
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
             loading.SetActive(false);
-            shareBtn.Show(false);
+            infoBtn.gameObject.SetActive(false);
             AddOnClick(OnClicked);
         }
         public void Init(SOPartData cd, System.Action<string> OnClicked, bool userView = false)
@@ -30,25 +30,32 @@ namespace UI.MainApp.Home.User
             Id = cd.id;
             if(userView)
             {
-                bool isPublic = Data.Instance.sObjectsData.GetMeta(cd.id).isPublic;
+                PropMetaData meta = Data.Instance.sObjectsData.GetMeta(cd.id);
+                bool isPublic = meta.isPublic;
                 print("ItemSelectorBtn id: " + cd.id + " isPublic: " + isPublic);   
-                shareBtn.Init(isPublic,OnSharedChanged);   
+                infoBtn.gameObject.SetActive(true);
+                infoBtn.Init(OnInfoClicked, isPublic);
             }  else            
-                shareBtn.Show(false);
+                infoBtn.gameObject.SetActive(false);
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
             AddOnClick(OnClicked);
         }        
-
+        void OnInfoClicked(bool isPublic)
+        {
+            UIManager.Instance.infoDataScreen.Init(Id, thumb.sprite);
+            print("Info clicked isPublic: " + isPublic);
+        }
         public void Init(CharacterMetaData cd, MetadataTypes type, System.Action<string> OnClicked, bool userView = false) {
             print("SHOW userView " + userView);
             if(userView)
             {
-                bool isPublic = Data.Instance.sObjectsData.GetMeta(cd.id).isPublic;
+                PropMetaData meta = Data.Instance.sObjectsData.GetMeta(cd.id);
+                bool isPublic = meta.isPublic;
                 print("ItemSelectorBtn id: " + cd.id + " isPublic: " + isPublic);  
-                shareBtn.Init(isPublic,OnSharedChanged);   
-                shareBtn.Show(true);
+                infoBtn.gameObject.SetActive(true);
+                infoBtn.Init(OnInfoClicked, isPublic);
             } else            
-                shareBtn.Show(false);
+                infoBtn.gameObject.SetActive(false);
                         
             AddOnClick(OnClicked);
             Init(cd, type);
@@ -72,12 +79,7 @@ namespace UI.MainApp.Home.User
         {
             transform.GetComponentInChildren<Button>().onClick.AddListener(() => OnClicked?.Invoke(Id));            
         }
-
-        public void OnSharedChanged(bool isPublic)
-        {
-            print("Shared changed isPublic: " + isPublic);
-            Data.Instance.sObjectsData.ChangePublic(Id, isPublic);
-        }       
+      
 
         public void SetSprite(Texture2D tex) {
             thumb.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);

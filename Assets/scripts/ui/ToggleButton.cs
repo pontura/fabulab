@@ -20,6 +20,10 @@ namespace UI
             on.SetActive(this.isOn);
             off.SetActive(!this.isOn);
         }
+        public void Clicked()
+        {
+            OnToggle(this.isOn);
+        }
         public void Toggle()
         {
             this.isOn = !isOn;

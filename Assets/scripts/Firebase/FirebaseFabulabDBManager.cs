@@ -277,7 +277,7 @@ namespace Yaguar.StoryMaker.DB
         }
 
 
-        public void SaveMetadataToServer(string type, string id, ServerCharacterMetaData swmd)
+        public void SaveMetadataToServer(string type, string id, ServerCharacterMetaData swmd, System.Action<bool, string> OnDone = null)
         {
             Debug.Log("#Save Metadata To Server type: " + type + ", id: " + id);
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/" + type  + "/" + id);            
@@ -285,7 +285,9 @@ namespace Yaguar.StoryMaker.DB
             if (type == "so")
                 s = JsonConvert.SerializeObject(swmd as ServerPropMetaData);
             reference.SetRawJsonValueAsync(s);
-            Debug.Log("Server: SaveMetadataToServer "+ id);           
+            Debug.Log("Server: SaveMetadataToServer "+ id);      
+            if(OnDone != null)  
+                OnDone(true, "Datos Actualizados!");     
         }
 
 
@@ -316,7 +318,7 @@ namespace Yaguar.StoryMaker.DB
                                 }
                                 fd.id = child.Key;
                                 fd.userID = child.Child("userID").Value as string;
-                                
+
                                 fd.creators = new List<string>();
                                 fd.tags = new List<string>();
 

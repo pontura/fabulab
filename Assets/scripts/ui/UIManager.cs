@@ -22,6 +22,7 @@ namespace UI
         [SerializeField] ConfirmationScreen confirmationScreen;
         public UndoManager undoManager;
         public InputManager inputManager;
+        public InfoDataScreen infoDataScreen;
 
         public bool hasUnsavedChanges;
 
@@ -48,6 +49,7 @@ namespace UI
         [SerializeField] List<screenType> backToScreen;
         void Awake()
         {
+            infoDataScreen = GetComponent<InfoDataScreen>();
             confirmationScreen.Init();
             backToScreen = new List<screenType>();
             zoomManager = GetComponent<ZoomsManager>();

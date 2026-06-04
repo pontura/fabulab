@@ -192,10 +192,9 @@ namespace BoardItems
             FirebaseStoryMakerDBManager.Instance.UploadTexture(currentSO.thumb, MetadataTypes.so.ToString(), currentSO.id, Data.Instance.userData.userDataInDatabase.uid);
 
             UIManager.Instance.ShowWorkDetail(currentSO);
-
         }
-        public void ChangePublic(string id, bool isPublic)
-        {
+        public void SaveInfo(string id, bool isPublic, string tagValue, System.Action<bool, string> OnDone)
+        { 
             string tstamp = DateTime.UtcNow.ToString("o");
             ServerPropMetaData swmd = new ServerPropMetaData();
             swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
@@ -203,25 +202,14 @@ namespace BoardItems
             swmd.type = md.type;
             swmd.timestamp = tstamp;
             swmd.isPublic = isPublic;
-            swmd.creators = md.creators;
-            swmd.tags = md.tags;
-            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), id, swmd);
-        }
-         public void AddTag(string id, string value)
-        {
-            string tstamp = DateTime.UtcNow.ToString("o");
-            ServerPropMetaData swmd = new ServerPropMetaData();
-            swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
-            PropMetaData md = metaData.Find(x => x.id == id);
-            swmd.type = md.type;
-            swmd.timestamp = tstamp;
-            swmd.isPublic = md.isPublic;
-            string tagID = Data.Instance.tagsManager.GetTagID(value);
-            print("AddTag " + value + " tagID: " + tagID);
+            string tagID = Data.Instance.tagsManager.GetTagID(tagValue);
+            print("AddTag " + tagValue + " tagID: " + tagID);
             swmd.AddTag(tagID);
             swmd.creators = md.creators;
-            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), id, swmd);
+            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), id, swmd, OnDone);
         }
+       
+        
         public void OnLoadSODataFromServer(List<CharacterMetaData> sfds)
         {
             //Debug.Log("% OnLoadSODataFromServer !!");
@@ -342,7 +330,12 @@ namespace BoardItems
                 pmd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
 
             pmd.isPublic = child.HasChild("isPublic") ? (bool)child.Child("isPublic").Value : false;
-            pmd.tags = child.HasChild("tags") ? (List<string>)child.Child("tags").Value : new List<string>();
+
+            pmd.tags = new List<string>();
+            if(child.HasChild("tags"))
+            {
+                pmd.tags.Add(child.Child("tags").Value as string);
+            } 
 
             FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.so.ToString(), pmd.id, (tex) => {
                 pmd.thumb = tex;

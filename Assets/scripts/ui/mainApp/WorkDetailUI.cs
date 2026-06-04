@@ -17,7 +17,6 @@ namespace UI.MainApp
         public GameObject sendingSign;
        // public SharePanel sharePanel;
         public Animation pkpkAnim;
-        [SerializeField] TagsSelector tagsSelector;
         [SerializeField] ShareBtn shareBtn;
         string id;
 
@@ -27,25 +26,11 @@ namespace UI.MainApp
             {
                 case UIManager.screenType.WorkDetail:
                     Show(true);
-                    tagsSelector.Init(OnTagSelected);
-                    shareBtn.Init(false, OnSharedChanged);
                     break;
                 default:
                     Show(false);
                     break;
             }
-        }
-
-          public void OnSharedChanged(bool isPublic)
-        {
-            print("Shared changed isPublic: " + isPublic);
-            Data.Instance.sObjectsData.ChangePublic(id, isPublic);
-        }
-
-        private void OnTagSelected(string value)
-        {
-            print("Tag seleccionado: " + value);  
-            Data.Instance.sObjectsData.AddTag(id, value);
         }
 
         public void SetTexture(Texture2D tex) {
