@@ -101,7 +101,7 @@ namespace UI.MainApp.Home.User
                 Data.Instance.charactersData.RemoveCharacter(id);
                 Events.OnCharacterMetadataRemoved(id);
             }else if (metadataType == MetadataTypes.so) {
-                Data.Instance.charactersData.RemoveCharacter(id);
+                Data.Instance.sObjectsData.RemoveSO(id);
                 Events.OnPropMetadataRemoved(id);
             }
             Destroy(gameObject);
