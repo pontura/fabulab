@@ -329,7 +329,6 @@ namespace BoardItems
                     cmd = new CharacterMetaData();
                     cmd.id = snapshot.Key;
                     cmd.userID = snapshot.Child("userID").Value as string;
-                    cmd.creators = new List<string>();
                     cmd.isPublic = snapshot.HasChild("isPublic") ? (bool)snapshot.Child("isPublic").Value : false;
                     if (snapshot.HasChild("timestamp"))
                         cmd.timestamp = snapshot.Child("timestamp").Value as string;
@@ -338,7 +337,11 @@ namespace BoardItems
 
                     if (snapshot.HasChild("creators")) {
                         foreach (var uid in snapshot.Child("creators").Children)
-                            cmd.creators.Add(uid.Value as string);
+                            cmd.AddCreator(uid.Value as string);
+                    }
+                    if (snapshot.HasChild("tags")) {
+                        foreach (var uid in snapshot.Child("tags").Children)
+                            cmd.AddTag(uid.Value as string);
                     }
                     
                     FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.characters.ToString(), cmd.id, (tex) => {

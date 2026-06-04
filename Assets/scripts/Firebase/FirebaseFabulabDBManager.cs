@@ -316,7 +316,9 @@ namespace Yaguar.StoryMaker.DB
                                 }
                                 fd.id = child.Key;
                                 fd.userID = child.Child("userID").Value as string;
+                                
                                 fd.creators = new List<string>();
+                                fd.tags = new List<string>();
 
                                 Debug.Log("______________isPublic " +child.HasChild("isPublic"));     
                                 if (child.HasChild("isPublic"))
@@ -332,7 +334,12 @@ namespace Yaguar.StoryMaker.DB
 
                                 if (child.HasChild("creators")) {
                                     foreach (var uid in child.Child("creators").Children)
-                                        fd.creators.Add(uid.Value as string);
+                                        fd.AddCreator(uid.Value as string);
+                                }
+
+                                if (child.HasChild("tags")) {
+                                    foreach (var tagID in child.Child("tags").Children)
+                                        fd.AddTag(tagID.Value as string);
                                 }
 
                                 if (child.HasChild("thumb")) {

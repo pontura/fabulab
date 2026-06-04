@@ -1189,7 +1189,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.ShareBtn
   sharedGO: {fileID: 7841720876119825170}
-  shared: 0
+  isPublic: 0
 --- !u!1 &4862021986547362121
 GameObject:
   m_ObjectHideFlags: 0
@@ -2042,6 +2042,14 @@ PrefabInstance:
       value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 4864106449298128994, guid: 2ca6287ca33dbd948911899e2d25fe15, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4864106449298128994, guid: 2ca6287ca33dbd948911899e2d25fe15, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4864106449298128994, guid: 2ca6287ca33dbd948911899e2d25fe15, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -2075,7 +2083,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4864106449298128994, guid: 2ca6287ca33dbd948911899e2d25fe15, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 7.23
       objectReference: {fileID: 0}
     - target: {fileID: 4864106449298128994, guid: 2ca6287ca33dbd948911899e2d25fe15, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2101,7 +2109,8 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: c5786102c203c7440a9c529ca53af0c3, type: 3}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 792078792087079810, guid: 2ca6287ca33dbd948911899e2d25fe15, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

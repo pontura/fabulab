@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
 namespace BoardItems.BoardData
 {
@@ -35,8 +34,32 @@ namespace BoardItems.BoardData
         public Texture2D thumb;
         public string userID;
         public List<string> creators;
+        public List<string> tags;
         public string timestamp;
         public bool isPublic;
+        public void AddCreator(string uid)
+        {
+            if (creators == null)
+            {
+                creators = new List<string>();
+            }
+            if (!creators.Contains(uid))
+            {
+                if(userID != uid)
+                    creators.Add(uid);
+            }
+        }
+         public void AddTag(string tagID)
+        {
+          //|  if (tags == null)
+         //   {
+                tags = new List<string>();
+          //  }
+          //  if (!tags.Contains(tagID))
+           // {
+                tags.Add(tagID);
+           // }
+        }
 
         public Sprite GetSprite()
         {
@@ -56,6 +79,7 @@ namespace BoardItems.BoardData
             thumb = other.thumb;
             userID = newUserID;
             creators = other.creators;
+            tags = other.tags;
             isPublic = other.isPublic;
         }
     }
@@ -65,6 +89,7 @@ namespace BoardItems.BoardData
     {
         public string userID;
         public List<string> creators;
+        public List<string> tags;
         public string timestamp;
         public bool isPublic;
         public void AddCreator(string uid)
@@ -79,6 +104,18 @@ namespace BoardItems.BoardData
                     creators.Add(uid);
             }
         }
+         public void AddTag(string tagID)
+        {
+          //  if (tags == null)
+           // {
+                tags = new List<string>();
+           // }
+          //  if (!tags.Contains(tagID))
+           // {
+                tags.Add(tagID);
+           // }
+        }
+
     }
 
     [Serializable]
@@ -86,6 +123,7 @@ namespace BoardItems.BoardData
     {
         public string partID;
         public List<string> creators;
+        public List<string> tags;
         public string timestamp;
     }
 

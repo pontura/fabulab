@@ -81,4 +81,9 @@ public class TagsManager : MonoBehaviour
             OnTagsLoaded?.Invoke();
         });
     }
+    public string GetTagID(string tagName)
+    {
+        TagData tag = Tags.Find(t => t.name.Trim().ToLower() == tagName.Trim().ToLower());
+        return tag != null ? tag.id : null;
+    }
 }

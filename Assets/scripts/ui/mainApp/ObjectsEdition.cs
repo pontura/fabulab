@@ -85,6 +85,7 @@ namespace UI.MainApp
         {
             UIManager.Instance.workDetailUI.SetTexture(tex);
             Data.Instance.sObjectsData.SaveSO(tex);
+            
         }
        
     }

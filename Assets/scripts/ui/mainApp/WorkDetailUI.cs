@@ -42,9 +42,10 @@ namespace UI.MainApp
             Data.Instance.sObjectsData.ChangePublic(id, isPublic);
         }
 
-        private void OnTagSelected(string obj)
+        private void OnTagSelected(string value)
         {
-            print("Tag seleccionado: " + obj);  
+            print("Tag seleccionado: " + value);  
+            Data.Instance.sObjectsData.AddTag(id, value);
         }
 
         public void SetTexture(Texture2D tex) {
@@ -58,7 +59,7 @@ namespace UI.MainApp
             savedSignal.SetActive(isNew);
             Events.OnLoading(false);
         }
-
+    
         public void ShowWorkDetail(string _id, Sprite sprite, bool isNew)
         {
             AudioManager.Instance.musicManager.Play("work");

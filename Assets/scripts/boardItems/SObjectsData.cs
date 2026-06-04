@@ -204,6 +204,22 @@ namespace BoardItems
             swmd.timestamp = tstamp;
             swmd.isPublic = isPublic;
             swmd.creators = md.creators;
+            swmd.tags = md.tags;
+            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), id, swmd);
+        }
+         public void AddTag(string id, string value)
+        {
+            string tstamp = DateTime.UtcNow.ToString("o");
+            ServerPropMetaData swmd = new ServerPropMetaData();
+            swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
+            PropMetaData md = metaData.Find(x => x.id == id);
+            swmd.type = md.type;
+            swmd.timestamp = tstamp;
+            swmd.isPublic = md.isPublic;
+            string tagID = Data.Instance.tagsManager.GetTagID(value);
+            print("AddTag " + value + " tagID: " + tagID);
+            swmd.AddTag(tagID);
+            swmd.creators = md.creators;
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), id, swmd);
         }
         public void OnLoadSODataFromServer(List<CharacterMetaData> sfds)
@@ -271,7 +287,6 @@ namespace BoardItems
                     pmd.type = (SObjectData.types)((int)(long)snapshot.Child("type").Value);
                     pmd.id = snapshot.Key;
                     pmd.userID = snapshot.Child("userID").Value as string;
-                    pmd.creators = new List<string>();
                     pmd.isPublic = snapshot.HasChild("isPublic") ? (bool)snapshot.Child("isPublic").Value : false;
                     if (snapshot.HasChild("timestamp"))
                         pmd.timestamp = snapshot.Child("timestamp").Value as string;
@@ -280,9 +295,13 @@ namespace BoardItems
 
                     if (snapshot.HasChild("creators")) {
                         foreach (var uid in snapshot.Child("creators").Children)
-                            pmd.creators.Add(uid.Value as string);
+                            pmd.AddCreator(uid.Value as string);
                     }
-                    
+                    if (snapshot.HasChild("tags")) {
+                        foreach (var tagID in snapshot.Child("tags").Children)
+                            pmd.AddTag(tagID.Value as string);
+                    }
+
                     FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.so.ToString(), pmd.id, (tex) => {
                         pmd.thumb = tex;
                         Events.OnPropMetadataAdded(pmd);
