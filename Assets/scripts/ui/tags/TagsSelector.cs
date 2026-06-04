@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Data.Common;
 using UnityEngine;
 
 namespace UI.MainApp.Home
@@ -14,6 +15,19 @@ namespace UI.MainApp.Home
                 PopulateDropdown();
             else
                 Data.Instance.tagsManager.OnTagsLoaded += PopulateDropdown;
+        }
+        public void SetTag(string tagID)
+        {
+            int id =0;
+            int a = 0;
+            foreach (TagData tag in Data.Instance.tagsManager.Tags)
+            {
+               if(tag.id == tagID)
+                    id = a;
+                a++;
+            }
+
+            dropdown.SetValueWithoutNotify(id);
         }
         void OnDestroy()
         {

@@ -28,6 +28,9 @@ namespace UI.MainApp
             shareBtn.Init(sod.isPublic,OnSharedChanged); 
             workImage.sprite = s;
             tagsSelector.Init(OnTagSelected);
+
+            if(sod.tags.Count>0) // solo muestra 1 por ahora.
+                tagsSelector.SetTag(sod.tags[0]);
         }
         void OnSharedChanged(bool isPublic)
         {
