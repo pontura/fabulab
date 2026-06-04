@@ -342,6 +342,7 @@ namespace BoardItems
                 pmd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
 
             pmd.isPublic = child.HasChild("isPublic") ? (bool)child.Child("isPublic").Value : false;
+            pmd.tags = child.HasChild("tags") ? (List<string>)child.Child("tags").Value : new List<string>();
 
             FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.so.ToString(), pmd.id, (tex) => {
                 pmd.thumb = tex;
