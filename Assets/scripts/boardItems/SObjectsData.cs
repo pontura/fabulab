@@ -3,6 +3,7 @@ using Firebase.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using UI;
 using UnityEngine;
 using Yaguar.Auth;
@@ -158,55 +159,51 @@ namespace BoardItems
         void OnSavedToServer(bool succes, string id)
         {
             string tstamp = DateTime.UtcNow.ToString("o");
-            //if (currentSO.id != "")
-            //{   
-            //    if (Data.Instance.userData.isAdmin) {
-                    
-            //        md.thumb = currentSO.thumb;
-            //        md.timestamp = tstamp;
-            //    }
-            //    PropMetaData umd = userMetaData.Find(x => x.id == currentSO.id);
-            //    umd.thumb = currentSO.thumb;
-            //    umd.timestamp = tstamp;
-            //}
+            PropMetaData md = null;
+            if (currentID == "") // is new character
+            {
+                md = new PropMetaData() { id = id, type = currentSO.type, userID = Data.Instance.userData.userDataInDatabase.uid, timestamp = tstamp };
+                md.AddCreator(md.userID);
+                userMetaData.Add(md);
+                metaData.Add(md);
+            } else {
+                md = userMetaData.Find(x => x.id == currentID);
+                md.timestamp = tstamp;
+            }
 
             metaData = metaData.OrderByDescending(x => x.timestamp).ToList();
             userMetaData = userMetaData.OrderByDescending(x => x.timestamp).ToList();
 
             currentSO.id = id;
 
-            ServerPropMetaData swmd = new ServerPropMetaData();
-            swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
-
-            PropMetaData md = metaData.Find(x => x.id == lastID);
-            if (md != null) swmd.AddCreator(md.userID);
-
             print("OnSavedToServer " + md + "   new id: " + id + " lastID:" + lastID);
 
-            swmd.type = currentSO.type;
-            swmd.timestamp = tstamp;
-            swmd.isPublic = md != null ? md.isPublic : false;
-
-            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), currentSO.id, swmd);
+            SaveMetadata(md);
 
             FirebaseStoryMakerDBManager.Instance.UploadTexture(currentSO.thumb, MetadataTypes.so.ToString(), currentSO.id, Data.Instance.userData.userDataInDatabase.uid);
 
             UIManager.Instance.ShowWorkDetail(currentSO);
         }
+
+        void SaveMetadata(PropMetaData md, System.Action<bool, string> OnDone = null) {
+            ServerPropMetaData swmd = new ServerPropMetaData();
+            swmd.userID = md.userID;
+            swmd.type = md.type;
+            swmd.timestamp = md.timestamp;
+            swmd.isPublic = md.isPublic;            
+            swmd.tags = md.tags;
+            swmd.creators = md.creators;
+            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), md.id, swmd, OnDone);
+        }
+
         public void SaveInfo(string id, bool isPublic, string tagValue, System.Action<bool, string> OnDone)
         { 
-            string tstamp = DateTime.UtcNow.ToString("o");
-            ServerPropMetaData swmd = new ServerPropMetaData();
-            swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
             PropMetaData md = metaData.Find(x => x.id == id);
-            swmd.type = md.type;
-            swmd.timestamp = tstamp;
-            swmd.isPublic = isPublic;
+            md.isPublic = isPublic;
             string tagID = Data.Instance.tagsManager.GetTagID(tagValue);
+            md.AddTag(tagID);
             print("AddTag " + tagValue + " tagID: " + tagID);
-            swmd.AddTag(tagID);
-            swmd.creators = md.creators;
-            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), id, swmd, OnDone);
+            SaveMetadata(md, OnDone);
         }
        
         

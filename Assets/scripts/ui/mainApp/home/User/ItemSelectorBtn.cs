@@ -25,43 +25,36 @@ namespace UI.MainApp.Home.User
             infoBtn.gameObject.SetActive(false);
             AddOnClick(OnClicked);
         }
-        public void Init(SOPartData cd, System.Action<string> OnClicked, bool userView = false)
+        public void Init(SOPartData cd, System.Action<string> OnClicked)
         {
             Id = cd.id;
-            if(userView)
+            /*if(userView)
             {
                 PropMetaData meta = Data.Instance.sObjectsData.GetMeta(cd.id);
                 bool isPublic = meta.isPublic;
                 print("ItemSelectorBtn id: " + cd.id + " isPublic: " + isPublic);   
                 infoBtn.gameObject.SetActive(true);
                 infoBtn.Init(OnInfoClicked, isPublic);
-            }  else            
-                infoBtn.gameObject.SetActive(false);
+            }  else            */
+            infoBtn.gameObject.SetActive(false);
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
             AddOnClick(OnClicked);
         }        
-        void OnInfoClicked(bool isPublic)
+        protected void OnInfoClicked(bool isPublic)
         {
-            UIManager.Instance.infoDataScreen.Init(Id, thumb.sprite);
-            print("Info clicked isPublic: " + isPublic);
+            UIManager.Instance.infoDataScreen.Init(Id, metadataType, thumb.sprite);
+            print($"Info clicked id: {Id} isPublic: " + isPublic);
         }
         public void Init(CharacterMetaData cd, MetadataTypes type, System.Action<string> OnClicked, bool userView = false) {
+            Init(cd, type);
             print("SHOW userView " + userView);
             if(userView)
             {
-                bool isPublic = false;
-                if (type==MetadataTypes.so)
-                    isPublic = Data.Instance.sObjectsData.GetMeta(cd.id).isPublic;
-                else if(type==MetadataTypes.characters)
-                    isPublic = Data.Instance.charactersData.GetMeta(cd.id).isPublic;
-                print("ItemSelectorBtn id: " + cd.id + " isPublic: " + isPublic);  
-                infoBtn.gameObject.SetActive(true);
-                infoBtn.Init(OnInfoClicked, isPublic);
+                UpdatePublicState();
             } else            
                 infoBtn.gameObject.SetActive(false);
                         
             AddOnClick(OnClicked);
-            Init(cd, type);
         }
 
         public void Init(CharacterMetaData cd, MetadataTypes type) {
@@ -83,6 +76,17 @@ namespace UI.MainApp.Home.User
             transform.GetComponentInChildren<Button>().onClick.AddListener(() => OnClicked?.Invoke(Id));            
         }
       
+        public void UpdatePublicState() {
+            bool isPublic = false;
+            if (metadataType == MetadataTypes.so)
+                isPublic = Data.Instance.sObjectsData.GetMeta(Id).isPublic;
+            else if (metadataType == MetadataTypes.characters)
+                isPublic = Data.Instance.charactersData.GetMeta(Id).isPublic;
+            print("ItemSelectorBtn id: " + Id + " isPublic: " + isPublic);
+            infoBtn.gameObject.SetActive(true);
+            infoBtn.Init(OnInfoClicked, isPublic);
+        }
+
 
         public void SetSprite(Texture2D tex) {
             thumb.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);

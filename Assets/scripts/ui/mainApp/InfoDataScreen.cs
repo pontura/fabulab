@@ -1,6 +1,7 @@
-﻿using System;
-using BoardItems.BoardData;
+﻿using BoardItems.BoardData;
+using System;
 using UI.MainApp.Home;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,22 +16,31 @@ namespace UI.MainApp
         string id;
         string tagValue;
         bool isPublic;
+        MetadataTypes metadataType;
         void Start()
         {
             panel.SetActive(false);            
         }
-        public void Init( string _id, Sprite s)
+        public void Init( string _id, MetadataTypes type, Sprite s)
         {   
             tagValue = Data.Instance.tagsManager.Tags[0].name;
             panel.SetActive(true);
             id = _id;
-            PropMetaData sod = Data.Instance.sObjectsData.GetMeta(id);            
-            shareBtn.Init(sod.isPublic,OnSharedChanged); 
-            workImage.sprite = s;
-            tagsSelector.Init(OnTagSelected);
-
-            if(sod.tags.Count>0) // solo muestra 1 por ahora.
-                tagsSelector.SetTag(sod.tags[0]);
+            metadataType = type;
+            bool isPublic = false;
+            if (type == MetadataTypes.stories) {
+                tagsSelector.gameObject.SetActive(false);
+                isPublic = Data.Instance.scenesData.GetMeta(id).isPublic;
+            } else {
+                CharacterMetaData md = type == MetadataTypes.so ? Data.Instance.sObjectsData.GetMeta(id) : Data.Instance.charactersData.GetMeta(id);
+                isPublic = md.isPublic;
+                tagsSelector.gameObject.SetActive(true);
+                tagsSelector.Init(OnTagSelected);
+                if (md.tags.Count > 0) // solo muestra 1 por ahora.
+                    tagsSelector.SetTag(md.tags[0]);
+            }
+            shareBtn.Init(isPublic,OnSharedChanged); 
+            workImage.sprite = s;            
         }
         void OnSharedChanged(bool isPublic)
         {
@@ -49,7 +59,10 @@ namespace UI.MainApp
         void OnLoadingDone()
         {            
             Events.OnLoading(true);
-            Data.Instance.sObjectsData.SaveInfo(id, isPublic, tagValue, OnDone);  
+            if(metadataType == MetadataTypes.so) 
+                Data.Instance.sObjectsData.SaveInfo(id, isPublic, tagValue, OnDone);
+            else if (metadataType == MetadataTypes.characters)
+                Data.Instance.charactersData.SaveInfo(id, isPublic, tagValue, OnDone);
         }
 
         private void OnDone(bool success, string text)

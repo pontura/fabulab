@@ -212,34 +212,52 @@ namespace BoardItems
         void OnCharacterSavedToServer(bool succes, string id)
         {
             string tstamp = DateTime.UtcNow.ToString("o");
-
+            CharacterMetaData md = null;
             if (currentID == "") // is new character
             {
-                userCharactersMetaData.Add(new CharacterMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentCharacter.thumb, timestamp = tstamp  });
+                md = new CharacterMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentCharacter.thumb, timestamp = tstamp };
+                md.AddCreator(md.userID);
+                userCharactersMetaData.Add(md);
+                charactersMetaData.Add(md);
             }
             else
             {
-                CharacterMetaData chmd = userCharactersMetaData.Find(x => x.id == currentID);
-                chmd.thumb = currentCharacter.thumb;
-                chmd.timestamp = tstamp;
+                md = userCharactersMetaData.Find(x => x.id == currentID);
+                md.thumb = currentCharacter.thumb;
+                md.timestamp = tstamp;
             }
 
             userCharactersMetaData = userCharactersMetaData.OrderByDescending(x => x.timestamp).ToList();
+            charactersMetaData = charactersMetaData.OrderByDescending(x => x.timestamp).ToList();
 
             currentCharacter.id = id;
             currentID = id;
 
-            ServerCharacterMetaData swmd = new ServerCharacterMetaData();
-
-            swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
-            swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
-            swmd.timestamp = tstamp;
-            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.characters.ToString(), currentID, swmd);
+            SaveMetadata(md);
 
             FirebaseStoryMakerDBManager.Instance.UploadTexture(currentCharacter.thumb, MetadataTypes.characters.ToString(), currentCharacter.id, Data.Instance.userData.userDataInDatabase.uid);
 
            // OpenCharacterDetail(currentCharacter);
             OnSaved?.Invoke(succes, id);
+        }
+
+        void SaveMetadata(CharacterMetaData md, System.Action<bool, string> OnDone = null) {
+            ServerCharacterMetaData swmd = new ServerCharacterMetaData();
+            swmd.userID = md.userID;
+            swmd.timestamp = md.timestamp;
+            swmd.isPublic = md.isPublic;
+            swmd.tags = md.tags;
+            swmd.creators = md.creators;
+            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.characters.ToString(), md.id, swmd, OnDone);
+        }
+
+        public void SaveInfo(string id, bool isPublic, string tagValue, System.Action<bool, string> OnDone) {
+            CharacterMetaData md = charactersMetaData.Find(x => x.id == id);
+            md.isPublic = isPublic;
+            string tagID = Data.Instance.tagsManager.GetTagID(tagValue);
+            md.AddTag(tagID);
+            print("AddTag " + tagValue + " tagID: " + tagID);
+            SaveMetadata(md, OnDone);
         }
 
         void OnPresetSavedToServer(bool succes, string id, string partId) {

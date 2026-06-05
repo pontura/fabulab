@@ -15,6 +15,7 @@ namespace BoardItems
     public class FilmDataFabulab : Yaguar.StoryMaker.Editor.FilmData
     {
         public int likes;
+        public bool isPublic;
         public bool IsMyStory() {
             if (userID == null || (Data.Instance.userData.userDataInDatabase != null && userID == Data.Instance.userData.userDataInDatabase.uid))
                 return true;
@@ -30,6 +31,7 @@ namespace BoardItems
         public int likes;
         public int speed;
         public string timestamp;
+        public bool isPublic;
     }
 
     public class ScenesData : MonoBehaviour {
@@ -171,6 +173,7 @@ namespace BoardItems
                     fd.name = e.Value.name;
                     fd.userID = e.Value.userID;
                     fd.speed = e.Value.speed;
+                    fd.isPublic = e.Value.isPublic;
                     if (e.Value.timestamp == null || e.Value.timestamp == "")
                         fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
                     else
@@ -257,6 +260,7 @@ namespace BoardItems
                     fd.name = sfd.name;
                     fd.userID = sfd.userID;
                     fd.speed = sfd.speed;
+                    fd.isPublic = sfd.isPublic;
                     if (sfd.timestamp == null || sfd.timestamp == "")
                         fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
                     else
@@ -301,6 +305,7 @@ namespace BoardItems
         void SetFilmChanged(FilmDataFabulab fd, ServerFilmData sfd) {
             fd.name = sfd.name;
             fd.speed = sfd.speed;
+            fd.isPublic = sfd.isPublic;
             if (sfd.timestamp == null || sfd.timestamp == "")
                 fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
             else
@@ -422,6 +427,7 @@ namespace BoardItems
                 sfd.name = fd.name;
                 sfd.speed = fd.speed;
                 sfd.userID = Data.Instance.userData.userDataInDatabase.uid;
+                sfd.isPublic = fd.isPublic;
                 sfd.timestamp = fd.timestamp;
                 FirebaseStoryMakerDBManager.Instance.SaveFilmDataToServer(fd.id, sfd);
 
@@ -560,7 +566,9 @@ namespace BoardItems
             }
         }
 
+        public FilmDataFabulab GetMeta(string id) {
+            return filmsData.Find(x => x.id == id);
+        }
 
-    }
-           
+    }           
 }

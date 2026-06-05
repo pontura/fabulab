@@ -30,7 +30,7 @@ namespace UI.MainApp.Home.User
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
-                go.Init(cd, OpenWork, false);
+                go.Init(cd, OpenWork);
             }            
             Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
         }

@@ -1,4 +1,5 @@
 using BoardItems;
+using BoardItems.BoardData;
 using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.DB;
@@ -20,6 +21,7 @@ namespace UI.MainApp.Home.User
         override public void Init(string id, Sprite sprite) {
             base.Init(id, sprite);
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
+            metadataType = MetadataTypes.stories;
         }
 
         public void SetContent(FilmDataFabulab content, UserStoriesScreen userStoriesScreen, bool isEdition)
@@ -38,6 +40,9 @@ namespace UI.MainApp.Home.User
             {
                 editionGO.SetActive(true);
                 viewGO.SetActive(false);
+                bool isPublic = Data.Instance.scenesData.GetMeta(Id).isPublic;
+                infoBtn.gameObject.SetActive(true);
+                infoBtn.Init(OnInfoClicked, isPublic);
             }
             else
             {

@@ -56,12 +56,13 @@ namespace UI.MainApp.Home.User
 
         }
 
-        void OnPropMetadataUpdated(PropMetaData fd) {
+        protected virtual void OnPropMetadataUpdated(PropMetaData fd) {
             if (fd.type == type) {
                 ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
                 ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
                 if (btn != null) {
                     btn.Init(fd, MetadataTypes.so);
+                    btn.UpdatePublicState();
                     btn.transform.SetAsFirstSibling();
                 }
             }
