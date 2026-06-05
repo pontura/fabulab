@@ -7,6 +7,14 @@ namespace UI.MainApp.Home.User
 {
     public class AllObjectsScreen : UserObjectsScreen
     {
+        protected override void AddPropMetadata(PropMetaData fd) {
+            ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
+
+            go.Init(fd, MetadataTypes.so, OpenWork);
+            //go.Init(fd, MetadataTypes.so);
+
+        }
+
         public override void SetType()
         {
             switch (type)

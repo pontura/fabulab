@@ -42,6 +42,10 @@ namespace BoardItems
         [SerializeField] string loadedPresetId;
         public string PresetID { get { return loadedPresetId; } }
 
+        public CharacterMetaData GetMeta(string id) {
+            return charactersMetaData.Find(x => x.id == id);
+        }
+
         string initTimeStamp;
 
         private void Start() {

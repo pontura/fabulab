@@ -49,8 +49,11 @@ namespace UI.MainApp.Home.User
             print("SHOW userView " + userView);
             if(userView)
             {
-                PropMetaData meta = Data.Instance.sObjectsData.GetMeta(cd.id);
-                bool isPublic = meta.isPublic;
+                bool isPublic = false;
+                if (type==MetadataTypes.so)
+                    isPublic = Data.Instance.sObjectsData.GetMeta(cd.id).isPublic;
+                else if(type==MetadataTypes.characters)
+                    isPublic = Data.Instance.charactersData.GetMeta(cd.id).isPublic;
                 print("ItemSelectorBtn id: " + cd.id + " isPublic: " + isPublic);  
                 infoBtn.gameObject.SetActive(true);
                 infoBtn.Init(OnInfoClicked, isPublic);

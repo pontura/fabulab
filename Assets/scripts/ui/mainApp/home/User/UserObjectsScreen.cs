@@ -8,7 +8,6 @@ namespace UI.MainApp.Home.User
 {
     public class UserObjectsScreen : ThumbsScreen
     {
-        [SerializeField] protected bool userView;
         [SerializeField] protected Button[] buttons;
         [SerializeField] protected SObjectData.types type;
         [SerializeField] protected List<PropMetaData> all;
@@ -44,15 +43,15 @@ namespace UI.MainApp.Home.User
 
         void OnPropMetadataAdded(PropMetaData fd) {
             if (fd.type == type) {
-                AddPropMetadata(fd, userView);
+                AddPropMetadata(fd);
                 worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
             }
         }
 
-        protected void AddPropMetadata(PropMetaData fd, bool userViews) {
+        protected virtual void AddPropMetadata(PropMetaData fd) {
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
 
-            go.Init(fd, MetadataTypes.so, OpenWork, userViews);
+            go.Init(fd, MetadataTypes.so, OpenWork, true);
             //go.Init(fd, MetadataTypes.so);
 
         }
@@ -79,7 +78,7 @@ namespace UI.MainApp.Home.User
         protected override void LoadNext() {
             
             foreach (PropMetaData cd in all)
-                AddPropMetadata(cd, userView);
+                AddPropMetadata(cd);
 
             Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
         }
