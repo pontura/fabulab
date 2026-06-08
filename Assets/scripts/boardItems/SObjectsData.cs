@@ -192,6 +192,7 @@ namespace BoardItems
             swmd.timestamp = md.timestamp;
             swmd.isPublic = md.isPublic;            
             swmd.tags = md.tags;
+            print("TAGS: "+ md.tags.Count);
             swmd.creators = md.creators;
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), md.id, swmd, OnDone);
         }
@@ -334,11 +335,11 @@ namespace BoardItems
 
             pmd.isPublic = child.HasChild("isPublic") ? (bool)child.Child("isPublic").Value : false;
 
-            pmd.tags = new List<string>();
-            if(child.HasChild("tags"))
-            {
-                pmd.tags.Add(child.Child("tags").Value as string);
-            } 
+            // pmd.tags = new List<string>();
+            // if(child.HasChild("tags"))
+            // {
+            //     pmd.tags.Add(child.Child("tags").Value as string);
+            // } 
 
             FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.so.ToString(), pmd.id, (tex) => {
                 pmd.thumb = tex;
