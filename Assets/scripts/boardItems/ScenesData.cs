@@ -423,13 +423,7 @@ namespace BoardItems
                 else
                     tfd = fd;
 
-                ServerFilmData sfd = new ServerFilmData();
-                sfd.name = fd.name;
-                sfd.speed = fd.speed;
-                sfd.userID = Data.Instance.userData.userDataInDatabase.uid;
-                sfd.isPublic = fd.isPublic;
-                sfd.timestamp = fd.timestamp;
-                FirebaseStoryMakerDBManager.Instance.SaveFilmDataToServer(fd.id, sfd);
+                SaveMetadata(fd);
 
                 FirebaseStoryMakerDBManager.Instance.UploadTexture(fd.thumb, MetadataTypes.stories.ToString(), fd.id, fd.userID);
 
@@ -439,6 +433,22 @@ namespace BoardItems
 
             AudioManager.Instance.musicManager.Play("work");
             Events.OnPopupTopSignalText("Historia salvada");
+        }
+
+        void SaveMetadata(FilmDataFabulab fd, System.Action<bool, string> OnDone = null) {
+            ServerFilmData sfd = new ServerFilmData();
+            sfd.name = fd.name;
+            sfd.speed = fd.speed;
+            sfd.userID = Data.Instance.userData.userDataInDatabase.uid;
+            sfd.isPublic = fd.isPublic;
+            sfd.timestamp = fd.timestamp;
+            FirebaseStoryMakerDBManager.Instance.SaveFilmDataToServer(fd.id, sfd, OnDone);
+        }
+
+        public void SaveInfo(string id, bool isPublic, List<string> selectedTagsID, System.Action<bool, string> OnDone) {
+            FilmDataFabulab md = filmsData.Find(x => x.id == id);
+            md.isPublic = isPublic;            
+            SaveMetadata(md, OnDone);
         }
 
         public void LoadFilm(string _id) {

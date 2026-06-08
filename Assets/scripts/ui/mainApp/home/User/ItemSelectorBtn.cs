@@ -82,6 +82,9 @@ namespace UI.MainApp.Home.User
                 isPublic = Data.Instance.sObjectsData.GetMeta(Id).isPublic;
             else if (metadataType == MetadataTypes.characters)
                 isPublic = Data.Instance.charactersData.GetMeta(Id).isPublic;
+            else if (metadataType == MetadataTypes.stories)
+                isPublic = Data.Instance.scenesData.GetMeta(Id).isPublic;
+
             print("ItemSelectorBtn id: " + Id + " isPublic: " + isPublic);
             infoBtn.gameObject.SetActive(true);
             infoBtn.Init(OnInfoClicked, isPublic);

@@ -30,12 +30,13 @@ namespace UI.MainApp.Home.User
             worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
         }
 
-        void OnFilmMetadataUpdated(FilmDataFabulab fd) {
-            Debug.Log("% UserStoriesScreen OnFilmMetadataUpdated");
+        protected virtual void OnFilmMetadataUpdated(FilmDataFabulab fd) {
+            Debug.Log("% UserStoriesScreen OnFilmMetadataUpdated "+gameObject.name);
             ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
             ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
             if (btn != null) {
                 btn.Init(fd.GetSprite());
+                btn.UpdatePublicState();
                 btn.transform.SetAsFirstSibling();
             }
         }

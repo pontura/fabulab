@@ -161,7 +161,7 @@ namespace Yaguar.StoryMaker.DB
                         foreach (var child in snapshot.Children)
                         {
                             string json = JsonConvert.SerializeObject(child.Value);
-                            Debug.Log(json);
+                            //Debug.Log(json);
                             if (!json.Contains("#"))
                                 d.Add(child.Key, JsonConvert.DeserializeObject<CharacterServerData>(json));
                         }
@@ -283,15 +283,28 @@ namespace Yaguar.StoryMaker.DB
                 Debug.LogError("Trying to save metadata without id");
                 return;
             }
+
             Debug.Log("#Save Metadata To Server type: " + type + ", id: " + id);
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/" + type  + "/" + id);            
             string s = JsonConvert.SerializeObject(swmd);
             if (type == "so")
                 s = JsonConvert.SerializeObject(swmd as ServerPropMetaData);
-            reference.SetRawJsonValueAsync(s);
+            reference.SetRawJsonValueAsync(s).ContinueWithOnMainThread(task => {
+                if (task.IsFaulted || task.IsCanceled) {
+                    Debug.Log("#SaveMetadataToServer FAIL");
+                    Debug.Log(task.Exception);
+                } else {
+                    try {
+                        if (OnDone != null)
+                            OnDone(true, "Datos Actualizados!");
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
+                }
+            });
+
             Debug.Log("Server: SaveMetadataToServer "+ id);      
-            if(OnDone != null)  
-                OnDone(true, "Datos Actualizados!");     
+                 
         }
 
 
@@ -326,10 +339,10 @@ namespace Yaguar.StoryMaker.DB
                                 fd.creators = new List<string>();
                                 fd.tags = new List<string>();
 
-                                Debug.Log("______________isPublic " +child.HasChild("isPublic"));     
+                                //Debug.Log("______________isPublic " +child.HasChild("isPublic"));     
                                 if (child.HasChild("isPublic"))
                                 {              
-                                    Debug.Log("______________tiene isPublic " + (bool)child.Child("isPublic").Value );                      
+                                    //Debug.Log("______________tiene isPublic " + (bool)child.Child("isPublic").Value );                      
                                     fd.isPublic = (bool)child.Child("isPublic").Value;
                                 }
 
@@ -548,13 +561,24 @@ namespace Yaguar.StoryMaker.DB
             //Debug.Log(url);
         }
 
-        public void SaveFilmDataToServer(string filmId, ServerFilmData fd) {
+        public void SaveFilmDataToServer(string filmId, ServerFilmData fd, System.Action<bool, string> OnDone = null) {
             Debug.Log("#SaveFilmDataToServer");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/" + filmId);
             string s = JsonConvert.SerializeObject(fd);
-            reference.SetRawJsonValueAsync(s);
+            reference.SetRawJsonValueAsync(s).ContinueWithOnMainThread(task => {
+                if (task.IsFaulted || task.IsCanceled) {
+                    Debug.Log("#SaveFilmDataToServer FAIL");
+                    Debug.Log(task.Exception);
+                } else {
+                    try {
+                        if (OnDone != null)
+                            OnDone(true, "Datos Actualizados!");
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
+                }
+            });
             Debug.Log("Server: SaveFilmDataToServer: "+s);
-
         }
 
         public void LoadUserFilmDataFromServer(List<FilmDataFabulab> filmsData, System.Action<List<FilmDataFabulab>, Dictionary<string, ServerFilmData>> callback) {

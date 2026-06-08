@@ -55,6 +55,8 @@ namespace UI.MainApp
                 Data.Instance.sObjectsData.SaveInfo(id, isPublic, tagsEditor.GetSelectedTags(), OnDone);
             else if (metadataType == MetadataTypes.characters)
                 Data.Instance.charactersData.SaveInfo(id, isPublic, tagsEditor.GetSelectedTags(), OnDone);
+            else if (metadataType == MetadataTypes.stories)
+                Data.Instance.scenesData.SaveInfo(id, isPublic, tagsEditor.GetSelectedTags(), OnDone);
         }
 
         private void OnDone(bool success, string text)
