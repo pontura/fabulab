@@ -51,14 +51,14 @@ namespace BoardItems.BoardData
         }
          public void AddTag(string tagID)
         {
-          //|  if (tags == null)
-         //   {
+            if (tags == null)
+            {
                 tags = new List<string>();
-          //  }
-          //  if (!tags.Contains(tagID))
-           // {
+            }
+            if (!tags.Contains(tagID))
+            {
                 tags.Add(tagID);
-           // }
+            }
         }
 
         public Sprite GetSprite()
@@ -106,14 +106,14 @@ namespace BoardItems.BoardData
         }
          public void AddTag(string tagID)
         {
-          //  if (tags == null)
-           // {
+            if (tags == null)
+            {
                 tags = new List<string>();
-           // }
-          //  if (!tags.Contains(tagID))
-           // {
+            }
+            if (!tags.Contains(tagID))
+            {
                 tags.Add(tagID);
-           // }
+            }
         }
 
     }

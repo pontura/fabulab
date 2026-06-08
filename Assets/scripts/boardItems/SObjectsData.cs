@@ -196,13 +196,19 @@ namespace BoardItems
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), md.id, swmd, OnDone);
         }
 
-        public void SaveInfo(string id, bool isPublic, string tagValue, System.Action<bool, string> OnDone)
+        public void SaveInfo(string id, bool isPublic, List<string> selectedTagsID, System.Action<bool, string> OnDone)
         { 
             PropMetaData md = metaData.Find(x => x.id == id);
             md.isPublic = isPublic;
-            string tagID = Data.Instance.tagsManager.GetTagID(tagValue);
-            md.AddTag(tagID);
-            print("AddTag " + tagValue + " tagID: " + tagID);
+            if(selectedTagsID.Count>0)
+            {
+                md.tags = new List<string>();
+                foreach(string t in selectedTagsID)
+                {
+                    md.AddTag(t);
+                    print("AddTag " + t);
+                }
+            }
             SaveMetadata(md, OnDone);
         }
        

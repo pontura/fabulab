@@ -11,10 +11,9 @@ namespace UI.MainApp
     {
         public GameObject panel;
         public Image workImage;
-        [SerializeField] TagsSelector tagsSelector;
+        [SerializeField] TagsEditor tagsEditor;
         [SerializeField] ShareBtn shareBtn;
         string id;
-        string tagValue;
         bool isPublic;
         MetadataTypes metadataType;
         void Start()
@@ -23,21 +22,19 @@ namespace UI.MainApp
         }
         public void Init( string _id, MetadataTypes type, Sprite s)
         {   
-            tagValue = Data.Instance.tagsManager.Tags[0].name;
             panel.SetActive(true);
             id = _id;
             metadataType = type;
             bool isPublic = false;
             if (type == MetadataTypes.stories) {
-                tagsSelector.gameObject.SetActive(false);
+                tagsEditor.gameObject.SetActive(false);
                 isPublic = Data.Instance.scenesData.GetMeta(id).isPublic;
             } else {
                 CharacterMetaData md = type == MetadataTypes.so ? Data.Instance.sObjectsData.GetMeta(id) : Data.Instance.charactersData.GetMeta(id);
                 isPublic = md.isPublic;
-                tagsSelector.gameObject.SetActive(true);
-                tagsSelector.Init(OnTagSelected);
+                tagsEditor.gameObject.SetActive(true);
                 if (md.tags.Count > 0) // solo muestra 1 por ahora.
-                    tagsSelector.SetTag(md.tags[0]);
+                    tagsEditor.Init(md.tags, Data.Instance.tagsManager.Tags);
             }
             shareBtn.Init(isPublic,OnSharedChanged); 
             workImage.sprite = s;            
@@ -45,11 +42,6 @@ namespace UI.MainApp
         void OnSharedChanged(bool isPublic)
         {
             this.isPublic = isPublic;
-        }
-         private void OnTagSelected(string value)
-        {
-            this.tagValue = value;
-            print("Tag seleccionado: " + value);
         }
 
         public void Save()
@@ -60,9 +52,9 @@ namespace UI.MainApp
         {            
             Events.OnLoading(true);
             if(metadataType == MetadataTypes.so) 
-                Data.Instance.sObjectsData.SaveInfo(id, isPublic, tagValue, OnDone);
+                Data.Instance.sObjectsData.SaveInfo(id, isPublic, tagsEditor.GetSelectedTags(), OnDone);
             else if (metadataType == MetadataTypes.characters)
-                Data.Instance.charactersData.SaveInfo(id, isPublic, tagValue, OnDone);
+                Data.Instance.charactersData.SaveInfo(id, isPublic, tagsEditor.GetSelectedTags(), OnDone);
         }
 
         private void OnDone(bool success, string text)
