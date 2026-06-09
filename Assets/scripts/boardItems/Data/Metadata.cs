@@ -45,8 +45,7 @@ namespace BoardItems.BoardData
             }
             if (!creators.Contains(uid))
             {
-                if(userID != uid)
-                    creators.Add(uid);
+                creators.Add(uid);
             }
         }
          public void AddTag(string tagID)

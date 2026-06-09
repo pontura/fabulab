@@ -33,8 +33,8 @@ namespace UI.MainApp
                 CharacterMetaData md = type == MetadataTypes.so ? Data.Instance.sObjectsData.GetMeta(id) : Data.Instance.charactersData.GetMeta(id);
                 isPublic = md.isPublic;
                 tagsEditor.gameObject.SetActive(true);
-                if (md.tags.Count > 0) // solo muestra 1 por ahora.
-                    tagsEditor.Init(md.tags, Data.Instance.tagsManager.Tags);
+                //if (md.tags.Count > 0) // solo muestra 1 por ahora.
+                tagsEditor.Init(md.tags, Data.Instance.tagsManager.Tags);
             }
             shareBtn.Init(isPublic,OnSharedChanged); 
             workImage.sprite = s;            
