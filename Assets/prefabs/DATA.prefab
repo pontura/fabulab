@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 7900181744596394278}
   - component: {fileID: 4781433556235439642}
   - component: {fileID: 1818131810870519092}
+  - component: {fileID: 5797612725518905383}
   m_Layer: 0
   m_Name: DATA
   m_TagString: Untagged
@@ -69,6 +70,7 @@ MonoBehaviour:
   scenesData: {fileID: 7900181744596394278}
   cacheData: {fileID: 4781433556235439642}
   characterAnimsManager: {fileID: 0}
+  tagsManager: {fileID: 0}
 --- !u!114 &4740097183744302633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -403,6 +405,7 @@ MonoBehaviour:
     username: 
     timestamp: 
     likes: 0
+    isPublic: 0
   loadedDone: 0
 --- !u!114 &4781433556235439642
 MonoBehaviour:
@@ -418,6 +421,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CacheData
   users: []
   filmData: []
+  maxUnusedDays: 30
 --- !u!114 &1818131810870519092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -509,3 +513,16 @@ MonoBehaviour:
     clip: {fileID: 7400000, guid: e2923e6de8426374a83e25524b7354c4, type: 2}
   - name: "\xB0o\xB0"
     clip: {fileID: 7400000, guid: b50b4dcbadc878f4f89d9736c12e76b8, type: 2}
+--- !u!114 &5797612725518905383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000013221123710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba7b601ecf1614642821612abe703f80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TagsManager
+  <Tags>k__BackingField: []

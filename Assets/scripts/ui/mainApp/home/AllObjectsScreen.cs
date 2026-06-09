@@ -12,9 +12,11 @@ namespace UI.MainApp.Home.User
             if (!fd.isPublic)
                 return;
 
-            ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
+            if (fd.tags.Contains(tagsSelector.SelectedTag()) || tagsSelector.SelectedTag() == Data.Instance.tagsManager.GetNoTagName()) {
+                ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
 
-            go.Init(fd, MetadataTypes.so, OpenWork);
+                go.Init(fd, MetadataTypes.so, OpenWork);
+            }
             //go.Init(fd, MetadataTypes.so);
 
         }

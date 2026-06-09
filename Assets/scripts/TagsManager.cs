@@ -15,7 +15,7 @@ public class TagData
 public class TagsManager : MonoBehaviour
 {
 
-    public List<TagData> Tags;
+    [field:SerializeField] public List<TagData> Tags { get; private set; }
 
     public event Action OnTagsLoaded;
 
@@ -85,5 +85,9 @@ public class TagsManager : MonoBehaviour
     {
         TagData tag = Tags.Find(t => t.name.Trim().ToLower() == tagName.Trim().ToLower());
         return tag != null ? tag.id : null;
+    }
+
+    public string GetNoTagName() {
+        return "Todos";
     }
 }

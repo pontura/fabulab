@@ -14,7 +14,7 @@ namespace UI.MainApp
         [SerializeField] TagsEditor tagsEditor;
         [SerializeField] ShareBtn shareBtn;
         string id;
-        bool isPublic;
+        [SerializeField] bool isPublic;
         MetadataTypes metadataType;
         void Start()
         {
@@ -25,7 +25,7 @@ namespace UI.MainApp
             panel.SetActive(true);
             id = _id;
             metadataType = type;
-            bool isPublic = false;
+            isPublic = false;
             if (type == MetadataTypes.stories) {
                 tagsEditor.gameObject.SetActive(false);
                 isPublic = Data.Instance.scenesData.GetMeta(id).isPublic;
@@ -34,7 +34,7 @@ namespace UI.MainApp
                 isPublic = md.isPublic;
                 tagsEditor.gameObject.SetActive(true);
                 //if (md.tags.Count > 0) // solo muestra 1 por ahora.
-                tagsEditor.Init(md.tags, Data.Instance.tagsManager.Tags);
+                tagsEditor.Init(md.tags);
             }
             shareBtn.Init(isPublic,OnSharedChanged); 
             workImage.sprite = s;            

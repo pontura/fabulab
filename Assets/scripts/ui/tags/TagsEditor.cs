@@ -11,14 +11,12 @@ namespace UI.MainApp.Home
         [SerializeField] Toggle tagToggle;
         [SerializeField] List<Toggle> toggles;
         [SerializeField] Transform container;
-        List<TagData> tags;
-        public void Init(List<string> activeTagIds, List<TagData> tags)
+        public void Init(List<string> activeTagIds)
         {
             toggles = new List<Toggle>();
-            this.tags = tags;
             Utils.RemoveAllChildsIn(container);
             int a = 0;
-            foreach (TagData tag in tags)
+            foreach (TagData tag in Data.Instance.tagsManager.Tags)
             {
                 Toggle t = Instantiate(tagToggle, container);
                 t.GetComponentInChildren<Text>().text = tag.name;
@@ -37,7 +35,7 @@ namespace UI.MainApp.Home
             int id = 0;
             foreach( Toggle t in toggles)
             {
-                if(t.isOn) selectedTagsId.Add(tags[id].id);
+                if(t.isOn) selectedTagsId.Add(Data.Instance.tagsManager.Tags[id].id);
                 id++;
             }
             return selectedTagsId;

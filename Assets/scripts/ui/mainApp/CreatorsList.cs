@@ -10,6 +10,8 @@ namespace UI.MainApp
 
         public void Init(List<string> uids)
         {
+            Utils.RemoveAllChildsIn(container);
+
             if (uids == null) return;
           //  print("uids count: " + uids.Count);
             foreach(string uid in uids)

@@ -1,6 +1,7 @@
 ﻿using BoardItems.BoardData;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,6 +30,7 @@ namespace UI.MainApp.Home.User
         private void OnTagSelected(string obj)
         {
             print("Tag seleccionado: " + obj);
+            ResetTab();
         }
 
         public virtual void InitTabs()
@@ -52,11 +54,12 @@ namespace UI.MainApp.Home.User
         }
 
         protected virtual void AddPropMetadata(PropMetaData fd) {
-            ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
+            if (fd.tags.Contains(tagsSelector.SelectedTag()) || tagsSelector.SelectedTag() == Data.Instance.tagsManager.GetNoTagName()) {
+                ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
 
-            go.Init(fd, MetadataTypes.so, OpenWork, true);
-            //go.Init(fd, MetadataTypes.so);
-
+                go.Init(fd, MetadataTypes.so, OpenWork, true);
+                //go.Init(fd, MetadataTypes.so);
+            }
         }
 
         protected virtual void OnPropMetadataUpdated(PropMetaData fd) {
@@ -116,6 +119,10 @@ namespace UI.MainApp.Home.User
                 type = SObjectData.types.generic;
             else
                 type = SObjectData.types.background;
+            ResetTab();
+        }
+
+        void ResetTab() {
             firstLoadDone = false;
             firstImageCache = false;
             imageCache.Clear();
@@ -125,6 +132,7 @@ namespace UI.MainApp.Home.User
             scrollbar.value = 1f;
             Init();
         }
+
         void SetTabs()
         {
             switch(type)

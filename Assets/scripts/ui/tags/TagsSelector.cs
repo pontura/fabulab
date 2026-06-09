@@ -37,24 +37,22 @@ namespace UI.MainApp.Home
         {
             dropdown.ClearOptions();
             List<TMPro.TMP_Dropdown.OptionData> options = new();
+            options.Add(new TMPro.TMP_Dropdown.OptionData(Data.Instance.tagsManager.GetNoTagName()));
             foreach (TagData tag in Data.Instance.tagsManager.Tags)
                 options.Add(new TMPro.TMP_Dropdown.OptionData(tag.name));
           //  options.Add(new TMPro.TMP_Dropdown.OptionData("Nuevo tag"));
             dropdown.AddOptions(options);
         }
         public void OnChanged()
-        {
-            int index = dropdown.value;
-            // if (index == Data.Instance.tagsManager.Tags.Count)
-            // {
-            //     string newTagName = "Tag " + (Data.Instance.tagsManager.Tags.Count + 1);
-            //     Data.Instance.tagsManager.AddTag(newTagName);
-            // }
-            // else
-            // {
-                TagData selectedTag = Data.Instance.tagsManager.Tags[index];
-                onTagSelected?.Invoke(selectedTag.name);
-          //  }
+        {            
+            onTagSelected?.Invoke(SelectedTag());
         }
+        public string SelectedTag() {
+                if(dropdown.value==0)
+                    return Data.Instance.tagsManager.GetNoTagName();
+                TagData selectedTag = Data.Instance.tagsManager.Tags[dropdown.value-1];
+                return selectedTag.id;
+        }
+  
     }
 }
