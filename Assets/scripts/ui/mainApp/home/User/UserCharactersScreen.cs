@@ -22,6 +22,9 @@ namespace UI.MainApp.Home.User
         void OnCharacterMetadataAdded(CharacterMetaData fd) {
             AddCharacterMetadata(fd);
             worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
+            if (firstImageCache) {
+                ResetCache();
+            }
         }
 
         protected  virtual void AddCharacterMetadata(CharacterMetaData fd) {
@@ -42,6 +45,7 @@ namespace UI.MainApp.Home.User
                 btn.Init(fd.GetSprite());
                 btn.UpdatePublicState();
                 btn.transform.SetAsFirstSibling();
+                ResetCache();
             }
         }
 

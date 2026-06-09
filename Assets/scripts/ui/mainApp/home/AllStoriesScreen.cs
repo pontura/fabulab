@@ -38,6 +38,7 @@ namespace UI.MainApp.Home.User
                     btn.Init(fd.GetSprite());
                     btn.UpdatePublicState();
                     btn.transform.SetAsFirstSibling();
+                    ResetCache();
                 }
             } else {
                 if (fd.isPublic) {

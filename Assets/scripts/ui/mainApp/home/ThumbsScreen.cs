@@ -36,7 +36,15 @@ namespace UI.MainApp.Home.User
             if (isOn && !firstLoadDone) {                
                 Init();
             }
-        }        
+        }
+        
+        protected void ResetCache() {
+            firstImageCache = false;
+            if (imageCache == null)
+                imageCache = new Dictionary<int, Texture2D>();
+            imageCache.Clear();
+            downloading.Clear();
+        }
 
         protected virtual void Init() {
             //Debug.Log("$ Init: " + firstLoadDone);

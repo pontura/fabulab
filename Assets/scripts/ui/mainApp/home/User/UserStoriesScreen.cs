@@ -28,6 +28,9 @@ namespace UI.MainApp.Home.User
             Debug.Log("% UserStoriesScreen OnFilmMetadataAdded");
             AddFilmMetadata(fd);
             worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
+            if (firstImageCache) {
+                ResetCache();
+            }
         }
 
         protected virtual void OnFilmMetadataUpdated(FilmDataFabulab fd) {
@@ -38,6 +41,7 @@ namespace UI.MainApp.Home.User
                 btn.Init(fd.GetSprite());
                 btn.UpdatePublicState();
                 btn.transform.SetAsFirstSibling();
+                ResetCache();
             }
         }
 

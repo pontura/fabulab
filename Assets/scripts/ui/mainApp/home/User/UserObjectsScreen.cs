@@ -45,6 +45,9 @@ namespace UI.MainApp.Home.User
             if (fd.type == type) {
                 AddPropMetadata(fd);
                 worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
+                if (firstImageCache) {
+                    ResetCache();
+                }
             }
         }
 
@@ -64,6 +67,7 @@ namespace UI.MainApp.Home.User
                     btn.Init(fd, MetadataTypes.so);
                     btn.UpdatePublicState();
                     btn.transform.SetAsFirstSibling();
+                    ResetCache();
                 }
             }
         }
