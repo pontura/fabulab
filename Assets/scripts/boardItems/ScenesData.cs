@@ -565,8 +565,39 @@ namespace BoardItems
             SceneElementType type = SceneElementType.AVATAR;
             if (sOPart is BoardData.SObjectData)
                 type = SceneElementType.PROP;
+
+            if (type == SceneElementType.PROP) {
+                SObjectData soD = sOPart as SObjectData;
+                if(soD.type == SObjectData.types.background) {
+                    DownLoadBGObjects(soD, 0);
+                    return;
+                }
+            }
             elementsIds.Remove((sOPart.id,type));
             CheckAllElementsDone();
+        }
+
+        void DownLoadBGObjects(SObjectData bgData, int bgSoIndex) {            
+            if (bgSoIndex < bgData.items.Count) {
+                Debug.Log($"% DownLoadBGObjects {bgData.id} index: {bgSoIndex}");
+
+                if (bgData.items[bgSoIndex].soID==null || bgData.items[bgSoIndex].soID == "") {
+                    bgSoIndex++;
+                    DownLoadBGObjects(bgData, bgSoIndex);
+                    return;
+                }
+
+                Data.Instance.sObjectsData.LoadOthersObject(bgData.items[bgSoIndex].soID, (sOPart) => {
+                    Debug.Log($"% BG so downloaded  {sOPart.id} index: {bgSoIndex}");
+                    bgSoIndex++;
+                    DownLoadBGObjects(bgData, bgSoIndex);
+                });
+            } else {
+                elementsIds.Remove((bgData.id, SceneElementType.PROP));
+                CheckAllElementsDone();
+                bgData = null;
+                bgSoIndex = 0;
+            }
         }
 
         void CheckAllElementsDone() {

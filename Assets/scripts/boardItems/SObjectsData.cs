@@ -398,6 +398,10 @@ namespace BoardItems
             return data.Find(x => x.id == id);
         }
 
+        public SObjectData GetOthersSO(string id) {
+            return othersData.Find(x => x.id == id);
+        }
+
         public SObjectData SetCurrentID(string id)
         {
             print("current id: " + id);

@@ -668,8 +668,10 @@ namespace BoardItems
             foreach (SavedIData soID in soIDs) {
              //   print("open SO in background soID: " + soID.soID);
                 SOPartData soPartData = Data.Instance.sObjectsData.GetSO(soID.soID);
+                if(soPartData == null)
+                    soPartData = Data.Instance.sObjectsData.GetOthersSO(soID.soID);
+
                 if (soPartData != null) {
-                    SOPartData o = Data.Instance.sObjectsData.GetSO(soID.soID);
                     GameObject go = new GameObject();
                     BoardItemManager boardItemManager_to_add = go.AddComponent<BoardItemManager>();
 
@@ -679,15 +681,15 @@ namespace BoardItems
 
                     //AddSceneObjectTo(o, boardItemManager_to_add, container, soID);
                     //AddSceneObjectTo(SOPartData wd, BoardItemManager newBoardItemManager, Transform container, SavedIData savedIOData = null)
-         
+
                     BoardItemManager childBoardItemManager = Instantiate(boardItemManager_to_add, container);
-                    childBoardItemManager.name = "Object " + o.id;
+                    childBoardItemManager.name = "Object " + soPartData.id;
                     childBoardItemManager.transform.SetParent(container);
                     childBoardItemManager.transform.localPosition = Vector3.zero;
                     ItemData newItem;
                     List<GameObject> childs = new List<GameObject>();
                     float _z = 0;
-                    foreach (SavedIData itemData in o.items) {
+                    foreach (SavedIData itemData in soPartData.items) {
                         _z -= 0.001f;
                         itemData.position.z = _z;
                         newItem = CreateItem(itemData, boardItemManager_to_add);
@@ -699,12 +701,12 @@ namespace BoardItems
                     float offsetY = bgContainer.localPosition.y;
                     childBoardItemManager.transform.localScale = new Vector3(8 * scale, 8 * scale, 1);
                     childBoardItemManager.transform.localPosition = new Vector3(0, offsetY, 0);
-                    
+
                     foreach (GameObject gO in childs)
                         gO.transform.SetParent(transform);
-                    
+
                     childBoardItemManager.transform.localScale = new Vector3(1f, 1f, 1f);
-                    childBoardItemManager.transform.localPosition = new Vector3(childBoardItemManager.transform.localPosition.x,0,0);
+                    childBoardItemManager.transform.localPosition = new Vector3(childBoardItemManager.transform.localPosition.x, 0, 0);
                     foreach (GameObject gO in childs)
                         gO.transform.SetParent(childBoardItemManager.transform);
 
@@ -713,8 +715,10 @@ namespace BoardItems
                     //float scale = snapScale * (8 / snapScale);
                     //UIManager.Instance.boardUI.items.ScaleSnaped(-snapScale);
 
-                    childBoardItemManager.SetInteractableObject(o.id, OnObjectMerged, soID);
-                } else print("open work itemData.soID not found: " + soID);
+                    childBoardItemManager.SetInteractableObject(soPartData.id, OnObjectMerged, soID);
+                } else {
+                    print("open work itemData.soID not found: " + soID);
+                }
             }
             
             bgContainer.localScale *= 0.5f;
