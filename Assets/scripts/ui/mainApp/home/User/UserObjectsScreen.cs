@@ -54,7 +54,7 @@ namespace UI.MainApp.Home.User
         }
 
         protected virtual void AddPropMetadata(PropMetaData fd) {
-            if (fd.tags.Contains(tagsSelector.SelectedTag()) || tagsSelector.SelectedTag() == Data.Instance.tagsManager.GetNoTagName()) {
+            if (fd!= null && (fd.tags.Contains(tagsSelector.SelectedTag()) || tagsSelector.SelectedTag() == Data.Instance.tagsManager.GetNoTagName())) {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
 
                 go.Init(fd, MetadataTypes.so, OpenWork, true);
