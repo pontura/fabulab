@@ -192,7 +192,6 @@ namespace BoardItems
             swmd.timestamp = md.timestamp;
             swmd.isPublic = md.isPublic;            
             swmd.tags = md.tags;
-            print("TAGS: "+ md.tags.Count);
             swmd.creators = md.creators;
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), md.id, swmd, OnDone);
         }
