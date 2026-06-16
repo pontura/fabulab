@@ -9,7 +9,8 @@ using Yaguar.StoryMaker.Editor;
 namespace UI.MainApp
 {
     public class CharacterEdition : MainScreen
-    {
+    {        
+        [SerializeField] GameObject tools;
         [SerializeField] bool isMyAvatar;
         public bool isPreview;
         [SerializeField] GameObject pictureBtn;
@@ -66,11 +67,11 @@ namespace UI.MainApp
                 isEditingCharacter = true;
 
             isPreview = !isEditingCharacter;
-
+            
+            DoneBtn.SetActive(true);     
             if (StoryMakerEvents.isEditing)
             {
-                Events.ShowUndo(true);
-                DoneBtn.SetActive(true);            
+                Events.ShowUndo(true);       
                 Done();
             }
             else
@@ -78,11 +79,12 @@ namespace UI.MainApp
                 SetTogglePreview();
                 Events.ShowUndo(false);
             }
+            tools.SetActive(isMyAvatar);
 
         }
         public void TogglePreview()
         {
-            if (!isMyAvatar) DoneBtn.SetActive(true); // si venias viendo un character de otro te permite guardar una copia, pero si es tu avatar te muestra el boton de guardar desde el principio.
+           // if (!isMyAvatar) DoneBtn.SetActive(true); // si venias viendo un character de otro te permite guardar una copia, pero si es tu avatar te muestra el boton de guardar desde el principio.
             isPreview = !isPreview;
             SetTogglePreview();
         }
@@ -101,7 +103,6 @@ namespace UI.MainApp
             }
             else
             {
-                DoneBtn.SetActive(isMyAvatar);
                 pictureBtn.SetActive(isMyAvatar);
                 bgColorsBtn.SetActive(isMyAvatar);
                 togglePreviewParts[0].SetActive(true);
@@ -227,6 +228,7 @@ namespace UI.MainApp
 
         private void OnSaved(bool arg1, string arg2)
         {
+            if(!isMyAvatar) DoneBtn.SetActive(false);
             Events.OnPopupTopSignalText("Personaje guardado");
         }
     }
