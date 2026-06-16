@@ -46,6 +46,8 @@ namespace UI.MainApp.Home.User
                 btn.UpdatePublicState();
                 btn.transform.SetAsFirstSibling();
                 ResetCache();
+            } else {
+                OnCharacterMetadataAdded(fd);
             }
         }
 

@@ -93,6 +93,7 @@ namespace BoardItems
         string lastID = "";
         public void SaveSO(Texture2D tex)
         {
+            Events.OnLoading(true);
             lastID = currentID;
             SObjectData wd = GetSO(currentID);
             if (wd == null)
@@ -176,13 +177,15 @@ namespace BoardItems
 
             currentSO.id = id;
 
-            print("OnSavedToServer " + md + "   new id: " + id + " lastID:" + lastID);
+            print("OnSavedToServer " + md + "   new id: " + id + " lastID:" + lastID);            
 
-            SaveMetadata(md);
+            FirebaseStoryMakerDBManager.Instance.UploadTexture(currentSO.thumb, MetadataTypes.so.ToString(), currentSO.id, Data.Instance.userData.userDataInDatabase.uid, onDone: () => {
+                SaveMetadata(md);
+                Events.OnLoading(false);
+                UIManager.Instance.ShowWorkDetail(currentSO);
+            });
 
-            FirebaseStoryMakerDBManager.Instance.UploadTexture(currentSO.thumb, MetadataTypes.so.ToString(), currentSO.id, Data.Instance.userData.userDataInDatabase.uid);
-
-            UIManager.Instance.ShowWorkDetail(currentSO);
+            
         }
 
         void SaveMetadata(PropMetaData md, System.Action<bool, string> OnDone = null) {

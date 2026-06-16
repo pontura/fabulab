@@ -222,8 +222,10 @@ namespace UI.MainApp
 
             if(savingPart)
                 Data.Instance.charactersData.SavePartCharacter(tex, (CharacterPartsHelper.parts)(int)UIManager.Instance.zoomManager.currentZoom);
-            else
-                Data.Instance.charactersData.SaveCharacter(tex, OnSaved);
+            else {
+                Events.OnLoadingParent(null, () => Data.Instance.charactersData.SaveCharacter(tex, OnSaved));
+            }
+                
         }
 
         private void OnSaved(bool arg1, string arg2)

@@ -84,8 +84,7 @@ namespace UI.MainApp
         public void OnTakeShotDone(Texture2D tex)
         {
             UIManager.Instance.workDetailUI.SetTexture(tex);
-            Data.Instance.sObjectsData.SaveSO(tex);
-            
+            Events.OnLoadingParent(null,()=> Data.Instance.sObjectsData.SaveSO(tex));            
         }
        
     }

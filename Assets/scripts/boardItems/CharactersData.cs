@@ -118,6 +118,7 @@ namespace BoardItems
         System.Action<bool, string> OnSaved;
         public void SaveCharacter(Texture2D tex, System.Action<bool, string> OnSaved)
         {
+            Events.OnLoading(true);
             this.OnSaved = OnSaved;
             CharacterData wd;
             if (currentID == "" || currentID == null)
@@ -233,12 +234,13 @@ namespace BoardItems
             currentCharacter.id = id;
             currentID = id;
 
-            SaveMetadata(md);
+            FirebaseStoryMakerDBManager.Instance.UploadTexture(currentCharacter.thumb, MetadataTypes.characters.ToString(), currentCharacter.id, Data.Instance.userData.userDataInDatabase.uid, onDone: () => {
+                SaveMetadata(md);
+                Events.OnLoading(false);
+                OnSaved?.Invoke(succes, id);
+            });
 
-            FirebaseStoryMakerDBManager.Instance.UploadTexture(currentCharacter.thumb, MetadataTypes.characters.ToString(), currentCharacter.id, Data.Instance.userData.userDataInDatabase.uid);
-
-           // OpenCharacterDetail(currentCharacter);
-            OnSaved?.Invoke(succes, id);
+           // OpenCharacterDetail(currentCharacter);            
         }
 
         void SaveMetadata(CharacterMetaData md, System.Action<bool, string> OnDone = null) {
