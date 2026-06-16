@@ -54,11 +54,14 @@ namespace UI.MainApp.Home.User
         }
 
         protected virtual void AddPropMetadata(PropMetaData fd) {
-            if (fd!= null && (fd.tags.Contains(tagsSelector.SelectedTag()) || tagsSelector.SelectedTag() == Data.Instance.tagsManager.GetNoTagName())) {
-                ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
+            if (fd!= null) {
+                List<string> tags = fd.tags == null ? new() : fd.tags;
+                if (tags.Contains(tagsSelector.SelectedTag()) || tagsSelector.SelectedTag() == Data.Instance.tagsManager.GetNoTagName()) {
+                    ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
 
-                go.Init(fd, MetadataTypes.so, OpenWork, true);
-                //go.Init(fd, MetadataTypes.so);
+                    go.Init(fd, MetadataTypes.so, OpenWork, true);
+                    //go.Init(fd, MetadataTypes.so);
+                }
             }
         }
 

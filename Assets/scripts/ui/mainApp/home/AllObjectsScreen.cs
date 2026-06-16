@@ -12,7 +12,8 @@ namespace UI.MainApp.Home.User
             if (!fd.isPublic)
                 return;
 
-            if (fd.tags.Contains(tagsSelector.SelectedTag()) || tagsSelector.SelectedTag() == Data.Instance.tagsManager.GetNoTagName()) {
+            List<string> tags = fd.tags == null ? new() : fd.tags;
+            if (tags.Contains(tagsSelector.SelectedTag()) || tagsSelector.SelectedTag() == Data.Instance.tagsManager.GetNoTagName()) {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
 
                 go.Init(fd, MetadataTypes.so, OpenWork);
