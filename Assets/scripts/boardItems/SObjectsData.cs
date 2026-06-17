@@ -157,10 +157,56 @@ namespace BoardItems
                 FirebaseStoryMakerDBManager.Instance.UpdateDataToServer(MetadataTypes.so.ToString(), wd.id, wd.GetServerData(), OnSavedToServer);
             }
         }
-        void OnSavedToServer(bool succes, string id)
+
+        System.Action<bool, string> OnDuplicated;
+        public void Duplicate(string id, System.Action<bool, string> OnDuplicated) {
+            this.OnDuplicated = OnDuplicated;
+            print("duplicate SO " + id);
+            string otherUserID;
+            PropMetaData pdata = metaData.Find(x => x.id == id);
+            otherUserID = pdata.userID;
+            if (data == null) {
+                Debug.LogError("No se ha encontrado el character a duplicar");
+                return;
+            }
+            FirebaseStoryMakerDBManager.Instance.LoadAssetFromServer(id, (success, key, d) => {
+                if (success) {
+                    currentID = "";
+                    currentSO = new SObjectData();
+                    currentSO.id = key;
+                    currentSO.LoadServerData(d);
+                    currentSO.type = pdata.type;
+                    data.Add(currentSO);
+
+                    Data.Instance.cacheData.LoadImage(MetadataTypes.so.ToString(), id, (tex) => {
+                        currentSO.thumb = tex;
+                        FirebaseStoryMakerDBManager.Instance.SaveToServer(MetadataTypes.so.ToString(), currentSO.GetServerData(), OnSavedToServer);
+                    }, pdata.timestamp, otherUserID);
+                    
+                } else {
+                    Debug.Log("Fail getting Character Data");
+                }
+
+            }, otherUserID);
+
+
+
+
+        }
+        
+        void OnSavedToServer(bool success, string id)
         {
+            Debug.Log("% OnSavedToServer " + success + " id: " + id);
+            if (!success) {
+                
+                OnDuplicated?.Invoke(success, id);
+                OnDuplicated = null;
+                return;
+            }
+
             string tstamp = DateTime.UtcNow.ToString("o");
             PropMetaData md = null;
+            Debug.Log("% currentID: " + currentID);
             if (currentID == "") // is new character
             {
                 md = new PropMetaData() { id = id, type = currentSO.type, userID = Data.Instance.userData.userDataInDatabase.uid, timestamp = tstamp };
@@ -182,7 +228,11 @@ namespace BoardItems
             FirebaseStoryMakerDBManager.Instance.UploadTexture(currentSO.thumb, MetadataTypes.so.ToString(), currentSO.id, Data.Instance.userData.userDataInDatabase.uid, onDone: () => {
                 SaveMetadata(md);
                 Events.OnLoading(false);
-                UIManager.Instance.ShowWorkDetail(currentSO);
+                if (OnDuplicated != null) {
+                    OnDuplicated?.Invoke(success, id);
+                    OnDuplicated = null;
+                } else
+                    UIManager.Instance.ShowWorkDetail(currentSO);
             });
 
             
@@ -489,72 +539,6 @@ namespace BoardItems
         {
             return data;
         }
-
-
-        System.Action<bool, string> OnDuplicated;
-        PropMetaData pdata;
-        public void Duplicate(string id, System.Action<bool, string> OnDuplicated)
-        {
-            this.OnDuplicated = OnDuplicated;
-            print("duplicate SO " + id);
-            string otherUserID;
-            pdata = metaData.Find(x => x.id == id);
-            otherUserID = pdata.userID;
-            if (data == null)
-            {
-                Debug.LogError("No se ha encontrado el character a duplicar");
-                return;
-            }
-            FirebaseStoryMakerDBManager.Instance.LoadAssetFromServer(id, (success, key, d) =>
-            {
-                if (success)
-                {
-                    currentSO = new SObjectData();
-                    currentSO.id = key;
-                    currentSO.LoadServerData(d);
-                    currentSO.thumb = pdata.thumb;
-                    currentSO.type = pdata.type;
-                    data.Add(currentSO);
-                    FirebaseStoryMakerDBManager.Instance.SaveToServer(MetadataTypes.so.ToString(), currentSO.GetServerData(), OnDuplicatedSaved);
-                }
-                else
-                {
-                    Debug.Log("Fail getting Character Data");
-                }
-
-            }, otherUserID);
-
-
-
-
-        }
-        void OnDuplicatedSaved(bool success, string id)
-        {
-            if (success)
-            {
-                string tstamp = DateTime.UtcNow.ToString("o");
-
-                metaData = metaData.OrderByDescending(x => x.timestamp).ToList();
-
-                currentSO.id = id;
-
-                ServerPropMetaData swmd = new ServerPropMetaData();
-                swmd.type = currentSO.type;
-                swmd.AddCreator(Data.Instance.userData.userDataInDatabase.uid);
-                swmd.userID = Data.Instance.userData.userDataInDatabase.uid;
-                swmd.timestamp = tstamp;
-                swmd.isPublic = false;
-                FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), currentSO.id, swmd);
-
-                FirebaseStoryMakerDBManager.Instance.UploadTexture(currentSO.thumb, MetadataTypes.characters.ToString(), id, Data.Instance.userData.userDataInDatabase.uid);
-
-                // OpenCharacterDetail(currentCharacter);
-            }
-            OnDuplicated?.Invoke(success, id);
-        }
-
-
-
     }
 
 }

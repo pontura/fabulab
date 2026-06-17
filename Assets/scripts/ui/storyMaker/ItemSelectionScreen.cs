@@ -40,13 +40,17 @@ namespace UI.MainApp.Home.User
             }
         }
 
+        protected virtual void AddElement(SOPartData part) {
+            ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
+            print("go " + go);
+            go.Init(part, OpenWork);
+        }
+
         protected override void LoadNext()
         {
-            foreach(CharacterData cd in Data.Instance.charactersData.userCharacters)
+            foreach(SOPartData part in Data.Instance.charactersData.userCharacters)
             {
-                ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-                print("go " + go);
-                go.Init(cd, OpenWork);
+                AddElement(part);
             }
 
             Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);

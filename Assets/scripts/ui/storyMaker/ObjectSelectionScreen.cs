@@ -30,9 +30,7 @@ namespace UI.MainApp.Home.User
             foreach (SObjectData cd in Data.Instance.sObjectsData.data)
             {
                 if (cd.type != SObjectData.types.background) {
-                    ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-                    print("go " + go);
-                    go.Init(cd, OpenWork);
+                    AddElement(cd);
                 }
             }
             SetFrontBack();
@@ -161,9 +159,10 @@ namespace UI.MainApp.Home.User
         private void LoopTillMetaReady()
         {
             loops++;
-            CharacterMetaData c = Data.Instance.sObjectsData.metaData.Find(x => x.id == duplicateID);
-            if (c != null)
+            SOPartData part = Data.Instance.sObjectsData.data.Find(x => x.id == duplicateID);
+            if (part != null)
             {
+                AddElement(part);
                 print("Duplicate open: " + duplicateID);
                 Events.OnLoading(false);
                 OpenWork(duplicateID);
@@ -193,7 +192,7 @@ namespace UI.MainApp.Home.User
                     }
                 }, pMD.timestamp, pMD.userID);
             } else {
-                Debug.LogError("Couldn´t find Film Metadata with ID " + isb.Id);
+                Debug.LogError("Couldn´t find Object Metadata with ID " + isb.Id);
             }
         }
     }

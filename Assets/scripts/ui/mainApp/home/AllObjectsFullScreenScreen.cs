@@ -27,15 +27,17 @@ namespace UI.MainApp.Home.User
 
         void OnPropMetadataAdded(PropMetaData fd) {
             if (fd.type == type) {
-                AddPropMetadata(fd, false);
+                AddPropMetadata(fd);
                 worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
             }
         }
 
-        protected void AddPropMetadata(PropMetaData fd, bool userView) {
+        protected void AddPropMetadata(PropMetaData fd) {
+            if (!fd.isPublic)
+                return;
+
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-            go.Init(fd, MetadataTypes.so);
-            go.AddOnClick(OpenWork);
+            go.Init(fd, MetadataTypes.so, OpenWork);            
         }
 
         void OnPropMetadataUpdated(PropMetaData fd) {
@@ -91,10 +93,8 @@ namespace UI.MainApp.Home.User
             }
             foreach (PropMetaData cd in all)
             {
-                ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-                print("go " + go);
-                go.Init(cd, MetadataTypes.so, OpenWork);
-                AddPropMetadata(cd, true);
+                if (cd.userID != Data.Instance.userData.userDataInDatabase.uid)
+                    AddPropMetadata(cd);
             }
 
             isActive = true;

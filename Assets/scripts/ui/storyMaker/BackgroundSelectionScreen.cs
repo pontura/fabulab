@@ -28,9 +28,7 @@ namespace UI.MainApp.Home.User
             {
                 Debug.Log("== Type: " + cd.type);
                 if (cd.type == SObjectData.types.background) {
-                    ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-                    print("BackgroundSelectionScreen " + go + " type: " + cd.type + " id: " + cd.id);
-                    go.Init(cd, OpenWork);
+                    AddElement(cd);
                 }
             }
             Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
@@ -97,9 +95,10 @@ namespace UI.MainApp.Home.User
         private void LoopTillMetaReady()
         {
             loops++;
-            CharacterMetaData c = Data.Instance.sObjectsData.metaData.Find(x => x.id == duplicateID);
-            if (c != null)
+            SOPartData cd = Data.Instance.sObjectsData.data.Find(x => x.id == duplicateID);
+            if (cd != null)
             {
+                AddElement(cd);
                 print("Duplicate open: " + duplicateID);
                 Events.OnLoading(false);
                 OpenWork(duplicateID);

@@ -22,15 +22,14 @@ namespace UI.MainApp.Home.User
         protected virtual void OnDestroy() {
             Events.DuplicateCharacter -= DuplicateCharacter;
         }
+
         protected override void LoadNext()
         {
             scrollbar.value = 0;
             AddBtn();
-            foreach (CharacterData cd in Data.Instance.charactersData.userCharacters)
+            foreach (SOPartData part in Data.Instance.charactersData.userCharacters)
             {
-                ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-                print("go " + go);
-                go.Init(cd, OpenWork);
+                AddElement(part);
             }            
             Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
         }
@@ -93,9 +92,10 @@ namespace UI.MainApp.Home.User
         private void LoopTillMetaReady()
         {
             loops++;
-            CharacterMetaData c =  Data.Instance.charactersData.charactersMetaData.Find(x => x.id == duplicateID);
-            if(c != null)
+            SOPartData part =  Data.Instance.charactersData.userCharacters.Find(x => x.id == duplicateID);
+            if(part != null)
             {
+                AddElement(part);
                 print("Duplicate open: " + duplicateID);
                 Events.OnLoading(false);
                 OpenWork(duplicateID);
