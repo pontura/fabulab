@@ -45,6 +45,8 @@ namespace UI.MainApp.Home
                 List<string> tabNames = new List<string>() { "Historias", "Personajes (" + charactersQty + ")", "Objectos" };
                 tabs.SetTabNames(tabNames);
                 profilePicture.InitOwner();
+                string username = Data.Instance.userData.userDataInDatabase.username;
+                OnChangeName(username);
             }
         }
         void OnTabClicked(int id)

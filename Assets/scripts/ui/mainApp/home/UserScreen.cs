@@ -13,7 +13,21 @@ namespace UI.MainApp.Home
         [SerializeField] UserCharactersScreen charactersScreen;
         [SerializeField] UserObjectsScreen objects;
         [SerializeField] ProfilePicture profilePicture;
+        [SerializeField] TMPro.TMP_Text usernameField;
 
+        
+        private void Start() {
+            Events.ChangeName += OnChangeName;
+        }
+
+        private void OnChangeName(string username)
+        {
+            usernameField.text = username;
+        }
+
+        private void OnDestroy() {
+            Events.ChangeName -= OnChangeName;
+        }
         public void Show(bool isOn)
         {
             gameObject.SetActive(isOn);
@@ -21,9 +35,10 @@ namespace UI.MainApp.Home
             {
                 profilePicture.InitOwner();
                 tabs.Init(OnTabClicked);
-                int charactersQty = Data.Instance.charactersData.userCharacters.Count;
-                List<string> tabNames = new List<string>() { "Usuario", "Historias", "Personajes (" + charactersQty + ")", "Objectos" };
+                List<string> tabNames = new List<string>() { "Historias", "Personajes", "Objetos", "Info" };
                 tabs.SetTabNames(tabNames);
+                string username = Data.Instance.userData.userDataInDatabase.username;
+                OnChangeName(username);
             }
         }
         void OnTabClicked(int id)
@@ -38,17 +53,18 @@ namespace UI.MainApp.Home
 
             switch (id)
             {
+              
                 case 0:
-                    userDataScreen.Show(true);
-                    break;
-                case 1:
                     storiesScreen.Show(true);
                     break;
-                case 2:
+                case 1:
                     charactersScreen.Show(true);
                     break;
-                case 3:
+                case 2:
                     objects.Show(true);
+                    break;
+                case 3:
+                    userDataScreen.Show(true);
                     break;
             }
         }
