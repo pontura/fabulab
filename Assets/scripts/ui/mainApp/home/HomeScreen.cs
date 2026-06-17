@@ -22,7 +22,12 @@ namespace UI.MainApp.Home
         }
         public void Create()
         {            
-            UIManager.Instance.Create();
+            
+            int screen = tabActive;
+            if(tabActive>1) 
+                UIManager.Instance.Create();
+            else
+                UIManager.Instance.CreateSelected(tabActive+1);
         }
         private void OnChangeName(string username)
         {
@@ -52,8 +57,10 @@ namespace UI.MainApp.Home
                 OnChangeName(username);
             }
         }
+        int tabActive;
         void OnTabClicked(int id)
         {
+            this.tabActive = id;
             print("On home TabClicked " + id);
 
             charactersScreen.Show(false);
