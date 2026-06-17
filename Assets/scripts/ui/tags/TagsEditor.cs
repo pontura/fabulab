@@ -20,10 +20,11 @@ namespace UI.MainApp.Home
             {
                 Toggle t = Instantiate(tagToggle, container);
                 t.GetComponentInChildren<Text>().text = tag.name;
-                t.isOn = false;  
-                 foreach (string tagID in activeTagIds)
-                    if(tag.id == tagID)
-                        t.isOn = true;
+                t.isOn = false;
+                if(activeTagIds!=null)
+                    foreach (string tagID in activeTagIds)
+                        if(tag.id == tagID)
+                            t.isOn = true;
                // t.onValueChanged.AddListener(isOn => { OnTagClicked(a); });
                 toggles.Add(t);
                 a++;
