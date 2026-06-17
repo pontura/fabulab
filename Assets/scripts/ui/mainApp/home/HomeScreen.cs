@@ -20,7 +20,10 @@ namespace UI.MainApp.Home
             Events.OnAllFilmMetadataLoadDone += OnServerDataLoadDone;
             Events.ChangeName += OnChangeName;
         }
-
+        public void Create()
+        {            
+            UIManager.Instance.Create();
+        }
         private void OnChangeName(string username)
         {
             usernameField.text = username;
