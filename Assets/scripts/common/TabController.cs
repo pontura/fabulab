@@ -29,7 +29,8 @@ namespace Common.UI
             int id = 0;
             foreach (TabButton tabButton in all)
             {
-                tabButton.SetName(names[id]);
+                if(id<names.Count)
+                    tabButton.SetName(names[id]);
                 id++;
             }
         }

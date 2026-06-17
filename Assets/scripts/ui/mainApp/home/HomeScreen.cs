@@ -11,12 +11,23 @@ namespace UI.MainApp.Home
         [SerializeField] AllStoriesScreen stories;
         [SerializeField] AllCharactersScreen charactersScreen;
         [SerializeField] AllObjectsScreen objects;
+        
+        [SerializeField] TMPro.TMP_Text usernameField;
+
+        [SerializeField] ProfilePicture profilePicture;
 
         private void Start() {
             Events.OnAllFilmMetadataLoadDone += OnServerDataLoadDone;
+            Events.ChangeName += OnChangeName;
+        }
+
+        private void OnChangeName(string username)
+        {
+            usernameField.text = username;
         }
 
         private void OnDestroy() {
+            Events.ChangeName -= OnChangeName;
             Events.OnAllFilmMetadataLoadDone -= OnServerDataLoadDone;
         }
 
@@ -33,6 +44,7 @@ namespace UI.MainApp.Home
                 int charactersQty = Data.Instance.charactersData.userCharacters.Count;
                 List<string> tabNames = new List<string>() { "Historias", "Personajes (" + charactersQty + ")", "Objectos" };
                 tabs.SetTabNames(tabNames);
+                profilePicture.InitOwner();
             }
         }
         void OnTabClicked(int id)
@@ -53,6 +65,9 @@ namespace UI.MainApp.Home
                     break;
                 case 2:
                     objects.Show(true);
+                    break;
+                case 3: // USER
+                    Events.ShowScreen(UIManager.screenType.UserScreen);
                     break;
             }
         }

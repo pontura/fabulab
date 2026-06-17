@@ -19,7 +19,8 @@ namespace Common.UI
         }
         public void SetThumb(Sprite s)
         {
-            image.sprite = s;
+            if(image != null)
+                image.sprite = s;
         }
         public void SetName(string name)
         {
