@@ -15,11 +15,12 @@ namespace UI.MainApp.Home.User
         }
 
         protected override void Init() {
-            Events.OnLoadingParent(transform, LoadNext);
+           // Events.OnLoadingParent(transform, LoadNext);
             foreach (Transform child in worksContainer) {
                 if (child.tag != "Persistent")
                     Destroy(child.gameObject);
             }
+            LoadNext();
         }
 
         protected override void LoadNext()

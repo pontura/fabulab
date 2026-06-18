@@ -24,7 +24,7 @@ namespace UI
         System.Action OnDone;
         void OnLoadingParent(Transform parent, System.Action OnDone)
         {
-
+            print("OnLoadingParent " + parent);
             this.OnDone = OnDone;
             panel.SetActive(true);
 

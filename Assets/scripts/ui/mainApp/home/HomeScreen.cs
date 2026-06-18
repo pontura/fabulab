@@ -50,7 +50,7 @@ namespace UI.MainApp.Home
             {
                 tabs.Init(OnTabClicked);
                 int charactersQty = Data.Instance.charactersData.userCharacters.Count;
-                List<string> tabNames = new List<string>() { "Historias", "Personajes (" + charactersQty + ")", "Objectos" };
+                List<string> tabNames = new List<string>() { "Historias", "Personajes", "Objetos" };
                 tabs.SetTabNames(tabNames);
                 profilePicture.InitOwner();
                 string username = Data.Instance.userData.userDataInDatabase.username;

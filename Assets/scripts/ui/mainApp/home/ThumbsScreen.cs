@@ -54,12 +54,13 @@ namespace UI.MainApp.Home.User
 
             if(Data.Instance.scenesData.filmsData.Count > 0) {
                 firstLoadDone = true;
-                Events.OnLoadingParent(transform, LoadNext);
 
                 foreach (Transform child in worksContainer) {
                     if (child.tag != "Persistent")
                         Destroy(child.gameObject);
                 }
+                //                Events.OnLoadingParent(transform, LoadNext);
+                LoadNext();
             }
         }        
         

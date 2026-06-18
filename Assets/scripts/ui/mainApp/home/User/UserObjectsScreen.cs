@@ -25,6 +25,7 @@ namespace UI.MainApp.Home.User
             InitTabs();
             SetType();
             tagsSelector.Init(OnTagSelected);
+            TabClicked(0);
         }
 
         private void OnTagSelected(string obj)
