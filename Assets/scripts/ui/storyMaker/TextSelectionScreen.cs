@@ -31,7 +31,8 @@ namespace UI.MainApp.Home.User
                 print(balloonType + " go " + go);
                 int a = (int)balloonType;
                 Sprite s = wballon_prefab.balloonIcons[a];
-                go.Init(s, OpenWordBalloon);         
+                go.Init(balloonType.ToString(), s);
+                go.AddOnClick(OpenWordBalloon);
             }
             Events.OnLoading(false);
         }        

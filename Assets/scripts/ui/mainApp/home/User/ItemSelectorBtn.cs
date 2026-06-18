@@ -69,6 +69,8 @@ namespace UI.MainApp.Home.User
             thumb.sprite = sprite;
             Id = id;
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
+            infoBtn.gameObject.SetActive(false);
+            loading.SetActive(false);
         }
 
         public void AddOnClick(System.Action<string> OnClicked)
