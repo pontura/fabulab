@@ -9,10 +9,10 @@ namespace UI.MainApp.Home.User
 {
     public class UserObjectsScreen : ThumbsScreen
     {
-        [SerializeField] protected Button[] buttons;
         [SerializeField] protected SObjectData.types type;
         [SerializeField] protected List<PropMetaData> all;
         [SerializeField] protected Scrollbar scrollbar;
+        [SerializeField] protected ObjectsTypeSelect objectsTypeSelect;
         [SerializeField] protected TagsSelector tagsSelector;
 
         protected override void Start() {
@@ -21,11 +21,20 @@ namespace UI.MainApp.Home.User
             Events.OnPropMetadataAdded += OnPropMetadataAdded;
             Events.OnPropMetadataRemoved += OnPropMetadataRemoved;
             all = new List<PropMetaData>();
-            type = SObjectData.types.generic;
             InitTabs();
+
+            type = SObjectData.types.generic;
             SetType();
+            
             tagsSelector.Init(OnTagSelected);
-            TabClicked(0);
+            objectsTypeSelect.Init(OnTypeSelected);
+            OnTypeSelected(type);
+        }
+        
+        public void OnTypeSelected(SObjectData.types t)
+        {
+            type = t;
+            ResetTab();
         }
 
         private void OnTagSelected(string obj)
@@ -119,14 +128,6 @@ namespace UI.MainApp.Home.User
         {
             UIManager.Instance.NewCharacter();
         }
-        public void TabClicked(int id)
-        {
-            if(id == 0)
-                type = SObjectData.types.generic;
-            else
-                type = SObjectData.types.background;
-            ResetTab();
-        }
 
         void ResetTab() {
             firstLoadDone = false;
@@ -140,18 +141,8 @@ namespace UI.MainApp.Home.User
         }
 
         void SetTabs()
-        {
-            switch(type)
-            {
-                case SObjectData.types.generic:
-                    buttons[0].interactable = false;
-                    buttons[1].interactable = true;
-                    break;
-                case SObjectData.types.background:
-                    buttons[0].interactable = true;
-                    buttons[1].interactable = false;
-                    break;
-            }
+        {            
+            objectsTypeSelect.SetSelected(type);
         }
 
         protected override void LoadImage(int index, ItemSelectorBtn isb) {

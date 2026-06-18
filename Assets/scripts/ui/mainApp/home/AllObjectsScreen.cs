@@ -58,17 +58,7 @@ namespace UI.MainApp.Home.User
         }
         public override void InitTabs()
         {
-            if (buttons.Length == 0)
-            {
-                foreach (Button b in buttons)
-                {
-                    b.gameObject.SetActive(false);
-                }
-            }
-            else
-            {
-                base.InitTabs();
-            }
+            base.InitTabs();
         }
         public override void OpenWork(string id)
         {
