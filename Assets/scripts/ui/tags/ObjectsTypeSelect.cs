@@ -34,8 +34,12 @@ namespace UI.MainApp.Home
         {
             dropdown.ClearOptions();
             List<TMPro.TMP_Dropdown.OptionData> options = new();
+            int id = 0;
             foreach (SObjectData.types type in System.Enum.GetValues(typeof(SObjectData.types)))
-                options.Add(new TMPro.TMP_Dropdown.OptionData(type.ToString()));
+            {
+                options.Add(new TMPro.TMP_Dropdown.OptionData(Data.Instance.sObjectsData.GetTypeByEnum(id)));
+                id++;
+            }
             dropdown.AddOptions(options);
         }
         public void OnChanged()

@@ -16,6 +16,7 @@ namespace BoardItems.BoardData
             generic,
             background
         }
+        
 
         public new SObjectServerData GetServerData()
         {

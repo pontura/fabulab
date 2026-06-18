@@ -31,6 +31,14 @@ namespace BoardItems
                 this.currentType = value;
             }
         }
+        public string GetTypeByEnum(int id)
+        {
+            switch(id)
+            {
+                case 0: return "OBJETO";
+                default: return "FONDO";
+            }
+        }
         public void SetType(SObjectData.types type) { this.currentType = type; }
         public List<SObjectData> GetDataByType(SObjectData.types type)
         {
