@@ -1,6 +1,7 @@
 ﻿using BoardItems;
 using BoardItems.BoardData;
 using BoardItems.Characters;
+using OnBoarding;
 using UI;
 using UI.MainApp;
 using UnityEngine;
@@ -74,5 +75,7 @@ public static class Events
     public static System.Action<PropMetaData> OnPropMetadataAdded = delegate { };
     public static System.Action<PropMetaData> OnPropMetadataUpdated = delegate { };
     public static System.Action<string> OnPropMetadataRemoved = delegate { };
+    public static System.Action<OnBoardingManager.steps> OnBoarding = delegate { };
+    public static System.Action<OnBoardingManager.steps> OnBoardingDone = delegate { };
 }
    

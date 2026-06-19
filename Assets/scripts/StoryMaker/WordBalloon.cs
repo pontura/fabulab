@@ -64,7 +64,7 @@ namespace Yaguar.StoryMaker.Editor
 
             //BoxCollider2D collider = GetComponent<BoxCollider2D>();
             //collider.size = new Vector2(10, 10);
-
+            print("soData " + soData.id);
             if (Enum.IsDefined(typeof(balloonTypes), soData.id))
                 balloonType = (balloonTypes)Enum.Parse(typeof(balloonTypes), soData.id);
             else
@@ -136,7 +136,7 @@ namespace Yaguar.StoryMaker.Editor
             // 1. suavizado
             smooth = Vector2.Lerp(smooth, input.normalized, smoothFactor);
 
-            // 2. ángulo
+            // 2. ï¿½ngulo
             float angle = Mathf.Atan2(smooth.y, smooth.x) * Mathf.Rad2Deg;
             angle -= 180;
             if (angle < 0) angle += 360;
@@ -149,7 +149,7 @@ namespace Yaguar.StoryMaker.Editor
                 return lastDir;
             }
 
-            // 3. ángulo entre direcciones (en grados)
+            // 3. ï¿½ngulo entre direcciones (en grados)
             float currentAngle = lastDir * 45f;
             float delta = Mathf.DeltaAngle(currentAngle, (candidate * 45f));
 
