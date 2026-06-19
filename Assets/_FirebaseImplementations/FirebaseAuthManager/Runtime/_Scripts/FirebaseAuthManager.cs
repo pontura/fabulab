@@ -222,6 +222,32 @@ namespace Yaguar.Auth
             });
         }
 
+        public void SignInAnonymously() {
+            _auth.SignInAnonymouslyAsync().ContinueWithOnMainThread(task => {
+                if (task.IsCanceled || task.IsFaulted) {
+                    Debug.LogError("Error en login anónimo: " + task.Exception);
+                    OnSignUp?.Invoke(false);
+                    return;
+                }
+                // Firebase user has been created.
+                Firebase.Auth.AuthResult result = task.Result;
+                Debug.LogFormat("Firebase user created successfully: {0} ({1})",
+                    result.User.DisplayName, result.User.UserId);
+
+                OnFirebaseAuthenticated?.Invoke("", "", result.User.UserId);
+                print("Signed Up localId: " + result.User.UserId);
+                UserDataInDatabase udata = new UserDataInDatabase();
+                udata.username = "";
+                udata.email = "";
+                udata.uid = result.User.UserId;
+                firebaseDBManager.GetComponent<IFirebaseDBManager>().SaveUserToServer(udata);
+                //GetServerTime();
+                OnSignUp?.Invoke(true);
+            });
+
+            Debug.Log("Server: SignInAnonymously");
+        }
+
         public void SignUpUserEmail(string username, string email, string password)
         {
             _auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task => {

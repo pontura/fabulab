@@ -6,8 +6,6 @@ using Yaguar.Auth;
 
 public class UserData : MonoBehaviour
 {
-    //[SerializeField] SocialAuth socialAuth;
-
     public UserDataInDatabase userDataInDatabase;
     [Serializable]
     public class UserDataInDatabase : FirebaseAuthManager.UserDataInDatabase

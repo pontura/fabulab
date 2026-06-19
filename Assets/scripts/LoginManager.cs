@@ -3,7 +3,9 @@ using Yaguar.Auth;
 
 public class LoginManager : MonoBehaviour
 {
-    [SerializeField] GameObject container;
+    [SerializeField] SocialAuth socialAuth;
+    [SerializeField] GameObject introContainer;
+    [SerializeField] GameObject emailContainer;
     [SerializeField] TMPro.TextMeshProUGUI title;
     [SerializeField] TMPro.TMP_InputField usernameField;
     [SerializeField] TMPro.TMP_InputField emailField;
@@ -48,7 +50,7 @@ public class LoginManager : MonoBehaviour
     private void OnSignedOut()
     {
         ResetRegisterFields();
-        container.SetActive(true);
+        introContainer.SetActive(true);
     }
 
     void OnLogin(bool succes) {
@@ -81,6 +83,29 @@ public class LoginManager : MonoBehaviour
         Invoke(nameof(OnLogged), Time.deltaTime * 3);
     }
 
+    public void ShowEmailAuth() {
+        introContainer.SetActive(false);
+        emailContainer.SetActive(true);
+    }
+
+    public void SignUpWithPlayGames() {
+        socialAuth.Init((authCode) => {
+            Debug.Log("#socialAuth: " + authCode);
+            if (authCode != "") {
+                FirebaseAuthManager.Instance.SignInWithPlayGames(authCode, (success) => {
+                    if (!success) {
+                        error.text = "No fue posible ingresar con Play Games.";
+                    }
+                });
+            } else {
+                error.text = "No fue posible ingresar con Play Games.";
+            }
+        });
+    }
+    public void SignInAnonymously() {
+        FirebaseAuthManager.Instance.SignInAnonymously();
+    }
+
     void ResetRegisterFields() {
         //usernameField.text = "";
         emailField.text = "";
@@ -93,7 +118,8 @@ public class LoginManager : MonoBehaviour
         print("logged");
         ResetRegisterFields();
 
-        container.SetActive(false);
+        introContainer.SetActive(false);
+        emailContainer.SetActive(false);
     }
     
 
