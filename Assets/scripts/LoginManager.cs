@@ -6,6 +6,7 @@ public class LoginManager : MonoBehaviour
     [SerializeField] SocialAuth socialAuth;
     [SerializeField] GameObject introContainer;
     [SerializeField] GameObject emailContainer;
+    [SerializeField] GameObject registerPopup;
     [SerializeField] TMPro.TextMeshProUGUI title;
     [SerializeField] TMPro.TMP_InputField usernameField;
     [SerializeField] TMPro.TMP_InputField emailField;
@@ -15,6 +16,8 @@ public class LoginManager : MonoBehaviour
     [SerializeField] GameObject loginBtn, signUpBtn, resetBtn;
     public bool isNew;
 
+    bool isToSyncUserToEmail;
+
     //public override void OnEnabled()
     void Start() {
 
@@ -23,6 +26,7 @@ public class LoginManager : MonoBehaviour
         FirebaseAuthManager.Instance.OnSignUp += OnSignUp;
         FirebaseAuthManager.Instance.OnSignedOut += OnSignedOut;
         FirebaseAuthManager.Instance.OnResetPassword += OnResetPassword;
+        Events.ShowRegisterPopup += ShowRegisterPopup;
 
         Invoke(nameof(CheckLogged), Time.deltaTime * 3);
     }
@@ -45,6 +49,7 @@ public class LoginManager : MonoBehaviour
         FirebaseAuthManager.Instance.OnSignedOut -= OnSignedOut;
         FirebaseAuthManager.Instance.OnResetPassword -= OnResetPassword;
         FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
+        Events.ShowRegisterPopup -= ShowRegisterPopup;
     }
 
     private void OnSignedOut()
@@ -102,6 +107,22 @@ public class LoginManager : MonoBehaviour
             }
         });
     }
+
+    public void SyncUserWithPlayGames() {
+        socialAuth.Init((authCode) => {
+            Debug.Log("#socialAuth: " + authCode);
+            if (authCode != "") {
+                FirebaseAuthManager.Instance.LinkWithPlayGames(authCode, (success) => {
+                    if (!success) {
+                        error.text = "No fue posible linkear la cuenta con Play Games.";
+                    }
+                });
+            } else {
+                error.text = "No fue posible linkear la cuenta con Play Games.";
+            }
+        });
+    }
+
     public void SignInAnonymously() {
         FirebaseAuthManager.Instance.SignInAnonymously();
     }
@@ -137,7 +158,10 @@ public class LoginManager : MonoBehaviour
 
 
             //Data.Instance.firebaseAuthManager.SignUpUserAnon();
-            FirebaseAuthManager.Instance.SignUpUserEmail(usernameField.text, emailField.text, passField.text);
+            if(isToSyncUserToEmail)             
+                FirebaseAuthManager.Instance.LinkWithEmail(usernameField.text, emailField.text, passField.text);
+            else
+                FirebaseAuthManager.Instance.SignUpUserEmail(usernameField.text, emailField.text, passField.text);
 
         }
     }
@@ -158,7 +182,17 @@ public class LoginManager : MonoBehaviour
 
     }
 
+    public void ToSyncUserToEmail() {
+        ToRegister();
+        usernameField.text = Data.Instance.userData.userDataInDatabase.username;
+        loginLink.SetActive(false);
+        resetLink.SetActive(false);
+        signUpBtn.SetActive(true);
+        isToSyncUserToEmail = true;
+    }
+
     public void ToRegister() {
+        isToSyncUserToEmail = false;
         ResetRegisterFields();
         title.text = "Completá tus datos para registrarte";
         loginBtn.SetActive(false);
@@ -198,6 +232,14 @@ public class LoginManager : MonoBehaviour
         loginLink.SetActive(false);
         resetLink.SetActive(true);
         signUpLink.SetActive(true);
+    }
+
+    void ShowRegisterPopup() {
+        registerPopup.SetActive(true);
+    }
+
+    public void CloseRegisterPopup() {
+        registerPopup.SetActive(true);
     }
 
 }

@@ -145,9 +145,9 @@ namespace Yaguar.Auth
                 Debug.LogFormat("User signed in successfully: {0} ({1})",
                     result.User.DisplayName, result.User.UserId);
 
-                IFirebaseDBManager dBManager = firebaseDBManager.GetComponent<IFirebaseDBManager>();
+                OnSignedUpWithPlayGames(result.User.DisplayName, result.User.UserId, callback);
 
-                Debug.Log(dBManager);
+                IFirebaseDBManager dBManager = firebaseDBManager.GetComponent<IFirebaseDBManager>();
 
                 dBManager.GetInstance().LoadUserData(result.User.UserId, (username, email, uid) =>
                 {
@@ -171,54 +171,55 @@ namespace Yaguar.Auth
                         callback(true);
                         OnSignUp?.Invoke(true);
                     }
-                });
+                });                
+            });
+        }
 
-                /*dBManager.GetInstance().CheckUserExist(result.User.UserId, (exist) =>
-                {
-                    Debug.Log("#CheckUserExist callback: "+exist);
-                    if (exist)
-                    {
-                        dBManager.GetInstance().LoadUserData(result.User.UserId, OnFirebaseAuthenticated);
-                    }
-                    else
-                    {
-                        OnFirebaseAuthenticated?.Invoke(result.User.DisplayName, "", result.User.UserId);
-                        print("Signed Up localId GooglePlay: " + result.User.UserId);
-                        UserDataInDatabase udata = new UserDataInDatabase();
-                        udata.username = result.User.DisplayName;
-                        udata.uid = result.User.UserId;
-                        udata.deviceID = SystemInfo.deviceUniqueIdentifier;
-                        dBManager.GetInstance().SaveUserToServer(udata);
-                        //GetServerTime();
-                        OnSignUp?.Invoke(true);
-                        callback(true);
-                    }
-                });*/
+        public void LinkWithPlayGames(string authCode, System.Action<bool> callback) { 
+            Debug.Log("#LinkWithPlayGames:  " + authCode);
+            Firebase.Auth.Credential credential = Firebase.Auth.PlayGamesAuthProvider.GetCredential(authCode);
+            _user.LinkWithCredentialAsync(credential).ContinueWithOnMainThread(task => {
+                if (task.IsCanceled) {
+                    Debug.Log("LinkWithPlayGames was canceled.");
+                    callback(false);
+                    return;
+                }
+                if (task.IsFaulted) {
+                    Debug.Log("LinkWithPlayGames encountered an error: " + task.Exception);
+                    callback(false);
+                    return;
+                }
 
+                Firebase.Auth.AuthResult result = task.Result;
+                Debug.LogFormat("User signed in successfully: {0} ({1})",
+                    result.User.DisplayName, result.User.UserId);
 
-                /*firebaseDBManager.GetComponent<IFirebaseDBManager>().LoadUserData(result.User.UserId, (username, email, uid)=> {
-                    Debug.Log("#ACA uid: " + uid);
-                    if (uid != "")
-                    {
-                        OnFirebaseAuthenticated?.Invoke(username, email, uid);                        
-                        OnLogin?.Invoke(true);
-                        callback(true);
-                    }
-                    else
-                    {
-                        Debug.Log("#ACA 2");
-                        OnFirebaseAuthenticated?.Invoke(result.User.DisplayName, email, result.User.UserId);
-                        print("Signed Up localId GooglePlay: " + result.User.UserId);
-                        UserDataInDatabase udata = new UserDataInDatabase();
-                        udata.username = username;
-                        udata.uid = result.User.UserId;
-                        udata.deviceID = SystemInfo.deviceUniqueIdentifier;
-                        firebaseDBManager.GetComponent<IFirebaseDBManager>().SaveUserToServer(udata);
-                        //GetServerTime();
-                        OnSignUp?.Invoke(true);
-                        callback(true);
-                    }
-                });*/
+                OnSignedUpWithPlayGames(result.User.DisplayName, result.User.UserId, callback);
+
+            });                                      
+        }
+
+        void OnSignedUpWithPlayGames(string displayName, string uid, System.Action<bool> callback) {
+            IFirebaseDBManager dBManager = firebaseDBManager.GetComponent<IFirebaseDBManager>();
+
+            dBManager.GetInstance().LoadUserData(uid, (username, email, uid) => {
+                Debug.Log("#CheckUserExist callback uid: " + uid);
+                if (uid != "" && uid.Length > 1) {
+                    Debug.Log("# uid!=void");
+                    OnFirebaseAuthenticated.Invoke(username, email, uid);
+                    callback(true);
+                } else {
+                    Debug.Log("# uid==void");
+                    OnFirebaseAuthenticated?.Invoke(displayName, "", uid);
+                    print("Signed Up localId GooglePlay: " + uid);
+                    UserDataInDatabase udata = new UserDataInDatabase();
+                    udata.username = displayName;
+                    udata.uid = uid;
+                    dBManager.GetInstance().SaveUserToServer(udata);
+                    //GetServerTime();
+                    callback(true);
+                    OnSignUp?.Invoke(true);
+                }
             });
         }
 
@@ -248,6 +249,22 @@ namespace Yaguar.Auth
             Debug.Log("Server: SignInAnonymously");
         }
 
+        public void LinkWithEmail(string username, string email, string password) {
+            Credential credential = EmailAuthProvider.GetCredential(email, password);
+
+            _user.LinkWithCredentialAsync(credential).ContinueWithOnMainThread(task => {
+                if (task.IsCanceled || task.IsFaulted) {
+                    Debug.LogError("Error al vincular email: " + task.Exception);
+                    OnSignUp?.Invoke(false);
+                    return;
+                }
+                Firebase.Auth.AuthResult result = task.Result;
+                //FirebaseUser newUser = task.Result;
+                Debug.Log("Cuenta vinculada con email: " + result.User.Email);
+
+                OnEmailSignedUp(username, email, result.User.UserId);
+            });
+        }
         public void SignUpUserEmail(string username, string email, string password)
         {
             _auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task => {
@@ -263,17 +280,21 @@ namespace Yaguar.Auth
                 Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                     result.User.DisplayName, result.User.UserId);
 
-                OnFirebaseAuthenticated?.Invoke(username, email, result.User.UserId);
-                print("Signed Up localId: " + result.User.UserId);
-                UserDataInDatabase udata = new UserDataInDatabase();
-                udata.username = username;
-                udata.email = email;
-                udata.uid = result.User.UserId;
-                firebaseDBManager.GetComponent<IFirebaseDBManager>().SaveUserToServer(udata);
-                //GetServerTime();
-                OnSignUp?.Invoke(true);
+                OnEmailSignedUp(username, email, result.User.UserId);
             });
             Debug.Log("Server: SignUpUserEmail");
+        }
+
+        void OnEmailSignedUp(string username, string email, string uid) {
+            OnFirebaseAuthenticated?.Invoke(username, email, uid);
+            print("Signed Up localId: " + uid);
+            UserDataInDatabase udata = new UserDataInDatabase();
+            udata.username = username;
+            udata.email = email;
+            udata.uid = uid;
+            firebaseDBManager.GetComponent<IFirebaseDBManager>().SaveUserToServer(udata);
+            //GetServerTime();
+            OnSignUp?.Invoke(true);
         }
         public void LoginUserByEmail(string email, string password)
         {
