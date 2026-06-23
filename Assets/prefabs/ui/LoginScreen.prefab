@@ -2536,12 +2536,14 @@ MonoBehaviour:
   socialAuth: {fileID: 6529647502838363751}
   introContainer: {fileID: 6175019786052168812}
   emailContainer: {fileID: 8187690550540901483}
-  registerPopup: {fileID: 0}
+  registerPopup: {fileID: 2938871847293943648}
   title: {fileID: 1940543358779084883}
   usernameField: {fileID: 8813016107631801081}
   emailField: {fileID: 4576087665268099004}
   passField: {fileID: 4693387178890971828}
-  error: {fileID: 5539167806244725019}
+  introFeedback: {fileID: 1218718233121555324}
+  emailFeedback: {fileID: 5539167806244725019}
+  popupFeedback: {fileID: 4439127608704009165}
   loginLink: {fileID: 1134969789909752283}
   resetLink: {fileID: 5345234237335665785}
   signUpLink: {fileID: 7774915191696263832}
@@ -6268,6 +6270,22 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 866c81bffa992a04abdd848a96346671, type: 3}
+--- !u!1 &2938871847293943648 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8458471527832027000, guid: 866c81bffa992a04abdd848a96346671, type: 3}
+  m_PrefabInstance: {fileID: 6749346998735274008}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4439127608704009165 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6931194168590566357, guid: 866c81bffa992a04abdd848a96346671, type: 3}
+  m_PrefabInstance: {fileID: 6749346998735274008}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8518504374806334409 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3142863611022953425, guid: 866c81bffa992a04abdd848a96346671, type: 3}

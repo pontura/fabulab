@@ -116,5 +116,10 @@ public class SocialAuth : MonoBehaviour
         }
     }
 #endif   
+
+    public string GetLocalUser() {
+        Debug.Log("GetLocalUser: " + Social.localUser.userName);
+        return Social.localUser.userName;
+    }
    
 }
