@@ -7,13 +7,17 @@ namespace OnBoarding
     {
         public OnBoardingManager.steps step;
         [SerializeField] GameObject panel;
-        void Awake()
+        [SerializeField] GameObject[] hideOnActive;
+
+        public bool active;
+        public void Init()
         {
             Events.OnBoarding += OnBoarding;
-            Hide();
+            Reset();
         }
         void OnDestroy()
         {
+            print("OnDestroy");
             Events.OnBoarding -= OnBoarding;
         }
         public void Done()
@@ -28,23 +32,42 @@ namespace OnBoarding
         {
            if(step == this.step)
                 Show();
-            else
+            else if(active)
                 Hide();
         }
         void Show()
         {
+            active = true;
+            if(hideOnActive.Length>0)
+            {
+                foreach(GameObject go in hideOnActive)
+                    go.SetActive(false);
+            }
             if(panel == null)
                 gameObject.SetActive(true);
             else
                 panel.SetActive(true);
             OnShow();
         }
-         void Hide()
+        public void Reset()
         {
-            if(panel == null)
+             if(panel == null)
                 gameObject.SetActive(false);
             else
                 panel.SetActive(false);
+        }
+        public virtual void ShowPanelsBack()
+        {
+            print("ShowPanelsBack " + this.gameObject.name);
+             foreach(GameObject go in hideOnActive)
+                    go.SetActive(true);
+        }
+         void Hide()
+        {
+            active = false;
+            if(hideOnActive.Length>0)
+                ShowPanelsBack();
+            Reset();
             OnHide();
         }
     }

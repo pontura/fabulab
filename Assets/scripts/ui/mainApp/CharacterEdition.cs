@@ -94,7 +94,6 @@ namespace UI.MainApp
             if (!isPreview)
             {
                 pictureBtn.SetActive(false);
-                bgColorsBtn.SetActive(true);
                 togglePreviewParts[0].SetActive(false);
                 togglePreviewParts[1].SetActive(true);
                 presetsUI.gameObject.SetActive(true);
@@ -104,7 +103,6 @@ namespace UI.MainApp
             else
             {
                 pictureBtn.SetActive(isMyAvatar);
-                bgColorsBtn.SetActive(isMyAvatar);
                 togglePreviewParts[0].SetActive(true);
                 togglePreviewParts[1].SetActive(false);
                 previewUI.Init();
@@ -232,6 +230,7 @@ namespace UI.MainApp
         {
             if(!isMyAvatar) DoneBtn.SetActive(false);
             Events.OnPopupTopSignalText("Personaje guardado");
+            Events.OnSaveCharacterDone();
         }
     }
 

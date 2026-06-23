@@ -19,7 +19,7 @@ namespace UI
         [SerializeField] GameObject deleteAll;
         [SerializeField] GameObject undo;
 
-        bool isPreset;
+        public bool isPreset;
         int lastPartID;
         void OnToggle(bool isOn)
         {
@@ -30,11 +30,11 @@ namespace UI
             deleteAll.gameObject.SetActive(false);
             snapToggle.Show(false);
             Events.ShowUndo(false); 
-            adminSavePreset.SetActive(false);
         }
         string characterEditorID = "";
         public void Init()
         {
+            adminSavePreset.SetActive(false);
             deleteAll.gameObject.SetActive(true);
 
             if (Data.Instance.sObjectsData.Type == BoardItems.BoardData.SObjectData.types.generic)
@@ -52,7 +52,7 @@ namespace UI
             tabs.Init(OnTabClicked, 0);
             SetToggle();
         }
-        void OnTabClicked(int id)
+        public void OnTabClicked(int id)
         {
             Events.OnPresetReset(); // Resetea si hay un preset abierto
             print(" preset clicked:" + id);
@@ -95,7 +95,7 @@ namespace UI
             dragAndDropUI.SetOn(true);
             Events.DragAndDropActive(true);
         }
-        void PresentsOn(int id)
+        public void PresentsOn(int id)
         {
             presetsSelector.SetOn(true, id);
             Events.DragAndDropActive(false);

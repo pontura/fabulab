@@ -1,15 +1,24 @@
 using System;
 using System.Linq;
+using UI;
 using UnityEngine;
 
 namespace OnBoarding
 {
     public class OnBoardingManager : MonoBehaviour
     {
+        [SerializeField] OnBoardingMain[] onboardingScreens;
         public enum steps
         {
             name,
             title_character,
+            character_intro,
+
+            choose_head,    
+            modify_head,
+            move,
+            allBody,
+            characterDone,
             ready
         }
         [SerializeField] int id;
@@ -19,9 +28,10 @@ namespace OnBoarding
         {
             public steps[] steps;
         }
-
         void Start()
         {
+            foreach(OnBoardingMain go in onboardingScreens)
+                go.Init();  
             Events.OnBoardingDone += OnBoardingDone;
             onboardingSequenceID = PlayerPrefs.GetInt("onboardingSequenceID", 0);
             Next();
@@ -31,8 +41,10 @@ namespace OnBoarding
             Events.OnBoardingDone -= OnBoardingDone;            
         }
 
-        private void OnBoardingDone(steps steps)
+        private void OnBoardingDone(steps step)
         {
+            if(step == steps.title_character)
+                UIManager.Instance.NewCharacter();
             Next();
         }
 
