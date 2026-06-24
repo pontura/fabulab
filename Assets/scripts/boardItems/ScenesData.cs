@@ -428,6 +428,10 @@ namespace BoardItems
                 FirebaseStoryMakerDBManager.Instance.UploadTexture(fd.thumb, MetadataTypes.stories.ToString(), fd.id, fd.userID);
 
                 filmsData = filmsData.OrderByDescending(x => x.timestamp).ToList();
+
+                if (FirebaseAuthManager.Instance.IsAnonymousUser()) {
+                    Events.ShowRegisterPopup();
+                }
             }
             //Events.OnUpdateFilmIcon();
 

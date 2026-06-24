@@ -276,6 +276,9 @@ namespace BoardItems
                 SaveMetadata(md);
                 Events.OnLoading(false);
                 OnSaved?.Invoke(succes, id);
+                if (FirebaseAuthManager.Instance.IsAnonymousUser()) {
+                    Events.ShowRegisterPopup();
+                }
             });
 
            // OpenCharacterDetail(currentCharacter);            
