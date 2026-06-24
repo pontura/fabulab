@@ -12,6 +12,7 @@ namespace OnBoarding
         [SerializeField] PresetsUI presetsUI;
         [SerializeField] GameObject PresetDragAndDropToggle;
         [SerializeField] GameObject characterScrollContent;
+        [SerializeField] Animation dragAndDropContainerAnim;
         public override void OnShow()
         {            
             field.text = "Mové y organizá las piezas a tu gusto";     
@@ -19,6 +20,10 @@ namespace OnBoarding
             presetsUI.DragAndDrop();
             characterScrollContent.GetComponent<Animation>().Play("on");
             PresetDragAndDropToggle.gameObject.SetActive(false);
+        }
+         public override void OnHide()
+        {
+            dragAndDropContainerAnim.Play("off");
         }
     }
 }

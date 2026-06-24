@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -11,6 +9,7 @@ namespace Yaguar.StoryMaker.Editor
         public static void SetEditing(bool editing)
         {
             isEditing = editing;
+            Debug.Log("is_editing: " + isEditing);
         }
         public static System.Action UpdateDraw = delegate { };
         public static System.Action<int, SOActionData> OnAction = delegate { };

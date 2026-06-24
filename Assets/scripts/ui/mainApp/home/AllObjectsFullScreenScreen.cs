@@ -103,14 +103,17 @@ namespace UI.MainApp.Home.User
        
         public override void OpenWork(string id)
         {
+            Debug.Log("OpenWork is_editing: " + StoryMakerEvents.isEditing);
             if(StoryMakerEvents.isEditing)
             {
                 switch (type)
                 {
                     case SObjectData.types.generic:
+                        Events.OnBoardingStepDone(OnBoarding.OnBoardingManager.steps.objects);
                         Events.DuplicateSO(id);
                         break;
                     case SObjectData.types.background:
+                        Events.OnBoardingStepDone(OnBoarding.OnBoardingManager.steps.background);
                         Events.DuplicateSOBG(id);
                         break;
                 }
