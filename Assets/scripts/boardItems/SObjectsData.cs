@@ -239,8 +239,12 @@ namespace BoardItems
                 if (OnDuplicated != null) {
                     OnDuplicated?.Invoke(success, id);
                     OnDuplicated = null;
-                } else
+                } else {
                     UIManager.Instance.ShowWorkDetail(currentSO);
+                    if (FirebaseAuthManager.Instance.IsAnonymousUser()) {
+                        Events.ShowRegisterPopup();
+                    }
+                }
             });
 
             

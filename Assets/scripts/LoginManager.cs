@@ -3,15 +3,23 @@ using Yaguar.Auth;
 
 public class LoginManager : MonoBehaviour
 {
-    [SerializeField] GameObject container;
+    [SerializeField] SocialAuth socialAuth;
+    [SerializeField] GameObject introContainer;
+    [SerializeField] GameObject emailContainer;
+    [SerializeField] GameObject registerPopup;
     [SerializeField] TMPro.TextMeshProUGUI title;
     [SerializeField] TMPro.TMP_InputField usernameField;
     [SerializeField] TMPro.TMP_InputField emailField;
     [SerializeField] TMPro.TMP_InputField passField;
-    [SerializeField] TMPro.TextMeshProUGUI error;
+    [SerializeField] TMPro.TextMeshProUGUI introFeedback;
+    [SerializeField] TMPro.TextMeshProUGUI emailFeedback;
+    [SerializeField] TMPro.TextMeshProUGUI popupFeedback;
     [SerializeField] GameObject loginLink, resetLink, signUpLink;
     [SerializeField] GameObject loginBtn, signUpBtn, resetBtn;
     public bool isNew;
+
+    bool isToSyncUserToEmail;
+    TMPro.TextMeshProUGUI feedback;
 
     //public override void OnEnabled()
     void Start() {
@@ -21,6 +29,9 @@ public class LoginManager : MonoBehaviour
         FirebaseAuthManager.Instance.OnSignUp += OnSignUp;
         FirebaseAuthManager.Instance.OnSignedOut += OnSignedOut;
         FirebaseAuthManager.Instance.OnResetPassword += OnResetPassword;
+        Events.ShowRegisterPopup += ShowRegisterPopup;
+
+        //feedback = introFeedback;
 
         Invoke(nameof(CheckLogged), Time.deltaTime * 3);
     }
@@ -32,7 +43,7 @@ public class LoginManager : MonoBehaviour
         ToRegister();
 
         if (!isNew) {
-            error.text = "Bienvenide " + Data.Instance.userData.userDataInDatabase.username;
+            feedback.text = "Bienvenide " + Data.Instance.userData.userDataInDatabase.username;
             Invoke(nameof(OnLogged), Time.deltaTime * 3);
         }
     }
@@ -43,12 +54,13 @@ public class LoginManager : MonoBehaviour
         FirebaseAuthManager.Instance.OnSignedOut -= OnSignedOut;
         FirebaseAuthManager.Instance.OnResetPassword -= OnResetPassword;
         FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
+        Events.ShowRegisterPopup -= ShowRegisterPopup;
     }
 
     private void OnSignedOut()
     {
         ResetRegisterFields();
-        container.SetActive(true);
+        introContainer.SetActive(true);
     }
 
     void OnLogin(bool succes) {
@@ -56,24 +68,24 @@ public class LoginManager : MonoBehaviour
         print("OnLogin " + succes);
 
         if (succes) {
-            error.text = "Conectado...";
+            feedback.text = "Conectado...";
             Invoke(nameof(OnLogged), Time.deltaTime*3);
         } else
-            error.text = "La dirección de correo electrónico o la contraseña son incorrectas";
+            feedback.text = "La dirección de correo electrónico o la contraseña son incorrectas";
     }
     void OnSignUp(bool succes) {
         if (succes) {
-            error.text = "Usuario registrado correctamente";
+            feedback.text = "Usuario registrado correctamente";
             Invoke(nameof(OnLogged), 1);
         } else
-            error.text = "Ocurrió un error al registrar el usuario, intentalo nuevamente más tarde";
+            feedback.text = "Ocurrió un error al registrar el usuario, intentalo nuevamente más tarde";
     }
 
     void OnResetPassword(bool succes) {
         if (succes) {
-            error.text = "Hemos envíado un link a " + emailField.text + " para que actualices tu contraseña";
+            feedback.text = "Hemos envíado un link a " + emailField.text + " para que actualices tu contraseña";
         } else
-            error.text = "La dirección de correo electrónico es incorrecta";
+            feedback.text = "La dirección de correo electrónico es incorrecta";
     }
 
     void OnTokenUpdated() {
@@ -81,11 +93,59 @@ public class LoginManager : MonoBehaviour
         Invoke(nameof(OnLogged), Time.deltaTime * 3);
     }
 
+    public void ShowEmailAuth() {
+        registerPopup.SetActive(false);
+        introContainer.SetActive(false);
+        emailContainer.SetActive(true);
+        feedback = emailFeedback;
+    }
+
+    public void SignUpWithPlayGames() {
+        feedback = introFeedback;
+        socialAuth.Init((authCode) => {
+            Debug.Log("#socialAuth: " + authCode);
+            if (authCode != "") {
+                FirebaseAuthManager.Instance.SignInWithPlayGames(authCode, (success) => {
+                    if (!success) {
+                        feedback.text = "No fue posible ingresar con Play Games.";
+                    } else {
+                        introContainer.SetActive(false);
+                    }
+                });
+            } else {
+                feedback.text = "No fue posible ingresar con Play Games.";
+            }
+        });
+    }
+
+    public void SyncUserWithPlayGames() {
+        feedback = popupFeedback;
+        socialAuth.Init((authCode) => {
+            Debug.Log("#socialAuth: " + authCode);
+            if (authCode != "") {                
+                FirebaseAuthManager.Instance.LinkWithPlayGames(socialAuth.GetLocalUser(), authCode, (success) => {
+                    if (!success) {
+                        feedback.text = "No fue posible linkear la cuenta con Play Games.";
+                    } else {
+                        registerPopup.SetActive(false);
+                    }
+                });
+            } else {
+                feedback.text = "No fue posible linkear la cuenta con Play Games.";
+            }
+        });
+    }
+
+    public void SignInAnonymously() {
+        feedback = introFeedback;
+        FirebaseAuthManager.Instance.SignInAnonymously();
+    }
+
     void ResetRegisterFields() {
         //usernameField.text = "";
         emailField.text = "";
         passField.text = "";
-        error.text = "";
+        emailFeedback.text = "";
     }
 
     public void OnLogged() {
@@ -93,32 +153,37 @@ public class LoginManager : MonoBehaviour
         print("logged");
         ResetRegisterFields();
 
-        container.SetActive(false);
+        registerPopup.SetActive(false);
+        introContainer.SetActive(false);
+        emailContainer.SetActive(false);
     }
     
 
     public void Register() {
         CancelInvoke();
         if (usernameField.text == "")
-            error.text = "Completá tu nombre de usuario";
+            feedback.text = "Completá tu nombre de usuario";
         else if (!emailField.text.Contains("@") || !emailField.text.Contains("."))
-            error.text = "El correo electrónico parece inválido";
+            feedback.text = "El correo electrónico parece inválido";
         else if (passField.text.Length < 6)
-            error.text = "La contraseña debe tener al menos 6 caracteres";
+            feedback.text = "La contraseña debe tener al menos 6 caracteres";
         else {
-            error.text = "Enviando datos...";
+            feedback.text = "Enviando datos...";
 
 
 
             //Data.Instance.firebaseAuthManager.SignUpUserAnon();
-            FirebaseAuthManager.Instance.SignUpUserEmail(usernameField.text, emailField.text, passField.text);
+            if(isToSyncUserToEmail)             
+                FirebaseAuthManager.Instance.LinkWithEmail(usernameField.text, emailField.text, passField.text);
+            else
+                FirebaseAuthManager.Instance.SignUpUserEmail(usernameField.text, emailField.text, passField.text);
 
         }
     }
 
     public void Login() {
         CancelInvoke();
-        error.text = "Enviando datos...";
+        feedback.text = "Enviando datos...";
 
         FirebaseAuthManager.Instance.LoginUserByEmail(emailField.text, passField.text);
 
@@ -126,13 +191,24 @@ public class LoginManager : MonoBehaviour
 
     public void Reset() {
         CancelInvoke();
-        error.text = "Enviando datos...";
+        feedback.text = "Enviando datos...";
 
         FirebaseAuthManager.Instance.PasswordReset(emailField.text);
 
     }
 
+    public void ToSyncUserToEmail() {                
+        ToRegister();
+        usernameField.text = Data.Instance.userData.userDataInDatabase.username;
+        loginLink.SetActive(false);
+        resetLink.SetActive(false);
+        signUpBtn.SetActive(true);
+        isToSyncUserToEmail = true;
+        ShowEmailAuth();
+    }
+
     public void ToRegister() {
+        isToSyncUserToEmail = false;
         ResetRegisterFields();
         title.text = "Completá tus datos para registrarte";
         loginBtn.SetActive(false);
@@ -172,6 +248,14 @@ public class LoginManager : MonoBehaviour
         loginLink.SetActive(false);
         resetLink.SetActive(true);
         signUpLink.SetActive(true);
+    }
+
+    void ShowRegisterPopup() {
+        registerPopup.SetActive(true);
+    }
+
+    public void CloseRegisterPopup() {
+        registerPopup.SetActive(false);
     }
 
 }
