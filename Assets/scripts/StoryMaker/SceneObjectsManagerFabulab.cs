@@ -26,6 +26,7 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.AddSceneObject += AddSceneObject;
             StoryMakerEvents.SetSceneObject += SetSceneObject;
             StoryMakerEvents.RemoveSceneObject += RemoveSceneObject;
+            StoryMakerEvents.ReplaceSceneObject += ReplaceSceneObject;
             StoryMakerEvents.OnMovieOver += OnMovieOver;
             StoryMakerEvents.OnMoviePaused += OnMovieOver;
             StoryMakerEvents.Restart += ShowBgMask;
@@ -40,6 +41,7 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.AddSceneObject -= AddSceneObject;
             StoryMakerEvents.SetSceneObject -= SetSceneObject;
             StoryMakerEvents.RemoveSceneObject -= RemoveSceneObject;
+            StoryMakerEvents.ReplaceSceneObject -= ReplaceSceneObject;
             StoryMakerEvents.OnMovieOver -= OnMovieOver;
             StoryMakerEvents.OnMoviePaused -= OnMovieOver;
             StoryMakerEvents.Restart -= ShowBgMask;
@@ -177,6 +179,22 @@ namespace Yaguar.StoryMaker.Editor
                 base.RemoveSceneObject();
             //UIManager.Instance.mainMenu.CloseAll();
         }
+
+        protected virtual void ReplaceSceneObject(string id) {
+            if (selected != null) {
+                if (selected is AvatarFabulab || selected is Prop) {
+                    StoryMakerEvents.OnSaveScene();
+                    SOAvatarFabulabData data = new SOAvatarFabulabData();
+                    data.id = id;
+                    data.itemName = Utils.GetUniqueDateTimeId();                    
+                    ScenesManagerFabulab.Instance.ReplaceItem(selected.GetData().id, selected.GetData().itemName,id, data.itemName);
+                    base.RemoveSceneObject();
+                    AddSceneObject(data);
+                    StoryMakerEvents.RewindStory();
+                }
+            }
+        }
+
         public override Avatar GetAvatarInSceneById(string id) {
             foreach (SceneObject a in sceneObjects) {
                 if (a is AvatarFabulab) {

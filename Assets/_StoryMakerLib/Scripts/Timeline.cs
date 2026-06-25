@@ -35,6 +35,7 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.OnLoadFilm += Reset;
             StoryMakerEvents.OnStartNewStory += Reset;
             StoryMakerEvents.ChangeSpeed += ChangeSpeed;
+            StoryMakerEvents.RewindStory += Rewind;
         }
 
         protected virtual void Start() {
@@ -60,6 +61,7 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.OnLoadFilm -= Reset;
             StoryMakerEvents.OnStartNewStory -= Reset;
             StoryMakerEvents.ChangeSpeed -= ChangeSpeed;
+            StoryMakerEvents.RewindStory -= Rewind;
         }
         protected virtual void ChangeSpeed(int speed)
         {
@@ -81,6 +83,11 @@ namespace Yaguar.StoryMaker.Editor
             RefreshKeyframes();
             filmMakerUI.JumpTo(1);
         }
+
+        protected virtual void Rewind() {
+            SetJump(1);
+        }
+
         protected virtual void RefreshKeyframes()
         {
             //for (int a = 0; a < ScenesManager.Instance.Scenes.Count; a++)

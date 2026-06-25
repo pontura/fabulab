@@ -50,6 +50,7 @@ namespace UI.MainApp
             StoryMakerEvents.EditExpressions += EditExpressions;
             StoryMakerEvents.OnLoadFilm += OnLoadFilm;
             StoryMakerEvents.EnableStoryEdition += EnableStoryEdition;
+            StoryMakerEvents.NoneItemSelected += NoneItemSelected;
         }
 
         void OnDestroy()
@@ -60,6 +61,7 @@ namespace UI.MainApp
             StoryMakerEvents.EditExpressions -= EditExpressions;
             StoryMakerEvents.OnLoadFilm -= OnLoadFilm;
             StoryMakerEvents.EnableStoryEdition -= EnableStoryEdition;
+            StoryMakerEvents.NoneItemSelected -= NoneItemSelected;
         }
 
         void OnLoadFilm() {
@@ -100,6 +102,7 @@ namespace UI.MainApp
         string selectedSOId;
         void EditAvatar(Vector3 pos, string id)
         {
+            NoneItemSelected();
             arrowSelect.SetActive(true);
             arrowSelect.transform.position = pos;
             this.selectedSOId = id;
@@ -120,6 +123,18 @@ namespace UI.MainApp
             StoryMakerEvents.RemoveSceneObject();
             CloseTools();
         }
+
+        void NoneItemSelected() {
+            characterScreen.ReplaceEnabled = false;
+            objectsScreen.ReplaceEnabled = false;
+        }
+
+        public void CancelSelection() {
+            NoneItemSelected();
+            CloseTools();
+            Scenario.Instance.sceneObejctsManager.selected = null;
+        }
+
         public void CloseTools()
         {
             arrowSelect.SetActive(false);
@@ -127,9 +142,11 @@ namespace UI.MainApp
             editObjects.SetActive(false);
             if (Scenario.Instance.sceneObejctsManager.selected != null) {
                 if (Scenario.Instance.sceneObejctsManager.selected is AvatarFabulab avFab) {
-                    avFab?.Borders?.Show(false);
+                    if(!characterScreen.ReplaceEnabled)
+                        avFab?.Borders?.Show(false);
                 } else if (Scenario.Instance.sceneObejctsManager.selected is Prop prop) {
-                    prop?.Borders?.Show(false);
+                    if (!objectsScreen.ReplaceEnabled)
+                        prop?.Borders?.Show(false);
                 }
             }            
             GetComponent<EditFieldUI>().ClosePanel();
@@ -146,8 +163,30 @@ namespace UI.MainApp
             emojisUI.SetOn(true);
         }
 
+        public void ReplaceCharacter() {
+            if (Scenario.Instance.sceneObejctsManager.selected != null) {
+                characterScreen.ReplaceEnabled = true;
+                objectSelectionScreen.Cancel();
+                avatarSelectionScreen.Cancel();
+                CloseTools();
+                actionUI.SetOn(false);
+                emojisUI.SetOn(false);
+                tabTools.SetOn(1);
+                timeline.SetActive(false);
+                itemList.SetActive(true);
+                characterScreen.Show(true);
+                backgroundScreen.Show(false);
+                objectsScreen.Show(false);            
+                if (Scenario.Instance.sceneObejctsManager.selected is AvatarFabulab avFab) {
+                    avFab?.Borders?.Show(true);
+                }
+                tabs.SetActive(1);
+            }
+        }
+
         void OnTabClicked(int id)
         {
+            NoneItemSelected();
             objectSelectionScreen.Cancel();
             avatarSelectionScreen.Cancel();
             addNewPanel.Close();
@@ -270,7 +309,7 @@ namespace UI.MainApp
             savePanel.SetActive(false);
             Invoke(nameof(SaveWork), Time.deltaTime * 2);
         }
-        public void Replace()// Guarda la version editada del personaje.
+        public void Replace()
         {
             if (ScenesManagerFabulab.Instance.currentFDataID == "")
                 Save();

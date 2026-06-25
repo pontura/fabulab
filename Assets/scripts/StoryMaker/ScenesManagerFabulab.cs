@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using NUnit.Framework;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -163,6 +164,16 @@ namespace Yaguar.StoryMaker.Editor
                 } else
                     break;
             }
-        }            
+        }
+
+        public void ReplaceItem(string oldId, string oldItemName, string newId, string newItemName) {
+            foreach (SceneDataFabulab scene in Scenes) {
+                Debug.Log($"% ReplaceItem SceneElement id: {oldId} itemName: {oldItemName}");
+                foreach (SceneElement se in scene.GetScenesElements().Where(b => b.data.id == oldId && b.data.itemName == oldItemName)) {                    
+                    se.data.id = newId;
+                    se.data.itemName = newItemName;
+                }
+            }
+        }
     }    
 }

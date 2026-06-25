@@ -44,6 +44,8 @@ namespace UI.MainApp.Home.User
         }
         public override void New()
         {
+            Debug.Log($"ReplaceEnabled {ReplaceEnabled}");
+            base.New();
             GetComponent<AddNew>().Show(true, Clicked);
         }
         public void Clicked(int id)
@@ -97,8 +99,8 @@ namespace UI.MainApp.Home.User
             {
                 AddElement(part);
                 print("Duplicate open: " + duplicateID);
-                Events.OnLoading(false);
-                OpenWork(duplicateID);
+                Events.OnLoading(false);                
+                SelectWork(duplicateID);
             }
             else
             {

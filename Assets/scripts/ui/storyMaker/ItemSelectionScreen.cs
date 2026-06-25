@@ -12,10 +12,12 @@ namespace UI.MainApp.Home.User
         [SerializeField] Button addBtn;
         [SerializeField] protected Scrollbar scrollbar;
 
+        [field:SerializeField] public bool ReplaceEnabled {  get; set; }
+
         public void AddBtn()
         {
             Button go = Instantiate(addBtn, worksContainer);
-            go.GetComponent<Button>().onClick.AddListener(() => New());
+            go.GetComponent<Button>().onClick.AddListener(() => New());            
         }
 
         public override void Show(bool isOn) {
@@ -44,7 +46,7 @@ namespace UI.MainApp.Home.User
         protected virtual void AddElement(SOPartData part) {
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
             print("go " + go);
-            go.Init(part, OpenWork);
+            go.Init(part, SelectWork);
         }
 
         protected override void LoadNext()
@@ -56,14 +58,27 @@ namespace UI.MainApp.Home.User
 
             Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
         }
-        public virtual void New(){ }
+        public virtual void New(){
+            if (ReplaceEnabled)
+                GetComponent<AddNew>().SetActiveButton(0, false);
+            else
+                GetComponent<AddNew>().SetActiveButton(0, true);
+        }
+
+        protected virtual void SelectWork(string id){
+            if(ReplaceEnabled)
+                StoryMakerEvents.ReplaceSceneObject(id);
+            else
+                OpenWork(id);
+        }
+        
         public override void OpenWork(string id) {
             SOAvatarFabulabData data = new SOAvatarFabulabData();
             data.id = id;
             data.itemName = Utils.GetUniqueDateTimeId();
             StoryMakerEvents.SetSceneObject(data);
             //UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);    
-        }       
+        }   
 
         protected override void LoadImage(int index, ItemSelectorBtn isb) {
             /*FilmDataFabulab fd = Data.Instance.scenesData.filmsData.Find(x => x.id == isb.Id);

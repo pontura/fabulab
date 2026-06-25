@@ -45,6 +45,11 @@ namespace Common.UI
             tabButton.SetActive();
             OnActive(tabButton.id);
         }
+
+        public void SetActive(int index) {
+            all[index].SetActive();
+        }
+
         void ResetAll()
         {
             foreach (TabButton tabButton in all)
