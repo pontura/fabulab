@@ -51,9 +51,11 @@ namespace OnBoarding
             StoryMakerEvents.SetEditing(true);
             yield return new WaitForSeconds(0.25f);
             storyEditorScreen.OnTabClicked(0);
+            
             //TO-DO - agregar el character recien creado:
-            string newCharacterID =  "-OsbnGzN2MMES--Y3_QJ";
-            print("OpenWork " + newCharacterID);
+            string newCharacterID =  Data.Instance.charactersData.userCharacters[0].id;
+            print("AddCharacterToScene lastID:" + newCharacterID);
+
             SOAvatarFabulabData data = new SOAvatarFabulabData();
             data.id = newCharacterID;
             data.itemName = Utils.GetUniqueDateTimeId();
