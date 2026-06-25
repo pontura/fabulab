@@ -40,7 +40,7 @@ public class LoginManager : MonoBehaviour
         if (Data.Instance.userData.userDataInDatabase.username == "")
             isNew = true;
 
-        ToRegister();
+        ToLogin();
 
         if (!isNew) {
             feedback.text = "Bienvenide " + Data.Instance.userData.userDataInDatabase.username;
@@ -146,6 +146,8 @@ public class LoginManager : MonoBehaviour
         emailField.text = "";
         passField.text = "";
         emailFeedback.text = "";
+        introFeedback.text = "";
+        popupFeedback.text = "";
     }
 
     public void OnLogged() {
