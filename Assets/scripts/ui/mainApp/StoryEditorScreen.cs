@@ -51,7 +51,10 @@ namespace UI.MainApp
             StoryMakerEvents.OnLoadFilm += OnLoadFilm;
             StoryMakerEvents.EnableStoryEdition += EnableStoryEdition;
         }
-
+        void OnDisable()
+        {
+            StoryMakerEvents.SetEditing(false);
+        }
         void OnDestroy()
         {
             StoryMakerEvents.ShowSoButtons -= ShowSoButtons;

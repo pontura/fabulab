@@ -79,7 +79,7 @@ namespace UI.MainApp
                 SetTogglePreview();
                 Events.ShowUndo(false);
             }
-            tools.SetActive(isMyAvatar);
+            tools.SetActive(chID == "" || isMyAvatar);
 
         }
         public void TogglePreview()
