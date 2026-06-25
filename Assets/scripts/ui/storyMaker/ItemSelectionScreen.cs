@@ -66,9 +66,10 @@ namespace UI.MainApp.Home.User
         }
 
         protected virtual void SelectWork(string id){
-            if(ReplaceEnabled)
+            if (ReplaceEnabled) {
                 StoryMakerEvents.ReplaceSceneObject(id);
-            else
+                ReplaceEnabled = false;
+            } else
                 OpenWork(id);
         }
         
