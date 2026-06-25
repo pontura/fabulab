@@ -1,3 +1,4 @@
+using System;
 using UI.MainApp;
 using UI.MainApp.Home.User;
 using UnityEngine;
@@ -17,18 +18,24 @@ namespace OnBoarding
             field.text = "Ahora probá modificando lo que quieras";   
             playButton.OnClick();     
 
-            Events.OnBoardingStepDone += OnBoardingStepDone;
+            StoryMakerEvents.OnMovieOver += OnMovieOver;
         }
 
         private void OnBoardingStepDone(OnBoardingManager.steps steps)
         {
             if(active && steps != step) return;            
             part.SetActive(true);
-            Events.OnBoardingStepDone -= OnBoardingStepDone;
+            StoryMakerEvents.OnMovieOver -= OnMovieOver;
         }
+
+        private void OnMovieOver()
+        {
+            part.SetActive(true);
+        }
+
         void OnDestroy()
         {            
-            Events.OnBoardingStepDone -= OnBoardingStepDone;
+            StoryMakerEvents.OnMovieOver -= OnMovieOver;
         }
         public override void ShowPanelsBack() {}
     }
