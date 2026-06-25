@@ -46,6 +46,7 @@ namespace UI.MainApp.Home.User
         }
         public override void New()
         {
+            base.New();
             GetComponent<AddNew>().Show(true, Clicked);
         }
         public void Clicked(int id)

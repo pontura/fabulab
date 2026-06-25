@@ -39,4 +39,8 @@ public class AddNew : MonoBehaviour
         GetComponent<UI.MainApp.StoryEditorScreen>().CloseTools();
     }
 
+    public void SetActiveButton(int index, bool enabled) {
+        buttons[index].gameObject.SetActive(enabled);
+    }
+
 }

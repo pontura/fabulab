@@ -31,7 +31,7 @@ public class LoginManager : MonoBehaviour
         FirebaseAuthManager.Instance.OnResetPassword += OnResetPassword;
         Events.ShowRegisterPopup += ShowRegisterPopup;
 
-        //feedback = introFeedback;
+        feedback = introFeedback;
 
         Invoke(nameof(CheckLogged), Time.deltaTime * 3);
     }

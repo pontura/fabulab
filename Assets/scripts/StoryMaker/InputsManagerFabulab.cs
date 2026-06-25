@@ -75,7 +75,7 @@ namespace Yaguar.StoryMaker.Editor
 
 
         protected override void SelectSO()
-        {            
+        {
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
 
@@ -127,7 +127,11 @@ namespace Yaguar.StoryMaker.Editor
                     {
                         StoryMakerEvents.NoneAvatarSelected();
                     }
+                } else {
+                    StoryMakerEvents.NoneItemSelected();
                 }
+            } else {
+                StoryMakerEvents.NoneItemSelected();
             }
         }
 

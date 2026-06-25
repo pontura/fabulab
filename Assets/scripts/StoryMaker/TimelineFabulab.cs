@@ -14,6 +14,10 @@ namespace Yaguar.StoryMaker.Editor
             base.Start();
             Invoke(nameof(SetTotalMarkers), Time.deltaTime * 3);
         }
+        protected override void Rewind() {
+            ScenesManagerFabulab.Instance.currentSceneId = 1;
+            base.SetJump(1);
+        }
 
         void SetTotalMarkers() {
             RectTransform canvasRect = GetComponentInParent<Canvas>().GetComponent<RectTransform>();

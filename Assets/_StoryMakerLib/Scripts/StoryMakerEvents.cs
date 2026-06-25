@@ -18,6 +18,7 @@ namespace Yaguar.StoryMaker.Editor
 
         public static System.Action OnStartNewStory = delegate { };
 
+        public static System.Action<string> ReplaceSceneObject = delegate { };
         public static System.Action<SOData> AddSceneObject = delegate { };
         public static System.Action<SOData> SetSceneObject = delegate { };
         public static System.Action<List<SOData>> AddAllSceneObjects = delegate { };
@@ -25,6 +26,7 @@ namespace Yaguar.StoryMaker.Editor
         public static System.Action<int> ChangeFont = delegate { };
         public static System.Action OnLoadFilm = delegate { };
         public static System.Action<int> ChangeSpeed = delegate { };
+        public static System.Action RewindStory = delegate { };
         public static System.Action OnSaveScene = delegate { };
         public static System.Action ReorderSceneObjectsInZ = delegate { };
 
@@ -51,6 +53,7 @@ namespace Yaguar.StoryMaker.Editor
         public static System.Action<SOData> SetAvatarData = delegate { };
 
         public static System.Action NoneAvatarSelected = delegate { };
+        public static System.Action NoneItemSelected = delegate { };
 
         public static System.Action<bool> EnableInputManager = delegate { };
 
