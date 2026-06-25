@@ -166,7 +166,7 @@ namespace UI.MainApp.Home.User
                 AddElement(part);
                 print("Duplicate open: " + duplicateID);
                 Events.OnLoading(false);
-                OpenWork(duplicateID);
+                SelectWork(duplicateID);
             }
             else
             {

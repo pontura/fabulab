@@ -184,7 +184,11 @@ namespace Yaguar.StoryMaker.Editor
             if (selected != null) {
                 if (selected is AvatarFabulab || selected is Prop) {
                     StoryMakerEvents.OnSaveScene();
-                    SOAvatarFabulabData data = new SOAvatarFabulabData();
+                    SOData data = null;
+                    if (selected is AvatarFabulab)
+                        data = new SOAvatarFabulabData();
+                    else if(selected is Prop)
+                        data = new SODataFabulab();
                     data.id = id;
                     data.itemName = Utils.GetUniqueDateTimeId();                    
                     ScenesManagerFabulab.Instance.ReplaceItem(selected.GetData().id, selected.GetData().itemName,id, data.itemName);

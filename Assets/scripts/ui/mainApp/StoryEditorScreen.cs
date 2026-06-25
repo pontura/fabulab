@@ -183,6 +183,26 @@ namespace UI.MainApp
                 tabs.SetActive(1);
             }
         }
+        public void ReplaceProp() {
+            if (Scenario.Instance.sceneObejctsManager.selected != null) {
+                objectsScreen.ReplaceEnabled = true;
+                objectSelectionScreen.Cancel();
+                avatarSelectionScreen.Cancel();
+                CloseTools();
+                actionUI.SetOn(false);
+                emojisUI.SetOn(false);
+                tabTools.SetOn(2);
+                timeline.SetActive(false);
+                itemList.SetActive(true);
+                characterScreen.Show(false);
+                backgroundScreen.Show(false);
+                objectsScreen.Show(true);
+                if (Scenario.Instance.sceneObejctsManager.selected is Prop prop) {
+                    prop?.Borders?.Show(true);
+                }
+                tabs.SetActive(2);
+            }
+        }
 
         public void OnTabClicked(int id){
             NoneItemSelected();
