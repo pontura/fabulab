@@ -21,7 +21,6 @@ namespace UI.MainApp
                     Events.ColorizeBG(PalettesManager.colorNames.BG_CELESTE);
                     UIManager.Instance.boardUI.characterManager.gameObject.SetActive(false);
                     UIManager.Instance.boardUI.sceneobjectsManager.gameObject.SetActive(false);
-                    Invoke("Delayed", 0.5f);
                     break;
                 default:
                     if (last == UIManager.screenType.StoryMaker) {
@@ -33,10 +32,6 @@ namespace UI.MainApp
                     break;
             }
             last = type;
-        }
-        void Delayed()
-        {
-            StoryMakerEvents.SetEditing(false);
         }
     }
 }

@@ -78,6 +78,7 @@ public static class Events
     public static System.Action<string> OnPropMetadataRemoved = delegate { };
     public static System.Action<OnBoardingManager.steps> OnBoarding = delegate { };
     public static System.Action<OnBoardingManager.steps> OnBoardingDone = delegate { };
+    public static System.Action<OnBoardingManager.steps> OnBoardingStepDone = delegate { };
     public static System.Action OnSaveCharacterDone = delegate { };
 }
    

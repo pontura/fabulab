@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using UI;
 using UnityEngine;
 
@@ -13,12 +12,16 @@ namespace OnBoarding
             name,
             title_character,
             character_intro,
-
             choose_head,    
             modify_head,
             move,
             allBody,
             characterDone,
+            firstStoryIntro,
+            background,
+            objects,
+            storyPresentation,
+            storyPresentationDone,
             ready
         }
         [SerializeField] int id;

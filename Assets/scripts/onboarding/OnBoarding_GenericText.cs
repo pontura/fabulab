@@ -15,7 +15,14 @@ namespace OnBoarding
                 case OnBoardingManager.steps.characterDone:
                     field.text = "Muy bien! Ya tenemos tu personaje";
                 break;
+                  case OnBoardingManager.steps.firstStoryIntro:
+                    field.text = "Ahora hagamos la primer historia!";
+                break;
+                  case OnBoardingManager.steps.storyPresentation:
+                    field.text = "Te damos la bienvenida a Fabulab!";
+                break;
             }           
         }
+       
     }
 }

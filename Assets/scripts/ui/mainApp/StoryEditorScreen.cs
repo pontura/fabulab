@@ -184,8 +184,7 @@ namespace UI.MainApp
             }
         }
 
-        void OnTabClicked(int id)
-        {
+        public void OnTabClicked(int id){
             NoneItemSelected();
             objectSelectionScreen.Cancel();
             avatarSelectionScreen.Cancel();
@@ -226,7 +225,7 @@ namespace UI.MainApp
                     backgroundScreen.Show(false);
                     objectsScreen.Show(false);
                     textsScreen.Show(true);
-                    Events.OnPopupTopSignalText("Diálogos");
+                    Events.OnPopupTopSignalText("Diï¿½logos");
                     break;
                 case 4:
                     timeline.SetActive(true);
@@ -334,7 +333,7 @@ namespace UI.MainApp
         }
 
         public void Delete() {
-            Events.OnConfirm("Confirmás que querés borrar esta historia?", "SI", "NO", OnConfirm);
+            Events.OnConfirm("Confirmï¿½s que querï¿½s borrar esta historia?", "SI", "NO", OnConfirm);
         }
         void OnConfirm(bool ok) {
             if (ok)

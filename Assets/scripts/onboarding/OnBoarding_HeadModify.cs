@@ -1,7 +1,5 @@
-using System;
 using BoardItems;
 using UI;
-using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 
 namespace OnBoarding
@@ -12,6 +10,7 @@ namespace OnBoarding
         [SerializeField] PresetsUI presetsUI;
         [SerializeField] GameObject PresetDragAndDropToggle;
         [SerializeField] GameObject characterScrollContent;
+        [SerializeField] Animation dragAndDropContainerAnim;
         public override void OnShow()
         {            
             field.text = "Ahora a crear!";     
@@ -20,6 +19,7 @@ namespace OnBoarding
             characterScrollContent.GetComponent<Animation>().Play("on");
             PresetDragAndDropToggle.gameObject.SetActive(false);
             Events.OnStopDrag += OnStopDrag;
+            dragAndDropContainerAnim.Play("on");
         }
 
         private void OnStopDrag(ItemInScene scene, Vector3 vector)
