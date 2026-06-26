@@ -86,6 +86,10 @@ namespace UI
         {
             this.part = part;
         }
+        public void ShowBack(bool showIt)
+        {
+            backBtn.SetActive(showIt);            
+        }
         private void OnShowScreen(screenType type)
         {
             undoManager.Reset();

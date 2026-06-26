@@ -11,9 +11,8 @@ namespace UI
         [SerializeField] PresetsSelector presetsSelector;
         [SerializeField] Transform dragAndDropContainer;
         [SerializeField] DragAndDropUI dragAndDropUI;
-        [SerializeField] TabController tabs;
-        [SerializeField] Button tab1;
-        [SerializeField] Button tab2;
+        public TabController tabs;
+        [SerializeField] ToggleButton toggleButton;
         [SerializeField] GameObject presetsDragAndDropToggleGO;
         [SerializeField] ToggleButton snapToggle;
         [SerializeField] GameObject deleteAll;
@@ -94,15 +93,16 @@ namespace UI
             dragAndDropContainer.gameObject.SetActive(true);
             dragAndDropUI.SetOn(true);
             Events.DragAndDropActive(true);
+            SetToggle();
         }
         public void PresentsOn(int id)
         {
             presetsSelector.SetOn(true, id);
             Events.DragAndDropActive(false);
         }
-        public void Clicked(bool isPreset)
+        public void Toggle()
         {
-            this.isPreset = isPreset;
+            this.isPreset = !isPreset;
 
             SetToggle();
 
@@ -117,14 +117,12 @@ namespace UI
             if (isPreset)
             {
                 snapToggle.Show(false);
-                tab1.interactable = false;
-                tab2.interactable = true;
+                toggleButton.Force(true);
             }
             else
             {
                 snapToggle.Show(true);
-                tab1.interactable = true;
-                tab2.interactable = false;
+                toggleButton.Force(false);
             } 
         }
         
