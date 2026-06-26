@@ -146,13 +146,12 @@ namespace Yaguar.StoryMaker.Editor
         public void InitPlaying()
         {
             OnPlay();
-            if (!StoryMakerEvents.isEditing)
-            {
+            //if (!StoryMakerEvents.isEditing){
                 Scenario.Instance.ResetScenario();
 
                 JumpTo(ScenesManager.Instance.currentSceneId);
                 filmMakerUI.JumpTo(ScenesManager.Instance.currentSceneId);
-            }
+            //}
         }
         public virtual void OnPlay() { }
         public virtual void OnStop() { }
