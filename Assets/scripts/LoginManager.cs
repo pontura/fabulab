@@ -16,6 +16,7 @@ public class LoginManager : MonoBehaviour
     [SerializeField] TMPro.TextMeshProUGUI popupFeedback;
     [SerializeField] GameObject loginLink, resetLink, signUpLink;
     [SerializeField] GameObject loginBtn, signUpBtn, resetBtn;
+    [SerializeField] UI.ToggleButton passToggle;
     public bool isNew;
 
     bool isToSyncUserToEmail;
@@ -30,6 +31,8 @@ public class LoginManager : MonoBehaviour
         FirebaseAuthManager.Instance.OnSignedOut += OnSignedOut;
         FirebaseAuthManager.Instance.OnResetPassword += OnResetPassword;
         Events.ShowRegisterPopup += ShowRegisterPopup;
+
+        passToggle.Init(PassToggle);
 
         feedback = introFeedback;
 
@@ -139,6 +142,11 @@ public class LoginManager : MonoBehaviour
     public void SignInAnonymously() {
         feedback = introFeedback;
         FirebaseAuthManager.Instance.SignInAnonymously();
+    }
+
+    void PassToggle(bool show) {
+        passField.contentType = show ? TMPro.TMP_InputField.ContentType.Standard : TMPro.TMP_InputField.ContentType.Password;
+        passField.textComponent.SetAllDirty();
     }
 
     void ResetRegisterFields() {
