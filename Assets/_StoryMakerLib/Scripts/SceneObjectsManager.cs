@@ -111,13 +111,15 @@ namespace Yaguar.StoryMaker.Editor
                 sod.pos = data.pos;
                 sod.rot = data.rot;
                 sod.size = data.size;
+                sod.goLeft = data.goLeft;
             }
 
-            so.transform.localPosition = data.pos.ToVector3();
+            so.transform.localPosition = data.pos.ToVector3();            
             so.transform.localEulerAngles = new Vector3(0, 0, data.rot);
             if (data.size == 0)
                 data.size = 1;
             so.transform.localScale = new Vector3(data.size, data.size, data.size);
+            so.FlipX(data.goLeft);
         }
 
         public virtual SceneObject GetSceneObjectInScene(SOData soData)

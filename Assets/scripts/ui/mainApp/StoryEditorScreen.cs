@@ -281,6 +281,7 @@ namespace UI.MainApp
 
                     (soData as SOAvatarFabulabData).anim = (so.GetData() as SOAvatarFabulabData).anim;
                     (soData as SOAvatarFabulabData).emoji = (so.GetData() as SOAvatarFabulabData).emoji;
+                    (soData as SOAvatarFabulabData).goLeft = (so.GetData() as SOAvatarFabulabData).goLeft;
                 } else if (so is Prop) {
                     soData = new SODataFabulab();
                     soData.Clone(so.GetData());

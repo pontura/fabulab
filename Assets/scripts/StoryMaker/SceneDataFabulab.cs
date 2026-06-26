@@ -61,6 +61,7 @@ namespace Yaguar.StoryMaker.Editor
             soData.size = data.size;
             soData.itemName = data.itemName;
             soData.force_z = data.force_z;
+            soData.goLeft = data.goLeft;
         }
 
     }
@@ -379,8 +380,6 @@ namespace Yaguar.StoryMaker.Editor
             if (data.type==SceneElementType.AVATAR)
             {
                 soData = new SOAvatarFabulabData();
-
-                soData.goLeft = data.data.goLeft;
 
                 (soData as SOAvatarFabulabData).anim = (data as SceneElementAvatar).anim;
                 (soData as SOAvatarFabulabData).emoji = (data as SceneElementAvatar).emoji;
