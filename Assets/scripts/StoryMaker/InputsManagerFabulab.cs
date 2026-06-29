@@ -59,6 +59,7 @@ namespace Yaguar.StoryMaker.Editor
                         if (isDragging)
                         {
                             sceneObjectsManager.selected.StopDrag();
+                            AudioManager.Instance.sfxManager.PlayTransp("drop", -2);
                             isDragging = false;
                             isResize = false;
                             isRotating = false;
@@ -116,6 +117,7 @@ namespace Yaguar.StoryMaker.Editor
                 {
                     isDragging = true;
                     sceneObjectsManager.selected.BeginDrag();
+                    AudioManager.Instance.sfxManager.PlayTransp("get", -2);
                     sceneObjectsManager.avatar = sceneObjectsManager.selected.GetComponent<Avatar>();
                     if (sceneObjectsManager.avatar != null)
                     {

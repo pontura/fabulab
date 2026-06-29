@@ -42,6 +42,7 @@ namespace UI.MainApp.Home.User
         }        
         protected void OnInfoClicked(bool isPublic)
         {
+            AudioManager.Instance.uiSfxManager.PlayTransp("click", 2);
             UIManager.Instance.infoDataScreen.Init(Id, metadataType, thumb.sprite);
             print($"Info clicked id: {Id} isPublic: " + isPublic);
         }
@@ -75,7 +76,10 @@ namespace UI.MainApp.Home.User
 
         public void AddOnClick(System.Action<string> OnClicked)
         {
-            transform.GetComponentInChildren<Button>().onClick.AddListener(() => OnClicked?.Invoke(Id));            
+            transform.GetComponentInChildren<Button>().onClick.AddListener(() => {
+                AudioManager.Instance.uiSfxManager.PlayTransp("click", 5);
+                OnClicked?.Invoke(Id);
+            });            
         }
       
         public void UpdatePublicState() {

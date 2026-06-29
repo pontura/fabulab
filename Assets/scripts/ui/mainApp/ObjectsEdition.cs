@@ -23,6 +23,7 @@ namespace UI.MainApp
                 case UIManager.screenType.WorkDetail:
                     break;
                 case UIManager.screenType.Creation_Objects:
+                    AudioManager.Instance.musicManager.Play("album");
                     sceneObjectsPanel.Init();                   
                     Events.OnBodyPartActive(CharacterPartsHelper.parts.BODY);
                     switch (Data.Instance.sObjectsData.Type)

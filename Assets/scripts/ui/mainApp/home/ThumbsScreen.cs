@@ -72,8 +72,7 @@ namespace UI.MainApp.Home.User
         {
             scrollRect.onValueChanged.AddListener(OnScrollChanged);
             SetCurrentScrollIndex(scrollRect.normalizedPosition);
-            Events.OnLoading(false);
-            
+            Events.OnLoading(false);            
         }
                 
         public virtual void OpenWork(string id) {

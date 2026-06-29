@@ -33,6 +33,7 @@ namespace UI.MainApp.Home
             gameObject.SetActive(isOn);
             if (isOn)
             {
+                AudioManager.Instance.musicManager.Play("board");
                 profilePicture.InitOwner();
                 tabs.Init(OnTabClicked);
                 List<string> tabNames = new List<string>() { "Historias", "Personajes", "Objetos", "Info" };
@@ -55,15 +56,19 @@ namespace UI.MainApp.Home
             {
               
                 case 0:
+                    AudioManager.Instance.uiSfxManager.PlayTransp("click", 5);
                     storiesScreen.Show(true);
                     break;
                 case 1:
+                    AudioManager.Instance.uiSfxManager.PlayTransp("click", 2);
                     charactersScreen.Show(true);
                     break;
                 case 2:
+                    AudioManager.Instance.uiSfxManager.Play("click");
                     objects.Show(true);
                     break;
                 case 3:
+                    AudioManager.Instance.uiSfxManager.PlayTransp("click", 2);
                     userDataScreen.Show(true);
                     break;
             }

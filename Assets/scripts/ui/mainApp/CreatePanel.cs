@@ -7,6 +7,7 @@ namespace UI.MainApp
             switch(type)
             {
                 case UIManager.screenType.Create:
+                    AudioManager.Instance.musicManager.Play("gallery");
                     Show(true);
                     break;
                 default:

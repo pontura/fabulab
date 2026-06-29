@@ -14,6 +14,7 @@ namespace UI.MainApp
             switch(type)
             {
                 case UIManager.screenType.StoryMaker:
+                    AudioManager.Instance.musicManager.Play("album");
                     Events.Zoom(ZoomStates.STORY, false);
                     StoryMakerEvents.Restart();
                     Show(true);

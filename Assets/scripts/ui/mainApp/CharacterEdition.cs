@@ -33,6 +33,7 @@ namespace UI.MainApp
                 case UIManager.screenType.WorkDetail:
                     break;
                 case UIManager.screenType.Creation_Character:
+                    AudioManager.Instance.musicManager.Play("album");
                     SetChangesMade(false);
                   //  SetButtons();
                     Show(true);

@@ -36,17 +36,17 @@ namespace UI.MainApp.Home.User
         void InitStoryBtn(bool isEdition)
         {
             print("InitStoryBtn" + content.userID + " u: "  + Data.Instance.userData.userDataInDatabase.uid);
-            if (isEdition)
-            {
+            if (isEdition) {
                 editionGO.SetActive(true);
                 viewGO.SetActive(false);
                 bool isPublic = Data.Instance.scenesData.GetMeta(Id).isPublic;
                 infoBtn.gameObject.SetActive(true);
                 infoBtn.Init(OnInfoClicked, isPublic);
-            }
-            else
-            {
-                GetComponent<Button>().onClick.AddListener(() => userStoriesScreen.OpenWork(content.id));
+            } else {
+                GetComponent<Button>().onClick.AddListener(() => {
+                    AudioManager.Instance.uiSfxManager.PlayTransp("click", 5);
+                    userStoriesScreen.OpenWork(content.id); 
+                });
                 editionGO.SetActive(false);
                 viewGO.SetActive(true);
 
@@ -59,14 +59,17 @@ namespace UI.MainApp.Home.User
         }
         public void Edit()
         {
+            AudioManager.Instance.uiSfxManager.PlayTransp("click", 5);
             userStoriesScreen.OpenWork(content.id);
         }
         public void Duplicate()
         {
+            AudioManager.Instance.uiSfxManager.PlayTransp("click", 5);
             userStoriesScreen.Duplicate(content.id);
         }
         public override void Delete()
         {
+            AudioManager.Instance.uiSfxManager.PlayTransp("click", -5);
             print("Delete ID: " + content.id);
             Events.OnConfirm("Confirmás que querés borrar esta historia?", "SI", "NO", OnConfirm);
         }
