@@ -15,7 +15,7 @@ namespace UI.MainApp.Home
         [SerializeField] ProfilePicture profilePicture;
         [SerializeField] TMPro.TMP_Text usernameField;
 
-        
+        bool firstTime = true;
         private void Start() {
             Events.ChangeName += OnChangeName;
         }
@@ -31,8 +31,9 @@ namespace UI.MainApp.Home
         public void Show(bool isOn)
         {
             gameObject.SetActive(isOn);
-            if (isOn)
+            if (isOn && firstTime)
             {
+                firstTime = false;
                 profilePicture.InitOwner();
                 tabs.Init(OnTabClicked);
                 List<string> tabNames = new List<string>() { "Historias", "Personajes", "Objetos", "Info" };

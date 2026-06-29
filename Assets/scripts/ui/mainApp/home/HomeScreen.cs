@@ -15,7 +15,7 @@ namespace UI.MainApp.Home
         [SerializeField] TMPro.TMP_Text usernameField;
 
         [SerializeField] ProfilePicture profilePicture;
-
+        bool firstTime = true;
         private void Start() {
             Events.OnAllFilmMetadataLoadDone += OnServerDataLoadDone;
             Events.ChangeName += OnChangeName;
@@ -46,11 +46,11 @@ namespace UI.MainApp.Home
         public void Show(bool isOn)
         {
             gameObject.SetActive(isOn);
-            if (isOn)
+            if (isOn && firstTime)
             {
+                firstTime = false;
                 tabs.Init(OnTabClicked);
-                int charactersQty = Data.Instance.charactersData.userCharacters.Count;
-                List<string> tabNames = new List<string>() { "Historias", "Personajes", "Objetos" };
+                 List<string> tabNames = new List<string>() { "Historias", "Personajes", "Objetos" };
                 tabs.SetTabNames(tabNames);
                 profilePicture.InitOwner();
                 string username = Data.Instance.userData.userDataInDatabase.username;
