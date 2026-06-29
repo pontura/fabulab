@@ -81,6 +81,7 @@ namespace Yaguar.StoryMaker.Editor
             }
             //Events.OnAddScore(2);
             StoryMakerEvents.OnSaveScene();
+
             //ScenesManagerFabulab.Instance.OnSaveScene();
             ScenesManagerFabulab.Instance.currentSceneId++;
             ScenesManagerFabulab.Instance.AddNewScene(ScenesManagerFabulab.Instance.currentSceneId);

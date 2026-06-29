@@ -141,5 +141,38 @@ namespace Yaguar.StoryMaker.Editor
 
             OnDone(texture);
         }
+
+        public Canvas canvas;
+
+        public void TakePartialScreenshot(System.Action<Texture2D> OnDone)
+        {
+            StartCoroutine(CaptureRoutineC(OnDone));
+        }
+   [SerializeField] int canvasStartY = 60;
+     [SerializeField]        int canvasEndY   = 300;
+       private IEnumerator CaptureRoutineC(System.Action<Texture2D> OnDone)
+        {
+            yield return new WaitForEndOfFrame();
+
+            float scaleFactor = canvas.scaleFactor;
+
+            int screenWidth = Screen.width;
+
+
+
+            int realStartY = Mathf.RoundToInt(canvasStartY * scaleFactor);
+            int realEndY   = Mathf.RoundToInt(canvasEndY   * scaleFactor);
+            int realHeight = realEndY - realStartY;
+
+            Texture2D screenshot = new Texture2D(screenWidth, realHeight, TextureFormat.RGB24, false);
+
+            // Invertir Y (OpenGL: Y=0 es abajo)
+            int readY = Screen.height - realEndY;
+
+            screenshot.ReadPixels(new Rect(0, readY, screenWidth, realHeight), 0, 0);
+            screenshot.Apply();
+
+            OnDone(screenshot);
+        }
     }
 }

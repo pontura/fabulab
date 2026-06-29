@@ -4,6 +4,7 @@ using Yaguar.StoryMaker.Editor;
 
 public class KeyFrameUI : MonoBehaviour
 {
+    public Sprite sprite;
     [SerializeField] TMPro.TMP_Text field;
     [SerializeField] GameObject label;
 
@@ -67,13 +68,13 @@ public class KeyFrameUI : MonoBehaviour
     {
         print("UpdateScreenshot " + id);
         if (timeline.filmMakerUI.isEditing)
-            Scenario.Instance.Screenshot(ScreenshotUpdated);
+            Scenario.Instance.TakePartialScreenshot(ScreenshotUpdated);
         else
             screenshot.enabled = false;
     }
     void ScreenshotUpdated(Texture2D texture)
     {
-        Sprite sprite = Sprite.Create(
+        sprite = Sprite.Create(
             texture,                   
             new Rect(0, 0, texture.width, texture.height), 
             new Vector2(0.5f, 0.5f)   

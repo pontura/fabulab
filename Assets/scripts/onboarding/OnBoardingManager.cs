@@ -36,9 +36,19 @@ namespace OnBoarding
             foreach(OnBoardingMain go in onboardingScreens)
                 go.Init();  
             Events.OnBoardingDone += OnBoardingDone;
+            if(Data.Instance.userData.onboardingSteps >0) return;
+            Reset();
+        }
+        public void Reset()
+        {
+            print("Reset");
+            onboardingSequenceID = 0;
+            id = 0;
             onboardingSequenceID = PlayerPrefs.GetInt("onboardingSequenceID", 0);
+            
             Next();
         }
+        
         void Oestroy()
         {
             Events.OnBoardingDone -= OnBoardingDone;            
@@ -54,9 +64,14 @@ namespace OnBoarding
         void Next()
         {            
             steps s = GetStep();
+            print(s);
             if(s != steps.ready) 
             {
                 Events.OnBoarding(s);
+            }
+            else
+            {
+                Data.Instance.userData.OnBoardingAllStepsDone();
             }
         }
         steps GetStep()
