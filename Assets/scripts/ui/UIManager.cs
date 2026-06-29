@@ -1,6 +1,7 @@
 ﻿using BoardItems;
 using BoardItems.BoardData;
 using BoardItems.Characters;
+using OnBoarding;
 using System.Collections.Generic;
 using UI.MainApp;
 using UnityEngine;
@@ -23,6 +24,7 @@ namespace UI
         public UndoManager undoManager;
         public InputManager inputManager;
         public InfoDataScreen infoDataScreen;
+        public OnBoardingManager onboardingManager;
 
         public bool hasUnsavedChanges;
 
@@ -56,6 +58,7 @@ namespace UI
             characterEdition = GetComponent<CharacterEdition>();
             undoManager = GetComponent<UndoManager>();
             inputManager = GetComponent<InputManager>();
+            onboardingManager = GetComponent<OnBoardingManager>();
             if (!mInstance)
                 mInstance = this;
         }

@@ -69,5 +69,9 @@ namespace UI.MainApp.Home
                     break;
             }
         }
+        public void OnBoardingBack()
+        {
+            UIManager.Instance.onboardingManager.Reset();
+        } 
     }
 }
