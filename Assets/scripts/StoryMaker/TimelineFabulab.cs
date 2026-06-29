@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Collections;
+using UI.MainApp;
 using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
@@ -7,12 +8,22 @@ namespace Yaguar.StoryMaker.Editor
     public class TimelineFabulab : Timeline
     {
         [SerializeField] GameObject shotButtons;
+        [SerializeField] GhostImage ghostImage;
 
         public float offset = 10;
         protected override void Start() {
 
             base.Start();
             Invoke(nameof(SetTotalMarkers), Time.deltaTime * 3);
+        }
+        public override void OnDisabled()
+        {
+            ghostImage.Show(false);
+        }
+        public override  void OnEnabled()
+        {
+            if(all.Count>1)
+                ghostImage.Show(true);
         }
         protected override void Rewind() {
             ScenesManagerFabulab.Instance.currentSceneId = 1;
@@ -33,6 +44,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         public override void Reset()
         {
+            ghostImage.Reset();
             activeAnimatedKeyframeID = 1;
             if (ScenesManagerFabulab.Instance.currentFilmData != null)
                 StoryMakerEvents.ChangeSpeed(ScenesManagerFabulab.Instance.currentFilmData.speed);
@@ -90,6 +102,14 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.OnSaveScene();
             ScenesManagerFabulab.Instance.currentSceneId = id;
             base.SetJump(id);
+        }
+        public override void OnJumpDone()
+        {
+            base.OnJumpDone();
+            print("ScenesManagerFabulab.Instance.currentSceneId: " + ScenesManagerFabulab.Instance.currentSceneId);
+            if(ScenesManagerFabulab.Instance.currentSceneId<2) return;
+            int prevSceneID = ScenesManagerFabulab.Instance.currentSceneId-2;
+            ghostImage.Init( all[prevSceneID].sprite);
         }
         public override void OnPlay() { shotButtons.SetActive(false); }
         public override void OnStop() { shotButtons.SetActive(true); }

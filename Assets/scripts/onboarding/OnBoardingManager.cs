@@ -37,6 +37,8 @@ namespace OnBoarding
                 go.Init();  
             Events.OnBoardingDone += OnBoardingDone;
             onboardingSequenceID = PlayerPrefs.GetInt("onboardingSequenceID", 0);
+            
+            if(Data.Instance.userData.onboardingSteps >0) return;
             Next();
         }
         void Oestroy()
@@ -57,6 +59,10 @@ namespace OnBoarding
             if(s != steps.ready) 
             {
                 Events.OnBoarding(s);
+            }
+            else
+            {
+                Data.Instance.userData.OnBoardingAllStepsDone();
             }
         }
         steps GetStep()

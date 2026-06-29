@@ -14,11 +14,13 @@ namespace OnBoarding
         [SerializeField] GameObject secondButton;
         [SerializeField] GameObject firstPanel;
         [SerializeField] GameObject thirdPanel;
+        [SerializeField] GameObject tools;
         public TMPro.TMP_Text field2;
         public override void OnShow()
         {            
-            UIManager.Instance.ShowBack(false);
             firstPanel.SetActive(true);
+            tools.SetActive(true); 
+            UIManager.Instance.ShowBack(false);
             secondButton.SetActive(false);
             thirdPanel.SetActive(false);
             field.text = "Genial! ahora sigamos con el resto del cuerpo";   
@@ -26,7 +28,7 @@ namespace OnBoarding
             characterScrollContent.GetComponent<Animation>().Play("off");
             presetsUI.Toggle(); 
             presetsUI.tabs.Clicked(presetsUI.tabs.All[0]);
-            Events.OnSaveCharacterDone += OnSaveCharacterDone;       
+            Events.OnSaveCharacterDone += OnSaveCharacterDone;  
         }
         public void FirstButtonClicked()
         {

@@ -13,13 +13,14 @@ public class UserData : MonoBehaviour
         public string deviceID;
     }
 
+    public int onboardingSteps;
     public bool isAdmin;
     public bool passport;
 
     public List<int> prizes;
 
     void Awake() {
-
+        onboardingSteps = PlayerPrefs.GetInt("onboardingSteps", 0);
         userDataInDatabase.username = PlayerPrefs.GetString("username", "");
         userDataInDatabase.email = PlayerPrefs.GetString("email", "");
         userDataInDatabase.uid = PlayerPrefs.GetString("uid", "");
@@ -36,6 +37,11 @@ public class UserData : MonoBehaviour
                 Debug.Log("Authentication failed");
         });*/
 
+    }
+    public void OnBoardingAllStepsDone()
+    {
+        PlayerPrefs.SetInt("onboardingSteps", 1);
+        onboardingSteps = 1;
     }
     private void Start() {               
 
@@ -61,12 +67,12 @@ public class UserData : MonoBehaviour
             if (authCode != "") {
                 FirebaseAuthManager.Instance.SignInWithPlayGames(authCode, (success) => {
                     if (!success) {
-                        Events.OnSimplePopup("¡UPS!", "Parece que necesitás volver a ingresar tu usuario y contraseña");
+                        Events.OnSimplePopup("ï¿½UPS!", "Parece que necesitï¿½s volver a ingresar tu usuario y contraseï¿½a");
                         Data.Instance.LoadLevel("Login");
                     }
                 });
             } else {
-                Events.OnSimplePopup("¡UPS!", "Parece que necesitás volver a ingresar tu usuario y contraseña");
+                Events.OnSimplePopup("ï¿½UPS!", "Parece que necesitï¿½s volver a ingresar tu usuario y contraseï¿½a");
                 Data.Instance.LoadLevel("Login");
             }
         });*/

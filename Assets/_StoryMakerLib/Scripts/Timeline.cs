@@ -41,8 +41,10 @@ namespace Yaguar.StoryMaker.Editor
         protected virtual void Start() {
             StoryMakerEvents.ChangeSpeed(ScenesManager.Instance.currentFilmData.speed);
         }
+        void OnDisable() {OnDisabled();}
         private void OnEnable() {
 
+            OnEnabled();
             if (all.Count == 0)
             {
                 Reset();
@@ -55,6 +57,8 @@ namespace Yaguar.StoryMaker.Editor
             float duration = (keyframe_duration - min_speed) / (max_speed - min_speed);
             durationBtn.Init(this, duration);
         }
+        public virtual void OnDisabled(){}
+        public virtual void OnEnabled(){}
         protected void OnDestroy()
         {
             StoryMakerEvents.UpdateDraw -= UpdateDraw;
@@ -196,7 +200,10 @@ namespace Yaguar.StoryMaker.Editor
 
             durationBtn?.SetDuration(all[activeAnimatedKeyframeID - 1].duration);
             durationBtn?.SetValue(sliderValue);
+
+            OnJumpDone();
         }
+        public virtual void OnJumpDone() {}
         protected void ForceMarkerPosition()
         {
             float timer_pos = CalculateTimer();
