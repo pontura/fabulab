@@ -726,20 +726,24 @@ namespace BoardItems
             childBoardItemManager.SetInteractableObject(soPartData.id, OnObjectMerged, soID);
         }
 
-        IEnumerator Cascade(BoardItemManager boardItemManager, SOPartData wd)
-        {
+        IEnumerator Cascade(BoardItemManager boardItemManager, SOPartData wd) {
             CharacterPartsHelper.parts partActive = UIManager.Instance.part;
+            int index = 0;
             foreach (ItemInScene i in boardItemManager.GetComponentsInChildren<ItemInScene>())
             {
-                if(i.data.part == partActive || partActive == CharacterPartsHelper.parts.none)
+                if (i.data.part == partActive || partActive == CharacterPartsHelper.parts.none) {
                     i.Appear();
+                    i.SetAudioForCascade(index);
+                    index++;
+                }
             }
             yield return new WaitForSeconds(0.05f);
             foreach (ItemInScene i in boardItemManager.GetComponentsInChildren<ItemInScene>())
             {
                 if (i.data.part == partActive || partActive == CharacterPartsHelper.parts.none)
                 {
-                    i.AppearAction();
+                    i.AppearAction();                    
+                    i.Invoke(nameof(i.PlayAudioForCascade),Time.deltaTime*30);
                     yield return new WaitForSeconds(0.05f);
                 }
                 if(i.data.part == partActive)

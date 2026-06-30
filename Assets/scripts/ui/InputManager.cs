@@ -68,7 +68,7 @@ namespace UI
 
         void OnStartDrag(ItemInScene item, Vector3 originalPosition)
         {
-            AudioManager.Instance.sfxManager.PlayTransp("get", -2);
+            AudioManager.Instance.sfxManager.PlayTransp("get", -4);
             state = states.DRAGGING;
             if(groupOn)
             {
@@ -207,7 +207,7 @@ namespace UI
                             if (!hasDragged && Vector3.Distance(clickPosition, centerPos) < 4 && !IsPointerOverUIObject())
                                 OpenTools();
                             else
-                                AudioManager.Instance.sfxManager.PlayTransp("drop", -2);
+                                AudioManager.Instance.sfxManager.PlayTransp("drop", -4);
                         }
                         else
                         {
@@ -265,6 +265,7 @@ namespace UI
                                 container.OnStopTransformModify();
                                 container = null;
                             }
+                            AudioManager.Instance.sfxManager.PlayTransp("drop", -4);
                             itemDragHandler.StopDragging(Input.mousePosition);
                         }
                     }
