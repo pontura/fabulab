@@ -19,6 +19,11 @@ namespace UI.MainApp.Home.User
             Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
         }
 
+        protected override void OnLoadedDone() {
+            base.OnLoadedDone();
+            AudioManager.Instance.musicManager.Play("intro");
+        }
+
         protected override void AddFilmMetadata(FilmDataFabulab fd) {
             if (!fd.isPublic)
                 return;
