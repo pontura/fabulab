@@ -54,7 +54,7 @@ namespace UI.MainApp
         }
         void OnDisable()
         {
-            StoryMakerEvents.SetEditing(false);
+                StoryMakerEvents.SetEditing(false);
         }
         void OnDestroy()
         {
@@ -376,7 +376,6 @@ namespace UI.MainApp
         }
 
         void EnableStoryEdition(bool enable) {
-
             print("EnableStoryEdition " + enable);
             editionEnabled = enable;
             tabs.gameObject.SetActive(enable);

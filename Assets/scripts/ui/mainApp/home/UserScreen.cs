@@ -41,6 +41,10 @@ namespace UI.MainApp.Home
                 string username = Data.Instance.userData.userDataInDatabase.username;
                 OnChangeName(username);
             }
+            else
+            {
+                tabs.ReOpen();
+            }
         }
         void OnTabClicked(int id)
         {
