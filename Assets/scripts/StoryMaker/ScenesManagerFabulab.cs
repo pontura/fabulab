@@ -178,9 +178,10 @@ namespace Yaguar.StoryMaker.Editor
         }
         public SceneElement GetSOInScene(int sceneID, string soID)
         {
-            if(sceneID>0 && sceneID < scenes.Count+1)
+            print("OnStopDraw GetSOInScene " + sceneID + " scenes.Count: " + scenes.Count);   
+            if(sceneID>=0 && sceneID < scenes.Count)
             {
-                SceneDataFabulab scene = scenes[sceneID-1];
+                SceneDataFabulab scene = scenes[sceneID];
                 foreach (SceneElement se in scene.GetScenesElements().Where(b => b.data.id == soID)) {                    
                     return se;
                 }

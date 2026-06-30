@@ -28,16 +28,17 @@ namespace Yaguar.StoryMaker.Editor
         private void OnStopDraw(SceneObject so)
         {
             SOData soData = so.GetData();
-           // print("OnStopDraw" + soData.itemName);      
-            SceneElement sceneElement = ScenesManagerFabulab.Instance.GetSOInScene(ScenesManagerFabulab.Instance.currentSceneId-1, soData.id);
+            print("OnStopDraw" + soData.itemName);      
+            SceneElement sceneElement = ScenesManagerFabulab.Instance.GetSOInScene(ScenesManagerFabulab.Instance.currentSceneId-2, soData.id);
             if(sceneElement == null) 
             {
                 Debug.Log("OnStopDraw no sceneElement");  return;
             }
             V3 v3 = sceneElement.data.pos;
-            Vector3 pos = new Vector3(v3.x, v3.y, v3.z);
-            float diff = Vector3.Distance(pos, so.gameObject.transform.localPosition);
-            if(diff<6)
+            Vector2 pos = new Vector2(v3.x, v3.y);
+            float diff = Vector2.Distance(pos, so.gameObject.transform.localPosition);
+            print("OnStopDraw diff: "  + diff); 
+            if(diff<3)
             {
                 soData.pos = v3;
                 print("Snap" + soData.itemName + " old pos: " + pos + "new pos: " + v3.ToVector3());     
@@ -136,9 +137,11 @@ namespace Yaguar.StoryMaker.Editor
         {
             base.OnJumpDone();
             print("ScenesManagerFabulab.Instance.currentSceneId: " + ScenesManagerFabulab.Instance.currentSceneId);
-            if(ScenesManagerFabulab.Instance.currentSceneId<2) return;
+            if(ScenesManagerFabulab.Instance.currentSceneId<2) { ghostImage.Show(false); return; }
             int prevSceneID = ScenesManagerFabulab.Instance.currentSceneId-2;
-            ghostImage.Init( all[prevSceneID].sprite);
+            
+            ghostImage.Show(true);
+            ghostImage.Init(all[prevSceneID].sprite);
         }
         public override void OnPlay() { shotButtons.SetActive(false); }
         public override void OnStop() { shotButtons.SetActive(true); }
