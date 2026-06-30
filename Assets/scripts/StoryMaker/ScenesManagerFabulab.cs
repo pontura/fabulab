@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VectorGraphics;
 using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
@@ -174,6 +175,17 @@ namespace Yaguar.StoryMaker.Editor
                     se.data.itemName = newItemName;
                 }
             }
+        }
+        public SceneElement GetSOInScene(int sceneID, string soID)
+        {
+            if(sceneID>0 && sceneID < scenes.Count+1)
+            {
+                SceneDataFabulab scene = scenes[sceneID-1];
+                foreach (SceneElement se in scene.GetScenesElements().Where(b => b.data.id == soID)) {                    
+                    return se;
+                }
+            }
+            return null;
         }
     }    
 }

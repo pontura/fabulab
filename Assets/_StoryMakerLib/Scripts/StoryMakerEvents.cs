@@ -29,6 +29,7 @@ namespace Yaguar.StoryMaker.Editor
         public static System.Action RewindStory = delegate { };
         public static System.Action OnSaveScene = delegate { };
         public static System.Action ReorderSceneObjectsInZ = delegate { };
+        public static System.Action<SceneObject> OnStopDraw = delegate { };
 
         public static System.Action<Vector3, SOData> ShowSoButtons = delegate { };
         public static System.Action HideSoButtons = delegate { };

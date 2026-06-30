@@ -92,7 +92,7 @@ namespace Yaguar.StoryMaker.Editor
 
             isBeingHeld = false;
             StoryMakerEvents.ReorderSceneObjectsInZ();
-            //borders.Show(false);
+            StoryMakerEvents.OnStopDraw(this);
         }
         public override void Run() {
             characterManager.SetAnim(Data.Instance.characterAnimsManager.defaultRun.name);

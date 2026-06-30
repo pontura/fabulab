@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using UI.MainApp;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
@@ -12,10 +14,37 @@ namespace Yaguar.StoryMaker.Editor
 
         public float offset = 10;
         protected override void Start() {
-
+            print("OnStopDraw Start");      
+            StoryMakerEvents.OnStopDraw += OnStopDraw;
             base.Start();
             Invoke(nameof(SetTotalMarkers), Time.deltaTime * 3);
         }
+        public override void OnDestroyed()
+        {            
+            print("OnStopDraw OnDestroyed");      
+            StoryMakerEvents.OnStopDraw -= OnStopDraw;
+        }
+
+        private void OnStopDraw(SceneObject so)
+        {
+            SOData soData = so.GetData();
+           // print("OnStopDraw" + soData.itemName);      
+            SceneElement sceneElement = ScenesManagerFabulab.Instance.GetSOInScene(ScenesManagerFabulab.Instance.currentSceneId-1, soData.id);
+            if(sceneElement == null) 
+            {
+                Debug.Log("OnStopDraw no sceneElement");  return;
+            }
+            V3 v3 = sceneElement.data.pos;
+            Vector3 pos = new Vector3(v3.x, v3.y, v3.z);
+            float diff = Vector3.Distance(pos, so.gameObject.transform.localPosition);
+            if(diff<6)
+            {
+                soData.pos = v3;
+                print("Snap" + soData.itemName + " old pos: " + pos + "new pos: " + v3.ToVector3());     
+                so.gameObject.transform.localPosition = v3.ToVector3();
+            }
+        }
+
         public override void OnDisabled()
         {
             ghostImage.Show(false);
@@ -113,5 +142,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         public override void OnPlay() { shotButtons.SetActive(false); }
         public override void OnStop() { shotButtons.SetActive(true); }
+        
+        public virtual void UpdateDrawDone() {}
     }
 }

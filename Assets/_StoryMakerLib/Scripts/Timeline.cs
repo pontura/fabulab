@@ -66,7 +66,9 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.OnStartNewStory -= Reset;
             StoryMakerEvents.ChangeSpeed -= ChangeSpeed;
             StoryMakerEvents.RewindStory -= Rewind;
+            OnDestroyed();
         }
+        public virtual void OnDestroyed() {}
         protected virtual void ChangeSpeed(int speed)
         {
             filmMakerUI.OnTimelinePlay(false);
@@ -116,7 +118,9 @@ namespace Yaguar.StoryMaker.Editor
             print("UpdateDraw");
             if(activeAnimatedKeyframeID >= all.Count-1)
             all[activeAnimatedKeyframeID - 1].UpdateScreenshot();
+            UpdateDrawDone();
         }
+        public virtual void UpdateDrawDone() {}
         protected void UpdateKeyframes()
         {
             int id = 0;
