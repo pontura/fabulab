@@ -56,6 +56,14 @@ namespace UI.MainApp.Home
                 profilePicture.InitOwner();
                 string username = Data.Instance.userData.userDataInDatabase.username;
                 OnChangeName(username);
+            }else
+            {
+                if(tabs.lastTabClicked.id == 3) // si el ultimo tab fue el user, fuerza a historias:
+                {
+                    OnTabClicked(0);
+                    tabs.SetActive(0);
+                } else
+                    tabs.ReOpen();                
             }
         }
         int tabActive;

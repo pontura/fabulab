@@ -13,6 +13,7 @@ namespace Common.UI
             get { return all; }
         }
         System.Action<int> OnActive;
+        [HideInInspector] public TabButton lastTabClicked;
         void Start()
         {
             int id = 0;
@@ -42,6 +43,7 @@ namespace Common.UI
         public void Clicked(TabButton tabButton)
         {
             ResetAll();
+            lastTabClicked = tabButton;
             tabButton.SetActive();
             OnActive(tabButton.id);
         }
@@ -63,6 +65,11 @@ namespace Common.UI
                 tabButton.gameObject.SetActive(list[id]);
                 id++;
             }
+        }
+        public void ReOpen()
+        {
+            if(lastTabClicked != null)
+                lastTabClicked.SetActive();
         }
     }
 }

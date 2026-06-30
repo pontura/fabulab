@@ -4,6 +4,7 @@ using BoardItems.Characters;
 using OnBoarding;
 using System.Collections.Generic;
 using UI.MainApp;
+using UI.MainApp.Home;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.Editor;
@@ -25,6 +26,7 @@ namespace UI
         public InputManager inputManager;
         public InfoDataScreen infoDataScreen;
         public OnBoardingManager onboardingManager;
+        public HomePage homePage;
 
         public bool hasUnsavedChanges;
 
@@ -51,6 +53,7 @@ namespace UI
         [SerializeField] List<screenType> backToScreen;
         void Awake()
         {
+            homePage = GetComponent<HomePage>();
             infoDataScreen = GetComponent<InfoDataScreen>();
             confirmationScreen.Init();
             backToScreen = new List<screenType>();
@@ -210,6 +213,10 @@ namespace UI
         }
         public void Back()
         {
+             if (backToScreen.Count > 0)
+                print("BACK " + backToScreen[backToScreen.Count - 1] );
+            else
+                print("BACK");
             inputManager.Back();
            if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.WorkDetail)
             {
@@ -222,8 +229,13 @@ namespace UI
             }
             else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.StoryMaker)
             {
+              
                 StoryMakerEvents.SetEditing(false);
-                Home();
+                
+                if(homePage.screen == HomePage.screens.user)
+                    SetBack();
+                else
+                    Home();
             }
             else
             {
