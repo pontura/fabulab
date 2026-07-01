@@ -227,11 +227,13 @@ namespace UI.MainApp
                 
         }
 
-        private void OnSaved(bool arg1, string arg2)
+        private void OnSaved(bool success, string id)
         {
             if(!isMyAvatar) DoneBtn.SetActive(false);
             Events.OnPopupTopSignalText("Personaje guardado");
             Events.OnSaveCharacterDone();
+            if(StoryMakerEvents.isEditing)
+                UIManager.Instance.BackToStoryFromAvatar(id);
         }
     }
 

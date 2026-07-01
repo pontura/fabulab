@@ -1,7 +1,6 @@
 ﻿using BoardItems.BoardData;
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User

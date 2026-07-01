@@ -273,7 +273,7 @@ namespace BoardItems
             currentID = id;
 
             FirebaseStoryMakerDBManager.Instance.UploadTexture(currentCharacter.thumb, MetadataTypes.characters.ToString(), currentCharacter.id, Data.Instance.userData.userDataInDatabase.uid, onDone: () => {
-                SaveMetadata(md);
+                SaveMetadata(md, OnCharacterSaved);
                 Events.OnLoading(false);
                 OnSaved?.Invoke(succes, id);
                 if (FirebaseAuthManager.Instance.IsAnonymousUser()) {
@@ -283,7 +283,10 @@ namespace BoardItems
 
            // OpenCharacterDetail(currentCharacter);            
         }
-
+        void OnCharacterSaved(bool succes, string id)
+        {
+            
+        }
         void SaveMetadata(CharacterMetaData md, System.Action<bool, string> OnDone = null) {
             ServerCharacterMetaData swmd = new ServerCharacterMetaData();
             swmd.userID = md.userID;

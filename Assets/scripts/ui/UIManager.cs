@@ -169,10 +169,15 @@ namespace UI
 
         public void NewCharacter()
         {
+            Events.OnCharacterReset();
+            Events.OnPropReset();
+            Events.OnPresetReset();
+            Events.EmptySceneItems();
             string newCharacterID = "-On3wQ6Vy9jnpMtTTgWb";
             LoadWork(editingTypes.CHARACTER, newCharacterID);
             Data.Instance.charactersData.SetCurrentID("");
             Events.OnPresetReset();
+            Events.ShowScreen(UIManager.screenType.Creation_Character);
         }
         void InitCharacterScreen()
         {
@@ -289,7 +294,7 @@ namespace UI
         IEnumerator AddSoAsyncC(SObjectData newSOData)
         {
             Events.OnLoading(true);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.5f);
             
             if (newSOData.type == SObjectData.types.generic)
             {
@@ -305,6 +310,23 @@ namespace UI
                 StoryMakerEvents.AddSceneObject(data);  
             } 
             Events.OnLoading(false);                
+        }
+        public void BackToStoryFromAvatar(string id)
+        {            
+            Events.ShowScreen(UIManager.screenType.StoryMaker);  
+            StartCoroutine(AddAvatarAsyncC(id));
+        }
+        IEnumerator AddAvatarAsyncC(string id)
+        {
+            Events.OnLoading(true);
+            yield return new WaitForSeconds(0.5f);
+
+            SOAvatarFabulabData data = new SOAvatarFabulabData();
+            data.id = id;
+            data.itemName = Utils.GetUniqueDateTimeId();
+            StoryMakerEvents.AddSceneObject(data);
+
+            Events.OnLoading(false);           
         }
     }
 
