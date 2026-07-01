@@ -99,6 +99,7 @@ namespace UI.MainApp.Home.User
             if (cd != null)
             {
                 AddElement(cd);
+                SetCurrentScrollIndex(scrollRect.normalizedPosition);
                 print("Duplicate open: " + duplicateID);
                 Events.OnLoading(false);
                 OpenWork(duplicateID);

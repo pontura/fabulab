@@ -98,6 +98,7 @@ namespace UI.MainApp.Home.User
             if(part != null)
             {
                 AddElement(part);
+                SetCurrentScrollIndex(scrollRect.normalizedPosition);
                 print("Duplicate open: " + duplicateID);
                 Events.OnLoading(false);                
                 SelectWork(duplicateID);

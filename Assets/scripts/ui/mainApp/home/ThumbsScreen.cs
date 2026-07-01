@@ -85,7 +85,7 @@ namespace UI.MainApp.Home.User
                 SetCurrentScrollIndex(pos);
         }
 
-        void SetCurrentScrollIndex(Vector2 pos) {
+        protected void SetCurrentScrollIndex(Vector2 pos) {
             //Debug.Log("% SetCurrentScrollIndex: "+pos);
             int currentIndex = CalculateCurrentIndex(pos);
             UpdateCacheOnScroll(currentIndex);
