@@ -1,4 +1,5 @@
 using UnityEngine;
+using Yaguar.StoryMaker.DB;
 
 namespace OnBoarding
 {
@@ -16,7 +17,9 @@ namespace OnBoarding
             if(input.text == "")
                 Events.OnPopupTopSignalText("por ahora te llamarás ");
             else
-                t = input.text;  
+                t = input.text;
+
+            FirebaseStoryMakerDBManager.Instance.UpdateUsername(t);
             Done();              
         }
     }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using Yaguar.Auth;
+using Yaguar.StoryMaker.DB;
 
 namespace UI.MainApp.Home.User
 {
@@ -25,7 +26,10 @@ namespace UI.MainApp.Home.User
         }
         void ChangeName(string name)
         {
-            Events.ChangeName(name);
+            FirebaseStoryMakerDBManager.Instance.UpdateUsername(name,(success) => {
+                if (success) 
+                    Events.ChangeName(name);
+            });            
         }
         public void Logout()
         {

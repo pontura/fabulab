@@ -1,10 +1,9 @@
-﻿using UnityEngine;
-using System;
-using Yaguar.Auth;
-using Yaguar.DB;
-using Firebase.Database;
-using System.Threading.Tasks;
+﻿using Firebase.Database;
 using Firebase.Extensions;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using Yaguar.Auth;
 
 namespace Yaguar.DB
 {
@@ -115,6 +114,21 @@ namespace Yaguar.DB
             });
             Debug.Log("Server: OnUserLogin");
             //print("OnUserLogin url : " + url);
+        }
+        public virtual void UpdateUsername(string username, System.Action<bool> callback=null) {
+            Dictionary<string, System.Object> childUpdates = new Dictionary<string, System.Object>();
+            childUpdates["username"] = username;
+
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + _uid);
+            reference.UpdateChildrenAsync(childUpdates).ContinueWithOnMainThread(task => {
+                if (task.IsFaulted || task.IsCanceled) {
+                    Debug.Log("#UpdateUsername FAIL " + task.Exception);
+                    callback?.Invoke(false);
+                }
+                callback?.Invoke(true);
+                Debug.Log("Server: UpdateUsername done!");
+            });
+            Debug.Log("Server: UpdateUsername " + username);
         }
     }
 }
