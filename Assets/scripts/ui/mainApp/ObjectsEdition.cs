@@ -1,3 +1,4 @@
+using BoardItems.BoardData;
 using BoardItems.Characters;
 using UnityEngine;
 using Yaguar.StoryMaker.Editor;
@@ -85,7 +86,14 @@ namespace UI.MainApp
         public void OnTakeShotDone(Texture2D tex)
         {
             UIManager.Instance.workDetailUI.SetTexture(tex);
-            Events.OnLoadingParent(null,()=> Data.Instance.sObjectsData.SaveSO(tex));            
+            Events.OnLoadingParent(null,()=> Data.Instance.sObjectsData.SaveSO(tex, OnSoSaved));            
+        }
+        void OnSoSaved(SObjectData soData)
+        {
+            if(StoryMakerEvents.isEditing)
+            {   
+                UIManager.Instance.BackToStory(soData);
+            }
         }
        
     }

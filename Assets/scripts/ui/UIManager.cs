@@ -2,6 +2,7 @@
 using BoardItems.BoardData;
 using BoardItems.Characters;
 using OnBoarding;
+using System.Collections;
 using System.Collections.Generic;
 using UI.MainApp;
 using UI.MainApp.Home;
@@ -231,7 +232,7 @@ namespace UI
             {
               
                 StoryMakerEvents.SetEditing(false);
-                
+
                 if(homePage.screen == HomePage.screens.user)
                     SetBack();
                 else
@@ -279,7 +280,31 @@ namespace UI
                 Events.ShowScreen(UIManager.screenType.WorkDetail);
                 workDetailUI.ShowWorkDetail(wd.id, true);
             }
-            //Events.ResetItems();
+        }
+        public void BackToStory(SObjectData newSOData)
+        {
+            Events.ShowScreen(UIManager.screenType.StoryMaker);  
+            StartCoroutine(AddSoAsyncC(newSOData));
+        }
+        IEnumerator AddSoAsyncC(SObjectData newSOData)
+        {
+            Events.OnLoading(true);
+            yield return new WaitForSeconds(0.1f);
+            
+            if (newSOData.type == SObjectData.types.generic)
+            {
+                SODataFabulab data = new SODataFabulab();
+                data.id = newSOData.id;
+                data.itemName = Utils.GetUniqueDateTimeId();
+                StoryMakerEvents.AddSceneObject(data);  
+            } else if (newSOData.type == SObjectData.types.background)
+            {
+                SOBGData data = new SOBGData();
+                data.id = newSOData.id;
+                data.itemName = Utils.GetUniqueDateTimeId();
+                StoryMakerEvents.AddSceneObject(data);  
+            } 
+            Events.OnLoading(false);                
         }
     }
 

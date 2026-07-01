@@ -52,10 +52,10 @@ namespace UI.MainApp
             StoryMakerEvents.EnableStoryEdition += EnableStoryEdition;
             StoryMakerEvents.NoneItemSelected += NoneItemSelected;
         }
-        void OnDisable()
-        {
-                StoryMakerEvents.SetEditing(false);
-        }
+        // void OnDisable()
+        // {
+        //     StoryMakerEvents.SetEditing(false);
+        // }
         void OnDestroy()
         {
             StoryMakerEvents.ShowSoButtons -= ShowSoButtons;

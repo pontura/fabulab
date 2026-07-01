@@ -8,6 +8,7 @@ using UI;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
+using Yaguar.StoryMaker.Editor;
 
 namespace BoardItems
 {
@@ -99,8 +100,10 @@ namespace BoardItems
             FirebaseStoryMakerDBManager.Instance.LoadMetadataFromServer(MetadataTypes.so.ToString(), OnLoadSODataFromServer);
         }
         string lastID = "";
-        public void SaveSO(Texture2D tex)
+        System.Action<SObjectData> OnSoSaved;
+        public void SaveSO(Texture2D tex, System.Action<SObjectData> OnSoSaved = null)
         {
+            this.OnSoSaved = OnSoSaved;
             Events.OnLoading(true);
             lastID = currentID;
             SObjectData wd = GetSO(currentID);
@@ -240,10 +243,22 @@ namespace BoardItems
                     OnDuplicated?.Invoke(success, id);
                     OnDuplicated = null;
                 } else {
-                    UIManager.Instance.ShowWorkDetail(currentSO);
-                    if (FirebaseAuthManager.Instance.IsAnonymousUser()) {
-                        Events.ShowRegisterPopup();
+                    print("OnSavedToServer StoryMakerEvents.isEditing:" + StoryMakerEvents.isEditing);
+                    if(StoryMakerEvents.isEditing)
+                    {
+                                                     
+                    } else
+                    {
+                        UIManager.Instance.ShowWorkDetail(currentSO);
+                        if (FirebaseAuthManager.Instance.IsAnonymousUser()) {
+                            Events.ShowRegisterPopup();
+                        }
                     }
+                    if(OnSoSaved != null)
+                    {                                
+                        OnSoSaved(currentSO);
+                        OnSoSaved = null;
+                    }       
                 }
             });
 
