@@ -231,7 +231,7 @@ namespace UI
             }
             else if (CheckLastScreenUnsaved())
             {
-                Events.OnConfirm("All changes will be lost", "Confirm and exit", "Cancel", ExitConfirmed);
+                Events.OnConfirm("Vas a perder todos los cambios", "Confirmar y Salir", "Cancelar", ExitConfirmed);
             }
             else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.StoryMaker)
             {
