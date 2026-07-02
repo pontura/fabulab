@@ -68,7 +68,7 @@ namespace UI
 
         void OnStartDrag(ItemInScene item, Vector3 originalPosition)
         {
-            AudioManager.Instance.sfxManager.PlayTransp("get", -4);
+            AudioManager.Instance.sfxManager.PlayTransp("get", -5);
             state = states.DRAGGING;
             if(groupOn)
             {

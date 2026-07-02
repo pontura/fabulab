@@ -197,7 +197,7 @@ namespace BoardItems
             else
                 audioSource.pitch = (1 + (index / penta.Length)) / AudioManager.Instance.pitchSteps[System.Math.Abs(pitch)];
             audioSource.volume = Mathf.Max(0.05f,(0.5f - (index*0.02f)) + Random.Range(-0.05f, 0.05f));
-            //Debug.Log($"# Pitch: {audioSource.pitch} Volume: {audioSource.volume}");
+            Debug.Log($"# Pitch: {audioSource.pitch} Volume: {audioSource.volume}");
         }
 
         public void PlayAudioForCascade() {

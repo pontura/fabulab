@@ -1,5 +1,6 @@
 using BoardItems;
 using BoardItems.Characters;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -76,10 +77,14 @@ namespace UI
         IEnumerator Cascade(ItemInScene i)
         {
             i.Appear(2);
-            yield return new WaitForSeconds(0.05f);
-            i.AppearAction();
-            yield return new WaitForSeconds(0.05f);
+            //i.SetAudioForCascade(UnityEngine.Random.Range(1,11));
+            yield return new WaitForSeconds(3 * Time.deltaTime);
+            i.AppearAction();            
+            //i.Invoke(nameof(i.PlayAudioForCascade), Time.deltaTime * 30);
+            yield return new WaitForSeconds(3 * Time.deltaTime);
             i.SetCollider(true);
+            yield return new WaitForSeconds(24 * Time.deltaTime);
+            AudioManager.Instance.uiSfxManager.PlayNextScale("drop", new int[] { -4, -2, 0, 3, 5, 8});
         }
     }
 }
