@@ -18,8 +18,8 @@ namespace OnBoarding
 
         public override void OnShow()
         {            
-            field.text = "Que objeto te gusta para tu historia?";
-            field2.text = "Podes moverlo donde más te guste";
+            field.text = "¿Qué objeto te gusta para tu historia?";
+            field2.text = "Podés ponerlo donde más te guste";
 
             part1.gameObject.SetActive(true);
             part2.gameObject.SetActive(false);          

@@ -11,7 +11,7 @@ namespace OnBoarding
         [SerializeField] GameObject characterScrollContent;
         public override void OnShow()
         {            
-            field.text = "Elegí una carita";     
+            field.text = "Elegí una cara.";     
             characterEdition.gameObject.SetActive(true);
             presetsUI.Init();
             characterScrollContent.GetComponent<Animation>().Play("on");

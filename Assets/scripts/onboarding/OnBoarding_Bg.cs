@@ -24,8 +24,8 @@ namespace OnBoarding
         }
         void OnLoadingDone()
         {
-            field.text = "Empecemos eligiendo un fondo";
-            field2.text = "Lindo, no? Ahora pongamos algún objeto";
+            field.text = "Empecemos eligiendo un fondo.";
+            field2.text = "Lindo, ¿no? Ahora pongamos algún objeto.";
 
             part1.gameObject.SetActive(true);
             part2.gameObject.SetActive(false);

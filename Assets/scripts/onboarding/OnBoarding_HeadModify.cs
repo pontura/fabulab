@@ -13,7 +13,7 @@ namespace OnBoarding
         [SerializeField] Animation dragAndDropContainerAnim;
         public override void OnShow()
         {            
-            field.text = "Ahora a crear!";     
+            field.text = "Agregá alguna pieza.";     
             characterEdition.gameObject.SetActive(true);
             presetsUI.DragAndDrop();
             characterScrollContent.GetComponent<Animation>().Play("on");
