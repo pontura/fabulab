@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +5,7 @@ namespace Yaguar.StoryMaker.Editor
 {
     public class DurationBtn : MonoBehaviour
     {
+        
         [SerializeField] Image bar;
         Timeline timeline;
         [SerializeField] GameObject sliderPanel;

@@ -214,7 +214,10 @@ namespace Yaguar.StoryMaker.Editor
             Vector2 pos = keyFrameMarker.transform.localPosition;
             pos.x = timer_pos * (total_x_marker / totalTimer);
             keyFrameMarker.transform.localPosition = pos;
+            float pos_x = pos.x + all[activeAnimatedKeyframeID - 1].mid;
+            OnMarkerUpdated(pos_x);
         }
+        public virtual void OnMarkerUpdated(float timer_pos) {}
         float CalculateTimer()
         {
             float timer_pos = 0;

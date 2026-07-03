@@ -6,7 +6,7 @@ using Yaguar.StoryMaker.Editor;
 
 public class TimelineInSceneUI : MonoBehaviour
 {
-    public TMPro.TextMeshProUGUI field;
+   // public TMPro.TextMeshProUGUI field;
     public void Init()
     {
         RefreshField(0);
@@ -14,6 +14,6 @@ public class TimelineInSceneUI : MonoBehaviour
 
     public virtual void RefreshField(int sceneID)
     {
-        field.text = sceneID + "/" + ScenesManager.Instance.Scenes.Count + " ("+ (ScenesManager.Instance.MaxKeyframes - ScenesManager.Instance.Scenes.Count) +")";
+       // field.text = sceneID + "/" + ScenesManager.Instance.Scenes.Count + " ("+ (ScenesManager.Instance.MaxKeyframes - ScenesManager.Instance.Scenes.Count) +")";
     }
 }

@@ -25,7 +25,10 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.EnableStoryEdition -= EnableStoryEdition;
             StoryMakerEvents.OnTimelineSetJump -= OnTimelineSetJump;
         }
-
+        public void CameraClicked()
+        {
+            print("Cam clicked");
+        }
         void EnableStoryEdition(bool enable) {
             isEditing = enable;
             deleteButton.gameObject.SetActive(enable);

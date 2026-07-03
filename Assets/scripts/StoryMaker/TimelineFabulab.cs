@@ -9,7 +9,7 @@ namespace Yaguar.StoryMaker.Editor
 {
     public class TimelineFabulab : Timeline
     {
-        [SerializeField] GameObject shotButtons;
+        public ShotButtons shotButtons;
         [SerializeField] GhostImage ghostImage;
 
         public float offset = 10;
@@ -143,8 +143,13 @@ namespace Yaguar.StoryMaker.Editor
             ghostImage.Show(true);
             ghostImage.Init(all[prevSceneID].sprite);
         }
-        public override void OnPlay() { shotButtons.SetActive(false); }
-        public override void OnStop() { shotButtons.SetActive(true); }
+        
+        public override void OnMarkerUpdated(float timer_pos)
+        {            
+            shotButtons.OnMarkerUpdated(timer_pos);
+        }
+        public override void OnPlay() { shotButtons.Show(false); }
+        public override void OnStop() { shotButtons.Show(true); }
         
         public virtual void UpdateDrawDone() {}
     }

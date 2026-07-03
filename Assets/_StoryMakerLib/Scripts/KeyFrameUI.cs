@@ -21,7 +21,7 @@ public class KeyFrameUI : MonoBehaviour
     int id = 0;
     Timeline timeline;
     public float duration;
-
+    public float mid;
     public void Init(Timeline timeline)
     {
         marker.color = selectedColor;
@@ -43,8 +43,8 @@ public class KeyFrameUI : MonoBehaviour
             r = GetComponent<RectTransform>();
         float w = timeline.total_x_marker * (duration / totalDuration);
         r.sizeDelta = new Vector2(w, r.sizeDelta.y);
-        float _x = w / 2;
-        label.transform.localPosition = new Vector2(_x,0);
+        mid = w / 2;
+        label.transform.localPosition = new Vector2(mid,0);
     }
     public void SetColor(bool pair)
     {
