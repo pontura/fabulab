@@ -20,7 +20,7 @@ public class CacheData : MonoBehaviour
     [Serializable]
     public class ServerMetaData
     {
-        public string thumb;
+        public string thumb_timestamp;
         public string username;
     }
 
@@ -28,7 +28,8 @@ public class CacheData : MonoBehaviour
     public class UserData {
         public string uid;
         public string username;
-        public Texture2D thumb;
+        public string thumb_timestamp;
+        //public Texture2D thumb;
     }
 
     [Serializable]
@@ -81,14 +82,14 @@ public class CacheData : MonoBehaviour
         filmData = filmsCache[id];
         return CloneFilmData(filmsCache[id]);
     }
-    public void GetUser(string uid, System.Action<UserData> OnReady)
+    public void GetUser(string uid, System.Action<UserData, Texture2D> OnReady)
     {
         //print("GET user: " + uid);
         foreach (UserData u in users)
         {
             if (u.uid == uid)
             {
-                OnReady( u);
+                LoadImage("profile", uid, (tex) => OnReady(u, tex), u.thumb_timestamp,userId: uid);
                 return;
             }
         }
@@ -96,24 +97,32 @@ public class CacheData : MonoBehaviour
         {
             UserData ud = users.Find(x=>x.uid == uid);
             if (ud != null) {
-                OnReady(ud);
+                LoadImage("profile", uid, (tex) => OnReady(ud, tex), ud.thumb_timestamp, userId: uid);
                 return;
             }
             //Debug.Log("# " + uid + " " + rawjson);
             ServerMetaData s = JsonUtility.FromJson<ServerMetaData>(rawjson);
-            Debug.Log("# " + uid + " " + rawjson + " " + s.thumb);
+            Debug.Log("# " + uid + " " + rawjson + " " + s.thumb_timestamp);
             ud = new UserData();
             ud.uid = uid;
             ud.username = s.username;
-            ud.thumb = new Texture2D(1, 1);
+            ud.thumb_timestamp = s.thumb_timestamp;
+            if (string.IsNullOrEmpty(ud.thumb_timestamp)) {
+                ud.thumb_timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
+            }
+            /*ud.thumb = new Texture2D(1, 1);
             if(s.thumb != "" && s.thumb != null)
-                ud.thumb.LoadImage(System.Convert.FromBase64String(s.thumb));            
+                ud.thumb.LoadImage(System.Convert.FromBase64String(s.thumb));*/            
             users.Add(ud);
-            OnReady(ud);
+            LoadImage("profile", uid, (tex) => OnReady(ud, tex), ud.thumb_timestamp, userId: uid);
         });
     }
 
     public void LoadImage(string folder, string id, Action<Texture2D> onComplete, string serverTimestamp, string userId = null) {
+
+        if(serverTimestamp==null)
+            serverTimestamp = DateTime.Now.ToUniversalTime().ToString("o");
+
         string folderPath = cacheDir + "/" + folder;
         Directory.CreateDirectory(folderPath);
         string path = Path.Combine(folderPath, $"{id}.jpg");
@@ -166,11 +175,22 @@ public class CacheData : MonoBehaviour
     }
 
     public void CleanCache() {
-        Directory.CreateDirectory(cacheDir);
-        foreach (var metaFile in Directory.GetFiles(cacheDir, "*.meta")) {
+        Debug.Log("& CleanCache");
+        foreach (BoardItems.BoardData.MetadataTypes mdTypes in Enum.GetValues(typeof(BoardItems.BoardData.MetadataTypes))) {
+            CheckAndCleanFolderCache(mdTypes.ToString());            
+        }
+        CheckAndCleanFolderCache("profile");
+    }
+
+    void CheckAndCleanFolderCache(string folderName) {
+        string folderPath = cacheDir + "/" + folderName;
+        Directory.CreateDirectory(folderPath);
+        foreach (var metaFile in Directory.GetFiles(folderPath, "*.meta")) {
             ImageMeta meta = JsonUtility.FromJson<ImageMeta>(File.ReadAllText(metaFile));
             long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            //Debug.Log($"& meta last access: {meta.lastAccess} now: {now}");
             if ((now - meta.lastAccess) > maxUnusedDays * 86400) {
+                Debug.Log($"& metafile to delete: {metaFile}");
                 string imgFile = Path.ChangeExtension(metaFile, ".jpg");
                 if (File.Exists(imgFile)) File.Delete(imgFile);
                 File.Delete(metaFile);

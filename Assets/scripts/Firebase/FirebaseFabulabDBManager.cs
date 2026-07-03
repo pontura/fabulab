@@ -854,9 +854,24 @@ namespace Yaguar.StoryMaker.DB
             });
             Debug.Log("Server: GetUsernameFromServer " + uid);
         }
-        public void SaveProfilePicture(string thumb)
-        {
-            Dictionary<string, System.Object> childUpdates = new Dictionary<string, System.Object>();
+        public void SaveProfilePicture(Texture2D texture, System.Action<string> callback) {
+
+            UploadTexture(texture, "profile", _uid, onDone:() => {
+                Debug.Log("Imagen de perfil actualizada correctamente");                
+                Dictionary<string, System.Object> childUpdates = new Dictionary<string, System.Object>();
+                childUpdates["thumb_timestamp"] = DateTime.Now.ToUniversalTime().ToString("o");
+                callback(childUpdates["thumb_timestamp"].ToString());
+                DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + _uid);
+                reference.UpdateChildrenAsync(childUpdates).ContinueWithOnMainThread(task =>
+                {
+                    if (task.IsFaulted || task.IsCanceled) {
+                        Debug.Log("#SaveProfilePicture timestamp FAIL " + task.Exception);
+                    }
+                    Debug.Log("Server: SaveProfilePicture timestamp done!");
+                });
+            });
+
+            /*Dictionary<string, System.Object> childUpdates = new Dictionary<string, System.Object>();
             childUpdates["thumb"] = thumb;
 
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + _uid);
@@ -869,7 +884,7 @@ namespace Yaguar.StoryMaker.DB
                 Debug.Log("Server: SaveProfilePicture done!");
             });
             Debug.Log("Server: SaveProfilePicture thumb: " + thumb);
-            //print("SaveInventoryItem url : " + url);
+            //print("SaveInventoryItem url : " + url);*/
         }
 
         public async Task DeleteImage(string folder, string fileName, string userId = null, System.Action onDone = null) {

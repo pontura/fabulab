@@ -58,9 +58,9 @@ namespace Yaguar.StoryMaker.Editor
         {
             titleField.text = content.name;
 
-            Data.Instance.cacheData.GetUser(content.userID, (userData) => {
+            Data.Instance.cacheData.GetUser(content.userID, (userData, tex) => {
                 creatorField.text = userData.username;
-                image.sprite = userData.thumb != null ? Sprite.Create(userData.thumb, new Rect(0, 0, userData.thumb.width, userData.thumb.height), new Vector2(0.5f, 0.5f)) : null;
+                image.sprite = tex != null ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f)) : null;
 
             });
 
