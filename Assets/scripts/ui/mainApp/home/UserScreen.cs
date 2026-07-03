@@ -24,7 +24,14 @@ namespace UI.MainApp.Home
         {
             usernameField.text = username;
         }
-
+        public void Create()
+        {    
+            int screen = tabActive;
+            if(tabActive>1) 
+                UIManager.Instance.Create();
+            else
+                UIManager.Instance.CreateSelected(tabActive+1);
+        }
         private void OnDestroy() {
             Events.ChangeName -= OnChangeName;
         }
@@ -47,8 +54,10 @@ namespace UI.MainApp.Home
                 tabs.ReOpen();
             }
         }
+        int tabActive;
         void OnTabClicked(int id)
         {
+            this.tabActive = id;
             print("OnTabClicked " + id + " name: "  +gameObject.name);
 
             userDataScreen.Show(false);
