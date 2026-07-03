@@ -50,9 +50,9 @@ namespace UI.MainApp.Home.User
                 editionGO.SetActive(false);
                 viewGO.SetActive(true);
 
-                Data.Instance.cacheData.GetUser(content.userID, (userData) => {
+                Data.Instance.cacheData.GetUser(content.userID, (userData, tex) => {
                     creatorField.text = userData.username;
-                    creatorThumb.sprite = userData.thumb != null ? Sprite.Create(userData.thumb, new Rect(0, 0, userData.thumb.width, userData.thumb.height), new Vector2(0.5f, 0.5f)) : null;
+                    creatorThumb.sprite = tex != null ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f)) : null;
 
                 });
             }

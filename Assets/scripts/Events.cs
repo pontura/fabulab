@@ -8,6 +8,8 @@ using UnityEngine;
 
 public static class Events
 {
+    public static System.Action<Texture2D> OnProfilePictureUpdated = delegate { };
+
     public static System.Action<bool> ShowUndo = delegate { };
     public static System.Action OnUndoAdded = delegate { };
     public static System.Action<bool> OnBGColorizerOpen = delegate { };

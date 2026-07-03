@@ -129,7 +129,7 @@ namespace UI
             Home();
         }
 
-        private void OnUserDone(CacheData.UserData uData)
+        private void OnUserDone(CacheData.UserData uData, Texture2D tex)
         {
             print("OnUserDone UID " + uData);
         }

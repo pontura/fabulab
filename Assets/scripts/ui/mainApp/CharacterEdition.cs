@@ -3,6 +3,7 @@ using BoardItems.BoardData;
 using BoardItems.Characters;
 using System;
 using UnityEngine;
+using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
 using Yaguar.StoryMaker.Editor;
 
@@ -210,8 +211,12 @@ namespace UI.MainApp
         }
         public void SaveProfilePictureDone(Texture2D tex)
         {
-            string thumb = System.Convert.ToBase64String(tex.EncodeToPNG());
-            FirebaseStoryMakerDBManager.Instance.SaveProfilePicture(thumb);
+            /*string thumb = System.Convert.ToBase64String(tex.EncodeToPNG());
+            FirebaseStoryMakerDBManager.Instance.SaveProfilePicture(thumb);*/
+            FirebaseStoryMakerDBManager.Instance.SaveProfilePicture(tex, (timestamp) => {
+                Data.Instance.cacheData.SaveImageCache("profile", Data.Instance.userData.userDataInDatabase.uid, tex.EncodeToJPG(), timestamp);
+                Events.OnProfilePictureUpdated(tex);
+            });            
         }
        
         bool savingPart = false;
