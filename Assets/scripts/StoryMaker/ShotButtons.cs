@@ -14,19 +14,21 @@ namespace Yaguar.StoryMaker.Editor
         {
             deleteBtn.SetActive(!isFirstFrame);            
         }
-
+        
         public void Show(bool isOn)
         {
             if(isOn)
             {
                 int frame = ScenesManagerFabulab.Instance.currentSceneId;
-                SetFirstFrame(frame == 1);
+                SetFirstFrame(frame <2);
             }
             panel.SetActive(isOn);
         }
         public void OnMarkerUpdated(float timer_pos)
         {
             if(opened) return;
+            int frame = ScenesManagerFabulab.Instance.currentSceneId;
+                SetFirstFrame(frame <2);
             if(anim == null)
                 anim = GetComponent<Animation>();
             anim.Play();

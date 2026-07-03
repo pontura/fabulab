@@ -88,9 +88,13 @@ namespace Yaguar.StoryMaker.Editor
             all.Clear();
 
             if(filmMakerUI.isEditing)
+            {                
+                shotButtons.Show(true);
                 Scenario.Instance.StartCoroutine(RefreshKeyframesC());
+            }
             else
             {
+                shotButtons.Show(false);
                 int a = 0;
                 foreach (SceneDataFabulab s in ScenesManagerFabulab.Instance.Scenes)
                 {
@@ -113,6 +117,10 @@ namespace Yaguar.StoryMaker.Editor
                 yield return new WaitForSeconds(Time.deltaTime * 10);
                 filmMakerUI.JumpTo(a);
             }
+
+            if(a <2)
+                shotButtons.SetFirstFrame(true);
+
             filmMakerUI.JumpTo(1);
             UpdateKeyframes();
 
@@ -149,7 +157,7 @@ namespace Yaguar.StoryMaker.Editor
             shotButtons.OnMarkerUpdated(timer_pos);
         }
         public override void OnPlay() { shotButtons.Show(false); }
-        public override void OnStop() { shotButtons.Show(true); }
+        public override void OnStop() {  if(filmMakerUI.isEditing) shotButtons.Show(true); }
         
         public virtual void UpdateDrawDone() {}
     }
