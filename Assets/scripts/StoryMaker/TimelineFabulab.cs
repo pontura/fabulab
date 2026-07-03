@@ -54,6 +54,11 @@ namespace Yaguar.StoryMaker.Editor
         {
             if(all.Count>1)
                 ghostImage.Show(true);
+            Invoke("OnEnabledDelayed", 0.1f);
+        }
+        void OnEnabledDelayed()
+        {            
+            shotButtons.Show(filmMakerUI.isEditing);
         }
         protected override void Rewind() {
             ScenesManagerFabulab.Instance.currentSceneId = 1;
@@ -89,12 +94,11 @@ namespace Yaguar.StoryMaker.Editor
 
             if(filmMakerUI.isEditing)
             {                
-                shotButtons.Show(true);
                 Scenario.Instance.StartCoroutine(RefreshKeyframesC());
+                shotButtons.Show(true);
             }
             else
             {
-                shotButtons.Show(false);
                 int a = 0;
                 foreach (SceneDataFabulab s in ScenesManagerFabulab.Instance.Scenes)
                 {
@@ -104,6 +108,7 @@ namespace Yaguar.StoryMaker.Editor
                 filmMakerUI.JumpTo(1);
                 UpdateKeyframes();
                 Events.OnLoading(false);
+                shotButtons.Show(false);
             }
             OnStop();
         }
@@ -154,7 +159,8 @@ namespace Yaguar.StoryMaker.Editor
         
         public override void OnMarkerUpdated(float timer_pos)
         {            
-            shotButtons.OnMarkerUpdated(timer_pos);
+            if(filmMakerUI.isEditing)
+                shotButtons.OnMarkerUpdated(timer_pos);
         }
         public override void OnPlay() { shotButtons.Show(false); }
         public override void OnStop() {  if(filmMakerUI.isEditing) shotButtons.Show(true); }
