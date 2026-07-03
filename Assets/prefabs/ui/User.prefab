@@ -10084,7 +10084,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 162289154435440343}
   m_HandleRect: {fileID: 279177409298014574}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -14252,7 +14252,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 53.29138, y: -0.38232422}
+  m_AnchoredPosition: {x: 44, y: -0.38232422}
   m_SizeDelta: {x: -114.7812, y: -19.9418}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &450663921565792424
@@ -14562,7 +14562,7 @@ MonoBehaviour:
   storiesScreen: {fileID: 6518089859255412408}
   charactersScreen: {fileID: 6430854029073126706}
   objects: {fileID: 4894279666961169119}
-  profilePicture: {fileID: 4466910149216840552}
+  profilePicture: {fileID: 83550383183181407}
   usernameField: {fileID: 9127575666536378856}
 --- !u!1 &8719437814288678143
 GameObject:
@@ -15407,11 +15407,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2805238164916484885, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.42677
       objectReference: {fileID: 0}
     - target: {fileID: 2805238164916484885, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.42677
+      objectReference: {fileID: 0}
+    - target: {fileID: 2805238164916484885, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.16062838
       objectReference: {fileID: 0}
     - target: {fileID: 2805238164916484885, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
       propertyPath: m_LocalPosition.x
@@ -15443,7 +15447,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2805238164916484885, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 75.7
+      value: 71.9
       objectReference: {fileID: 0}
     - target: {fileID: 2805238164916484885, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -15478,14 +15482,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
---- !u!224 &1501639137667521433 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2805238164916484885, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
-  m_PrefabInstance: {fileID: 3618873101385212044}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4466910149216840552 stripped
+--- !u!114 &83550383183181407 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1136445272681876452, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3679446702377604819, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
   m_PrefabInstance: {fileID: 3618873101385212044}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -15494,6 +15493,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 574ef9e785e5af5408c331d32137842b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.MainApp.ProfilePicture
+--- !u!224 &1501639137667521433 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2805238164916484885, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
+  m_PrefabInstance: {fileID: 3618873101385212044}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3840720970660346545
 PrefabInstance:
   m_ObjectHideFlags: 0
