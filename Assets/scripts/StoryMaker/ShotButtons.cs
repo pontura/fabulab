@@ -1,18 +1,22 @@
 using UnityEngine;
+using UnityEngine.UI;
 namespace Yaguar.StoryMaker.Editor
 {
     public class ShotButtons : MonoBehaviour
     {
         [SerializeField] GameObject panel;
         [SerializeField] GameObject subPanel;
-        [SerializeField] GameObject deleteBtn;
+        [SerializeField] Button addBtn;
+        [SerializeField] Button deleteBtn;
+        [SerializeField] Button camBtn;
+        [SerializeField] Toggle moveBtn;
         [SerializeField] GameObject marker;
          [SerializeField] DurationBtn durationBtn;
         Animation anim;
         bool opened;
         public void SetFirstFrame(bool isFirstFrame)
         {
-            deleteBtn.SetActive(!isFirstFrame);            
+            deleteBtn.gameObject.SetActive(!isFirstFrame);            
         }
         
         public void Show(bool isOn)
@@ -38,6 +42,8 @@ namespace Yaguar.StoryMaker.Editor
         {
             Open();
             durationBtn.Clicked();
+            SetInteracions(false);
+            durationBtn.GetComponent<Button>().interactable = true;
         }
         public void Open()
         {
@@ -49,12 +55,21 @@ namespace Yaguar.StoryMaker.Editor
         }
         public void Close()
         {
+            SetInteracions(true);
             opened = false;
             durationBtn.Close();
             if(anim == null)
                 anim = GetComponent<Animation>();
             anim.Play("close");
             
+        }
+        void SetInteracions(bool interactable)
+        {
+            addBtn.interactable = interactable;
+            deleteBtn.interactable = interactable;
+            camBtn.interactable = interactable;
+            moveBtn.interactable = interactable;
+            durationBtn.GetComponent<Button>().interactable = interactable;
         }
 
     }
