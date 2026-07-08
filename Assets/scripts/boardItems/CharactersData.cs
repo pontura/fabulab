@@ -294,12 +294,14 @@ namespace BoardItems
             swmd.isPublic = md.isPublic;
             swmd.tags = md.tags;
             swmd.creators = md.creators;
+            swmd.name = md.name;
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.characters.ToString(), md.id, swmd, OnDone);
         }
 
-        public void SaveInfo(string id, bool isPublic,  List<string> selectedTagsID, System.Action<bool, string> OnDone) {
+        public void SaveInfo(string id, bool isPublic, string name, List<string> selectedTagsID, System.Action<bool, string> OnDone) {
             CharacterMetaData md = charactersMetaData.Find(x => x.id == id);
             md.isPublic = isPublic;
+            md.name = name;
             if(selectedTagsID.Count>0)
             {
                 md.tags = new List<string>();
@@ -403,6 +405,7 @@ namespace BoardItems
                     cmd = new CharacterMetaData();
                     cmd.id = snapshot.Key;
                     cmd.userID = snapshot.Child("userID").Value as string;
+                    cmd.name = snapshot.Child("name").Value as string;
                     cmd.isPublic = snapshot.HasChild("isPublic") ? (bool)snapshot.Child("isPublic").Value : false;
                     if (snapshot.HasChild("timestamp"))
                         cmd.timestamp = snapshot.Child("timestamp").Value as string;

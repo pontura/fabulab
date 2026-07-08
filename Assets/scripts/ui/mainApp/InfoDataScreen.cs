@@ -1,4 +1,5 @@
-﻿using BoardItems.BoardData;
+﻿using BoardItems;
+using BoardItems.BoardData;
 using System;
 using UI.MainApp.Home;
 using Unity.Mathematics;
@@ -13,6 +14,7 @@ namespace UI.MainApp
         public Image workImage;
         [SerializeField] TagsEditor tagsEditor;
         [SerializeField] ShareBtn shareBtn;
+        [SerializeField] TMPro.TMP_InputField nameField;
         string id;
         [SerializeField] bool isPublic;
         MetadataTypes metadataType;
@@ -28,12 +30,14 @@ namespace UI.MainApp
             isPublic = false;
             if (type == MetadataTypes.stories) {
                 tagsEditor.gameObject.SetActive(false);
-                isPublic = Data.Instance.scenesData.GetMeta(id).isPublic;
+                FilmDataFabulab filmDataFabulab = Data.Instance.scenesData.GetMeta(id);
+                isPublic = filmDataFabulab.isPublic;
+                nameField.text = filmDataFabulab.name;
             } else {
                 CharacterMetaData md = type == MetadataTypes.so ? Data.Instance.sObjectsData.GetMeta(id) : Data.Instance.charactersData.GetMeta(id);
                 isPublic = md.isPublic;
                 tagsEditor.gameObject.SetActive(true);
-                //if (md.tags.Count > 0) // solo muestra 1 por ahora.
+                nameField.text = md.name;
                 tagsEditor.Init(md.tags);
             }
             shareBtn.Init(isPublic,OnSharedChanged); 
@@ -52,9 +56,9 @@ namespace UI.MainApp
         {            
             Events.OnLoading(true);
             if(metadataType == MetadataTypes.so) 
-                Data.Instance.sObjectsData.SaveInfo(id, isPublic, tagsEditor.GetSelectedTags(), OnDone);
+                Data.Instance.sObjectsData.SaveInfo(id, isPublic,nameField.text,  tagsEditor.GetSelectedTags(), OnDone);
             else if (metadataType == MetadataTypes.characters)
-                Data.Instance.charactersData.SaveInfo(id, isPublic, tagsEditor.GetSelectedTags(), OnDone);
+                Data.Instance.charactersData.SaveInfo(id, isPublic, nameField.text, tagsEditor.GetSelectedTags(), OnDone);
             else if (metadataType == MetadataTypes.stories)
                 Data.Instance.scenesData.SaveInfo(id, isPublic, tagsEditor.GetSelectedTags(), OnDone);
         }

@@ -270,16 +270,18 @@ namespace BoardItems
             swmd.userID = md.userID;
             swmd.type = md.type;
             swmd.timestamp = md.timestamp;
-            swmd.isPublic = md.isPublic;            
+            swmd.isPublic = md.isPublic;    
+            swmd.name = md.name;            
             swmd.tags = md.tags;
             swmd.creators = md.creators;
             FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), md.id, swmd, OnDone);
         }
 
-        public void SaveInfo(string id, bool isPublic, List<string> selectedTagsID, System.Action<bool, string> OnDone)
+        public void SaveInfo(string id, bool isPublic, string name, List<string> selectedTagsID, System.Action<bool, string> OnDone)
         { 
             PropMetaData md = metaData.Find(x => x.id == id);
             md.isPublic = isPublic;
+            md.name = name;
             if(selectedTagsID.Count>0)
             {
                 md.tags = new List<string>();
@@ -358,6 +360,7 @@ namespace BoardItems
                     pmd.type = (SObjectData.types)((int)(long)snapshot.Child("type").Value);
                     pmd.id = snapshot.Key;
                     pmd.userID = snapshot.Child("userID").Value as string;
+                    pmd.name = snapshot.Child("name").Value as string;
                     pmd.isPublic = snapshot.HasChild("isPublic") ? (bool)snapshot.Child("isPublic").Value : false;
                     if (snapshot.HasChild("timestamp"))
                         pmd.timestamp = snapshot.Child("timestamp").Value as string;
@@ -413,6 +416,7 @@ namespace BoardItems
                 pmd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
 
             pmd.isPublic = child.HasChild("isPublic") ? (bool)child.Child("isPublic").Value : false;
+            pmd.name = child.Child("name").Value as string;
 
             // pmd.tags = new List<string>();
             // if(child.HasChild("tags"))

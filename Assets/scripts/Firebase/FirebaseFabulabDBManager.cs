@@ -335,6 +335,7 @@ namespace Yaguar.StoryMaker.DB
                                 }
                                 fd.id = child.Key;
                                 fd.userID = child.Child("userID").Value as string;
+                                fd.name = child.Child("name").Value as string;
 
                                 fd.creators = new List<string>();
                                 fd.tags = new List<string>();

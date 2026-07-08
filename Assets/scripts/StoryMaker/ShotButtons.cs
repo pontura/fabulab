@@ -5,7 +5,6 @@ namespace Yaguar.StoryMaker.Editor
     public class ShotButtons : MonoBehaviour
     {
         [SerializeField] GameObject panel;
-        [SerializeField] GameObject subPanel;
         [SerializeField] Button addBtn;
         [SerializeField] Button deleteBtn;
         [SerializeField] Button camBtn;

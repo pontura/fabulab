@@ -37,6 +37,12 @@ namespace BoardItems.BoardData
         public List<string> tags;
         public string timestamp;
         public bool isPublic;
+        public string name;
+        
+        public void SetName(string name)
+        {
+           this.name = name;
+        }
         public void AddCreator(string uid)
         {
             if (creators == null)
@@ -48,7 +54,7 @@ namespace BoardItems.BoardData
                 creators.Add(uid);
             }
         }
-         public void AddTag(string tagID)
+        public void AddTag(string tagID)
         {
             if (tags == null)
             {
@@ -80,6 +86,7 @@ namespace BoardItems.BoardData
             creators = other.creators;
             tags = other.tags;
             isPublic = other.isPublic;
+            name = other.name;
         }
     }
 
@@ -91,6 +98,7 @@ namespace BoardItems.BoardData
         public List<string> tags;
         public string timestamp;
         public bool isPublic;
+        public string name;
         public void AddCreator(string uid)
         {
             if (creators == null)
@@ -103,7 +111,7 @@ namespace BoardItems.BoardData
                     creators.Add(uid);
             }
         }
-         public void AddTag(string tagID)
+        public void AddTag(string tagID)
         {
             if (tags == null)
             {
@@ -113,6 +121,10 @@ namespace BoardItems.BoardData
             {
                 tags.Add(tagID);
             }
+        }
+        public void SetName(string name)
+        {
+           this.name = name;
         }
 
     }
@@ -124,6 +136,7 @@ namespace BoardItems.BoardData
         public List<string> creators;
         public List<string> tags;
         public string timestamp;
+        public string name;
     }
 
 }
