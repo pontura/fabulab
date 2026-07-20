@@ -267,7 +267,10 @@ namespace UI.MainApp
             SceneDataFabulab sdf = ScenesManagerFabulab.Instance.GetActiveScene();
             sdf.Reset();
             SOData bgData = Scenario.Instance.sceneObejctsManager.bgData;
-            sdf.bgID = bgData.id;
+            if (sdf.bgID != bgData.id || string.IsNullOrEmpty(sdf.bgID)) {
+                ScenesManagerFabulab.Instance.ReplaceBG(sdf.bgID, bgData.id);
+                sdf.bgID = bgData.id;
+            }
             foreach (SceneObject so in Scenario.Instance.sceneObejctsManager.sceneObjects) {
                 if (so == null || !so.gameObject.activeSelf)
                     continue;

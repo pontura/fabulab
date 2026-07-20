@@ -166,6 +166,14 @@ namespace Yaguar.StoryMaker.Editor
                     break;
             }
         }
+        public void ReplaceBG(string oldBG, string newBG) {
+            for (int i = currentSceneId; i < Scenes.Count; i++) {
+                if (Scenes[i].bgID == oldBG || string.IsNullOrEmpty(Scenes[i].bgID)) {
+                    Scenes[i].bgID = newBG;
+                } else
+                    break;
+            }
+        }
 
         public void ReplaceItem(string oldId, string oldItemName, string newId, string newItemName) {
             foreach (SceneDataFabulab scene in Scenes) {
