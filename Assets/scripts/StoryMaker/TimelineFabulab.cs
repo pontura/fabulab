@@ -152,9 +152,14 @@ namespace Yaguar.StoryMaker.Editor
             print("ScenesManagerFabulab.Instance.currentSceneId: " + ScenesManagerFabulab.Instance.currentSceneId);
             if(ScenesManagerFabulab.Instance.currentSceneId<2) { ghostImage.Show(false); return; }
             int prevSceneID = ScenesManagerFabulab.Instance.currentSceneId-2;
-            
-            ghostImage.Show(true);
-            ghostImage.Init(all[prevSceneID].sprite);
+            if(ScenesManagerFabulab.Instance.Scenes[ScenesManagerFabulab.Instance.currentSceneId-1].bgID == ScenesManagerFabulab.Instance.Scenes[prevSceneID].bgID)
+            {
+                ghostImage.Show(true);
+                ghostImage.Init(all[prevSceneID].sprite);
+            } else
+            {
+                ghostImage.Show(false);
+            }
         }
         
         public override void OnMarkerUpdated(float timer_pos)
