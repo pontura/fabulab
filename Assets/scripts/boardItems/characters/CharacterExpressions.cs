@@ -7,7 +7,7 @@ public class CharacterExpressions : MonoBehaviour
     public void Play(string animName)
     {
         anim.speed = 1;
-        Debug.Log("Play Emoji: " + animName);
+       // Debug.Log("Play Emoji: " + animName);
 
         if (animName == "" || animName ==null)
             animName = Data.Instance.characterAnimsManager.defaultEmoji.name;

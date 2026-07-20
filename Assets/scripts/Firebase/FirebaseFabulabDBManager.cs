@@ -265,7 +265,7 @@ namespace Yaguar.StoryMaker.DB
                     try {
                         //SceneDataFabulabLyna[] sds = JsonConvert.DeserializeObject<SceneDataFabulabLyna[]>(task.Result.GetRawJsonValue());
                         string data = task.Result.GetRawJsonValue();
-                        Debug.Log("# " + data);
+                      //  Debug.Log("# " + data);
                         callback(true, task.Result.Key, JsonConvert.DeserializeObject<SObjectServerData>(data));
                     } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");

@@ -26,6 +26,7 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.AddSceneObject += AddSceneObject;
             StoryMakerEvents.SetSceneObject += SetSceneObject;
             StoryMakerEvents.RemoveSceneObject += RemoveSceneObject;
+            StoryMakerEvents.ReplaceSceneObjectFromTo += ReplaceSceneObjectFromTo;
             StoryMakerEvents.ReplaceSceneObject += ReplaceSceneObject;
             StoryMakerEvents.OnMovieOver += OnMovieOver;
             StoryMakerEvents.OnMoviePaused += OnMovieOver;
@@ -42,6 +43,7 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.SetSceneObject -= SetSceneObject;
             StoryMakerEvents.RemoveSceneObject -= RemoveSceneObject;
             StoryMakerEvents.ReplaceSceneObject -= ReplaceSceneObject;
+            StoryMakerEvents.ReplaceSceneObjectFromTo -= ReplaceSceneObjectFromTo;
             StoryMakerEvents.OnMovieOver -= OnMovieOver;
             StoryMakerEvents.OnMoviePaused -= OnMovieOver;
             StoryMakerEvents.Restart -= ShowBgMask;
@@ -69,12 +71,12 @@ namespace Yaguar.StoryMaker.Editor
 
         public override void AddSceneObject(SOData data)
         {
-            Debug.Log("AddSceneObject: " + data.id + " data.force_z: " + data.force_z);
+         //   Debug.Log("AddSceneObject: " + data.id + " data.force_z: " + data.force_z);
             
             selected = null;
 
             if (data is SOAvatarFabulabData avatarData) {
-                Debug.Log("& is SOAvatarFabulabData");
+             //   Debug.Log("& is SOAvatarFabulabData");
                 SceneObject avatar = Instantiate(avatar_to_instantiate);
                 AddToContainer(avatar, avatarData);
 
@@ -87,8 +89,8 @@ namespace Yaguar.StoryMaker.Editor
                 selected = avatar;
                 selectedAvatar = avatar;
 
-                Debug.Log("& Anim: " + avatarData.anim);
-                Debug.Log("& Emoji: " + avatarData.emoji);                
+                //Debug.Log("& Anim: " + avatarData.anim);
+                //Debug.Log("& Emoji: " + avatarData.emoji);                
 
                 Events.OnCharacterAnim(avatarData.id, avatarData.anim);
                 Events.OnCharacterExpression(avatarData.id, avatarData.emoji);
@@ -179,8 +181,15 @@ namespace Yaguar.StoryMaker.Editor
                 base.RemoveSceneObject();
             //UIManager.Instance.mainMenu.CloseAll();
         }
-
+        void ReplaceSceneObjectFromTo(string original, string duplicated)
+        {
+            print("ReplaceSceneObjectFromTo original: " + original + " duplicated: " + duplicated); 
+            selected = sceneObjects.Find(so => so.GetData().id == original);
+            ReplaceSceneObject(duplicated);
+        }
         protected virtual void ReplaceSceneObject(string id) {
+            
+            print("ReplaceSceneObjectFromTo selected: " + selected); 
             if (selected != null) {
                 if (selected is AvatarFabulab || selected is Prop) {
                     StoryMakerEvents.OnSaveScene();

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UI;
 using UI.MainApp;
@@ -19,24 +18,46 @@ namespace OnBoarding
 
         public override void OnShow()
         {     
-            Events.OnLoadingParent(null, OnLoadingDone);
-            Events.OnLoading(true);            
-        }
-        void OnLoadingDone()
-        {
+
             field.text = "Empecemos eligiendo un fondo.";
             field2.text = "Lindo, ¿no? Ahora pongamos algún objeto.";
 
             part1.gameObject.SetActive(true);
             part2.gameObject.SetActive(false);
+            
+            Events.ShowScreen(UIManager.screenType.StoryMaker);
 
-            UIManager.Instance.NewStory();            
-
+            Events.OnLoadingParent(null, OnLoadingDone);
+            Events.OnLoading(true);            
+        }
+        
+        void OnLoadingDone()
+        {
+            Events.OnLoading(true);            
+            LoadStoryDefault();
+        }
+         void LoadStoryDefault()
+        {
+            string storyID = "-Oxq-0rsW82KJKF_1ZKe"; //Story por defecto para onboarding
+            Data.Instance.scenesData.LoadFilm(storyID);
+            UIManager.Instance.boardUI.SetEditingType(BoardUI.editingTypes.NONE);
+            StoryMakerEvents.OnLoadFilm += OnLoadFilm;
+        }
+         void OnLoadFilm() {
+            StoryMakerEvents.OnLoadFilm -= OnLoadFilm;
+            StoryMakerEvents.EnableStoryEdition(true);
+            StoryMakerEvents.EnableInputManager(false);
+            InitBg();
+        }   
+         void InitBg()
+        {
+            Events.OnLoading(true);            
             StartCoroutine(AddCharacterToScene());
             Events.OnBoardingStepDone += OnBoardingStepDone;
         }
         private void OnBoardingStepDone(OnBoardingManager.steps steps)
         {
+            StoryMakerEvents.EnableStoryEdition(true);
             if(active && steps != step) return;
             Step2();
             Events.OnBoardingStepDone -= OnBoardingStepDone;
@@ -52,15 +73,18 @@ namespace OnBoarding
             yield return new WaitForSeconds(0.25f);
             storyEditorScreen.OnTabClicked(0);
             
-            //TO-DO - agregar el character recien creado:
-            string newCharacterID =  Data.Instance.charactersData.userCharacters[0].id;
-            print("AddCharacterToScene lastID:" + newCharacterID);
+            string originalCharacterID = "-On3wQ6Vy9jnpMtTTgWb"; //Character por defecto en story del onboarding:
+            string newCharacterID =  Data.Instance.charactersData.userCharacters[Data.Instance.charactersData.userCharacters.Count - 1].id;
 
-            SOAvatarFabulabData data = new SOAvatarFabulabData();
-            data.id = newCharacterID;
-            data.itemName = Utils.GetUniqueDateTimeId();
+            StoryMakerEvents.ReplaceSceneObjectFromTo(originalCharacterID, newCharacterID);
+
+            // print("AddCharacterToScene lastID:" + newCharacterID);
+
+            // SOAvatarFabulabData data = new SOAvatarFabulabData();
+            // data.id = newCharacterID;
+            // data.itemName = Utils.GetUniqueDateTimeId();
             
-            StoryMakerEvents.AddSceneObject(data); 
+            // StoryMakerEvents.AddSceneObject(data); 
 
             Data.Instance.charactersData.ResetCurrentID();
             StoryMakerEvents.SetEditing(true);  

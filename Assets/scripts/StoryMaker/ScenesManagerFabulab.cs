@@ -116,7 +116,7 @@ namespace Yaguar.StoryMaker.Editor
             
             if (lastSceneID == currentSceneId)
                 lastSceneID = -1;
-            Debug.Log("& LastScene = " + lastSceneID);
+        //    Debug.Log("& LastScene = " + lastSceneID);
             GetActiveScene()?.DeleteChangedSO(lastSceneID);
             GetActiveScene()?.AddSceneObjects(lastSceneID);
         }      

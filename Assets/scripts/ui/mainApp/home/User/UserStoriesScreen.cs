@@ -99,12 +99,12 @@ namespace UI.MainApp.Home.User
             FilmDataFabulab fd = Data.Instance.scenesData.filmsData.Find(x => x.id == isb.Id);
             if (fd != null) {
                 downloading.Add(index);
-                Debug.Log($"$ DownloadTexture index: {index} Id: {fd.id}");
+              //  Debug.Log($"$ DownloadTexture index: {index} Id: {fd.id}");
                 Data.Instance.cacheData.LoadImage(BoardItems.BoardData.MetadataTypes.stories.ToString(), fd.id, (tex) => {
                     downloading.Remove(index);
                     isb.SetSprite(tex);
                     imageCache[index] = tex;
-                    Debug.Log($"ImageCache: {imageCache.Count}");
+                 //   Debug.Log($"ImageCache: {imageCache.Count}");
                     if (!firstImageCache && imageCache.Count >= (cacheSize - cacheExtraItemsCount)) {
                         firstImageCache = true;
                         Events.OnLoading(false);

@@ -49,7 +49,7 @@ namespace BoardItems
         }
         public void SetSelection(bool isOn)
         {
-            print("SetSelection " + isOn + " part: " + part + " GO: " + gameObject.name);
+         //   print("SetSelection " + isOn + " part: " + part + " GO: " + gameObject.name);
             selectedBodySignal.gameObject.SetActive(isOn);
             ItemInScene[] all = GetComponentsInChildren<ItemInScene>();
             foreach (ItemInScene i in all)

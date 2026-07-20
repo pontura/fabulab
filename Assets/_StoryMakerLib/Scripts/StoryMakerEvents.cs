@@ -18,6 +18,7 @@ namespace Yaguar.StoryMaker.Editor
 
         public static System.Action OnStartNewStory = delegate { };
 
+        public static System.Action<string, string> ReplaceSceneObjectFromTo = delegate { };
         public static System.Action<string> ReplaceSceneObject = delegate { };
         public static System.Action<SOData> AddSceneObject = delegate { };
         public static System.Action<SOData> SetSceneObject = delegate { };

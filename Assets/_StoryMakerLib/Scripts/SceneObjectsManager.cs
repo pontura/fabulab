@@ -62,7 +62,7 @@ namespace Yaguar.StoryMaker.Editor
         public void TurnOff(SOData data)
         {
             SceneObject soToTurnOff = GetSceneObjectInScene(data);
-            Debug.Log("$$$ soToRemove " + (soToTurnOff == null));
+         //   Debug.Log("$$$ soToRemove " + (soToTurnOff == null));
             if (soToTurnOff == null)
                 return;
 

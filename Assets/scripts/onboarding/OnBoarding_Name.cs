@@ -1,5 +1,6 @@
 using UnityEngine;
 using Yaguar.StoryMaker.DB;
+using Yaguar.StoryMaker.Editor;
 
 namespace OnBoarding
 {
@@ -7,8 +8,10 @@ namespace OnBoarding
     {
         [SerializeField] TMPro.TMP_Text field;
         [SerializeField] TMPro.TMP_InputField input;
+        
          public override void OnShow()
         {
+            StoryMakerEvents.EnableStoryEdition(true);
             field.text = "Hola,";                  
         }
         public void OnClicked()

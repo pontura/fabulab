@@ -212,7 +212,7 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         void SetPaused() {
-            Debug.Log("& SetPaused");
+         //   Debug.Log("& SetPaused");
             iTween.Stop();
             StoryMakerEvents.OnMoviePaused();
         }
@@ -225,7 +225,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         public override void JumpTo(int keyframeID)
         {
-            Debug.Log("#JumpTo");
+          //  Debug.Log("#JumpTo");
             int lastSceneId = ScenesManagerFabulab.Instance.currentSceneId;
             ScenesManagerFabulab.Instance.currentSceneId = keyframeID;
             SetScene(lastSceneId);

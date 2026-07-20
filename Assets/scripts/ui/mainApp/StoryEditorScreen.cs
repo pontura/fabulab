@@ -35,7 +35,7 @@ namespace UI.MainApp
         [SerializeField] bool changesMade;
         AddNew addNewPanel;
 
-        bool editionEnabled;
+        //bool editionEnabled;
               
 
         private void Start()
@@ -72,15 +72,15 @@ namespace UI.MainApp
         }
         private void OnEnable()
         {
-            print("OnEnable EnableStoryEdition " + editionEnabled);
+            print("OnEnable EnableStoryEdition " + GetComponent<FilmMakerManager>().isEditing);
             Invoke(nameof(Init), Time.deltaTime * 4);
         }
 
         void Init()
         {
-            print("Init EnableStoryEdition " + editionEnabled + "frames: " + ScenesManagerFabulab.Instance.Scenes.Count);
+            print("Init EnableStoryEdition " + GetComponent<FilmMakerManager>().isEditing + "frames: " + ScenesManagerFabulab.Instance.Scenes.Count);
             SetChangesMade(false);
-            if (!editionEnabled) return;            
+            if (!GetComponent<FilmMakerManager>().GetComponent<FilmMakerManager>().isEditing) return;            
             tabs.Init(OnTabClicked, 4);
         }
 
@@ -310,7 +310,7 @@ namespace UI.MainApp
                     StoryMakerEvents.SetNewAvatarCustomization(customizerData);*/
 
             }
-            if (!changesMade && editionEnabled)
+            if (!changesMade && GetComponent<FilmMakerManager>().isEditing)
                 SetChangesMade(true);
         }
 
@@ -377,7 +377,7 @@ namespace UI.MainApp
 
         void EnableStoryEdition(bool enable) {
             print("EnableStoryEdition " + enable);
-            editionEnabled = enable;
+            GetComponent<FilmMakerManager>().isEditing = enable;
             tabs.gameObject.SetActive(enable);
             storyName.interactable = enable;
 

@@ -151,7 +151,7 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public override SOData GetSOData() {
-            Debug.Log("% GetSOData type: " + type);
+          //  Debug.Log("% GetSOData type: " + type);
             SOData soData = null;
             if (type == SceneElementType.WORD_BALLOON) {
                 soData = new SOWordBalloonData();                
@@ -373,8 +373,8 @@ namespace Yaguar.StoryMaker.Editor
         
         protected virtual void AddSOToScenenario(SceneElement data)
         {
-            if (data is SceneElementAvatar)
-                Debug.Log("$ data is SceneElementAvatar");
+            // if (data is SceneElementAvatar)
+            //     Debug.Log("$ data is SceneElementAvatar");
 
             SOData soData = null;
             if (data.type==SceneElementType.AVATAR)
@@ -406,7 +406,7 @@ namespace Yaguar.StoryMaker.Editor
             
             if (soData != null)
             {
-                Debug.Log("# AddSOToScenenario");
+              //  Debug.Log("# AddSOToScenenario");
                 StoryMakerEvents.SetSceneObject(soData);
                 //Scenario.Instance.sceneObejctsManager.AddSceneObject(soData);
             }

@@ -148,7 +148,7 @@ public class CacheData : MonoBehaviour
 
                 onComplete?.Invoke(tex);
                 needDownload = false;
-                Debug.Log($"% Loaded ImageCache from {path}");
+               // Debug.Log($"% Loaded ImageCache from {path}");
             }
         }
 

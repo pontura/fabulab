@@ -34,7 +34,6 @@ public class KeyFrameUI : MonoBehaviour
     }
     public void SetDuration(float duration)
     {
-        print("SetDuration duration: " + duration);
         this.duration = duration;
     }
     public void SetSize(float totalDuration)
@@ -66,7 +65,7 @@ public class KeyFrameUI : MonoBehaviour
     }
     public void UpdateScreenshot()
     {
-        print("UpdateScreenshot " + id);
+        //print("UpdateScreenshot " + id);
         if (timeline.filmMakerUI.isEditing)
             Scenario.Instance.TakePartialScreenshot(ScreenshotUpdated);
         else

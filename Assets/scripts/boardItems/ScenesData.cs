@@ -456,7 +456,7 @@ namespace BoardItems
         }
 
         public void LoadFilm(string _id) {
-            print("LoadFilm _id:" + _id + " loadedDone: " + loadedDone);
+                print("LoadFilm _id:" + _id + " loadedDone: " + loadedDone);
             loadedDone = false;
             currentFilmData = filmsData.Find(x => x.id == _id);
             ScenesManagerFabulab.Instance.currentFilmData = currentFilmData;
@@ -583,7 +583,7 @@ namespace BoardItems
 
         void DownLoadBGObjects(SObjectData bgData, int bgSoIndex) {            
             if (bgSoIndex < bgData.items.Count) {
-                Debug.Log($"% DownLoadBGObjects {bgData.id} index: {bgSoIndex}");
+            //    Debug.Log($"% DownLoadBGObjects {bgData.id} index: {bgSoIndex}");
 
                 if (bgData.items[bgSoIndex].soID==null || bgData.items[bgSoIndex].soID == "") {
                     bgSoIndex++;
@@ -592,7 +592,7 @@ namespace BoardItems
                 }
 
                 Data.Instance.sObjectsData.LoadOthersObject(bgData.items[bgSoIndex].soID, (sOPart) => {
-                    Debug.Log($"% BG so downloaded  {sOPart.id} index: {bgSoIndex}");
+                //    Debug.Log($"% BG so downloaded  {sOPart.id} index: {bgSoIndex}");
                     bgSoIndex++;
                     DownLoadBGObjects(bgData, bgSoIndex);
                 });
