@@ -46,7 +46,7 @@ namespace OnBoarding
          void OnLoadFilm() {
             StoryMakerEvents.OnLoadFilm -= OnLoadFilm;
             StoryMakerEvents.EnableStoryEdition(true);
-            StoryMakerEvents.EnableInputManager(false);
+            StoryMakerEvents.EnableInputManager(true);
             InitBg();
         }   
          void InitBg()
