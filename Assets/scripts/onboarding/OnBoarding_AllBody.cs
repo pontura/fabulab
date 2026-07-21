@@ -50,9 +50,8 @@ namespace OnBoarding
         }
          public void ThirdButtonClicked()
         {
-            Done();
-            // TO-DO descomentar para que lo guarde de verdad:
-            //characterEdition.OnSaveClicked();
+            //Done();
+            characterEdition.OnSaveClicked();
         }
         public void HidePanel()
         {
