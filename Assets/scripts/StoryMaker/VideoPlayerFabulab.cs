@@ -1,4 +1,5 @@
 using BoardItems;
+using Firebase.Analytics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,6 +44,12 @@ namespace Yaguar.StoryMaker.Editor
             ScenesManager.Instance.currentSceneId = 1;
             timeline.JumpTo(ScenesManager.Instance.currentSceneId);
             StoryMakerEvents.OnTimelinePlay(true);
+
+            Firebase.Analytics.FirebaseAnalytics.LogEvent(
+                "others_story_played",                
+                new Parameter("story_id", ScenesManager.Instance.currentFilmData.id),
+                new Parameter("story_user_id", ScenesManager.Instance.currentFilmData.userID)
+            );
         }
         public void FastForward()
         {

@@ -1,4 +1,5 @@
 ﻿using BoardItems;
+using Firebase.Analytics;
 using System;
 using UnityEngine;
 using Yaguar.StoryMaker.Editor;
@@ -65,6 +66,10 @@ namespace UI.MainApp.Home.User
             UIManager.Instance.boardUI.SetEditingType(BoardUI.editingTypes.NONE);
             Events.ShowScreen(UIManager.screenType.StoryMaker);
             Invoke(nameof(SetStoryEditionState), Time.deltaTime * 2);
+            Firebase.Analytics.FirebaseAnalytics.LogEvent(
+                "others_story_opened",
+                new Parameter("story_id", id)                
+            );
         }
         
         void SetStoryEditionState() {

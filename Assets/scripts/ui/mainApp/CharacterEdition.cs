@@ -1,9 +1,6 @@
-using BoardItems;
 using BoardItems.BoardData;
 using BoardItems.Characters;
-using System;
 using UnityEngine;
-using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
 using Yaguar.StoryMaker.Editor;
 
@@ -175,6 +172,8 @@ namespace UI.MainApp
                 TogglePreview();
                 Invoke("Save", 0.5f);
             }
+
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("character_save_clicked");
         }
         void Save()
         {

@@ -76,6 +76,8 @@ namespace UI.MainApp
         {
             SaveWork();
             UIManager.Instance.boardUI.toolsMenu.SetOff();
+
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("object_save_clicked");
         }       
         
         void SaveWork()

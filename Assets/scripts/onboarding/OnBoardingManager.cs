@@ -1,3 +1,4 @@
+using Firebase.Analytics;
 using System;
 using UI;
 using UnityEngine;
@@ -33,7 +34,10 @@ namespace OnBoarding
         }
         void Start()
         {
-            foreach(OnBoardingMain go in onboardingScreens)
+            //PlayerPrefs.DeleteKey("onboardingSteps");
+            //PlayerPrefs.DeleteKey("onboardingSequenceID");            
+
+            foreach (OnBoardingMain go in onboardingScreens)
                 go.Init();  
             Events.OnBoardingDone += OnBoardingDone;
             if(Data.Instance.userData.onboardingSteps >0) return;
@@ -45,7 +49,9 @@ namespace OnBoarding
             onboardingSequenceID = 0;
             id = 0;
             onboardingSequenceID = PlayerPrefs.GetInt("onboardingSequenceID", 0);
-            
+
+            FirebaseAnalytics.LogEvent("onboarding_start");
+
             Next();
         }
         
@@ -65,14 +71,22 @@ namespace OnBoarding
         {            
             steps s = GetStep();
             print(s);
-            if(s != steps.ready) 
+            FirebaseAnalytics.LogEvent(
+                "onboarding_step",
+                new Parameter("step_id", (int)s),
+                new Parameter("step_name", s.ToString())
+            );
+            if (s != steps.ready) 
             {
                 Events.OnBoarding(s);
             }
             else
             {
                 Data.Instance.userData.OnBoardingAllStepsDone();
+                FirebaseAnalytics.LogEvent("onboarding_complete");
             }
+
+            
         }
         steps GetStep()
         {

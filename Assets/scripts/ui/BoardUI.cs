@@ -2,6 +2,7 @@
 using BoardItems.BoardData;
 using BoardItems.Characters;
 using BoardItems.SceneObjects;
+using Firebase.Analytics;
 using System.Collections;
 using UI.MainApp;
 using UnityEngine;
@@ -187,26 +188,35 @@ namespace UI
         public void LoadWork(string id)
         {
             items.DeleteAll();
-            
-            switch (editingType)
-            {
+            string eventName = "";            
+            switch (editingType) {
                 case editingTypes.CHARACTER:
                     Data.Instance.charactersData.SetCurrentID(id);
                     CharacterData ch = Data.Instance.charactersData.GetUserCharacter(id);
-                    if (ch != null)
+                    if (ch != null) {
+                        eventName = "open_character";
                         OpenWork(ch);
-                    else
+                    } else {
+                        eventName = "open_others_character";
                         LoadOthersWork(id);
+                    }
                     break;
                 default:
-                    SOPartData cd = Data.Instance.sObjectsData.SetCurrentID(id);
-                    if (cd != null)
+                    SObjectData cd = Data.Instance.sObjectsData.SetCurrentID(id);
+                    if (cd != null) {
+                        eventName = "open_object_"+cd.type;
                         OpenWork(cd);
-                    else
+                    } else {
+                        eventName = "open_others_object_"+cd.type;
                         LoadOthersWork(id);
+                    }
                     break;
             }
-           
+
+            Firebase.Analytics.FirebaseAnalytics.LogEvent(
+                eventName,
+                new Parameter("item_id", id)
+            );
         }
 
         public void LoadOthersWork(string id)
