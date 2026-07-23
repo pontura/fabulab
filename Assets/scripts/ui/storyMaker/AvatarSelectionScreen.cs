@@ -1,4 +1,5 @@
 ﻿using BoardItems.BoardData;
+using Firebase.Analytics;
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -54,6 +55,10 @@ namespace UI.MainApp.Home.User
             {
                 case 0:
                     UIManager.Instance.NewCharacter();
+                    FirebaseAnalytics.LogEvent(
+                        "new_character",
+                        new Parameter("origin", "story")
+                    );
                     break;
                 case 1:
                     allCharactersScreen.gameObject.SetActive(true);

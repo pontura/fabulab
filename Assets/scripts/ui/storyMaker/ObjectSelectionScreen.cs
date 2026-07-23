@@ -1,4 +1,5 @@
 ﻿using BoardItems.BoardData;
+using Firebase.Analytics;
 using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
@@ -55,6 +56,10 @@ namespace UI.MainApp.Home.User
             {
                 case 0:
                     UIManager.Instance.NewObject(SObjectData.types.generic);
+                    FirebaseAnalytics.LogEvent(
+                        "new_object_generic",
+                        new Parameter("origin", "story")
+                    );
                     break;
                 case 1:
                     allObjectsScreen.gameObject.SetActive(true);

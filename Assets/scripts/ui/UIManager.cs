@@ -1,6 +1,7 @@
 ﻿using BoardItems;
 using BoardItems.BoardData;
 using BoardItems.Characters;
+using Firebase.Analytics;
 using OnBoarding;
 using System.Collections;
 using System.Collections.Generic;
@@ -146,12 +147,25 @@ namespace UI
         {
             if (id == 1)
                 NewStory(); // TO-DO
-            else if (id == 2)
+            else if (id == 2) {
                 NewCharacter();
-            else if (id == 3)
+                FirebaseAnalytics.LogEvent(
+                    "new_character",
+                    new Parameter("origin", "home")
+                 );
+            } else if (id == 3) {
                 NewObject(SObjectData.types.generic);
-            else if (id == 4)
+                FirebaseAnalytics.LogEvent(
+                    "new_object_generic",
+                    new Parameter("origin", "home")
+                );
+            } else if (id == 4) {
                 NewObject(SObjectData.types.background);
+                FirebaseAnalytics.LogEvent(
+                    "new_object_background",
+                    new Parameter("origin", "home")
+                );
+            }
         }
         public void Albums()
         {
@@ -162,6 +176,8 @@ namespace UI
             boardUI.SetEditingType(editingTypes.NONE);
             Events.ShowScreen(UIManager.screenType.StoryMaker);
             Invoke(nameof(SetNewStoryEditionState), Time.deltaTime * 2);
+
+            FirebaseAnalytics.LogEvent("new_story");
         }
         void SetNewStoryEditionState() {
             StoryMakerEvents.EnableStoryEdition(true);
@@ -177,7 +193,7 @@ namespace UI
             LoadWork(editingTypes.CHARACTER, newCharacterID);
             Data.Instance.charactersData.SetCurrentID("");
             Events.OnPresetReset();
-            Events.ShowScreen(UIManager.screenType.Creation_Character);
+            Events.ShowScreen(UIManager.screenType.Creation_Character);            
         }
         void InitCharacterScreen()
         {

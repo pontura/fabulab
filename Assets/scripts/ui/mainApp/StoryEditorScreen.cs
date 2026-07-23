@@ -1,5 +1,6 @@
 using BoardItems;
 using Common.UI;
+using Firebase.Analytics;
 using System;
 using UI.MainApp.Home.User;
 using UnityEngine;
@@ -344,6 +345,7 @@ namespace UI.MainApp
                 savePanel.SetActive(false);
                 Invoke(nameof(SaveWork), Time.deltaTime * 2);
             }
+            FirebaseAnalytics.LogEvent("story_save_clicked");
         }
         public void Cancel() {
             savePanel.SetActive(false);

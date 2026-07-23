@@ -1,4 +1,5 @@
 ﻿using BoardItems;
+using Firebase.Analytics;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -84,6 +85,10 @@ namespace UI.MainApp.Home.User
             UIManager.Instance.boardUI.SetEditingType(BoardUI.editingTypes.NONE);
             Events.ShowScreen(UIManager.screenType.StoryMaker);
             Invoke(nameof(SetUserStoryEditionState), Time.deltaTime * 2);
+            Firebase.Analytics.FirebaseAnalytics.LogEvent(
+                "story_edit",
+                new Parameter("story_id", iD)
+            );
         }
 
         void SetUserStoryEditionState() {
