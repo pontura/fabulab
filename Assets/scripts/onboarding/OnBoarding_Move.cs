@@ -1,7 +1,4 @@
-using System;
-using BoardItems;
 using UI;
-using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 
 namespace OnBoarding
