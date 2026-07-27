@@ -18,6 +18,7 @@ public class LoginManager : MonoBehaviour
     [SerializeField] GameObject loginBtn, signUpBtn, resetBtn;
     [SerializeField] UI.ToggleButton passToggle;
     public bool isNew;
+    [SerializeField] int registerPopupThresh;
 
     bool isToSyncUserToEmail;
     TMPro.TextMeshProUGUI feedback;
@@ -261,7 +262,8 @@ public class LoginManager : MonoBehaviour
     }
 
     void ShowRegisterPopup() {
-        registerPopup.SetActive(true);
+        if(Data.Instance.scenesData.userFilmsData.Count > registerPopupThresh || Data.Instance.charactersData.userCharacters.Count > registerPopupThresh || Data.Instance.sObjectsData.data.Count > registerPopupThresh)
+            registerPopup.SetActive(true);
     }
 
     public void CloseRegisterPopup() {
