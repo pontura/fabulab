@@ -26,6 +26,7 @@ namespace OnBoarding
         {
             if(!active) return;
             Events.OnStopDrag -= OnStopDrag;
+            scene.SetTools(true);
             Done();
         }
         public override void ShowPanelsBack() {}

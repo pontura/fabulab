@@ -1,3 +1,4 @@
+using BoardItems;
 using UI;
 using UnityEngine;
 
@@ -12,14 +13,19 @@ namespace OnBoarding
         [SerializeField] Animation dragAndDropContainerAnim;
         public override void OnShow()
         {            
-            field.text = "Mové y organizá las piezas a tu gusto";     
+            field.text = "Arrastrá y organizá las piezas a tu gusto";
             characterEdition.gameObject.SetActive(true);
             presetsUI.DragAndDrop();
             characterScrollContent.GetComponent<Animation>().Play("on");
             PresetDragAndDropToggle.gameObject.SetActive(false);
+            Events.OnStopDrag += OnStopDrag;
         }
-         public override void OnHide()
+        private void OnStopDrag(ItemInScene scene, Vector3 vector) {
+            field.text = "Tocá las piezas en el dibujo para modificarlas";
+        }
+        public override void OnHide()
         {
+            Events.OnStopDrag -= OnStopDrag;
             dragAndDropContainerAnim.Play("off");
         }
     }
