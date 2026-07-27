@@ -9,4 +9,6 @@ public class Settings : MonoBehaviour
     public int snapAngle;
     public float snapGride = 0.512f;
     public float snapScale = 0.025f;
+    
+    public CamData[] camDatas;
 }

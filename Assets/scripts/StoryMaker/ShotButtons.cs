@@ -10,7 +10,11 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] Button camBtn;
         [SerializeField] Toggle moveBtn;
         [SerializeField] GameObject marker;
-         [SerializeField] DurationBtn durationBtn;
+        [SerializeField] DurationBtn durationBtn;
+        [SerializeField] ShotSubButtons shotSubButtons;
+        [SerializeField] FilmMakerManagerFabulab filmMakerManagerFabulab;
+
+
         Animation anim;
         bool opened;
         public void SetFirstFrame(bool isFirstFrame)
@@ -37,12 +41,26 @@ namespace Yaguar.StoryMaker.Editor
             anim.Play();
             marker.transform.localPosition = new Vector3(timer_pos, marker.transform.localPosition.y, marker.transform.localPosition.z);
         }
+         public void AddShot()
+        {
+            filmMakerManagerFabulab.New();
+            shotSubButtons.Reset();
+        }
+         public void DeleteShot()
+        {
+            filmMakerManagerFabulab.Delete();
+            shotSubButtons.Reset();
+        }
         public void DurationBtnClicked()
         {
-            Open();
+            shotSubButtons.Init(ShotSubButtons.types.duration);
             durationBtn.Clicked();
             SetInteracions(false);
             durationBtn.GetComponent<Button>().interactable = true;
+        }
+        public void CamsClkicked()
+        {
+            shotSubButtons.Init(ShotSubButtons.types.camera);
         }
         public void Open()
         {
@@ -60,7 +78,7 @@ namespace Yaguar.StoryMaker.Editor
             if(anim == null)
                 anim = GetComponent<Animation>();
             anim.Play("close");
-            
+                        
         }
         void SetInteracions(bool interactable)
         {

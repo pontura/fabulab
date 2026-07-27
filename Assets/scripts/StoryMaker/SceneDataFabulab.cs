@@ -169,6 +169,7 @@ namespace Yaguar.StoryMaker.Editor
     public class SceneDataFabulab : SceneData
     {
         public bool transition;
+        public CamData camData;
         public float duration;
         public string lightingId;
         public int lightingValue;

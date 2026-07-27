@@ -13,6 +13,7 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] Toggle toggleTransition;
         [SerializeField] GameObject durationBtn;
         [SerializeField] VideoPlayerFabulab videoPlayerFabulab;
+        
 
         protected override void Awake() {
             base.Awake();
@@ -24,10 +25,6 @@ namespace Yaguar.StoryMaker.Editor
             base.OnDestroy();
             StoryMakerEvents.EnableStoryEdition -= EnableStoryEdition;
             StoryMakerEvents.OnTimelineSetJump -= OnTimelineSetJump;
-        }
-        public void CameraClicked()
-        {
-            print("Cam clicked");
         }
         void EnableStoryEdition(bool enable) {
             isEditing = enable;
@@ -234,6 +231,11 @@ namespace Yaguar.StoryMaker.Editor
         public void OnTransitionChange() {
             if(ScenesManagerFabulab.Instance!=null && ScenesManagerFabulab.Instance.GetActiveScene()!=null)
                 ScenesManagerFabulab.Instance.GetActiveScene().transition = toggleTransition.isOn;
+        }
+        public void SetCam(CamData camData)
+        {
+            if(ScenesManagerFabulab.Instance!=null && ScenesManagerFabulab.Instance.GetActiveScene()!=null)
+                ScenesManagerFabulab.Instance.GetActiveScene().camData = camData;
         }
     }
 }
