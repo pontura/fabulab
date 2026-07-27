@@ -2,6 +2,7 @@
 using BoardItems;
 using UI;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -60,6 +61,8 @@ namespace Yaguar.StoryMaker.Editor
         }
         public void OnClicked(int id)
         {
+            Events.OnPopupTopSignalText(Data.Instance.settings.camDatas[id].name);
+
             this.id = id;
             CamData camData = Data.Instance.settings.camDatas[id];            
             StoryMakerEvents.SetCamDataEdition(camData.pos, camData.zoom);

@@ -6,4 +6,5 @@ public class CamData
 {
     public Vector2 pos;
     public int zoom;
+    public string name;
 }
