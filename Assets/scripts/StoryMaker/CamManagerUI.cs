@@ -1,4 +1,5 @@
 
+using BoardItems;
 using UI;
 using UnityEngine;
 
@@ -26,10 +27,8 @@ namespace Yaguar.StoryMaker.Editor
         }
         public void OpenCam()
         {
-            //reset zoom:
-            CamData camData = Data.Instance.settings.camDatas[0];    
-            
-            print("open " + camData.zoom);        
+            CamData camData = ScenesManagerFabulab.Instance.Scenes[ScenesManagerFabulab.Instance.currentSceneId-1].camData;
+              
             StoryMakerEvents.SetCamData(camData.pos, camData.zoom);
             
             Open(camData);
@@ -43,6 +42,8 @@ namespace Yaguar.StoryMaker.Editor
 
             foreach(ToggleButton tb in cams)
                 tb.Force(false);
+                
+            print("open id:" +id  + " zoom: " +  camData.zoom);    
 
             cams[id].Force(true);
         }
@@ -52,7 +53,7 @@ namespace Yaguar.StoryMaker.Editor
             foreach(CamData cd in Data.Instance.settings.camDatas)
             {
                 if(cd.zoom == camData.zoom)                    
-                    return id;
+                    return _id;
                 _id++;
             }
             return 0;

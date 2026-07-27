@@ -1,3 +1,4 @@
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
@@ -16,6 +17,8 @@ namespace Yaguar.StoryMaker.Editor
         }
         private void SetCamData(Vector2 pos, int zoom)
         {
+            if(zoom == 0)
+                zoom = 60;
             cam.orthographicSize = zoom;
             print("SetCamData "+pos + "  zoom : " +zoom );
         }

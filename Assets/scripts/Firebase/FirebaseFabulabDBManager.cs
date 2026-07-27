@@ -726,12 +726,13 @@ namespace Yaguar.StoryMaker.DB
                     try {
                         var children = task.Result.Children.OrderBy(c => int.Parse(c.Key)); //Ordena los key evitando el orden lexigráfico (10 antes que 2)
                         List<SceneDataFabulab> scene = new List<SceneDataFabulab>();
+                        
                         foreach (var child in children) {
                             //Debug.Log(child.Key + " => " + child.Child("name").Value);
                             //SceneDataFabulab sdf = JsonUtility.FromJson<SceneDataFabulab>(child.GetRawJsonValue());
                             SceneDataFabulab sdf = new SceneDataFabulab();
                             sdf.bgID = child.Child("bgID").Value as string;
-
+                            sdf.camData = new CamData();
                             if(child.HasChild("transition"))
                                 sdf.transition = bool.Parse(child.Child("transition").Value as string);
                             if (child.HasChild("duration"))
@@ -742,7 +743,13 @@ namespace Yaguar.StoryMaker.DB
                                 sdf.lightingId = child.Child("lightingId").Value as string;
                             if (child.HasChild("lightingValue"))
                                 sdf.lightingValue = int.Parse(child.Child("lightingValue").Value as string);
-
+                            if (child.HasChild("camData_pos_x"))
+                                sdf.camData.pos.x = float.Parse(child.Child("camData_pos_x").Value as string,System.Globalization.CultureInfo.InvariantCulture);
+                            if (child.HasChild("camData_pos_y"))
+                                sdf.camData.pos.y = float.Parse(child.Child("camData_pos_y").Value as string,System.Globalization.CultureInfo.InvariantCulture);
+                            if (child.HasChild("camData_zoom"))
+                                sdf.camData.zoom = int.Parse(child.Child("camData_zoom").Value as string);
+                                
                             List <SceneElement> elements = new List<SceneElement>();
                             foreach (var se in child.Child("scenesElements").Children) {
                                 SceneElement sceneElement = null;

@@ -22,6 +22,8 @@ namespace Yaguar.StoryMaker.Editor
         {
             print("OnTimelinePlay " +isPlay);
             gameObject.SetActive(!isPlay);
+            if(!isPlay)                
+                StoryMakerEvents.SetCamData(Data.Instance.settings.camDatas[0].pos, Data.Instance.settings.camDatas[0].zoom);// resetea el zoom en el edit:
         }
 
         private void SetCamDataEdition(Vector2 pos, int zoom)
