@@ -60,6 +60,8 @@ namespace Yaguar.StoryMaker.Editor
         }
         public void CamsClkicked()
         {
+            SetInteracions(false);
+            camBtn.GetComponent<Button>().interactable = true;
             shotSubButtons.Init(ShotSubButtons.types.camera);
         }
         public void Open()
@@ -78,7 +80,7 @@ namespace Yaguar.StoryMaker.Editor
             if(anim == null)
                 anim = GetComponent<Animation>();
             anim.Play("close");
-                        
+
         }
         void SetInteracions(bool interactable)
         {

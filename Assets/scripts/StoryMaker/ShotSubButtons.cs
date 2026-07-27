@@ -26,8 +26,7 @@ namespace Yaguar.StoryMaker.Editor
             {
                 case types.camera:
                 camManagerUI.gameObject.SetActive(true);
-                CamData camData = Data.Instance.settings.camDatas[0];
-                camManagerUI.Open(camData);
+                camManagerUI.OpenCam();
                 break;
                 case types.duration:
                 durations.gameObject.SetActive(true);

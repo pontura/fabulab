@@ -183,6 +183,7 @@ namespace Yaguar.StoryMaker.Editor
                 lightingId = bglp.Id;
                 lightingValue = bglp.DefaultStep;
                 transition = true;
+                camData = Data.Instance.settings.camDatas[0];
             }
         }
 

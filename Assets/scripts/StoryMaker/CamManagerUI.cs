@@ -8,8 +8,8 @@ namespace Yaguar.StoryMaker.Editor
     {
         public ToggleButton[] cams;
         public ShotSubButtons subPanel;
-        public GameObject camPanel;
-        public GameObject[] camPanelCams;
+        CamData camData;
+        int id;
 
         public void Init()
         {
@@ -24,25 +24,22 @@ namespace Yaguar.StoryMaker.Editor
                 id++;
             }
         }
-        void OnDisable()
+        public void OpenCam()
         {
-            camPanel.SetActive(false);     
+            //reset zoom:
+            CamData camData = Data.Instance.settings.camDatas[0];    
+            
+            print("open " + camData.zoom);        
+            StoryMakerEvents.SetCamData(camData.pos, camData.zoom);
+            
+            Open(camData);
         }
-        int id;
         public void Open(CamData camData)
         {
-            print("open " + camData.zoom);
-
+            this.camData = camData;
             gameObject.SetActive(true);
-            camPanel.SetActive(true);         
-            camPanel.gameObject.SetActive(true);
           
             id = SetID(camData);
-
-            foreach(GameObject cd in camPanelCams)
-                cd.SetActive(false);
-
-            camPanelCams[id].gameObject.SetActive(true);
 
             foreach(ToggleButton tb in cams)
                 tb.Force(false);
@@ -63,14 +60,16 @@ namespace Yaguar.StoryMaker.Editor
         public void OnClicked(int id)
         {
             this.id = id;
-            Open(Data.Instance.settings.camDatas[id]);
+            CamData camData = Data.Instance.settings.camDatas[id];            
+            StoryMakerEvents.SetCamDataEdition(camData.pos, camData.zoom);
+            ScenesManagerFabulab.Instance.GetActiveScene().camData = camData;
+            Open(camData);
         }
         public void Close()
         {        
             subPanel.Reset();
             gameObject.SetActive(false);
             subPanel.Close();
-
         }
     }
 }

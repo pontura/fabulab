@@ -134,6 +134,22 @@ namespace Yaguar.StoryMaker.Editor
                 timeline.JumpTo(ScenesManagerFabulab.Instance.currentSceneId);
             }
         }
+        public void PrevAll()
+        {
+            Stop();
+            StoryMakerEvents.OnSaveScene();
+            ScenesManagerFabulab.Instance.currentSceneId = 1;
+            SetScene(1);
+            timeline.JumpTo(ScenesManagerFabulab.Instance.currentSceneId);
+        }
+        public void NextAll()
+        {
+            Stop();
+            StoryMakerEvents.OnSaveScene();
+            ScenesManagerFabulab.Instance.currentSceneId = ScenesManagerFabulab.Instance.Scenes.Count;
+            SetScene(ScenesManagerFabulab.Instance.currentSceneId );
+            timeline.JumpTo(ScenesManagerFabulab.Instance.currentSceneId);
+        }
         public override void Prev()
         {
             Stop();
@@ -173,9 +189,9 @@ namespace Yaguar.StoryMaker.Editor
         {
             int total = ScenesManagerFabulab.Instance.Scenes.Count;
             int nextSceneid = ScenesManagerFabulab.Instance.currentSceneId + 1;
-
-            if (ScenesManagerFabulab.Instance.GetActiveScene() != null)
-                timeline.keyframe_duration = Mathf.Max(ScenesManagerFabulab.Instance.GetActiveScene().duration, 0.5f);
+            SceneDataFabulab aciveScene = ScenesManagerFabulab.Instance.GetActiveScene() ;
+            if (aciveScene!= null)
+                timeline.keyframe_duration = Mathf.Max(aciveScene.duration, 0.5f);
 
             if (State == states.PLAYING && nextSceneid <= total)
             {
@@ -200,8 +216,10 @@ namespace Yaguar.StoryMaker.Editor
             SetButtons();
 
             if (ScenesManagerFabulab.Instance.GetActiveScene() != null) {
-                toggleTransition.isOn = ScenesManagerFabulab.Instance.GetActiveScene().transition;
+                toggleTransition.isOn = aciveScene.transition;
                 StoryMakerEvents.SetBackgroundLights();
+                if (State == states.PLAYING)
+                    StoryMakerEvents.SetCamData(aciveScene.camData.pos, aciveScene.camData.zoom);
             }
 
             ScenesManagerFabulab.Instance.SetSceneObjectsIntoScenenario(lastSceneId);
@@ -231,11 +249,6 @@ namespace Yaguar.StoryMaker.Editor
         public void OnTransitionChange() {
             if(ScenesManagerFabulab.Instance!=null && ScenesManagerFabulab.Instance.GetActiveScene()!=null)
                 ScenesManagerFabulab.Instance.GetActiveScene().transition = toggleTransition.isOn;
-        }
-        public void SetCam(CamData camData)
-        {
-            if(ScenesManagerFabulab.Instance!=null && ScenesManagerFabulab.Instance.GetActiveScene()!=null)
-                ScenesManagerFabulab.Instance.GetActiveScene().camData = camData;
         }
     }
 }

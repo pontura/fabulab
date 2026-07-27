@@ -149,6 +149,7 @@ namespace Yaguar.StoryMaker.Editor
         public override void OnJumpDone()
         {
             base.OnJumpDone();
+            SetCams();
             print("ScenesManagerFabulab.Instance.currentSceneId: " + ScenesManagerFabulab.Instance.currentSceneId);
             if(ScenesManagerFabulab.Instance.currentSceneId<2) { ghostImage.Show(false); return; }
             int prevSceneID = ScenesManagerFabulab.Instance.currentSceneId-2;
@@ -161,7 +162,11 @@ namespace Yaguar.StoryMaker.Editor
                 ghostImage.Show(false);
             }
         }
-        
+        void SetCams()
+        {
+            CamData cd = ScenesManagerFabulab.Instance.Scenes[ScenesManagerFabulab.Instance.currentSceneId-1].camData;
+            StoryMakerEvents.SetCamDataEdition(cd.pos,cd.zoom);
+        }
         public override void OnMarkerUpdated(float timer_pos)
         {            
             if(filmMakerUI.isEditing)
