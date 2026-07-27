@@ -19,6 +19,7 @@ public class LoginManager : MonoBehaviour
     [SerializeField] UI.ToggleButton passToggle;
     public bool isNew;
     [SerializeField] int registerPopupThresh;
+    [SerializeField] UnityEngine.UI.Button comenzarBtn;
 
     bool isToSyncUserToEmail;
     TMPro.TextMeshProUGUI feedback;
@@ -65,6 +66,7 @@ public class LoginManager : MonoBehaviour
     {
         ResetRegisterFields();
         introContainer.SetActive(true);
+        comenzarBtn.interactable = true;
     }
 
     void OnLogin(bool succes) {
@@ -81,8 +83,10 @@ public class LoginManager : MonoBehaviour
         if (succes) {
             feedback.text = "Usuario registrado correctamente";
             Invoke(nameof(OnLogged), 1);
-        } else
+        } else {
             feedback.text = "Ocurrió un error al registrar el usuario, intentalo nuevamente más tarde";
+            comenzarBtn.interactable = true;
+        }
     }
 
     void OnResetPassword(bool succes) {
@@ -141,6 +145,7 @@ public class LoginManager : MonoBehaviour
     }
 
     public void SignInAnonymously() {
+        comenzarBtn.interactable = false;
         feedback = introFeedback;
         FirebaseAuthManager.Instance.SignInAnonymously();
     }
