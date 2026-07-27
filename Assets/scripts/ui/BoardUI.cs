@@ -187,12 +187,12 @@ namespace UI
 
         public void LoadWork(string id)
         {
-            items.DeleteAll();
-            string eventName = "";            
+            items.DeleteAll();            
             switch (editingType) {
                 case editingTypes.CHARACTER:
                     Data.Instance.charactersData.SetCurrentID(id);
                     CharacterData ch = Data.Instance.charactersData.GetUserCharacter(id);
+                    string eventName = "";
                     if (ch != null) {
                         eventName = "open_character";
                         OpenWork(ch);
@@ -200,23 +200,26 @@ namespace UI
                         eventName = "open_others_character";
                         LoadOthersWork(id);
                     }
+                    Firebase.Analytics.FirebaseAnalytics.LogEvent(
+                        eventName,
+                        new Parameter("item_id", id)
+                    );
                     break;
                 default:
                     SObjectData cd = Data.Instance.sObjectsData.SetCurrentID(id);
                     if (cd != null) {
-                        eventName = "open_object_"+cd.type;
                         OpenWork(cd);
-                    } else {
-                        eventName = "open_others_object_"+cd.type;
+                        Firebase.Analytics.FirebaseAnalytics.LogEvent(
+                            "open_object_" + cd.type,
+                            new Parameter("item_id", id)
+                        );
+                    } else {                        
                         LoadOthersWork(id);
                     }
                     break;
             }
 
-            Firebase.Analytics.FirebaseAnalytics.LogEvent(
-                eventName,
-                new Parameter("item_id", id)
-            );
+            
         }
 
         public void LoadOthersWork(string id)

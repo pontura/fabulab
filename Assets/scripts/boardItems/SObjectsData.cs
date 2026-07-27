@@ -1,4 +1,5 @@
 ﻿using BoardItems.BoardData;
+using Firebase.Analytics;
 using Firebase.Database;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using UI;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
 using Yaguar.StoryMaker.Editor;
@@ -501,6 +503,10 @@ namespace BoardItems
             if (chd != null)
             {
                 OnDone(chd);
+                Firebase.Analytics.FirebaseAnalytics.LogEvent(
+                    "open_others_object_" + chd.type,
+                    new Parameter("item_id", id)
+                );
             }
             else
             {
@@ -521,6 +527,10 @@ namespace BoardItems
                         {
                             Debug.Log("& othersData != null");
                             OnDone(chD);
+                            Firebase.Analytics.FirebaseAnalytics.LogEvent(
+                                "open_others_object_" + chD.type,
+                                new Parameter("item_id", id)
+                            );
                             return;
                         }
                         chD = new SObjectData();
@@ -530,6 +540,10 @@ namespace BoardItems
                         chD.type = chmd.type;
                         othersData.Add(chD);
                         OnDone(chD);
+                        Firebase.Analytics.FirebaseAnalytics.LogEvent(
+                            "open_others_object_" + chD.type,
+                            new Parameter("item_id", id)
+                        );
                     }
                     else
                     {
