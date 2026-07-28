@@ -131,7 +131,7 @@ namespace Yaguar.StoryMaker.Editor
                 json += "\"" + nameof(SceneDataFabulab.lightingId) + "\":\"" + scenes[i].lightingId + "\",";
                 json += "\"" + nameof(SceneDataFabulab.lightingValue) + "\":\"" + scenes[i].lightingValue + "\",";
                 
-                if(scenes[i].camData.zoom != 0)
+                if(scenes[i].camData.HasData())
                 {                    
                     json += "\"" + "camData_zoom" + "\":\"" + scenes[i].camData.zoom + "\",";
                     json += "\"" + "camData_pos_x" + "\":\"" + scenes[i].camData.pos.x + "\",";
