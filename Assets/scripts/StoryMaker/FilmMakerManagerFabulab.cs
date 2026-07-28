@@ -138,16 +138,18 @@ namespace Yaguar.StoryMaker.Editor
         {
             Stop();
             StoryMakerEvents.OnSaveScene();
+            int lastSceneId = ScenesManagerFabulab.Instance.currentSceneId;
             ScenesManagerFabulab.Instance.currentSceneId = 1;
-            SetScene(1);
+            SetScene(lastSceneId);
             timeline.JumpTo(ScenesManagerFabulab.Instance.currentSceneId);
         }
         public void NextAll()
         {
             Stop();
             StoryMakerEvents.OnSaveScene();
+            int lastSceneId = ScenesManagerFabulab.Instance.currentSceneId;
             ScenesManagerFabulab.Instance.currentSceneId = ScenesManagerFabulab.Instance.Scenes.Count;
-            SetScene(ScenesManagerFabulab.Instance.currentSceneId );
+            SetScene(lastSceneId);
             timeline.JumpTo(ScenesManagerFabulab.Instance.currentSceneId);
         }
         public override void Prev()
