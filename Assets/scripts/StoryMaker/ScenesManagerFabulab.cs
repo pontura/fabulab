@@ -59,7 +59,10 @@ namespace Yaguar.StoryMaker.Editor
             if (currentSceneId - 1 > 0) {
                 activeScene.lightingId = scenes[currentSceneId - 2].lightingId;
                 activeScene.lightingValue = scenes[currentSceneId - 2].lightingValue;
-                activeScene.camData = scenes[currentSceneId - 2].camData;
+                activeScene.camData = new CamData();
+                activeScene.camData.zoom = scenes[currentSceneId - 2].camData.zoom;
+                activeScene.camData.pos = scenes[currentSceneId - 2].camData.pos;
+                activeScene.camData.tween = scenes[currentSceneId - 2].camData.tween;
             }
         }
 
@@ -136,7 +139,7 @@ namespace Yaguar.StoryMaker.Editor
                     json += "\"" + "camData_zoom" + "\":\"" + scenes[i].camData.zoom + "\",";
                     json += "\"" + "camData_pos_x" + "\":\"" + scenes[i].camData.pos.x + "\",";
                     json += "\"" + "camData_pos_y" + "\":\"" + scenes[i].camData.pos.y + "\",";
-                    json += "\"" + "camData_pos_tween" + "\":\"" + scenes[i].camData.tween + "\",";
+                    json += "\"" + "camData_tween" + "\":\"" + scenes[i].camData.tween + "\",";
                 }
 
                 List<SceneElement> elements = scenes[i].GetScenesElements();

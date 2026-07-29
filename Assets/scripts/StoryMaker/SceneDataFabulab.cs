@@ -183,7 +183,7 @@ namespace Yaguar.StoryMaker.Editor
                 lightingId = bglp.Id;
                 lightingValue = bglp.DefaultStep;
                 transition = true;
-                camData = Data.Instance.settings.camDatas[0];
+                camData = new CamData();
             }
         }
 
@@ -197,7 +197,9 @@ namespace Yaguar.StoryMaker.Editor
             nuevo.duration = duration;
             nuevo.lightingId = lightingId;
             nuevo.lightingValue = lightingValue;
-            nuevo.camData = camData;
+            nuevo.camData = new CamData();
+            nuevo.camData.pos = camData.pos;
+            nuevo.camData.zoom = camData.zoom;
             return nuevo;
         }
 
@@ -214,12 +216,12 @@ namespace Yaguar.StoryMaker.Editor
 
             SceneElement sceneElement = new SceneElement();
             if (soData is SOAvatarFabulabData sOAvatar) {
-                Debug.Log("$ is SOAvatarFabulabData");
+              //  Debug.Log("$ is SOAvatarFabulabData");
                 sceneElement = new SceneElementAvatar();
                 sceneElement.type = SceneElementType.AVATAR;
                 (sceneElement as SceneElementAvatar).anim = sOAvatar.anim;
                 (sceneElement as SceneElementAvatar).emoji = sOAvatar.emoji;
-                Debug.Log("$ anim: " + sOAvatar.anim + " emoji:" + sOAvatar.emoji);
+              //  Debug.Log("$ anim: " + sOAvatar.anim + " emoji:" + sOAvatar.emoji);
             } else if (soData is SOWordBalloonData soWBD) {
                 sceneElement = new SceneElementTextInput();
                 sceneElement.type = SceneElementType.WORD_BALLOON;

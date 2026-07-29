@@ -1,5 +1,6 @@
 using UI;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -8,6 +9,7 @@ namespace Yaguar.StoryMaker.Editor
         public ToggleButton[] cams;
         public ShotSubButtons subPanel;
         [SerializeField] CamerasEditorUI camerasEditorUI;
+        [SerializeField] Toggle tweebBtn;
         CamData camData;
         int id;
 
@@ -30,24 +32,26 @@ namespace Yaguar.StoryMaker.Editor
               
             StoryMakerEvents.SetCamDataEdition(camData.pos, camData.zoom);
             
-            Open(camData);
-        }
-        public void Open(CamData camData)
-        {
-            this.camData = camData;
             gameObject.SetActive(true);
           
-            id = SetID(camData);
+            id = GetID(camData);
+            tweebBtn.SetIsOnWithoutNotify(camData.tween);
+            tweebBtn.isOn = camData.tween;
 
+            ZoomSelection();
+         
+            StoryMakerEvents.ActivateCamDataEditionDrag(true);
+        }
+        void ZoomSelection()
+        {
             foreach(ToggleButton tb in cams)
                 tb.Force(false);
                 
             print("open id:" +id  + " zoom: " +  camData.zoom);    
 
             cams[id].Force(true);
-            StoryMakerEvents.ActivateCamDataEditionDrag(true);
         }
-        int SetID(CamData camData)
+        int GetID(CamData camData)
         {              
             int _id = 0;
             foreach(CamData cd in Data.Instance.settings.camDatas)
@@ -60,13 +64,13 @@ namespace Yaguar.StoryMaker.Editor
         }
         public void OnClicked(int id)
         {
-            Events.OnPopupTopSignalText(Data.Instance.settings.camDatas[id].name);
+            CamData setttingsCamData = Data.Instance.settings.camDatas[id];  
+            Events.OnPopupTopSignalText(setttingsCamData.name);
 
-            this.id = id;
-            CamData setttingsCamData = Data.Instance.settings.camDatas[id];            
-            StoryMakerEvents.SetCamDataEdition(setttingsCamData.pos, setttingsCamData.zoom);
-            ScenesManagerFabulab.Instance.GetActiveScene().camData = setttingsCamData;
-            Open(camData);
+            this.id = id;       
+            camData.zoom = setttingsCamData.zoom;   
+            StoryMakerEvents.SetCamDataEdition(camData.pos, camData.zoom);
+            ZoomSelection();
         }
         public void Close()
         {        
@@ -74,6 +78,7 @@ namespace Yaguar.StoryMaker.Editor
             gameObject.SetActive(false);
             subPanel.Close();
             StoryMakerEvents.ActivateCamDataEditionDrag(false);
+            camData.tween = tweebBtn.isOn;
             if(camData.pos != camerasEditorUI.normalizedPos)
             {
                 camData.pos = camerasEditorUI.normalizedPos;

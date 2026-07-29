@@ -243,7 +243,7 @@ namespace Yaguar.StoryMaker.Editor
             else{
                 CamData currentScene = ScenesManagerFabulab.Instance.Scenes[ScenesManagerFabulab.Instance.currentSceneId-1].camData;
                 CamData nextScene = ScenesManagerFabulab.Instance.Scenes[ScenesManagerFabulab.Instance.currentSceneId].camData;
-                if(currentScene.pos == nextScene.pos && currentScene.zoom == nextScene.zoom)
+                if(!currentScene.tween || (currentScene.pos == nextScene.pos && currentScene.zoom == nextScene.zoom))
                 {
                     //no hace nada:
                 } else{

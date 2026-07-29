@@ -11,11 +11,9 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] GameObject editingBG;
         [SerializeField] GameObject arrows;
 
-        CamData activeCamData;
         GameObject zoomGO;
         float limitZoom;
         Vector2 intialMousePos;
-        bool dragging = false;
         public Vector2 normalizedPos;
 
         void Start()
@@ -35,7 +33,6 @@ namespace Yaguar.StoryMaker.Editor
         public void Reset()
         {
             normalizedPos = Vector2.zero;
-            dragging = false;
         }
         private void ActivateCamDataEditionDrag(bool canBeDrag)
         {
@@ -69,7 +66,6 @@ namespace Yaguar.StoryMaker.Editor
                 if(Data.Instance.settings.camDatas[id].zoom == zoom)
                 {
                     zoomGO = go;                    
-                    activeCamData = Data.Instance.settings.camDatas[id];
                     limitZoom = Data.Instance.settings.limitZooms[id];
                     go.SetActive(true);
                 }
@@ -93,7 +89,6 @@ namespace Yaguar.StoryMaker.Editor
 
                     if(intialMousePos != newPos)
                     {
-                        dragging = true;
                         UpdatePosition(newPos-intialMousePos);
                         intialMousePos = newPos;
                     }
@@ -101,7 +96,6 @@ namespace Yaguar.StoryMaker.Editor
                 else if(Input.GetMouseButtonUp(0))
                 {
                     intialMousePos = Vector2.zero;
-                    dragging = false;
                 }
             }
         }
@@ -121,7 +115,6 @@ namespace Yaguar.StoryMaker.Editor
             rt.anchoredPosition = pos;
             
             normalizedPos = new Vector2(pos.x/limitZoom, pos.y/limitZoom);
-            print ("normalizedPos" + normalizedPos);
         }
     }
 }

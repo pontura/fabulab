@@ -749,6 +749,10 @@ namespace Yaguar.StoryMaker.DB
                                 sdf.camData.pos.y = float.Parse(child.Child("camData_pos_y").Value as string,System.Globalization.CultureInfo.InvariantCulture);
                             if (child.HasChild("camData_zoom"))
                                 sdf.camData.zoom = int.Parse(child.Child("camData_zoom").Value as string);
+                            if (child.HasChild("camData_tween"))
+                            {
+                                sdf.camData.tween = bool.Parse(child.Child("camData_tween").Value as string);                                
+                            }
                                 
                             List <SceneElement> elements = new List<SceneElement>();
                             foreach (var se in child.Child("scenesElements").Children) {
