@@ -68,6 +68,8 @@ namespace UI.MainApp
             itemData.scale = savedIOData != null ? savedIOData.scale : Vector3.one;
             itemData.rotation = savedIOData != null ? savedIOData.rotation : Vector3.zero;
 
+            itemData.flipX = savedIOData != null ? savedIOData.flipX : false;
+
             itemData.soID = soID;
             itemData.part = BoardItems.Characters.CharacterPartsHelper.parts.BODY;
             ItemInScene iInScene = gameObject.AddComponent<ItemInScene>();

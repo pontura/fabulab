@@ -40,7 +40,8 @@ namespace BoardItems.UI
                 if (item != null && item.IsBeingUse())
                 {
                     item.transform.SetParent(items.container.transform);
-                    item.data.scale = item.transform.lossyScale;
+                    item.data.scale = new Vector3(Mathf.Abs(item.transform.lossyScale.x), item.transform.lossyScale.y, item.transform.lossyScale.z);
+                    //item.data.scale = item.transform.lossyScale;
                     item.data.position = item.transform.localPosition;
                 }
             }

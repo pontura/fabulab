@@ -1,5 +1,4 @@
 ﻿using BoardItems.Characters;
-using BoardItems.SceneObjects;
 using System;
 using UI.MainApp;
 using UnityEngine;
@@ -11,6 +10,7 @@ namespace BoardItems
     {
         public CharacterPartsHelper.parts part;
         public int galleryID;
+        public bool flipX;
         public Vector3 rotation;
         public Vector3 position;
         public Vector3 scale;
@@ -47,7 +47,8 @@ namespace BoardItems
         {
             this.position = transform.localPosition;
             this.rotation = transform.localEulerAngles;
-            this.scale = transform.localScale;
+            //this.scale = transform.localScale;
+            this.scale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
             originalScale = scale;
         }
         public void ResetScale()
@@ -69,7 +70,10 @@ namespace BoardItems
         {
             transform.localPosition = position;
             transform.localEulerAngles = rotation;
-            transform.localScale = scale;
+            if (flipX)
+                transform.localScale = new Vector3(scale.x * -1, scale.y, scale.z);
+            else
+                transform.localScale = scale;
         }
         public void ClonateFrom(ItemData itemDataOriginal)
         {
@@ -78,6 +82,7 @@ namespace BoardItems
             rotation = itemDataOriginal.rotation;
             position = itemDataOriginal.position;
             scale = itemDataOriginal.scale;
+            flipX = itemDataOriginal.flipX;
             id = itemDataOriginal.id;
             paletteName = itemDataOriginal.paletteName;
             colorName = itemDataOriginal.colorName;

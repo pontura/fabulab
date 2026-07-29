@@ -10,6 +10,7 @@ namespace BoardItems.BoardData
         public int galleryID;
         public int part;
         public int id;
+        public bool flipX;
         public Vector3 position;
         public Vector3 rotation;
         public Vector3 scale;
@@ -21,9 +22,11 @@ namespace BoardItems.BoardData
             sid.galleryID = galleryID;
             sid.id = id;
             sid.part = part;
+            sid.flipX = flipX;
             sid.position = new V3(position);
             sid.rotation = new V3(rotation);
             sid.scale = new V3(scale);
+            sid.scale.x = Mathf.Abs(scale.x);
             sid.anim = anim;
             sid.color = color;
             sid.soID = soID;
@@ -34,6 +37,7 @@ namespace BoardItems.BoardData
             id = serverData.id;
             galleryID = serverData.galleryID;
             part = serverData.part;
+            flipX = serverData.flipX;
             position = new Vector3(serverData.position.x, serverData.position.y, serverData.position.z);
             rotation = new Vector3(serverData.rotation.x, serverData.rotation.y, serverData.rotation.z);
             scale = new Vector3(serverData.scale.x, serverData.scale.y, serverData.scale.z);

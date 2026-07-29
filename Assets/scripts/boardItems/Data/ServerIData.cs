@@ -10,6 +10,7 @@ namespace BoardItems.BoardData
         public int id;
         public string soID;
 
+        public bool flipX;
         public V3 position;
         public V3 rotation;
         public V3 scale;

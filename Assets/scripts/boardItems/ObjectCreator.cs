@@ -33,6 +33,7 @@ namespace BoardItems
             d.position = itemData.gameObject.transform.position;
             d.rotation = itemData.gameObject.transform.localEulerAngles;
             d.scale = itemData.gameObject.transform.localScale;
+            d.flipX = itemData.flipX;
             d.anim = itemData.anim;
             d.color = itemData.colorName;
             d.id = itemData.id;

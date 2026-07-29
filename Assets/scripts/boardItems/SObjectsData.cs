@@ -151,6 +151,7 @@ namespace BoardItems
                     sd.position = iInScene.data.position;
                     sd.rotation = iInScene.data.rotation;
                     sd.scale = iInScene.data.scale;
+                    sd.flipX = iInScene.data.flipX;
                     sd.anim = iInScene.data.anim;
                     sd.color = iInScene.data.colorName;
                     wd.items.Add(sd);

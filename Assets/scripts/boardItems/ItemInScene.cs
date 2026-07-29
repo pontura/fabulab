@@ -63,6 +63,14 @@ namespace BoardItems
             //AudioManager.Instance.sfxManager.SetPitch((newAngle % 360) * 0.0056f);
         }
 
+        public void FlipX() {
+            data.flipX = !data.flipX;
+            if (data.flipX)
+                transform.localScale = new Vector3(data.scale.x * -1, data.scale.y, data.scale.z);
+            else
+                transform.localScale = new Vector3(data.scale.x, data.scale.y, data.scale.z);
+        }
+
         public void ScaleSetValue(float v) {
             print("ScaleSetValue " + v + transform.gameObject.name);
             float nenewValue = Mathf.Min(transform.localScale.x + (v / 100), Data.Instance.settings.maxScale);
@@ -79,7 +87,10 @@ namespace BoardItems
 #endif
 
             data.scale = new Vector3(nenewValue, nenewValue, 1);
-            transform.localScale = data.scale;
+            if (data.flipX)
+                transform.localScale = new Vector3(data.scale.x * -1, data.scale.y, data.scale.z);
+            else
+                transform.localScale = data.scale;
             // AudioManager.Instance.sfxManager.SetPitch(Data.Instance.settings.maxScale - Mathf.Abs(nenewValue));
         }
         float timer;

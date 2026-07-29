@@ -6,9 +6,6 @@ using System.Collections.Generic;
 using UI;
 using UI.MainApp;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
-using Yaguar.StoryMaker.Editor;
-using static UnityEngine.GraphicsBuffer;
 
 namespace BoardItems
 {
@@ -315,7 +312,7 @@ namespace BoardItems
                 SetItemInScene(item.data.BoardItemManager, item, item.data.part);
                 item.data.position = item.transform.localPosition;
                 item.data.rotation = item.transform.localEulerAngles;
-                item.data.scale = item.transform.localScale;
+                item.data.scale = new Vector3(Mathf.Abs(item.transform.localScale.x), item.transform.localScale.y, item.transform.localScale.z);
 
                 item.data.SetTransformByData();
 
@@ -367,8 +364,8 @@ namespace BoardItems
 
             mirror.data.position = item.transform.localPosition;
             mirror.data.rotation = item.transform.localEulerAngles;
-            mirror.data.scale = item.transform.localScale;
-
+            mirror.data.scale = new Vector3(Mathf.Abs(item.transform.localScale.x), item.transform.localScale.y, item.transform.localScale.z);
+            mirror.data.flipX = item.data.flipX;
         }
         void AddMirror(ItemInScene item)
         {
@@ -416,8 +413,8 @@ namespace BoardItems
             newItem.id = itemSelected.data.id;
             newItem.position = pos;
             newItem.rotation = itemSelected.data.rotation;
-
             newItem.scale = itemSelected.data.scale;
+            newItem.flipX = itemSelected.data.flipX;
             newItem.anim = itemSelected.data.anim;
             itemInScene.data = newItem;
 
@@ -461,8 +458,11 @@ namespace BoardItems
         {
             itemSelected.data.rotation = Vector3.zero;
             itemSelected.transform.localEulerAngles = Vector3.zero;
-            itemSelected.data.ResetScale();
-            itemSelected.transform.localScale = itemSelected.data.scale;
+            itemSelected.data.ResetScale();            
+            if(itemSelected.data.flipX)
+                itemSelected.transform.localScale = new Vector3(itemSelected.data.scale.x*-1, itemSelected.data.scale.y, itemSelected.data.scale.z);
+            else
+                itemSelected.transform.localScale = itemSelected.data.scale;
             print("scale " + itemSelected.data.scale);
             FinishEditingItem(itemSelected);
         }
@@ -504,7 +504,10 @@ namespace BoardItems
         public void ScaleSnaped(float scale)
         {
             itemSelected.data.scale = new Vector3(scale, scale, scale);
-            itemSelected.transform.localScale = itemSelected.data.scale;
+            if (itemSelected.data.flipX)
+                itemSelected.transform.localScale = new Vector3(itemSelected.data.scale.x * -1, itemSelected.data.scale.y, itemSelected.data.scale.z);
+            else
+                itemSelected.transform.localScale = itemSelected.data.scale;
             FinishEditingItem(itemSelected);
         }
         public void Rotate(float _x)
@@ -523,6 +526,11 @@ namespace BoardItems
             print("EditMode " + isEditMode);
             foreach (ItemInScene item in all)
                 item.SetCollider(isEditMode);
+        }
+
+        public void FlipX() {
+            itemSelected.FlipX();
+            print("FlipX: " + itemSelected.data.flipX);
         }
                     
         void LoadBgForStory(BoardItemManager itemManager, string id, Transform bgContainer, Transform container) {
@@ -573,6 +581,7 @@ namespace BoardItems
             newItem.scale = itemData.scale;
             newItem.colorName = itemData.color;
             newItem.anim = itemData.anim;
+            newItem.flipX = itemData.flipX;
 
             ItemInScene itemInScene = newItem.gameObject.AddComponent<ItemInScene>();
             itemInScene.SetCollider(false);

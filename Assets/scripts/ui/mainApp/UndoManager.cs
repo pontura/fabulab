@@ -70,6 +70,7 @@ public class UndoManager : MonoBehaviour
                 sd.id = iInScene.data.id;
                 sd.position = iInScene.data.position;
                 sd.rotation = iInScene.data.rotation;
+                sd.flipX = iInScene.data.flipX;
                 sd.scale = iInScene.data.scale;
                 sd.anim = iInScene.data.anim;
                 sd.color = iInScene.data.colorName;
