@@ -1,8 +1,5 @@
-
-using BoardItems;
 using UI;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -10,6 +7,7 @@ namespace Yaguar.StoryMaker.Editor
     {
         public ToggleButton[] cams;
         public ShotSubButtons subPanel;
+        [SerializeField] CamerasEditorUI camerasEditorUI;
         CamData camData;
         int id;
 
@@ -28,7 +26,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         public void OpenCam()
         {
-            CamData camData = ScenesManagerFabulab.Instance.Scenes[ScenesManagerFabulab.Instance.currentSceneId-1].camData;
+            camData = ScenesManagerFabulab.Instance.Scenes[ScenesManagerFabulab.Instance.currentSceneId-1].camData;
               
             StoryMakerEvents.SetCamDataEdition(camData.pos, camData.zoom);
             
@@ -47,6 +45,7 @@ namespace Yaguar.StoryMaker.Editor
             print("open id:" +id  + " zoom: " +  camData.zoom);    
 
             cams[id].Force(true);
+            StoryMakerEvents.ActivateCamDataEditionDrag(true);
         }
         int SetID(CamData camData)
         {              
@@ -64,8 +63,8 @@ namespace Yaguar.StoryMaker.Editor
             Events.OnPopupTopSignalText(Data.Instance.settings.camDatas[id].name);
 
             this.id = id;
-            CamData camData = Data.Instance.settings.camDatas[id];            
-            StoryMakerEvents.SetCamDataEdition(camData.pos, camData.zoom);
+            CamData setttingsCamData = Data.Instance.settings.camDatas[id];            
+            StoryMakerEvents.SetCamDataEdition(setttingsCamData.pos, setttingsCamData.zoom);
             ScenesManagerFabulab.Instance.GetActiveScene().camData = camData;
             Open(camData);
         }
@@ -74,6 +73,13 @@ namespace Yaguar.StoryMaker.Editor
             subPanel.Reset();
             gameObject.SetActive(false);
             subPanel.Close();
+            StoryMakerEvents.ActivateCamDataEditionDrag(false);
+            if(camData.pos != camerasEditorUI.normalizedPos)
+            {
+                camData.pos = camerasEditorUI.normalizedPos;
+                print("_________" + camData.pos);
+                camerasEditorUI.Reset();
+            }
         }
     }
 }

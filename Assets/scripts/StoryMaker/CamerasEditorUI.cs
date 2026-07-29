@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
@@ -6,16 +5,43 @@ namespace Yaguar.StoryMaker.Editor
     public class CamerasEditorUI : MonoBehaviour
     {
         [SerializeField] GameObject[] editorCams;
+        [SerializeField] bool canBeDrag;
+        [SerializeField] int zoom;
+        [SerializeField] int fullZoom;
+        [SerializeField] GameObject editingBG;
+        [SerializeField] GameObject arrows;
+
+        CamData activeCamData;
+        GameObject zoomGO;
+        int limitZoom;
+        Vector2 intialMousePos;
+        bool dragging = false;
+        public Vector2 normalizedPos;
 
         void Start()
         {
+            ActivateCamDataEditionDrag(false);
+            fullZoom = Data.Instance.settings.camDatas[0].zoom;
             StoryMakerEvents.OnTimelinePlay += OnTimelinePlay;
             StoryMakerEvents.SetCamDataEdition +=SetCamDataEdition;
+            StoryMakerEvents.ActivateCamDataEditionDrag += ActivateCamDataEditionDrag;
         }
         void OnDestroy()
         {
             StoryMakerEvents.OnTimelinePlay -= OnTimelinePlay;
             StoryMakerEvents.SetCamDataEdition -=SetCamDataEdition;
+            StoryMakerEvents.ActivateCamDataEditionDrag -= ActivateCamDataEditionDrag;
+        }
+        public void Reset()
+        {
+            normalizedPos = Vector2.zero;
+            dragging = false;
+        }
+        private void ActivateCamDataEditionDrag(bool canBeDrag)
+        {
+            editingBG.SetActive(canBeDrag);
+            this.canBeDrag = canBeDrag;
+            arrows.SetActive(canBeDrag);
         }
 
         private void OnTimelinePlay(bool isPlay)
@@ -26,17 +52,68 @@ namespace Yaguar.StoryMaker.Editor
                 StoryMakerEvents.SetCamData(Data.Instance.settings.camDatas[0].pos, Data.Instance.settings.camDatas[0].zoom);// resetea el zoom en el edit:
         }
 
-        private void SetCamDataEdition(Vector2 pos, int zoom)
+        private void SetCamDataEdition(Vector2 normalizedPos, int zoom)
         {
-            int id = 0;
+            this.zoom = zoom;
+            int id = 0;            
             foreach(GameObject go in editorCams)
             {
                 if(Data.Instance.settings.camDatas[id].zoom == zoom)
+                {
+                    zoomGO = go;                    
+                    activeCamData = Data.Instance.settings.camDatas[id];
+                    limitZoom = Data.Instance.settings.limitZooms[id];
                     go.SetActive(true);
+                }
                 else 
                     go.SetActive(false);                
                 id++;                
             }
+            RectTransform rt = zoomGO.GetComponent<RectTransform>();
+            rt.anchoredPosition = new Vector2(normalizedPos.x*limitZoom, normalizedPos.y*limitZoom); 
+        }
+        void Update()
+        {
+            if(canBeDrag && zoom != fullZoom)
+            {
+                if(Input.GetMouseButtonDown(0))
+                {                    
+                    intialMousePos = Input.mousePosition;
+                } else if(Input.GetMouseButton(0))
+                {
+                    Vector2 newPos = Input.mousePosition;
+
+                    if(intialMousePos != newPos)
+                    {
+                        dragging = true;
+                        UpdatePosition(newPos-intialMousePos);
+                        intialMousePos = newPos;
+                    }
+                }
+                else if(Input.GetMouseButtonUp(0))
+                {
+                    intialMousePos = Vector2.zero;
+                    dragging = false;
+                }
+            }
+        }
+        void UpdatePosition(Vector2 newPos)
+        {
+            RectTransform rt = zoomGO.GetComponent<RectTransform>();
+            Vector2 pos = rt.anchoredPosition;            
+            pos.x += newPos.x;
+            pos.y += newPos.y;
+
+            if(pos.x<-limitZoom) pos.x = -limitZoom;
+            else if(pos.x>limitZoom) pos.x = limitZoom;
+            
+            if(pos.y<-limitZoom) pos.y = -limitZoom;
+            else if(pos.y>limitZoom) pos.y = limitZoom;
+
+            rt.anchoredPosition = pos;
+            
+            normalizedPos = new Vector2(pos.x/limitZoom, pos.y/limitZoom);
+            print ("normalizedPos" + normalizedPos);
         }
     }
 }

@@ -6,6 +6,7 @@ namespace Yaguar.StoryMaker.Editor
     public class ScenarioCameraManager : MonoBehaviour
     {
         [SerializeField] Camera cam;
+        [SerializeField] Vector2 limitsCamZoom1;
 
         void Start()
         {
@@ -19,8 +20,16 @@ namespace Yaguar.StoryMaker.Editor
         {
             if(zoom == 0)
                 zoom = 60;
+
             cam.orthographicSize = zoom;
-            print("SetCamData "+pos + "  zoom : " +zoom );
+            Vector3 camPos = cam.transform.position;
+            if(zoom == 60) pos = Vector2.zero;
+
+            camPos.x = limitsCamZoom1.x * pos.x;
+            camPos.y = limitsCamZoom1.y * pos.y;
+
+            cam.transform.position = camPos;
+            print("SetCamData "+ pos + "  zoom : " + zoom );
         }
     }
 }

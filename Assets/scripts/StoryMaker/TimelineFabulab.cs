@@ -1,8 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections;
+﻿using System.Collections;
 using UI.MainApp;
-using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
@@ -20,15 +17,14 @@ namespace Yaguar.StoryMaker.Editor
             Invoke(nameof(SetTotalMarkers), Time.deltaTime * 3);
         }
         public override void OnDestroyed()
-        {            
-            print("OnStopDraw OnDestroyed");      
+        {                 
             StoryMakerEvents.OnStopDraw -= OnStopDraw;
         }
 
         private void OnStopDraw(SceneObject so)
         {
             SOData soData = so.GetData();
-            print("OnStopDraw" + soData.itemName);      
+           // print("OnStopDraw" + soData.itemName);      
             SceneElement sceneElement = ScenesManagerFabulab.Instance.GetSOInScene(ScenesManagerFabulab.Instance.currentSceneId-2, soData.id);
             if(sceneElement == null) 
             {
@@ -37,11 +33,11 @@ namespace Yaguar.StoryMaker.Editor
             V3 v3 = sceneElement.data.pos;
             Vector2 pos = new Vector2(v3.x, v3.y);
             float diff = Vector2.Distance(pos, so.gameObject.transform.localPosition);
-            print("OnStopDraw diff: "  + diff); 
+          //  print("OnStopDraw diff: "  + diff); 
             if(diff<3)
             {
                 soData.pos = v3;
-                print("Snap" + soData.itemName + " old pos: " + pos + "new pos: " + v3.ToVector3());     
+             //   print("Snap" + soData.itemName + " old pos: " + pos + "new pos: " + v3.ToVector3());     
                 so.gameObject.transform.localPosition = v3.ToVector3();
             }
         }

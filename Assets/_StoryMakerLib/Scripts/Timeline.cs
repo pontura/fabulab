@@ -115,7 +115,6 @@ namespace Yaguar.StoryMaker.Editor
         }
         void UpdateDraw()
         {
-            print("UpdateDraw");
             if(activeAnimatedKeyframeID >= all.Count-1)
             all[activeAnimatedKeyframeID - 1].UpdateScreenshot();
             UpdateDrawDone();
@@ -226,7 +225,7 @@ namespace Yaguar.StoryMaker.Editor
                 if (a < all.Count)
                     timer_pos += all[a].duration;
             }
-            print("CalculateTimer timer_pos" + timer_pos + " activeAnimatedKeyframeID:" + activeAnimatedKeyframeID);
+           // print("CalculateTimer timer_pos" + timer_pos + " activeAnimatedKeyframeID:" + activeAnimatedKeyframeID);
             return timer_pos;
         }
         void CheckToNextAnimatedKeyframe()
@@ -253,7 +252,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         public virtual void OnChangeLight(float value)
         {
-            print("change light " + value);
+            //print("change light " + value);
         }
     }
 }

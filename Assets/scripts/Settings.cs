@@ -11,4 +11,10 @@ public class Settings : MonoBehaviour
     public float snapScale = 0.025f;
     
     public CamData[] camDatas;
+    public int[] limitZooms = {0,70};
+    
+    public int GetLimit(int id)
+    {
+        return limitZooms[id];
+    }
 }

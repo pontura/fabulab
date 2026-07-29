@@ -7,6 +7,7 @@ namespace Yaguar.StoryMaker.Editor
     {
         public static System.Action<Vector2, int> SetCamData;
         public static System.Action<Vector2, int> SetCamDataEdition;
+        public static System.Action<bool> ActivateCamDataEditionDrag;
         public static bool isEditing;
         public static void SetEditing(bool editing)
         {
