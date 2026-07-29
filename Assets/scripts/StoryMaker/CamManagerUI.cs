@@ -65,7 +65,7 @@ namespace Yaguar.StoryMaker.Editor
             this.id = id;
             CamData setttingsCamData = Data.Instance.settings.camDatas[id];            
             StoryMakerEvents.SetCamDataEdition(setttingsCamData.pos, setttingsCamData.zoom);
-            ScenesManagerFabulab.Instance.GetActiveScene().camData = camData;
+            ScenesManagerFabulab.Instance.GetActiveScene().camData = setttingsCamData;
             Open(camData);
         }
         public void Close()
