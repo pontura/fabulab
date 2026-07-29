@@ -1,4 +1,6 @@
 using System;
+using System.Globalization;
+using UI;
 using UI.MainApp;
 using UI.MainApp.Home.User;
 using UnityEngine;
@@ -15,7 +17,7 @@ namespace OnBoarding
         public override void OnShow()
         {            
             part.SetActive(false);
-            field.text = "Ahora probá modificando lo que quieras";   
+            field.text = "Ahora mirá las cosas que se pueden hacer en Fabulab!";   
             playButton.OnClick();     
 
             StoryMakerEvents.OnMovieOver += OnMovieOver;
@@ -36,6 +38,11 @@ namespace OnBoarding
         void OnDestroy()
         {            
             StoryMakerEvents.OnMovieOver -= OnMovieOver;
+        }
+        public void OnDone()
+        {
+            Done();
+            UIManager.Instance.Home();
         }
         public override void ShowPanelsBack() {}
     }
