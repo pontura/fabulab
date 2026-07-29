@@ -73,6 +73,7 @@ namespace Yaguar.StoryMaker.Editor
                     go.SetActive(false);                
                 id++;                
             }
+            if(zoomGO == null) return;
             RectTransform rt = zoomGO.GetComponent<RectTransform>();
             rt.anchoredPosition = new Vector2(normalizedPos.x*limitZoom, normalizedPos.y*limitZoom); 
         }
