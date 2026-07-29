@@ -10,13 +10,13 @@ namespace Yaguar.StoryMaker.Editor
 
         void Start()
         {
-            StoryMakerEvents.SetCamData +=SetCamData;
+            StoryMakerEvents.SetCamData += SetCamData;
         }
         void OnDestroy()
         {
-            StoryMakerEvents.SetCamData -=SetCamData;
+            StoryMakerEvents.SetCamData -= SetCamData;
         }
-        private void SetCamData(Vector2 pos, int zoom)
+        private void SetCamData(Vector2 pos, float zoom, bool tween)
         {
             if(zoom == 0)
                 zoom = 60;
@@ -30,6 +30,17 @@ namespace Yaguar.StoryMaker.Editor
 
             cam.transform.position = camPos;
             print("SetCamData "+ pos + "  zoom : " + zoom );
+        }
+        public void OnUpdate(Vector2 pos, float zoom)
+        {
+            cam.orthographicSize = zoom;
+            Vector3 camPos = cam.transform.position;
+
+            camPos.x = limitsCamZoom1.x * pos.x;
+            camPos.y = limitsCamZoom1.y * pos.y;
+
+            cam.transform.position = camPos;
+            print("OnUpdate CamData "+ pos + "  zoom : " + zoom );
         }
     }
 }

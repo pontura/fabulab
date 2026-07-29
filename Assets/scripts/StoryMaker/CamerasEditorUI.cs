@@ -6,14 +6,14 @@ namespace Yaguar.StoryMaker.Editor
     {
         [SerializeField] GameObject[] editorCams;
         [SerializeField] bool canBeDrag;
-        [SerializeField] int zoom;
-        [SerializeField] int fullZoom;
+        [SerializeField] float zoom;
+        [SerializeField] float fullZoom;
         [SerializeField] GameObject editingBG;
         [SerializeField] GameObject arrows;
 
         CamData activeCamData;
         GameObject zoomGO;
-        int limitZoom;
+        float limitZoom;
         Vector2 intialMousePos;
         bool dragging = false;
         public Vector2 normalizedPos;
@@ -48,11 +48,19 @@ namespace Yaguar.StoryMaker.Editor
         {
             print("OnTimelinePlay " +isPlay);
             gameObject.SetActive(!isPlay);
-            if(!isPlay)                
-                StoryMakerEvents.SetCamData(Data.Instance.settings.camDatas[0].pos, Data.Instance.settings.camDatas[0].zoom);// resetea el zoom en el edit:
+            if(!isPlay)
+            {
+                bool tween = true;
+                StoryMakerEvents.SetCamData(
+                    Data.Instance.settings.camDatas[0].pos, 
+                    Data.Instance.settings.camDatas[0].zoom,
+                    tween
+                    );// resetea el zoom en el edit:
+      
+            }       
         }
 
-        private void SetCamDataEdition(Vector2 normalizedPos, int zoom)
+        private void SetCamDataEdition(Vector2 normalizedPos, float zoom)
         {
             this.zoom = zoom;
             int id = 0;            

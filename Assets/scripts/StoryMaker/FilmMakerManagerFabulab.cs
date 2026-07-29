@@ -205,6 +205,7 @@ namespace Yaguar.StoryMaker.Editor
                     float delay = timeline.keyframe_duration * delayFactor;
                     Debug.Log("# Delay: " + delay);
                     StartCoroutine(MoveAvatarsAfter(delay));
+                    StartCoroutine(MoveCamera(timeline.keyframe_duration));
                 }
             } else if(State == states.STOPPED) {
                 Invoke(nameof(SetPaused), Time.deltaTime);
@@ -221,7 +222,7 @@ namespace Yaguar.StoryMaker.Editor
                 toggleTransition.isOn = aciveScene.transition;
                 StoryMakerEvents.SetBackgroundLights();
                 if (State == states.PLAYING)
-                    StoryMakerEvents.SetCamData(aciveScene.camData.pos, aciveScene.camData.zoom);
+                    StoryMakerEvents.SetCamData(aciveScene.camData.pos, aciveScene.camData.zoom, aciveScene.camData.tween);
             }
 
             ScenesManagerFabulab.Instance.SetSceneObjectsIntoScenenario(lastSceneId);
@@ -233,7 +234,31 @@ namespace Yaguar.StoryMaker.Editor
             iTween.Stop();
             StoryMakerEvents.OnMoviePaused();
         }
-
+        [SerializeField] ScenarioCameraManager scenarioCameraManager;
+        protected override IEnumerator MoveCamera(float duration)
+        { 
+            print("MoveCamera currentSceneId" + ScenesManagerFabulab.Instance.currentSceneId + " ScenesManagerFabulab.Instance.Scenes.Count_ " + ScenesManagerFabulab.Instance.Scenes.Count);
+            if(ScenesManagerFabulab.Instance.currentSceneId>=ScenesManagerFabulab.Instance.Scenes.Count) 
+                yield return null;
+            else{
+                CamData currentScene = ScenesManagerFabulab.Instance.Scenes[ScenesManagerFabulab.Instance.currentSceneId-1].camData;
+                CamData nextScene = ScenesManagerFabulab.Instance.Scenes[ScenesManagerFabulab.Instance.currentSceneId].camData;
+                if(currentScene.pos == nextScene.pos && currentScene.zoom == nextScene.zoom)
+                {
+                    //no hace nada:
+                } else{
+                    float a = 0;
+                    while(a<duration)
+                    {
+                        Vector2 pos = Vector2.Lerp(currentScene.pos, nextScene.pos, a/duration);
+                        float zoom = Mathf.Lerp(currentScene.zoom, nextScene.zoom, a/duration);
+                        scenarioCameraManager.OnUpdate(pos, zoom);
+                        yield return new WaitForEndOfFrame();
+                        a += Time.deltaTime;
+                    }
+                }
+            }
+        }
         protected override IEnumerator MoveAvatarsAfter(float delay)
         {
             yield return new WaitForSeconds(delay);

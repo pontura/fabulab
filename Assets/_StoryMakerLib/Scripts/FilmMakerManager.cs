@@ -226,6 +226,7 @@ namespace Yaguar.StoryMaker.Editor
                 {
                     float delay = timeline.keyframe_duration - (timeline.keyframe_duration / 3);
                     StartCoroutine(MoveAvatarsAfter(delay));
+                    StartCoroutine(MoveCamera(timeline.keyframe_duration));
                 }
             }
 
@@ -238,6 +239,10 @@ namespace Yaguar.StoryMaker.Editor
 
             ScenesManager.Instance.SetSceneObjectsIntoScenenario(lastSceneId);
             StoryMakerEvents.ReorderSceneObjectsInZ();
+        }
+        protected virtual IEnumerator MoveCamera(float duration)
+        { 
+            yield return new WaitForSeconds(duration);
         }
         protected virtual IEnumerator MoveAvatarsAfter(float delay)
         {

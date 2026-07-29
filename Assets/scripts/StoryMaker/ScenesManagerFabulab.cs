@@ -136,6 +136,7 @@ namespace Yaguar.StoryMaker.Editor
                     json += "\"" + "camData_zoom" + "\":\"" + scenes[i].camData.zoom + "\",";
                     json += "\"" + "camData_pos_x" + "\":\"" + scenes[i].camData.pos.x + "\",";
                     json += "\"" + "camData_pos_y" + "\":\"" + scenes[i].camData.pos.y + "\",";
+                    json += "\"" + "camData_pos_tween" + "\":\"" + scenes[i].camData.tween + "\",";
                 }
 
                 List<SceneElement> elements = scenes[i].GetScenesElements();
