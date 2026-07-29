@@ -105,7 +105,7 @@ namespace UI.MainApp.Home.User
         public virtual void Delete() {
             if (Id != null && Id != "") {
                 print("Delete ID: " + Id);
-                Events.OnConfirm($"�Confirm�s que quer�s borrar id: {Id}?", "SI", "NO", OnConfirm);
+                Events.OnConfirm($"¿Confirmás que querés borrar id: {Id}?", "SI", "NO", OnConfirm);
             }
         }
         protected virtual void OnConfirm(bool ok) {

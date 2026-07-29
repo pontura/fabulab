@@ -108,7 +108,7 @@ namespace Yaguar.StoryMaker.DB
         }
 
         public void DeletePart(string type, string id, System.Action<string> callback, string userId) {
-            if (!Data.Instance.userData.isAdmin)
+            if (!Data.Instance.userData.isAdmin && userId!=Data.Instance.userData.userDataInDatabase.uid)
                 return;
 
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference(type + "/" + userId + "/" + id);
