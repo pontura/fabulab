@@ -23,6 +23,10 @@ namespace OnBoarding
             objects,
             storyPresentation,
             storyPresentationDone,
+            video_story,
+            video_character,
+            video_object,
+            video_bg,
             ready
         }
         [SerializeField] int id;
@@ -32,14 +36,23 @@ namespace OnBoarding
         {
             public steps[] steps;
         }
+        public bool charactersDone;
+        public bool objectsDone;
+        public bool storiesDone;
+        public bool bgDone;
+
         void Start()
         {
-            //PlayerPrefs.DeleteKey("onboardingSteps");
-            //PlayerPrefs.DeleteKey("onboardingSequenceID");            
+            bgDone = PlayerPrefs.GetInt("bgDone", 0) == 1;
+            charactersDone = PlayerPrefs.GetInt("charactersDone", 0)== 1;
+            storiesDone = PlayerPrefs.GetInt("storiesDone", 0)== 1;
+            objectsDone = PlayerPrefs.GetInt("objectsDone", 0)== 1;        
 
             foreach (OnBoardingMain go in onboardingScreens)
                 go.Init();  
+
             Events.OnBoardingDone += OnBoardingDone;
+            Events.OnBoardingXtraStep += OnBoardingXtraStep;
             if(Data.Instance.userData.onboardingSteps >0) return;
             Reset();
         }
@@ -57,13 +70,38 @@ namespace OnBoarding
         
         void Oestroy()
         {
-            Events.OnBoardingDone -= OnBoardingDone;            
+            Events.OnBoardingDone -= OnBoardingDone;    
+            Events.OnBoardingXtraStep -= OnBoardingXtraStep;        
+        }
+
+        public void OnBoardingXtraStep(steps step, System.Action o)
+        {
+            print("OnBoardingXtraStep " + step);
+            switch(step)
+            {
+                case steps.video_bg:
+                    bgDone = true;
+                    PlayerPrefs.SetInt("bgDone", 1);
+                break;
+                case steps.video_character:
+                    charactersDone = true;
+                    PlayerPrefs.SetInt("charactersDone", 1);
+                break;
+                case steps.video_story:
+                    storiesDone = true;
+                    PlayerPrefs.SetInt("storiesDone", 1);
+                break;
+                case steps.video_object:
+                    objectsDone = true;
+                    PlayerPrefs.SetInt("objectsDone", 1);
+                break;
+            }
         }
 
         private void OnBoardingDone(steps step)
         {
             if(step == steps.title_character)
-                UIManager.Instance.NewCharacter();
+                UIManager.Instance.CreateSelected(2);
             Next();
         }
 

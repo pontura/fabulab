@@ -125,7 +125,7 @@ namespace UI.MainApp.Home.User
 
         public virtual void New()
         {
-            UIManager.Instance.NewCharacter();
+            UIManager.Instance.CreateSelected(2);
         }
 
         void ResetTab() {

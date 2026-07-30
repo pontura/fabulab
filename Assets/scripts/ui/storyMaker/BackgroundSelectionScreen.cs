@@ -51,7 +51,7 @@ namespace UI.MainApp.Home.User
             {
                 case 0:
 
-                    UIManager.Instance.NewObject(SObjectData.types.background);
+                    UIManager.Instance.CreateSelected(4);
                     FirebaseAnalytics.LogEvent(
                         "new_object_background",
                         new Parameter("origin", "story")

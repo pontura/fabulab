@@ -92,8 +92,7 @@ namespace UI.MainApp.Home.User
 
         public virtual void New()
         {
-            print("New Character");
-            UIManager.Instance.NewCharacter();
+            UIManager.Instance.CreateSelected(2);
         }
 
         protected override void LoadImage(int index, ItemSelectorBtn isb) {

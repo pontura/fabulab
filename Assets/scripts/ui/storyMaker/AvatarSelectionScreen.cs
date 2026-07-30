@@ -54,7 +54,7 @@ namespace UI.MainApp.Home.User
             switch (id)
             {
                 case 0:
-                    UIManager.Instance.NewCharacter();
+                    UIManager.Instance.CreateSelected(2);
                     FirebaseAnalytics.LogEvent(
                         "new_character",
                         new Parameter("origin", "story")

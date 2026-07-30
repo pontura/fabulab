@@ -146,32 +146,49 @@ namespace UI
         public void CreateSelected(int id)
         {
             if (id == 1)
-                NewStory(); // TO-DO
+            {
+                if(!onboardingManager.storiesDone)
+                    Events.OnBoardingXtraStep(OnBoardingManager.steps.video_story, NewStory);
+                else
+                    NewStory();
+            }
             else if (id == 2) {
-                NewCharacter();
+                if(!onboardingManager.charactersDone)
+                    Events.OnBoardingXtraStep(OnBoardingManager.steps.video_character, NewCharacter);
+                else
+                    NewCharacter();
                 FirebaseAnalytics.LogEvent(
                     "new_character",
                     new Parameter("origin", "home")
                  );
             } else if (id == 3) {
-                NewObject(SObjectData.types.generic);
+                  if(!onboardingManager.objectsDone)
+                    Events.OnBoardingXtraStep(OnBoardingManager.steps.video_object, NewObject);
+                else
+                    NewObject() ;
                 FirebaseAnalytics.LogEvent(
                     "new_object_generic",
                     new Parameter("origin", "home")
                 );
             } else if (id == 4) {
-                NewObject(SObjectData.types.background);
+                 if(!onboardingManager.bgDone)
+                    Events.OnBoardingXtraStep(OnBoardingManager.steps.video_bg, NewBG);
+                else
+                    NewBG() ;
                 FirebaseAnalytics.LogEvent(
                     "new_object_background",
                     new Parameter("origin", "home")
                 );
             }
         }
+        void NewObject()  {  NewObject(SObjectData.types.generic); }
+        void NewBG()  {  NewObject(SObjectData.types.background); }
+
         public void Albums()
         {
             Events.ShowScreen(UIManager.screenType.Albums);
         }
-        public void NewStory() {
+        void NewStory() {
             Data.Instance.scenesData.StartNewStory("");
             boardUI.SetEditingType(editingTypes.NONE);
             Events.ShowScreen(UIManager.screenType.StoryMaker);
@@ -183,7 +200,7 @@ namespace UI
             StoryMakerEvents.EnableStoryEdition(true);
         }
 
-        public void NewCharacter()
+        void NewCharacter()
         {
             Events.OnCharacterReset();
             Events.OnPropReset();
@@ -199,7 +216,7 @@ namespace UI
         {
             Events.ShowScreen(UIManager.screenType.Creation_Character);
         }
-        public void NewObject(SObjectData.types type)
+        void NewObject(SObjectData.types type)
         {
             boardUI.items.DeleteAll();
             Data.Instance.sObjectsData.SetType(type);
