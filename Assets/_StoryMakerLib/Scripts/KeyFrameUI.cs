@@ -26,6 +26,8 @@ public class KeyFrameUI : MonoBehaviour
     {
         marker.color = selectedColor;
         this.timeline = timeline;
+        if (!timeline.filmMakerUI.isEditing)
+            screenshot.enabled = false;
     }
     public void SetID(int id)
     {
@@ -65,9 +67,9 @@ public class KeyFrameUI : MonoBehaviour
     }
     public void UpdateScreenshot()
     {
-        //print("UpdateScreenshot " + id);
+        print("CAPTURE SCREENSHOT id: " + id);
         if (timeline.filmMakerUI.isEditing)
-            Scenario.Instance.TakePartialScreenshot(ScreenshotUpdated);
+            Scenario.Instance.Screenshot(ScreenshotUpdated);          
         else
             screenshot.enabled = false;
     }

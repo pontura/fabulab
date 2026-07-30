@@ -13,14 +13,23 @@ namespace Yaguar.StoryMaker.Editor
         protected override void Start() {
             print("OnStopDraw Start");      
             StoryMakerEvents.OnStopDraw += OnStopDraw;
+            StoryMakerEvents.UpdateDraw += UpdateDraw;
             base.Start();
             Invoke(nameof(SetTotalMarkers), Time.deltaTime * 3);
         }
         public override void OnDestroyed()
         {                 
             StoryMakerEvents.OnStopDraw -= OnStopDraw;
+            StoryMakerEvents.UpdateDraw -= UpdateDraw;
         }
-
+        void UpdateDraw()
+        {
+            if(!filmMakerUI.isEditing) return;
+            print("UpdateDraw activeAnimatedKeyframeID: " + activeAnimatedKeyframeID);
+            if(activeAnimatedKeyframeID <= all.Count)
+                all[activeAnimatedKeyframeID - 1].UpdateScreenshot();
+            UpdateDrawDone();
+        }
         private void OnStopDraw(SceneObject so)
         {
             SOData soData = so.GetData();
@@ -88,44 +97,43 @@ namespace Yaguar.StoryMaker.Editor
             }
             all.Clear();
 
-            if(filmMakerUI.isEditing)
-            {                
-                Scenario.Instance.StartCoroutine(RefreshKeyframesC());
-                shotButtons.Show(true);
-            }
-            else
-            {
-                int a = 0;
-                foreach (SceneDataFabulab s in ScenesManagerFabulab.Instance.Scenes)
-                {
-                    a++;
-                    AddNewKeyframe(s.duration);
-                }
-                filmMakerUI.JumpTo(1);
-                UpdateKeyframes();
-                Events.OnLoading(false);
-                shotButtons.Show(false);
-            }
-            OnStop();
-        }
-        IEnumerator RefreshKeyframesC()
-        {
+            // if(filmMakerUI.isEditing)
+            // {                
+            //     Scenario.Instance.StartCoroutine(RefreshKeyframesC());
+            //     shotButtons.Show(true);
+            // }
+            // else
+            // {
             int a = 0;
             foreach (SceneDataFabulab s in ScenesManagerFabulab.Instance.Scenes)
             {
                 a++;
                 AddNewKeyframe(s.duration);
-                yield return new WaitForSeconds(Time.deltaTime * 10);
-                filmMakerUI.JumpTo(a);
-            }
-
-            if(a <2)
-                shotButtons.SetFirstFrame(true);
-
+            }           
+            if(filmMakerUI.isEditing)
+                Scenario.Instance.StartCoroutine(CreateAllInitialThumbs());
+            else
+                OnLoadDone();
+        }
+        void OnLoadDone()
+        { 
             filmMakerUI.JumpTo(1);
             UpdateKeyframes();
-
             Events.OnLoading(false);
+            shotButtons.Show(false);
+            OnStop();
+        }
+        IEnumerator CreateAllInitialThumbs()
+        {
+            int id = 1;
+            foreach (KeyFrameUI kf in all)
+            {
+                filmMakerUI.JumpTo(id);
+                kf.UpdateScreenshot();
+                id++;
+                yield return new WaitForSeconds(0.1f);
+            }
+            OnLoadDone();
         }
         public override float OnChangeDuration(float value) {
             float duration = Mathf.Lerp(min_speed, max_speed, value);

@@ -31,7 +31,6 @@ namespace Yaguar.StoryMaker.Editor
 
         protected virtual void Awake()
         {
-            StoryMakerEvents.UpdateDraw += UpdateDraw;
             StoryMakerEvents.OnLoadFilm += Reset;
             StoryMakerEvents.OnStartNewStory += Reset;
             StoryMakerEvents.ChangeSpeed += ChangeSpeed;
@@ -61,7 +60,6 @@ namespace Yaguar.StoryMaker.Editor
         public virtual void OnEnabled(){}
         protected void OnDestroy()
         {
-            StoryMakerEvents.UpdateDraw -= UpdateDraw;
             StoryMakerEvents.OnLoadFilm -= Reset;
             StoryMakerEvents.OnStartNewStory -= Reset;
             StoryMakerEvents.ChangeSpeed -= ChangeSpeed;
@@ -110,16 +108,10 @@ namespace Yaguar.StoryMaker.Editor
             kf.transform.localScale = Vector2.one;
             kf.transform.localPosition = Vector2.zero;
             //Debug.Log(kf.transform.localPosition);
-            UpdateKeyframes();
-            kf.UpdateScreenshot();
+           // UpdateKeyframes();
+           // kf.UpdateScreenshot();
         }
-        void UpdateDraw()
-        {
-            if(activeAnimatedKeyframeID >= all.Count-1)
-            all[activeAnimatedKeyframeID - 1].UpdateScreenshot();
-            UpdateDrawDone();
-        }
-        public virtual void UpdateDrawDone() {}
+        
         protected void UpdateKeyframes()
         {
             int id = 0;
@@ -138,9 +130,9 @@ namespace Yaguar.StoryMaker.Editor
                     kf.SetSelected(false);
                 id++;
             }
-            print(all.Count + " activeAnimatedKeyframeID_ " + activeAnimatedKeyframeID);
-            if(all.Count>0 && activeAnimatedKeyframeID<all.Count)
-                all[activeAnimatedKeyframeID - 1].UpdateScreenshot();
+           // print(all.Count + " activeAnimatedKeyframeID_ " + activeAnimatedKeyframeID);
+            // if(all.Count>0 && activeAnimatedKeyframeID<=all.Count)
+            //     all[activeAnimatedKeyframeID - 1].UpdateScreenshot();
         }
         public void RemoveKeyframe()
         {
