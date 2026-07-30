@@ -34,8 +34,8 @@ namespace OnBoarding
         }
         void Start()
         {
-            PlayerPrefs.DeleteKey("onboardingSteps");
-            PlayerPrefs.DeleteKey("onboardingSequenceID");            
+            //PlayerPrefs.DeleteKey("onboardingSteps");
+            //PlayerPrefs.DeleteKey("onboardingSequenceID");            
 
             foreach (OnBoardingMain go in onboardingScreens)
                 go.Init();  
