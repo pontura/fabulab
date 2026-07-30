@@ -29,7 +29,8 @@ namespace OnBoarding
         }
 
         public void Done()
-        {            
+        {
+            AudioManager.Instance.uiSfxManager.PlayNextScale("click", new int[] { 0, 2, 5 });
             Events.OnBoardingDone(step);
             Hide();
         }

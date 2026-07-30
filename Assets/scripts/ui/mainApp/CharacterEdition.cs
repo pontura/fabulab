@@ -90,6 +90,8 @@ namespace UI.MainApp
         void SetTogglePreview()
         {
             print("SetTogglePreview isPreview: " + isPreview + " isMyAvatar: " + isMyAvatar);
+            string key = isPreview ? "get" : "drop";
+            AudioManager.Instance.sfxManager.Play(key);
             if (!isPreview)
             {
                 pictureBtn.SetActive(false);
