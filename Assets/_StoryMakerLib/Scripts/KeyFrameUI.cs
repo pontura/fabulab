@@ -26,6 +26,8 @@ public class KeyFrameUI : MonoBehaviour
     {
         marker.color = selectedColor;
         this.timeline = timeline;
+        if (!timeline.filmMakerUI.isEditing)
+            screenshot.enabled = false;
     }
     public void SetID(int id)
     {
