@@ -32,6 +32,7 @@ namespace OnBoarding
         }
         public void FirstButtonClicked()
         {
+            AudioManager.Instance.uiSfxManager.PlayNextScale("click", new int[] { 0, 2, 5 });
             firstPanel.SetActive(false);
             secondButton.SetActive(true);
             presetsUI.tabs.Clicked(presetsUI.tabs.All[1]);
@@ -44,6 +45,7 @@ namespace OnBoarding
         }
         public void SecondButtonClicked()
         {
+            AudioManager.Instance.uiSfxManager.PlayNextScale("click", new int[] { 0, 2, 5 });
             firstPanel.SetActive(false);
             secondButton.SetActive(false);
             thirdPanel.SetActive(true);

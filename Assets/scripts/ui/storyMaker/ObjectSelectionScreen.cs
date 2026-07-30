@@ -55,7 +55,7 @@ namespace UI.MainApp.Home.User
             switch (id)
             {
                 case 0:
-                    UIManager.Instance.NewObject(SObjectData.types.generic);
+                    UIManager.Instance.CreateSelected(3);
                     FirebaseAnalytics.LogEvent(
                         "new_object_generic",
                         new Parameter("origin", "story")

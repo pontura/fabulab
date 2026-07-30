@@ -15,7 +15,6 @@ public static class Events
     public static System.Action<bool> OnBGColorizerOpen = delegate { };
     public static System.Action<bool> SetGroupToolsOn = delegate { };
     public static System.Action<BodyPart> OnNewBodyPartSelected = delegate { };
-    public static System.Action<ItemInScene, Vector3> OnStartDrag = delegate { };
     public static System.Action<ItemInScene, Vector3> OnStopDrag = delegate { };
     public static System.Action<ItemInScene> ItemBackToMenu = delegate { };
     public static System.Action<GaleriasData.GalleryData, bool, System.Action> InitGallery = delegate { };
@@ -82,6 +81,7 @@ public static class Events
     public static System.Action<OnBoardingManager.steps> OnBoarding = delegate { };
     public static System.Action<OnBoardingManager.steps> OnBoardingDone = delegate { };
     public static System.Action<OnBoardingManager.steps> OnBoardingStepDone = delegate { };
+    public static System.Action<OnBoardingManager.steps, System.Action> OnBoardingXtraStep = delegate { };
     public static System.Action OnSaveCharacterDone = delegate { };
 }
    

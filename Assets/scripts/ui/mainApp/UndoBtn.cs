@@ -37,6 +37,7 @@ public class UndoBtn : MonoBehaviour
     }
     public void OnClicked()
     {
+        AudioManager.Instance.uiSfxManager.PlayTransp("pop", -2, 0.5f);
         UIManager.Instance.undoManager.OnClicked(); 
         CheckInteraction();
     }

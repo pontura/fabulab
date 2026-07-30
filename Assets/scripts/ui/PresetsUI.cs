@@ -22,6 +22,8 @@ namespace UI
         int lastPartID;
         void OnToggle(bool isOn)
         {
+            int val = isOn ? 0 : -3;
+            AudioManager.Instance.uiSfxManager.PlayTransp("drop", val, 0.5f);
             UIManager.Instance.boardUI.snap = isOn;
         }
         public void SetOff()
@@ -53,6 +55,8 @@ namespace UI
         }
         public void OnTabClicked(int id)
         {
+            if(id!= lastPartID-1)
+                AudioManager.Instance.uiSfxManager.PlayNextScale("click", new int[] { -3, 0, 2, 5 });
             Events.OnPresetReset(); // Resetea si hay un preset abierto
             print(" preset clicked:" + id);
             //isPreset = true; 
@@ -103,6 +107,8 @@ namespace UI
         public void Toggle()
         {
             this.isPreset = !isPreset;
+            string key = isPreset ? "get" : "drop";
+            AudioManager.Instance.sfxManager.Play(key);
 
             SetToggle();
 

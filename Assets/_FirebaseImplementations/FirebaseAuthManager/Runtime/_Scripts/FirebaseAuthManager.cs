@@ -182,7 +182,7 @@ namespace Yaguar.Auth
 
             dBManager.GetInstance().LoadUserData(userId, (username, email, uid) => {
                 Debug.Log("#CheckUserExist callback uid: " + uid);
-                if (uid != "" && uid.Length > 1 && username == "" && username.Length > 1) {
+                if (uid != "" && uid.Length > 1 && username != "" && username.Length > 1) {
                     Debug.Log("# uid!=void");
                     OnFirebaseAuthenticated.Invoke(username, email, uid);
                     callback(true);

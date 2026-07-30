@@ -13,22 +13,32 @@ namespace OnBoarding
         public void Init()
         {
             Events.OnBoarding += OnBoarding;
+            Events.OnBoardingXtraStep += OnBoardingXtraStep;
             Reset();
         }
         void OnDestroy()
         {
             print("OnDestroy");
             Events.OnBoarding -= OnBoarding;
+            Events.OnBoardingXtraStep -= OnBoardingXtraStep;
         }
+        Action OnXtraStepDone;
+        public virtual void OnBoardingXtraStep(OnBoardingManager.steps step, Action OnXtraStepDone)
+        {
+            this.OnXtraStepDone = OnXtraStepDone;
+        }
+
         public void Done()
-        {            
+        {
+            AudioManager.Instance.uiSfxManager.PlayNextScale("click", new int[] { 0, 2, 5 });
             Events.OnBoardingDone(step);
             Hide();
         }
 
-         public virtual void OnShow(){}
-         public virtual void OnHide() {}
-        private void OnBoarding(OnBoardingManager.steps step)
+        public virtual void OnShow(){}
+        public virtual void OnHide() {}
+
+        public void OnBoarding(OnBoardingManager.steps step)
         {
            if(step == this.step)
                 Show();
@@ -62,7 +72,7 @@ namespace OnBoarding
              foreach(GameObject go in hideOnActive)
                     go.SetActive(true);
         }
-         void Hide()
+        public void Hide()
         {
             active = false;
             if(hideOnActive.Length>0)

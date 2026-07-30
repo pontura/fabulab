@@ -46,6 +46,7 @@ namespace UI
         }
         public void OnClick()
         {
+            AudioManager.Instance.uiSfxManager.PlayNextScale("drop", new int[] { -4, -2, 0, 3});
             OnClicked(this);
         }
     }
