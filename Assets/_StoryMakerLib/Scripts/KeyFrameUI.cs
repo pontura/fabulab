@@ -65,9 +65,9 @@ public class KeyFrameUI : MonoBehaviour
     }
     public void UpdateScreenshot()
     {
-        //print("UpdateScreenshot " + id);
+        print("CAPTURE SCREENSHOT id: " + id);
         if (timeline.filmMakerUI.isEditing)
-            Scenario.Instance.TakePartialScreenshot(ScreenshotUpdated);
+            Scenario.Instance.Screenshot(ScreenshotUpdated);          
         else
             screenshot.enabled = false;
     }

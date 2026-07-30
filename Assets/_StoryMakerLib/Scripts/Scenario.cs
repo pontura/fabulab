@@ -62,16 +62,13 @@ namespace Yaguar.StoryMaker.Editor
 
         [SerializeField] Renderer targetRenderer;
         public void Screenshot(System.Action<Texture2D> OnDone)
-        {
+        { 
+            targetRenderer.GetComponent<Animator>().SetInteger("zoom", 9);
             StartCoroutine(CaptureRoutine(OnDone));
         }
         IEnumerator CaptureRoutine(System.Action<Texture2D> OnDone)
-        {
-            yield return new WaitForSeconds(0.1f);
-
-            targetRenderer.GetComponent<Animator>().SetInteger("zoom", 9);
-
-            yield return new WaitForEndOfFrame();
+        {           
+            yield return new WaitForSeconds(0.1f); 
 
             int rtWidth = Screen.width;
             int rtHeight = Screen.height;
@@ -137,42 +134,10 @@ namespace Yaguar.StoryMaker.Editor
 
             Cam.targetTexture = null;
             RenderTexture.active = null;
+            yield return new WaitForSeconds(0.1f);
             Destroy(rt);
 
             OnDone(texture);
-        }
-
-        public Canvas canvas;
-
-        public void TakePartialScreenshot(System.Action<Texture2D> OnDone)
-        {
-            StartCoroutine(CaptureRoutineC(OnDone));
-        }
-   [SerializeField] int canvasStartY = 60;
-     [SerializeField]        int canvasEndY   = 300;
-       private IEnumerator CaptureRoutineC(System.Action<Texture2D> OnDone)
-        {
-            yield return new WaitForEndOfFrame();
-
-            float scaleFactor = canvas.scaleFactor;
-
-            int screenWidth = Screen.width;
-
-
-
-            int realStartY = Mathf.RoundToInt(canvasStartY * scaleFactor);
-            int realEndY   = Mathf.RoundToInt(canvasEndY   * scaleFactor);
-            int realHeight = realEndY - realStartY;
-
-            Texture2D screenshot = new Texture2D(screenWidth, realHeight, TextureFormat.RGB24, false);
-
-            // Invertir Y (OpenGL: Y=0 es abajo)
-            int readY = Screen.height - realEndY;
-
-            screenshot.ReadPixels(new Rect(0, readY, screenWidth, realHeight), 0, 0);
-            screenshot.Apply();
-
-            OnDone(screenshot);
         }
     }
 }

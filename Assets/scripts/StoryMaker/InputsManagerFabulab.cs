@@ -63,8 +63,8 @@ namespace Yaguar.StoryMaker.Editor
                             isDragging = false;
                             isResize = false;
                             isRotating = false;
+                            StoryMakerEvents.UpdateDraw();
                         }
-                        StoryMakerEvents.UpdateDraw();
                     }
                     else if (!isResize && !isRotating && isDragging)
                     {
