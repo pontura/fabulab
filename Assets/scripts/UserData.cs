@@ -129,5 +129,6 @@ public class UserData : MonoBehaviour
         userDataInDatabase.username = "";
         userDataInDatabase.email = "";
         userDataInDatabase.uid = "";
+        onboardingSteps = 0;
     }
 }
