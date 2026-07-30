@@ -15,11 +15,14 @@ namespace OnBoarding
 
         public override void OnBoardingXtraStep(OnBoardingManager.steps step, Action OnXtraStepDone)
         {
+            videoPlayer.Stop();
             loading.SetActive(true);
             this.OnXtraStepDone = OnXtraStepDone;
             base.OnBoardingXtraStep(step, OnXtraStepDone);
             OnBoarding(step);
             videoPlayer.url = url;
+            videoPlayer.playOnAwake = true;
+            videoPlayer.Prepare();
             videoPlayer.prepareCompleted += OnVideoReady;
             videoPlayer.loopPointReached += OnVideoFinished;
         }
@@ -27,8 +30,6 @@ namespace OnBoarding
         {
             loading.SetActive(false);
             videoPlayer.prepareCompleted -= OnVideoReady;
-            videoPlayer.Stop();
-            videoPlayer.Prepare();
             videoPlayer.Play();
         }
         void OnVideoFinished(VideoPlayer vp)
