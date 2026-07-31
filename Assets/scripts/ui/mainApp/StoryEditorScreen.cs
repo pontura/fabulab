@@ -167,6 +167,12 @@ namespace UI.MainApp
             emojisUI.SetOn(true);
         }
 
+        public void SelectedFlipX() {
+            if (Scenario.Instance.sceneObejctsManager.selected != null) {
+                Scenario.Instance.sceneObejctsManager.selected.FlipX();
+            }
+        }
+
         public void ReplaceCharacter() {
             if (Scenario.Instance.sceneObejctsManager.selected != null) {
                 characterScreen.ReplaceEnabled = true;

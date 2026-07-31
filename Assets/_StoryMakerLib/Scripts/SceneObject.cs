@@ -92,6 +92,11 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.ReorderSceneObjectsInZ();
         }
 
+        public void FlipX() {
+            data.goLeft = !data.goLeft;
+            FlipX(data.goLeft);
+        }
+
         public void FlipX(bool setLeft) {
             if (setLeft) {
                 if(transform.localScale.x>0)
@@ -109,6 +114,8 @@ namespace Yaguar.StoryMaker.Editor
                 float lastPosX = data.pos.x;
                 UpdatePos();
                 gameObject.transform.localPosition = data.pos.ToVector3();
+
+                /* FlipX on move
                 if (data is SOAvatarData)
                 {
                     if (!data.goLeft && lastPosX > data.pos.x)
@@ -121,7 +128,7 @@ namespace Yaguar.StoryMaker.Editor
                         transform.localScale = new Vector3(-1 * transform.localScale.x, transform.localScale.y, transform.localScale.z);
                         data.goLeft = false;
                     }
-                }
+                }*/
             }
         }
 
