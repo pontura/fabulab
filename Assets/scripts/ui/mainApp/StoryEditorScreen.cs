@@ -52,6 +52,7 @@ namespace UI.MainApp
             StoryMakerEvents.OnLoadFilm += OnLoadFilm;
             StoryMakerEvents.EnableStoryEdition += EnableStoryEdition;
             StoryMakerEvents.NoneItemSelected += NoneItemSelected;
+            StoryMakerEvents.OnStartNewStory += OnStartNewStory;
         }
         // void OnDisable()
         // {
@@ -66,6 +67,11 @@ namespace UI.MainApp
             StoryMakerEvents.OnLoadFilm -= OnLoadFilm;
             StoryMakerEvents.EnableStoryEdition -= EnableStoryEdition;
             StoryMakerEvents.NoneItemSelected -= NoneItemSelected;
+            StoryMakerEvents.OnStartNewStory -= OnStartNewStory;
+        }
+
+        void OnStartNewStory() {
+            storyName.text = Data.Instance.scenesData.currentFilmData.name;
         }
 
         void OnLoadFilm() {
