@@ -2,6 +2,7 @@ using Common.UI;
 using System.Collections.Generic;
 using UI.MainApp.Home.User;
 using UnityEngine;
+using Yaguar.Auth;
 
 namespace UI.MainApp.Home
 {
@@ -19,6 +20,7 @@ namespace UI.MainApp.Home
         private void Start() {
             Events.OnAllFilmMetadataLoadDone += OnServerDataLoadDone;
             Events.ChangeName += OnChangeName;
+            FirebaseAuthManager.Instance.OnSignedOut += OnSignedOut;
         }
         public void Create()
         {            
@@ -37,6 +39,11 @@ namespace UI.MainApp.Home
         private void OnDestroy() {
             Events.ChangeName -= OnChangeName;
             Events.OnAllFilmMetadataLoadDone -= OnServerDataLoadDone;
+            FirebaseAuthManager.Instance.OnSignedOut -= OnSignedOut;
+        }
+
+        void OnSignedOut() {
+            firstTime = true;
         }
 
         void OnServerDataLoadDone() {

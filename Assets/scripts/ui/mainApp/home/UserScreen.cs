@@ -2,6 +2,7 @@ using Common.UI;
 using System.Collections.Generic;
 using UI.MainApp.Home.User;
 using UnityEngine;
+using Yaguar.Auth;
 
 namespace UI.MainApp.Home
 {
@@ -18,6 +19,7 @@ namespace UI.MainApp.Home
         bool firstTime = true;
         private void Start() {
             Events.ChangeName += OnChangeName;
+            FirebaseAuthManager.Instance.OnSignedOut += OnSignedOut;
         }
 
         private void OnChangeName(string username)
@@ -34,7 +36,13 @@ namespace UI.MainApp.Home
         }
         private void OnDestroy() {
             Events.ChangeName -= OnChangeName;
+            FirebaseAuthManager.Instance.OnSignedOut -= OnSignedOut;
         }
+
+        void OnSignedOut() {
+            firstTime = true;
+        }
+
         public void Show(bool isOn)
         {
             gameObject.SetActive(isOn);

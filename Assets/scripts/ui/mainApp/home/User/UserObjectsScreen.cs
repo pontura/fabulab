@@ -46,10 +46,15 @@ namespace UI.MainApp.Home.User
         {
             SetTabs();
         }
-        protected virtual void OnDestroy() {
+        protected override void OnDestroy() {
+            base.OnDestroy();
             Events.OnPropMetadataUpdated -= OnPropMetadataUpdated;
             Events.OnPropMetadataAdded -= OnPropMetadataAdded;
             Events.OnPropMetadataRemoved -= OnPropMetadataRemoved;
+        }
+
+        protected override void OnSignedOut() {
+            ResetTab();
         }
 
         void OnPropMetadataAdded(PropMetaData fd) {

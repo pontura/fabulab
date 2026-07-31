@@ -2,6 +2,7 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Yaguar.Auth;
 
 namespace UI.MainApp.Home.User
 {
@@ -27,8 +28,19 @@ namespace UI.MainApp.Home.User
 
         protected virtual void Start() {            
             imageCache = new Dictionary<int, Texture2D>();
+            FirebaseAuthManager.Instance.OnSignedOut += OnSignedOut;
         }
-        
+
+        protected virtual void OnDestroy() {
+            FirebaseAuthManager.Instance.OnSignedOut += OnSignedOut;
+        }
+
+        protected virtual void OnSignedOut() {
+            firstLoadDone = false;
+            ResetCache();
+        }
+
+
         public virtual void Show(bool isOn)
         {
             isActive = isOn;
