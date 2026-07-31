@@ -101,7 +101,7 @@ namespace OnBoarding
         private void OnBoardingDone(steps step)
         {
             if(step == steps.title_character)
-                UIManager.Instance.CreateSelected(2);
+                UIManager.Instance.CreateSelected(2, true);
             Next();
         }
 

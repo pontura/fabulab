@@ -143,42 +143,48 @@ namespace UI
         {
             Events.ShowScreen(UIManager.screenType.Create);
         }
-        public void CreateSelected(int id)
+        public void CreateSelected(int id, bool skipOnBoarding = false)
         {
             if (id == 1)
             {
-                if(!onboardingManager.storiesDone)
+                if(!skipOnBoarding && !onboardingManager.storiesDone)
                     Events.OnBoardingXtraStep(OnBoardingManager.steps.video_story, NewStory);
                 else
                     NewStory();
             }
             else if (id == 2) {
-                if(!onboardingManager.charactersDone)
+                if(!skipOnBoarding && !onboardingManager.charactersDone)
                     Events.OnBoardingXtraStep(OnBoardingManager.steps.video_character, NewCharacter);
                 else
+                {
                     NewCharacter();
-                FirebaseAnalytics.LogEvent(
-                    "new_character",
-                    new Parameter("origin", "home")
-                 );
+                    FirebaseAnalytics.LogEvent(
+                        "new_character",
+                        new Parameter("origin", "home")
+                    );
+                }
             } else if (id == 3) {
-                  if(!onboardingManager.objectsDone)
+                  if(!skipOnBoarding && !onboardingManager.objectsDone)
                     Events.OnBoardingXtraStep(OnBoardingManager.steps.video_object, NewObject);
                 else
+                {
                     NewObject() ;
-                FirebaseAnalytics.LogEvent(
-                    "new_object_generic",
-                    new Parameter("origin", "home")
-                );
+                    FirebaseAnalytics.LogEvent(
+                        "new_object_generic",
+                        new Parameter("origin", "home")
+                    );
+                }
             } else if (id == 4) {
-                 if(!onboardingManager.bgDone)
+                 if(!skipOnBoarding && !onboardingManager.bgDone)
                     Events.OnBoardingXtraStep(OnBoardingManager.steps.video_bg, NewBG);
                 else
+                {
                     NewBG() ;
-                FirebaseAnalytics.LogEvent(
-                    "new_object_background",
-                    new Parameter("origin", "home")
-                );
+                    FirebaseAnalytics.LogEvent(
+                        "new_object_background",
+                        new Parameter("origin", "home")
+                    );
+                }
             }
         }
         void NewObject()  {  NewObject(SObjectData.types.generic); }
