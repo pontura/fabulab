@@ -36,10 +36,11 @@ public class EditFieldUI : MonoBehaviour
     }
 
     void OnInputField(ObjectSignal objectSignal) {
-        Invoke("SetFocus", 0.1f);
         this.objectSignal = objectSignal;
         if (objectSignal.field.text != "")
             field.text = objectSignal.field.text;
+        else
+            Invoke("SetFocus", 0.1f);
         panel.SetActive(true);
     }
     public void OnFieldChanged()

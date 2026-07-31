@@ -190,8 +190,8 @@ namespace UI
                             float scaleValue = Vector3.Distance(nowTouch1, nowTouch2);
                             float angleValue = Utils.GetAngleBetween(nowTouch1, nowTouch2);
 
-                            UIManager.Instance.boardUI.items.Scale((originalDistanceInTouches - scaleValue) * -0.5f);
-                            UIManager.Instance.boardUI.items.Rotate((originalAngleInTouches - angleValue) * -2);
+                           // UIManager.Instance.boardUI.items.Scale((originalDistanceInTouches - scaleValue) * -0.5f);
+                          //  UIManager.Instance.boardUI.items.Rotate((originalAngleInTouches - angleValue) * -2);
 
                             originalDistanceInTouches = scaleValue;
                             originalAngleInTouches = angleValue;
