@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UI.MainApp;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace Yaguar.StoryMaker.Editor
             print("OnStopDraw Start");      
             StoryMakerEvents.OnStopDraw += OnStopDraw;
             StoryMakerEvents.UpdateDraw += UpdateDraw;
+            StoryMakerEvents.OnMovieOver += OnMovieOver;
             base.Start();
             Invoke(nameof(SetTotalMarkers), Time.deltaTime * 3);
         }
@@ -21,7 +23,11 @@ namespace Yaguar.StoryMaker.Editor
         {                 
             StoryMakerEvents.OnStopDraw -= OnStopDraw;
             StoryMakerEvents.UpdateDraw -= UpdateDraw;
+            StoryMakerEvents.OnMovieOver -= OnMovieOver;
         }
+
+      
+
         void UpdateDraw()
         {
             if(!filmMakerUI.isEditing) return;
@@ -68,6 +74,14 @@ namespace Yaguar.StoryMaker.Editor
         protected override void Rewind() {
             ScenesManagerFabulab.Instance.currentSceneId = 1;
             base.SetJump(1);
+        }
+        private void OnMovieOver()
+        { 
+            if(filmMakerUI.isEditing)
+            {
+                ScenesManagerFabulab.Instance.currentSceneId = ScenesManagerFabulab.Instance.Scenes.Count;
+                base.SetJump(ScenesManagerFabulab.Instance.currentSceneId);
+            }
         }
 
         void SetTotalMarkers() {

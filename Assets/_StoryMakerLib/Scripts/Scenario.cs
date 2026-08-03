@@ -63,6 +63,7 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] Renderer targetRenderer;
         public void Screenshot(System.Action<Texture2D> OnDone)
         { 
+            print("Screenshot");
             targetRenderer.GetComponent<Animator>().SetInteger("zoom", 9);
             StartCoroutine(CaptureRoutine(OnDone));
         }

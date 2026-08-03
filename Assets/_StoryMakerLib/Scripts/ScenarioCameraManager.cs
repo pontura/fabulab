@@ -1,5 +1,3 @@
-using System;
-using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
@@ -38,6 +36,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         void ApplyZoom1(Vector2 pos, float zoom)
         {
+            if(zoom == 0) zoom = defaultZoom;
             cam.orthographicSize = zoom;
             Vector3 camPos = cam.transform.position;
 
@@ -49,7 +48,7 @@ namespace Yaguar.StoryMaker.Editor
             }
             
             cam.transform.position = camPos;
-            print("OnUpdate CamData "+ pos + " camPos: " + camPos  + "  zoom : " + zoom );
+           // print("OnUpdate CamData "+ pos + " camPos: " + camPos  + "  zoom : " + zoom );
         }
     }
 }

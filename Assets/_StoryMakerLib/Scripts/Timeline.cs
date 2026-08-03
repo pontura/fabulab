@@ -170,7 +170,7 @@ namespace Yaguar.StoryMaker.Editor
                 pos.x = total_x_marker;
                 StoryMakerEvents.OnMovieOver();
                 print("____________termino");
-                //filmMakerUI.JumpTo(1);
+                filmMakerUI.JumpTo(activeAnimatedKeyframeID);
             }
             else
                 CheckToNextAnimatedKeyframe();
