@@ -40,7 +40,6 @@ namespace Yaguar.StoryMaker.Editor
             if(zoom == 0) zoom = defaultZoom;
             cam.orthographicSize = zoom;         
             cam.transform.position = pos;
-            print("OnUpdate " + pos);
         }
     }
 }

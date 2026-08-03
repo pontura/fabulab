@@ -289,8 +289,7 @@ namespace Yaguar.StoryMaker.Editor
         {
             if(zoom == defaultZoom)
             {
-                pos.x = limitsCamZoom1.x * pos.x;
-                pos.y = (limitsCamZoom1.y * pos.y) + 3.34f;
+                return Data.Instance.settings.camDatas[0].pos;
             }
             else{
                 pos.x = limitsCamZoom1.x * pos.x;
