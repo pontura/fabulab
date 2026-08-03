@@ -15,6 +15,7 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] FilmMakerManagerFabulab filmMakerManagerFabulab;
         [SerializeField] TimelineFabulab timeline;
         [SerializeField] GameObject playButton;
+        [SerializeField] protected Button reportBtn;
 
         private void Start()
         {
@@ -73,6 +74,16 @@ namespace Yaguar.StoryMaker.Editor
 
             dateField.text = content.GetTimestamp();
 
+        }
+
+        public void OnReportClicked() {
+            AudioManager.Instance.uiSfxManager.PlayTransp("click", 2);
+            Events.OnConfirm("¿Querés reportar este contenido como inadecuado?", "Sí", "No", OnReportConfirmed);
+        }
+        private void OnReportConfirmed(bool doIt) {
+            if (doIt) {
+                Events.OnPopupTopSignalText("¡GRACIAS!");
+            }
         }
     }
 }
