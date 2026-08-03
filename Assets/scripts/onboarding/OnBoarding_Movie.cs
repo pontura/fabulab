@@ -15,18 +15,36 @@ namespace OnBoarding
 
         public override void OnBoardingXtraStep(OnBoardingManager.steps step, Action OnXtraStepDone)
         {
-            videoPlayer.Stop();
             loading.SetActive(true);
             this.OnXtraStepDone = OnXtraStepDone;
             base.OnBoardingXtraStep(step, OnXtraStepDone);
             OnBoarding(step);
+        }        
+        public override void OnShow()
+        {
+            videoPlayer.Stop();
+            switch(step)
+            {
+                case OnBoardingManager.steps.video_character:
+                    field.text = "Así se hace un personaje";
+                break;
+                case OnBoardingManager.steps.video_object:
+                    field.text = "Así se hace un objeto";
+                break;
+                  case OnBoardingManager.steps.video_story:
+                    field.text = "Así se hace una historia";
+                break;
+                  case OnBoardingManager.steps.video_bg:
+                    field.text = "Así se hace un background";
+                break;
+            }       
             videoPlayer.url = url;
             videoPlayer.playOnAwake = true;
             videoPlayer.Prepare();
             videoPlayer.prepareCompleted += OnVideoReady;
-            videoPlayer.loopPointReached += OnVideoFinished;
+            videoPlayer.loopPointReached += OnVideoFinished;    
         }
-         void OnVideoReady(VideoPlayer vp)
+        void OnVideoReady(VideoPlayer vp)
         {
             loading.SetActive(false);
             videoPlayer.prepareCompleted -= OnVideoReady;
@@ -42,24 +60,6 @@ namespace OnBoarding
             videoPlayer.Stop();
             OnXtraStepDone();
             Hide();
-        }
-        public override void OnShow()
-        {
-            switch(step)
-            {
-                case OnBoardingManager.steps.video_character:
-                    field.text = "Así se hace un personaje";
-                break;
-                case OnBoardingManager.steps.video_object:
-                    field.text = "Así se hace un objeto";
-                break;
-                  case OnBoardingManager.steps.video_story:
-                    field.text = "Así se hace una historia";
-                break;
-                  case OnBoardingManager.steps.video_bg:
-                    field.text = "Así se hace un background";
-                break;
-            }           
         }
     }
 }
