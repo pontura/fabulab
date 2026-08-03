@@ -13,6 +13,8 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] Toggle toggleTransition;
         [SerializeField] GameObject durationBtn;
         [SerializeField] VideoPlayerFabulab videoPlayerFabulab;
+        [SerializeField] CamerasEditorUI camerasEditorUI;
+        
         
 
         protected override void Awake() {
@@ -34,6 +36,9 @@ namespace Yaguar.StoryMaker.Editor
             toggleTransition.gameObject.SetActive(enable);
             videoPlayerFabulab.Show(!enable);
             durationBtn.gameObject.SetActive(enable);
+
+            camerasEditorUI.Init(enable);        
+            camerasEditorUI.Show(enable);
 
             if(enable)
                 timeline.GetComponent<Animator>().Play("editor");

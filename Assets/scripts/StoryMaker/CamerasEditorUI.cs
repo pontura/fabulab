@@ -30,6 +30,19 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.SetCamDataEdition -=SetCamDataEdition;
             StoryMakerEvents.ActivateCamDataEditionDrag -= ActivateCamDataEditionDrag;
         }
+        bool isEditing;
+        public void Init(bool isEditing)
+        {
+            this.isEditing = isEditing;
+            foreach(GameObject go in editorCams)
+                go.SetActive(false); 
+        }
+        public void Show(bool isOn)
+        {
+            if(!isEditing) isOn = false;
+            print("CamerasEditorUI " + isOn);
+            gameObject.SetActive(isOn);
+        }
         public void Reset()
         {
             normalizedPos = Vector2.zero;
@@ -44,7 +57,7 @@ namespace Yaguar.StoryMaker.Editor
         private void OnTimelinePlay(bool isPlay)
         {
             print("OnTimelinePlay " +isPlay);
-            gameObject.SetActive(!isPlay);
+            Show(!isPlay);
             if(!isPlay)
             {
                 bool tween = true;
