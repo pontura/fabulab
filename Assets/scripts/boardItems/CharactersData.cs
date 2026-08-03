@@ -466,7 +466,7 @@ namespace BoardItems
             FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.characters.ToString(), fd.id, (tex) => {
                 fd.thumb = tex;
                 Events.OnCharacterMetadataUpdated(fd);
-            }, fd.userID);
+            }, userId: fd.userID);
 
             charactersMetaData = charactersMetaData.OrderByDescending(x => x.timestamp).ToList();
             userCharactersMetaData = userCharactersMetaData.OrderByDescending(x => x.timestamp).ToList();
