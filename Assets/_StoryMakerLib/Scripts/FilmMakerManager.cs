@@ -212,6 +212,7 @@ namespace Yaguar.StoryMaker.Editor
             SetScene(lastSceneId);
             timeline.JumpTo(ScenesManager.Instance.currentSceneId);
         }
+        public virtual void MoveCamSingleFrame() {}
         protected virtual void SetScene(int lastSceneId)
         {
             int total = ScenesManager.Instance.Scenes.Count();
@@ -228,6 +229,9 @@ namespace Yaguar.StoryMaker.Editor
                     StartCoroutine(MoveAvatarsAfter(delay));
                     StartCoroutine(MoveCamera(timeline.keyframe_duration));
                 }
+            } else
+            {
+                MoveCamSingleFrame();
             }
 
             if (ScenesManager.Instance.currentSceneId > total)

@@ -18,6 +18,7 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.OnMovieOver += OnMovieOver;
             base.Start();
             Invoke(nameof(SetTotalMarkers), Time.deltaTime * 3);
+
         }
         public override void OnDestroyed()
         {                 
@@ -59,6 +60,7 @@ namespace Yaguar.StoryMaker.Editor
 
         public override void OnDisabled()
         {
+            StopAllCoroutines();
             ghostImage.Show(false);
         }
         public override  void OnEnabled()
@@ -110,14 +112,8 @@ namespace Yaguar.StoryMaker.Editor
                 Destroy(child.gameObject);
             }
             all.Clear();
-
-            // if(filmMakerUI.isEditing)
-            // {                
-            //     Scenario.Instance.StartCoroutine(RefreshKeyframesC());
-            //     shotButtons.Show(true);
-            // }
-            // else
-            // {
+            
+            StopAllCoroutines();
             int a = 0;
             foreach (SceneDataFabulab s in ScenesManagerFabulab.Instance.Scenes)
             {

@@ -67,6 +67,7 @@ public class KeyFrameUI : MonoBehaviour
     }
     public void UpdateScreenshot()
     {
+        if(gameObject.activeInHierarchy == false) return;
         print("CAPTURE SCREENSHOT id: " + id);
         if (timeline.filmMakerUI.isEditing)
             Scenario.Instance.Screenshot(ScreenshotUpdated);          
@@ -75,6 +76,7 @@ public class KeyFrameUI : MonoBehaviour
     }
     void ScreenshotUpdated(Texture2D texture)
     {
+        if(gameObject.activeInHierarchy == false) return;
         sprite = Sprite.Create(
             texture,                   
             new Rect(0, 0, texture.width, texture.height), 

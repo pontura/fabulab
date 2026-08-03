@@ -22,8 +22,8 @@ namespace Yaguar.StoryMaker.Editor
         {
             if(!play)
             {
-                 cam.orthographicSize = defaultZoom;
-                 Vector3 camPos = Vector2.zero;
+                cam.orthographicSize = defaultZoom;
+                cam.transform.position = new Vector3(0,  3.34f, cam.transform.position.z);
             }
         }
         private void SetCamData(Vector2 pos, float zoom, bool tween)
@@ -33,22 +33,14 @@ namespace Yaguar.StoryMaker.Editor
         public void OnUpdate(Vector2 pos, float zoom)
         {
             ApplyZoom1(pos, zoom);
+            print("OnUpdate CamData "+ pos + "  zoom : " + zoom );
         }
         void ApplyZoom1(Vector2 pos, float zoom)
         {
             if(zoom == 0) zoom = defaultZoom;
-            cam.orthographicSize = zoom;
-            Vector3 camPos = cam.transform.position;
-
-            if(zoom == defaultZoom) 
-                camPos = Vector2.zero;
-            else{
-                camPos.x = limitsCamZoom1.x * pos.x;
-                camPos.y = (limitsCamZoom1.y * pos.y) + 10;
-            }
-            
-            cam.transform.position = camPos;
-           // print("OnUpdate CamData "+ pos + " camPos: " + camPos  + "  zoom : " + zoom );
+            cam.orthographicSize = zoom;         
+            cam.transform.position = pos;
+            print("OnUpdate " + pos);
         }
     }
 }

@@ -214,6 +214,9 @@ namespace Yaguar.StoryMaker.Editor
                 }
             } else if(State == states.STOPPED) {
                 Invoke(nameof(SetPaused), Time.deltaTime);
+            } else
+            {
+                MoveCamSingleFrame();
             }
 
             if (ScenesManagerFabulab.Instance.currentSceneId > total)
@@ -226,8 +229,8 @@ namespace Yaguar.StoryMaker.Editor
             if (ScenesManagerFabulab.Instance.GetActiveScene() != null) {
                 toggleTransition.isOn = aciveScene.transition;
                 StoryMakerEvents.SetBackgroundLights();
-                if (State == states.PLAYING)
-                    StoryMakerEvents.SetCamData(aciveScene.camData.pos, aciveScene.camData.zoom, aciveScene.camData.tween);
+                // if (State == states.PLAYING)
+                //     StoryMakerEvents.SetCamData(aciveScene.camData.pos, aciveScene.camData.zoom, aciveScene.camData.tween);
             }
 
             ScenesManagerFabulab.Instance.SetSceneObjectsIntoScenenario(lastSceneId);
@@ -239,7 +242,17 @@ namespace Yaguar.StoryMaker.Editor
             iTween.Stop();
             StoryMakerEvents.OnMoviePaused();
         }
+        
+        float defaultZoom = 60;
+        [SerializeField] Vector2 limitsCamZoom1;
         [SerializeField] ScenarioCameraManager scenarioCameraManager;
+
+        public override void MoveCamSingleFrame()
+        {
+            CamData currentScene = ScenesManagerFabulab.Instance.Scenes[ScenesManagerFabulab.Instance.currentSceneId-1].camData;
+            Vector2 pos_from = GetPos(currentScene.pos, currentScene.zoom);
+            scenarioCameraManager.OnUpdate(pos_from, currentScene.zoom);
+        }
         protected override IEnumerator MoveCamera(float duration)
         { 
             print("MoveCamera currentSceneId" + ScenesManagerFabulab.Instance.currentSceneId + " ScenesManagerFabulab.Instance.Scenes.Count_ " + ScenesManagerFabulab.Instance.Scenes.Count);
@@ -248,21 +261,42 @@ namespace Yaguar.StoryMaker.Editor
             else{
                 CamData currentScene = ScenesManagerFabulab.Instance.Scenes[ScenesManagerFabulab.Instance.currentSceneId-1].camData;
                 CamData nextScene = ScenesManagerFabulab.Instance.Scenes[ScenesManagerFabulab.Instance.currentSceneId].camData;
+
+                print("______ currentScene pos:" + currentScene.pos + "  nextScene.pos : " + nextScene.pos );
                 if(!currentScene.tween || (currentScene.pos == nextScene.pos && currentScene.zoom == nextScene.zoom))
                 {
                     //no hace nada:
                 } else{
                     float a = 0;
+
+                    Vector2 pos_from = GetPos(currentScene.pos, currentScene.zoom);
+                    Vector2 pos_to = GetPos(nextScene.pos, nextScene.zoom);
+
                     while(a<duration)
                     {
-                        Vector2 pos = Vector2.Lerp(currentScene.pos, nextScene.pos, a/duration);
-                        float zoom = Mathf.Lerp(currentScene.zoom, nextScene.zoom, a/duration);
+                        float d = a/duration;
+                        Vector2 pos = Vector2.Lerp(pos_from, pos_to, d);
+                        float zoom = Mathf.Lerp(currentScene.zoom, nextScene.zoom, d);
+
                         scenarioCameraManager.OnUpdate(pos, zoom);
                         yield return new WaitForEndOfFrame();
                         a += Time.deltaTime;
                     }
                 }
             }
+        }
+        Vector2 GetPos(Vector2 pos, float zoom)
+        {
+            if(zoom == defaultZoom)
+            {
+                pos.x = limitsCamZoom1.x * pos.x;
+                pos.y = (limitsCamZoom1.y * pos.y) + 3.34f;
+            }
+            else{
+                pos.x = limitsCamZoom1.x * pos.x;
+                pos.y = (limitsCamZoom1.y * pos.y) + 10;
+            }
+            return pos;
         }
         protected override IEnumerator MoveAvatarsAfter(float delay)
         {
