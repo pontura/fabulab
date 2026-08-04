@@ -15,6 +15,7 @@ namespace Yaguar.StoryMaker.Editor
         float limitZoom;
         Vector2 intialMousePos;
         public Vector2 normalizedPos;
+        bool isEditing;
 
         void Start()
         {
@@ -30,7 +31,6 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.SetCamDataEdition -=SetCamDataEdition;
             StoryMakerEvents.ActivateCamDataEditionDrag -= ActivateCamDataEditionDrag;
         }
-        bool isEditing;
         public void Init(bool isEditing)
         {
             this.isEditing = isEditing;
@@ -56,6 +56,7 @@ namespace Yaguar.StoryMaker.Editor
 
         private void OnTimelinePlay(bool isPlay)
         {
+            if(!isEditing) {Show(false);return;}
             print("OnTimelinePlay " +isPlay);
             Show(!isPlay);
             if(!isPlay)
