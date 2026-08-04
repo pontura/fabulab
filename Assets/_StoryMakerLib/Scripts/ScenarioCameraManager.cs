@@ -7,6 +7,8 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] Camera cam;
         [SerializeField] Vector2 limitsCamZoom1;
         float defaultZoom = 60;
+        [SerializeField] bool isEditing;
+
         void Start()
         {
             StoryMakerEvents.SetCamData += SetCamData;
@@ -17,10 +19,13 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.SetCamData -= SetCamData;
             StoryMakerEvents.OnTimelinePlay -= OnTimelinePlay;
         }
-
+        public void Init(bool isEditing)
+        {
+            this.isEditing = isEditing;
+        }
         private void OnTimelinePlay(bool play)
         {
-            if(!play)
+            if(!play && isEditing)
             {
                 cam.orthographicSize = defaultZoom;
                 cam.transform.position = new Vector3(0,  3.34f, cam.transform.position.z);
@@ -33,13 +38,13 @@ namespace Yaguar.StoryMaker.Editor
         public void OnUpdate(Vector2 pos, float zoom)
         {
             ApplyZoom1(pos, zoom);
-            print("OnUpdate CamData "+ pos + "  zoom : " + zoom );
         }
         void ApplyZoom1(Vector2 pos, float zoom)
         {
             if(zoom == 0) zoom = defaultZoom;
             cam.orthographicSize = zoom;         
             cam.transform.position = pos;
+            print("OnUpdate CamData "+ pos + "  zoom : " + zoom );
         }
     }
 }

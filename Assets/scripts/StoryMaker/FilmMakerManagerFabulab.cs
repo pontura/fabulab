@@ -7,13 +7,14 @@ namespace Yaguar.StoryMaker.Editor
     public class FilmMakerManagerFabulab : FilmMakerManager
     {
         [SerializeField] protected Button newButton;
-      //  [SerializeField] protected Button hamburguerButton;
-       // [SerializeField] protected HorizontalLayoutGroup buttonsGroup;
         [SerializeField] protected float delayFactor;
         [SerializeField] Toggle toggleTransition;
         [SerializeField] GameObject durationBtn;
         [SerializeField] VideoPlayerFabulab videoPlayerFabulab;
         [SerializeField] CamerasEditorUI camerasEditorUI;
+        [SerializeField] ScenarioCameraManager scenarioCameraManager;
+         float defaultZoom = 60;
+        [SerializeField] Vector2 limitsCamZoom1;
         
         
 
@@ -37,7 +38,8 @@ namespace Yaguar.StoryMaker.Editor
             videoPlayerFabulab.Show(!enable);
             durationBtn.gameObject.SetActive(enable);
 
-            camerasEditorUI.Init(enable);        
+            scenarioCameraManager.Init(enable);
+            camerasEditorUI.Init(enable);
             camerasEditorUI.Show(enable);
 
             if(enable)
@@ -229,8 +231,6 @@ namespace Yaguar.StoryMaker.Editor
             if (ScenesManagerFabulab.Instance.GetActiveScene() != null) {
                 toggleTransition.isOn = aciveScene.transition;
                 StoryMakerEvents.SetBackgroundLights();
-                // if (State == states.PLAYING)
-                //     StoryMakerEvents.SetCamData(aciveScene.camData.pos, aciveScene.camData.zoom, aciveScene.camData.tween);
             }
 
             ScenesManagerFabulab.Instance.SetSceneObjectsIntoScenenario(lastSceneId);
@@ -243,9 +243,7 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.OnMoviePaused();
         }
         
-        float defaultZoom = 60;
-        [SerializeField] Vector2 limitsCamZoom1;
-        [SerializeField] ScenarioCameraManager scenarioCameraManager;
+       
 
         public override void MoveCamSingleFrame()
         {

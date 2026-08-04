@@ -64,6 +64,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         public virtual void OnTimelinePlay(bool isOn)
         {
+            StopAllCoroutines();
             if (isOn)
             {
                 //Events.OnAddScore(1);
