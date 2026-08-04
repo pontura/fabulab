@@ -13,7 +13,6 @@ namespace UI.MainApp.Home.User
         [SerializeField] protected Button deleteBtn;
         [SerializeField] protected GameObject loading;
         [SerializeField] protected ToggleButton infoBtn;
-        [SerializeField] protected Button reportBtn;
         public string Id { get; private set; }
 
         protected MetadataTypes metadataType;
@@ -25,7 +24,6 @@ namespace UI.MainApp.Home.User
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
             loading.SetActive(false);
             infoBtn.gameObject.SetActive(false);
-            reportBtn.gameObject.SetActive(true);
             AddOnClick(OnClicked);
         }
         public void Init(SOPartData cd, System.Action<string> OnClicked)
@@ -40,7 +38,6 @@ namespace UI.MainApp.Home.User
                 infoBtn.Init(OnInfoClicked, isPublic);
             }  else            */
             infoBtn.gameObject.SetActive(false);
-            reportBtn.gameObject.SetActive(false);
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
             AddOnClick(OnClicked);
         }        
@@ -55,10 +52,8 @@ namespace UI.MainApp.Home.User
             print("SHOW userView " + userView);
             if (userView) {
                 UpdatePublicState();
-                reportBtn.gameObject.SetActive(false);
             } else {
                 infoBtn.gameObject.SetActive(false);
-                reportBtn.gameObject.SetActive(true);
             }
                         
             AddOnClick(OnClicked);
@@ -71,15 +66,12 @@ namespace UI.MainApp.Home.User
             metadataType = type;
             itemUserId = cd.userID;
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
-            reportBtn.gameObject.SetActive(true);
         }
         virtual public void Init(string id, Sprite sprite) {
             thumb.sprite = sprite;
             Id = id;
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
-            infoBtn.gameObject.SetActive(false);
-            if(reportBtn!=null)
-                reportBtn.gameObject.SetActive(false);
+            infoBtn.gameObject.SetActive(false);            
             loading.SetActive(false);
         }
 
