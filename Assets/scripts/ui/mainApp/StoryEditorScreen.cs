@@ -396,8 +396,7 @@ namespace UI.MainApp
             print("EnableStoryEdition " + enable);
             GetComponent<FilmMakerManager>().isEditing = enable;
             tabs.gameObject.SetActive(enable);
-            storyName.interactable = enable;
-
+            storyName.gameObject.SetActive(enable);
             actionUI.SetOn(enable);
             emojisUI.SetOn(enable);
         }
