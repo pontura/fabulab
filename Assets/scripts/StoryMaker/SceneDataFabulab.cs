@@ -200,6 +200,7 @@ namespace Yaguar.StoryMaker.Editor
             nuevo.camData = new CamData();
             nuevo.camData.pos = camData.pos;
             nuevo.camData.zoom = camData.zoom;
+            nuevo.camData.tween = camData.tween;
             return nuevo;
         }
 
