@@ -38,7 +38,8 @@ namespace BoardItems.BoardData
         public string timestamp;
         public bool isPublic;
         public string name;
-        
+        public int likes;
+
         public void SetName(string name)
         {
            this.name = name;

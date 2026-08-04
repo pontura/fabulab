@@ -4,10 +4,8 @@ using Firebase.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
 using UI;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
 using Yaguar.StoryMaker.Editor;
@@ -277,7 +275,7 @@ namespace BoardItems
             swmd.name = md.name;            
             swmd.tags = md.tags;
             swmd.creators = md.creators;
-            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.so.ToString(), md.id, swmd, OnDone);
+            FirebaseStoryMakerDBManager.Instance.UpdateMetadataToServer(MetadataTypes.so.ToString(), md.id, swmd, OnDone);
         }
 
         public void SaveInfo(string id, bool isPublic, string name, List<string> selectedTagsID, System.Action<bool, string> OnDone)
@@ -365,6 +363,7 @@ namespace BoardItems
                     pmd.userID = snapshot.Child("userID").Value as string;
                     pmd.name = snapshot.Child("name").Value as string;
                     pmd.isPublic = snapshot.HasChild("isPublic") ? (bool)snapshot.Child("isPublic").Value : false;
+                    pmd.likes = snapshot.HasChild("likes") ? (int)(long)snapshot.Child("likes").Value : 0;
                     if (snapshot.HasChild("timestamp"))
                         pmd.timestamp = snapshot.Child("timestamp").Value as string;
                     else
@@ -420,6 +419,7 @@ namespace BoardItems
 
             pmd.isPublic = child.HasChild("isPublic") ? (bool)child.Child("isPublic").Value : false;
             pmd.name = child.Child("name").Value as string;
+            pmd.likes = child.HasChild("likes") ? (int)(long)child.Child("likes").Value : 0;
 
             // pmd.tags = new List<string>();
             // if(child.HasChild("tags"))

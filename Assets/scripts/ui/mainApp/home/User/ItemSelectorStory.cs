@@ -42,6 +42,7 @@ namespace UI.MainApp.Home.User
                 bool isPublic = Data.Instance.scenesData.GetMeta(Id).isPublic;
                 infoBtn.gameObject.SetActive(true);
                 infoBtn.Init(OnInfoClicked, isPublic);
+                likeBtn.gameObject.SetActive(false);
             } else {
                 GetComponent<Button>().onClick.AddListener(() => {
                     AudioManager.Instance.uiSfxManager.PlayTransp("click", 5);
@@ -49,7 +50,8 @@ namespace UI.MainApp.Home.User
                 });
                 editionGO.SetActive(false);
                 viewGO.SetActive(true);
-
+                likeBtn.gameObject.SetActive(true);
+                likeBtn.Init(OnLikeToggle, Data.Instance.userData.isLiked(Id));
                 Data.Instance.cacheData.GetUser(content.userID, (userData, tex) => {
                     creatorField.text = userData.username;
                     creatorThumb.sprite = tex != null ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f)) : null;

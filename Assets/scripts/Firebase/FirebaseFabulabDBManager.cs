@@ -5,6 +5,7 @@ using Firebase.Database;
 using Firebase.Extensions;
 using Firebase.Storage;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -277,7 +278,7 @@ namespace Yaguar.StoryMaker.DB
         }
 
 
-        public void SaveMetadataToServer(string type, string id, ServerCharacterMetaData swmd, System.Action<bool, string> OnDone = null)
+        public void UpdateMetadataToServer(string type, string id, ServerCharacterMetaData swmd, System.Action<bool, string> OnDone = null)
         {
             if (id == null || id.Length == 0) {
                 Debug.LogError("Trying to save metadata without id");
@@ -285,11 +286,13 @@ namespace Yaguar.StoryMaker.DB
             }
 
             Debug.Log("#Save Metadata To Server type: " + type + ", id: " + id);
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/" + type  + "/" + id);            
-            string s = JsonConvert.SerializeObject(swmd);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/" + type  + "/" + id);
+            var jObject = JObject.FromObject(swmd);            
+            //string s = JsonConvert.SerializeObject(swmd);
             if (type == "so")
-                s = JsonConvert.SerializeObject(swmd as ServerPropMetaData);
-            reference.SetRawJsonValueAsync(s).ContinueWithOnMainThread(task => {
+                jObject = JObject.FromObject(swmd as ServerPropMetaData);
+            //JsonConvert.SerializeObject(swmd as ServerPropMetaData);
+            reference.UpdateChildrenAsync(NormalizeDictionary(jObject)).ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#SaveMetadataToServer FAIL");
                     Debug.Log(task.Exception);
@@ -336,6 +339,7 @@ namespace Yaguar.StoryMaker.DB
                                 fd.id = child.Key;
                                 fd.userID = child.Child("userID").Value as string;
                                 fd.name = child.Child("name").Value as string;
+                                fd.likes = child.HasChild("likes") ? (int)(long)child.Child("likes").Value : 0;
 
                                 fd.creators = new List<string>();
                                 fd.tags = new List<string>();
@@ -997,6 +1001,169 @@ namespace Yaguar.StoryMaker.DB
                  }
                  Debug.Log($"Server DownloadTexture: images/{uid}/{folder}/{fileName}.jpg");
              });
+        }
+
+        public void LoadUserLikeFromServer(System.Action<List<string>> callback, string userID = "") {
+            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+
+            if (userID == "")
+                userID = _uid;
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + userID + "/likes");
+            reference.GetValueAsync().ContinueWith(task => {
+                if (task.IsFaulted || task.IsCanceled) {
+                    Debug.Log("#LoadUserLikeFromServer FAIL");
+                    Debug.Log(task.Exception);
+                } else if (task.IsCompleted) {
+                    Dictionary<string, string> d = JsonConvert.DeserializeObject<Dictionary<string, string>>(task.Result.GetRawJsonValue());
+                    callback(d.Keys.ToList<string>());
+                }
+            }, taskScheduler);
+            Debug.Log("Server: LoadUserLikeFromServer");
+            //Debug.Log(url);
+        }
+
+        public void AddUserLikeToServer(string itemId) {
+            Dictionary<string, System.Object> childUpdates = new Dictionary<string, System.Object>();
+            childUpdates[itemId] = "";
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + _uid + "/likes");
+            reference.UpdateChildrenAsync(childUpdates).ContinueWith(task => {
+                if (task.IsFaulted || task.IsCanceled) {
+                    Debug.Log("#AddUserLikeToServer FAIL");
+                    Debug.Log(task.Exception);
+                }
+            });
+            Debug.Log("Server: AddUserLikeToServer "+ itemId);
+            //print("AddUserLikeToServer url : " + url);
+        }
+
+        public void RemoveUserLikeToServer(string itemId) {
+            Dictionary<string, System.Object> childUpdates = new Dictionary<string, System.Object>();
+            childUpdates[itemId] = "";
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + _uid + "/likes/"+itemId);
+            reference.RemoveValueAsync().ContinueWithOnMainThread(task => {
+                if (task.IsFaulted || task.IsCanceled) {
+                    Debug.Log("#RemoveUserLikeToServer FAIL");
+                    Debug.Log(task.Exception);
+                }
+            });
+            
+            Debug.Log("Server: RemoveUserLikeToServer "+ itemId);
+            //print("AddUserLikeToServer url : " + url);
+        }
+
+        public void AddLikeCountToFilm(string type, string id) {
+           
+            if (id == null || id.Length == 0) {
+                Debug.LogError("Trying to update likes without id");
+                return;
+            }
+
+            Debug.Log("#Save Metadata To Server type: " + type + ", id: " + id);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/" + type + "/" + id + "/likes");
+            IncrementNode(reference);
+            Debug.Log("Server: AddLikeCountToFilm" + type + ", id: " + id);
+        }
+
+        public void RemoveLikeCountToFilm(string type, string id) {
+
+            if (id == null || id.Length == 0) {
+                Debug.LogError("Trying to update likes without id");
+                return;
+            }
+
+            Debug.Log("#Save Metadata To Server type: " + type + ", id: " + id);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/" + type + "/" + id + "/likes");
+            DecrementNode(reference, 0);
+            Debug.Log("Server: RemoveLikeCountToFilm" + type + ", id: " + id);
+        }
+
+        public void IncrementNode(DatabaseReference reference, int maxValue=int.MaxValue) {
+
+            reference.RunTransaction(mutableData =>
+            {
+                long currentValue = 0;
+                if (mutableData.Value != null) {
+                    if (mutableData.Value is long longVal) {
+                        currentValue = longVal;
+                    } else if (mutableData.Value is string strVal && long.TryParse(strVal, out long parsed)) {
+                        currentValue = parsed;
+                    } else {
+                        Debug.LogWarning("Tipo inesperado en nodo: " + mutableData.Value.GetType());
+                        return TransactionResult.Abort();
+                    }
+                }                
+                mutableData.Value = currentValue + 1 > maxValue ? maxValue : currentValue + 1;
+                return TransactionResult.Success(mutableData);
+            }).ContinueWithOnMainThread(task =>
+            {
+                if (task.Exception != null) {
+                    Debug.LogError("Error en la transacción: " + task.Exception);
+                } else if (task.IsCompleted) {
+                    Debug.Log("Valor incrementado correctamente");
+                }
+            });
+        }
+
+        public void DecrementNode(DatabaseReference reference, int minValue = int.MinValue) {
+
+            reference.RunTransaction(mutableData =>
+            {
+                long currentValue = 0;
+                if (mutableData.Value != null) {
+                    if (mutableData.Value is long longVal) {
+                        currentValue = longVal;
+                    } else if (mutableData.Value is string strVal && long.TryParse(strVal, out long parsed)) {
+                        currentValue = parsed;
+                    } else {
+                        Debug.LogWarning("Tipo inesperado en nodo: " + mutableData.Value.GetType());
+                        return TransactionResult.Abort();
+                    }
+                }
+                mutableData.Value = currentValue - 1 < minValue ? minValue : currentValue - 1;
+                return TransactionResult.Success(mutableData);
+            }).ContinueWithOnMainThread(task =>
+            {
+                if (task.Exception != null) {
+                    Debug.LogError("Error en la transacción: " + task.Exception);
+                } else if (task.IsCompleted) {
+                    Debug.Log("Valor decrementado correctamente");
+                }
+            });
+        }
+
+        private static Dictionary<string, object> NormalizeDictionary(JObject jObject) {
+            var dict = new Dictionary<string, object>();
+
+            foreach (var property in jObject.Properties()) {
+                dict[property.Name] = NormalizeToken(property.Value);
+            }
+
+            return dict;
+        }
+
+        private static object NormalizeToken(JToken token) {
+            switch (token.Type) {
+                case JTokenType.Integer:
+                    return token.ToObject<long>(); // Firebase usa long para enteros
+                case JTokenType.Float:
+                    return token.ToObject<double>();
+                case JTokenType.String:
+                    return token.ToObject<string>();
+                case JTokenType.Boolean:
+                    return token.ToObject<bool>();
+                case JTokenType.Object:
+                    return NormalizeDictionary((JObject)token);
+                case JTokenType.Array:
+                    var list = new List<object>();
+                    foreach (var item in (JArray)token) {
+                        list.Add(NormalizeToken(item));
+                    }
+                    return list;
+                case JTokenType.Null:
+                    return null;
+                default:
+                    return token.ToString(); // fallback seguro
+            }
         }
     }
 }

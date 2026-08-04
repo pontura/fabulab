@@ -9,7 +9,6 @@ using UI;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
-using Yaguar.StoryMaker.Editor;
 using static BoardItems.Characters.CharacterPartsHelper;
 
 namespace BoardItems
@@ -297,7 +296,7 @@ namespace BoardItems
             swmd.tags = md.tags;
             swmd.creators = md.creators;
             swmd.name = md.name;
-            FirebaseStoryMakerDBManager.Instance.SaveMetadataToServer(MetadataTypes.characters.ToString(), md.id, swmd, OnDone);
+            FirebaseStoryMakerDBManager.Instance.UpdateMetadataToServer(MetadataTypes.characters.ToString(), md.id, swmd, OnDone);
         }
 
         public void SaveInfo(string id, bool isPublic, string name, List<string> selectedTagsID, System.Action<bool, string> OnDone) {
@@ -409,6 +408,7 @@ namespace BoardItems
                     cmd.userID = snapshot.Child("userID").Value as string;
                     cmd.name = snapshot.Child("name").Value as string;
                     cmd.isPublic = snapshot.HasChild("isPublic") ? (bool)snapshot.Child("isPublic").Value : false;
+                    cmd.likes = snapshot.HasChild("likes") ? (int)(long)snapshot.Child("likes").Value : 0;
                     if (snapshot.HasChild("timestamp"))
                         cmd.timestamp = snapshot.Child("timestamp").Value as string;
                     else
@@ -461,8 +461,12 @@ namespace BoardItems
             if (child.HasChild("timestamp"))
                 fd.timestamp = child.Child("timestamp").Value as string;
             else
-                fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");                        
-            
+                fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
+
+            fd.isPublic = child.HasChild("isPublic") ? (bool)child.Child("isPublic").Value : false;
+            fd.name = child.Child("name").Value as string;
+            fd.likes = child.HasChild("likes") ? (int)(long)child.Child("likes").Value : 0;
+
             FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.characters.ToString(), fd.id, (tex) => {
                 fd.thumb = tex;
                 Events.OnCharacterMetadataUpdated(fd);

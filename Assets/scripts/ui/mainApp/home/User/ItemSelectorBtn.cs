@@ -13,6 +13,7 @@ namespace UI.MainApp.Home.User
         [SerializeField] protected Button deleteBtn;
         [SerializeField] protected GameObject loading;
         [SerializeField] protected ToggleButton infoBtn;
+        [SerializeField] protected ToggleButton likeBtn;
         public string Id { get; private set; }
 
         protected MetadataTypes metadataType;
@@ -24,6 +25,7 @@ namespace UI.MainApp.Home.User
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
             loading.SetActive(false);
             infoBtn.gameObject.SetActive(false);
+            likeBtn.gameObject.SetActive(false);            
             AddOnClick(OnClicked);
         }
         public void Init(SOPartData cd, System.Action<string> OnClicked)
@@ -38,6 +40,8 @@ namespace UI.MainApp.Home.User
                 infoBtn.Init(OnInfoClicked, isPublic);
             }  else            */
             infoBtn.gameObject.SetActive(false);
+            likeBtn.gameObject.SetActive(true);
+            likeBtn.Init(OnLikeToggle, Data.Instance.userData.isLiked(Id));
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
             AddOnClick(OnClicked);
         }        
@@ -47,6 +51,11 @@ namespace UI.MainApp.Home.User
             UIManager.Instance.infoDataScreen.Init(Id, metadataType, thumb.sprite);
             print($"Info clicked id: {Id} isPublic: " + isPublic);
         }
+        protected void OnLikeToggle(bool addLike) {
+            AudioManager.Instance.uiSfxManager.PlayTransp("click", 2);
+            Data.Instance.userData.OnLikeUpdate(metadataType,Id,addLike);
+            print($"Like clicked id: {Id} adding: " + addLike);
+        }
         public void Init(CharacterMetaData cd, MetadataTypes type, System.Action<string> OnClicked, bool userView = false) {
             Init(cd, type);
             print("SHOW userView " + userView);
@@ -54,6 +63,8 @@ namespace UI.MainApp.Home.User
                 UpdatePublicState();
             } else {
                 infoBtn.gameObject.SetActive(false);
+                likeBtn.gameObject.SetActive(true);
+                likeBtn.Init(OnLikeToggle, Data.Instance.userData.isLiked(Id));
             }
                         
             AddOnClick(OnClicked);
@@ -95,6 +106,7 @@ namespace UI.MainApp.Home.User
             print("ItemSelectorBtn id: " + Id + " isPublic: " + isPublic);
             infoBtn.gameObject.SetActive(true);
             infoBtn.Init(OnInfoClicked, isPublic);
+            likeBtn.gameObject.SetActive(false);
         }
 
 
@@ -126,14 +138,9 @@ namespace UI.MainApp.Home.User
             Destroy(gameObject);
         }
 
-        public void OnReportClicked() {
+        void OnLikeClicked() {
             AudioManager.Instance.uiSfxManager.PlayTransp("click", 2);
-            Events.OnConfirm("¿Querés reportar este contenido como inadecuado?", "Sí", "No", OnReportConfirmed);
-        }
-        private void OnReportConfirmed(bool doIt) {
-            if (doIt) {
-                Events.OnPopupTopSignalText("¡GRACIAS!");
-            }
-        }
+            
+        }       
     }
 }

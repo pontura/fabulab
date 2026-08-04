@@ -1,8 +1,10 @@
+using BoardItems.BoardData;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using Yaguar.Auth;
+using Yaguar.StoryMaker.DB;
 
 public class UserData : MonoBehaviour
 {
@@ -11,6 +13,7 @@ public class UserData : MonoBehaviour
     public class UserDataInDatabase : FirebaseAuthManager.UserDataInDatabase
     {
         public string deviceID;
+        public List<string> likes;
     }
 
     public int onboardingSteps;
@@ -89,6 +92,7 @@ public class UserData : MonoBehaviour
         //ResetUserData();
         if (IsLogged()) {
             CheckAdmin();
+            FirebaseStoryMakerDBManager.Instance.LoadUserLikeFromServer(OnLoadingUserLikesFromServer);
         }
     }
 
@@ -130,5 +134,38 @@ public class UserData : MonoBehaviour
         userDataInDatabase.email = "";
         userDataInDatabase.uid = "";
         onboardingSteps = 0;
+    }
+
+    void OnLoadingUserLikesFromServer(List<string> l) {
+        userDataInDatabase.likes = l;
+    }
+
+    public bool isLiked(string filmId) {
+        if (userDataInDatabase.likes != null)
+            return userDataInDatabase.likes.Contains(filmId);
+        else
+            return false;
+    }
+
+    public void OnLikeUpdate(MetadataTypes type, string id, bool adding) {
+        if (!isLiked(id) && adding) {
+            if (userDataInDatabase.likes == null)
+                userDataInDatabase.likes = new List<string>();
+            AddLike(type, id);                
+        } else if(isLiked(id) && !adding) {
+            RemoveLike(type, id);
+        }
+    }
+
+    void AddLike(MetadataTypes type, string id) {
+        userDataInDatabase.likes.Add(id);
+        FirebaseStoryMakerDBManager.Instance.AddUserLikeToServer(id);        
+        FirebaseStoryMakerDBManager.Instance.AddLikeCountToFilm(type.ToString(),id);
+    }
+
+    void RemoveLike(MetadataTypes type, string id) {
+        userDataInDatabase.likes.Remove(id);
+        FirebaseStoryMakerDBManager.Instance.RemoveUserLikeToServer(id);
+        FirebaseStoryMakerDBManager.Instance.RemoveLikeCountToFilm(type.ToString(), id);
     }
 }
