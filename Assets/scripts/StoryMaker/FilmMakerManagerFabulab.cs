@@ -285,7 +285,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         Vector2 GetPos(Vector2 pos, float zoom)
         {
-            if(zoom == defaultZoom)
+            if(zoom == defaultZoom || zoom == 0)
             {
                 return Data.Instance.settings.camDatas[0].pos;
             }
