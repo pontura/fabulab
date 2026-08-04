@@ -28,6 +28,12 @@ public class BordersCreator : MonoBehaviour
         this.container = sr.transform;
         InitBounds( sr.bounds);
     }
+
+    public void Init(Transform container, Bounds bounds) {
+        this.container = container;
+        InitBounds(bounds);
+    }
+
     public void InitBounds(Bounds b)
     {
 

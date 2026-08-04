@@ -1,4 +1,5 @@
 ﻿using BoardItems.Characters;
+using System.Collections;
 using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
@@ -37,20 +38,50 @@ namespace Yaguar.StoryMaker.Editor
             asset.SetActive(true);
             characterManager = asset.GetComponent<CharacterManager>();
             characterManager.Init();
-
-            Invoke("Delayed", 0.1f);            
+                        
+            Invoke(nameof(SetDefaultAnim), 3*Time.deltaTime);
         }
-        void Delayed()
-        {
+        
+        System.Action onColliderSetDone;
+        void SetDefaultAnim() {
+            onColliderSetDone = characterManager.SetTemporalDefaultAnim();
+            Invoke(nameof(SetAvatarCollider), 3 * Time.deltaTime);
+        }
+
+        void SetAvatarCollider()
+        {   
             BoxCollider2D collider = GetComponent<BoxCollider2D>();
             Bounds worldBounds = new Bounds(transform.position, Vector3.zero);
             foreach (SpriteRenderer sr in GetComponentsInChildren<SpriteRenderer>()) {
-                worldBounds.Encapsulate(sr.bounds);
+                //if (sr.gameObject.name == "torax_part" || sr.transform.parent.parent.gameObject.name == "head_part")
+                //if (sr.gameObject.name == "torax_part")
+                    //Debug.Log($"%Name: {sr.gameObject.name}");
+                    worldBounds.Encapsulate(sr.bounds);                
             }
 
+            //Debug.Log($"% Center:{worldBounds.center} Extents: {worldBounds.extents}");
+            Bounds localBounds = GetRectBounds(worldBounds);
+
+            collider.offset = localBounds.center;
+            collider.size = localBounds.size;
+            //collider.size = new Vector2(10f, localBounds.size.y);
+            Debug.Log($"% offset:{collider.offset} size: {collider.size}");
+
+            foreach (Collider2D coll in GetComponentsInChildren<Collider2D>()) {
+                if (coll == collider) 
+                    continue;
+                coll.enabled = false;
+            }
+
+            if(onColliderSetDone!=null)
+                onColliderSetDone();
+            onColliderSetDone = null;
+        }
+
+        Bounds GetRectBounds(Bounds bounds) {
             Vector3[] corners = new Vector3[8];
-            Vector3 ext = worldBounds.extents;
-            Vector3 cen = worldBounds.center;
+            Vector3 ext = bounds.extents;
+            Vector3 cen = bounds.center;
             int i = 0;
             for (int x = -1; x <= 1; x += 2)
                 for (int y = -1; y <= 1; y += 2)
@@ -61,24 +92,16 @@ namespace Yaguar.StoryMaker.Editor
             for (int j = 1; j < corners.Length; j++) {
                 localBounds.Encapsulate(transform.InverseTransformPoint(corners[j]));
             }
-
-            collider.offset = localBounds.center;
-            collider.size = localBounds.size;
-
-            foreach (Collider2D coll in GetComponentsInChildren<Collider2D>()) {
-                if (coll == collider) 
-                    continue;
-                coll.enabled = false;
-            }
-        }        
+            return localBounds;
+        }
 
         public override void StopDrag() {
             if(Mathf.Approximately(initDragPos.x, transform.localPosition.x) &&
                Mathf.Approximately(initDragPos.y, transform.localPosition.y)) {
                 StoryMakerEvents.ShowSoButtons(Input.mousePosition, data);
-                if (Borders == null) {
+                if (Borders == null) {                    
                     Borders = gameObject.AddComponent<BordersCreator>();
-                    Borders.Init(GetComponent<BoxCollider2D>());
+                    Borders.Init(GetComponent<BoxCollider2D>());                    
                 }
                 Borders.Show(true);
             } /*else {

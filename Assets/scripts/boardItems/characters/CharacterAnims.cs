@@ -3,6 +3,7 @@ using UnityEngine;
 public class CharacterAnims : MonoBehaviour
 {
     Animator anim;
+    string currentAnimName;
     private void Awake()
     {
         anim = GetComponent<Animator>();
@@ -27,6 +28,7 @@ public class CharacterAnims : MonoBehaviour
             anim.Play(aName);
         }
 
+        currentAnimName = animName;
     }
     public void Idle()
     {
@@ -35,5 +37,10 @@ public class CharacterAnims : MonoBehaviour
     public void Stop() {
         anim.speed = 0;
         //Debug.Log("& Speed: " + anim.speed);
+    }
+    public System.Action SetTemporalDefaultAnim() {
+        string lastAnim = currentAnimName;
+        Play("");
+        return ()=>Play(lastAnim);
     }
 }

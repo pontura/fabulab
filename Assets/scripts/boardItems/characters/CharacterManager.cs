@@ -126,6 +126,10 @@ namespace BoardItems.Characters
             anims.Stop();
             expressions.Stop();
         }
+        
+        public System.Action SetTemporalDefaultAnim() {
+            return anims.SetTemporalDefaultAnim();
+        }
 
         public override void AttachItem(ItemInScene item)
         {
