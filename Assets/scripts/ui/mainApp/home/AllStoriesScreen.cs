@@ -41,7 +41,8 @@ namespace UI.MainApp.Home.User
                 if (!fd.isPublic) {
                     Destroy(btn.gameObject);
                 } else {
-                    btn.Init(fd.GetSprite());
+                    btn.Init(fd.id,null);
+                    btn.SetContent(fd, this, false);
                     btn.UpdatePublicState();
                     btn.transform.SetAsFirstSibling();
                     ResetCache();
@@ -49,6 +50,7 @@ namespace UI.MainApp.Home.User
             } else {
                 if (fd.isPublic) {
                     AddFilmMetadata(fd);
+                    ResetCache();
                 }
             }
         }

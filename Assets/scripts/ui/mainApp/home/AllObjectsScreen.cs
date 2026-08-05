@@ -30,13 +30,14 @@ namespace UI.MainApp.Home.User
                     if (!fd.isPublic) {
                         Destroy(btn.gameObject);
                     } else {
-                        btn.Init(fd, MetadataTypes.so);
+                        btn.Init(fd, MetadataTypes.so, OpenWork);
                         btn.transform.SetAsFirstSibling();
                         ResetCache();
                     }
                 } else {
                     if (fd.isPublic) {
                         AddPropMetadata(fd);
+                        ResetCache();
                     }
                 }
             }

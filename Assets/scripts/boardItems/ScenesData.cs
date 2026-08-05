@@ -306,6 +306,7 @@ namespace BoardItems
             fd.name = sfd.name;
             fd.speed = sfd.speed;
             fd.isPublic = sfd.isPublic;
+            fd.likes = sfd.likes;
             if (sfd.timestamp == null || sfd.timestamp == "")
                 fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
             else
@@ -446,7 +447,7 @@ namespace BoardItems
             sfd.userID = Data.Instance.userData.userDataInDatabase.uid;
             sfd.isPublic = fd.isPublic;
             sfd.timestamp = fd.timestamp;
-            FirebaseStoryMakerDBManager.Instance.SaveFilmDataToServer(fd.id, sfd, OnDone);
+            FirebaseStoryMakerDBManager.Instance.UpdateFilmDataToServer(fd.id, sfd, OnDone);
         }
 
         public void SaveInfo(string id, bool isPublic, List<string> selectedTagsID, System.Action<bool, string> OnDone) {

@@ -26,13 +26,17 @@ namespace UI.MainApp.Home.User
                 if (!fd.isPublic) {
                     Destroy(btn.gameObject);
                 } else {
-                    btn.Init(fd.GetSprite());
+                    if (StoryMakerEvents.isEditing)
+                        btn.Init(fd, MetadataTypes.characters, Duplicate);
+                    else
+                        btn.Init(fd, MetadataTypes.characters, OpenWork);
                     btn.transform.SetAsFirstSibling();
                     ResetCache();
                 }
             } else {
                 if (fd.isPublic) {
                     AddCharacterMetadata(fd);
+                    ResetCache();
                 }
             }
         }       

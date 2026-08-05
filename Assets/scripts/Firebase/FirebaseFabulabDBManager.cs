@@ -566,13 +566,17 @@ namespace Yaguar.StoryMaker.DB
             //Debug.Log(url);
         }
 
-        public void SaveFilmDataToServer(string filmId, ServerFilmData fd, System.Action<bool, string> OnDone = null) {
-            Debug.Log("#SaveFilmDataToServer");
+        public void UpdateFilmDataToServer(string filmId, ServerFilmData fd, System.Action<bool, string> OnDone = null) {
+            Debug.Log("#UpdateFilmDataToServer");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/" + filmId);
             string s = JsonConvert.SerializeObject(fd);
-            reference.SetRawJsonValueAsync(s).ContinueWithOnMainThread(task => {
+            var jObject = JObject.FromObject(fd);
+            Dictionary<string, object> data = NormalizeDictionary(jObject);
+            data.Remove("likes");
+            reference.UpdateChildrenAsync(data).ContinueWithOnMainThread(task => {
+                //reference.SetRawJsonValueAsync(s).ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
-                    Debug.Log("#SaveFilmDataToServer FAIL");
+                    Debug.Log("#UpdateFilmDataToServer FAIL");
                     Debug.Log(task.Exception);
                 } else {
                     try {
@@ -583,7 +587,7 @@ namespace Yaguar.StoryMaker.DB
                     }
                 }
             });
-            Debug.Log("Server: SaveFilmDataToServer: "+s);
+            Debug.Log("Server: UpdateFilmDataToServer: " + s);
         }
 
         public void LoadUserFilmDataFromServer(List<FilmDataFabulab> filmsData, System.Action<List<FilmDataFabulab>, Dictionary<string, ServerFilmData>> callback) {

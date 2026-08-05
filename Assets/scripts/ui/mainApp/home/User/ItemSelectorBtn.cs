@@ -13,7 +13,7 @@ namespace UI.MainApp.Home.User
         [SerializeField] protected Button deleteBtn;
         [SerializeField] protected GameObject loading;
         [SerializeField] protected ToggleButton infoBtn;
-        [SerializeField] protected ToggleButton likeBtn;
+        [SerializeField] protected LikeToggle likeBtn;
         public string Id { get; private set; }
 
         protected MetadataTypes metadataType;
@@ -64,7 +64,7 @@ namespace UI.MainApp.Home.User
             } else {
                 infoBtn.gameObject.SetActive(false);
                 likeBtn.gameObject.SetActive(true);
-                likeBtn.Init(OnLikeToggle, Data.Instance.userData.isLiked(Id));
+                likeBtn.Init(OnLikeToggle, cd.likes, Data.Instance.userData.isLiked(Id));
             }
                         
             AddOnClick(OnClicked);
@@ -106,7 +106,7 @@ namespace UI.MainApp.Home.User
             print("ItemSelectorBtn id: " + Id + " isPublic: " + isPublic);
             infoBtn.gameObject.SetActive(true);
             infoBtn.Init(OnInfoClicked, isPublic);
-            likeBtn.gameObject.SetActive(false);
+            //likeBtn.gameObject.SetActive(false);
         }
 
 

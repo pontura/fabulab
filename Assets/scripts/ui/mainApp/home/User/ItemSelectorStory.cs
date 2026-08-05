@@ -35,11 +35,12 @@ namespace UI.MainApp.Home.User
 
         void InitStoryBtn(bool isEdition)
         {
-            print("InitStoryBtn" + content.userID + " u: "  + Data.Instance.userData.userDataInDatabase.uid);
+            print("InitStoryBtn" + content.userID + " u: "  + Data.Instance.userData.userDataInDatabase.uid + " isEdition: "+ isEdition);
+
             if (isEdition) {
                 editionGO.SetActive(true);
                 viewGO.SetActive(false);
-                bool isPublic = Data.Instance.scenesData.GetMeta(Id).isPublic;
+                bool isPublic = content.isPublic;
                 infoBtn.gameObject.SetActive(true);
                 infoBtn.Init(OnInfoClicked, isPublic);
                 likeBtn.gameObject.SetActive(false);
@@ -51,7 +52,8 @@ namespace UI.MainApp.Home.User
                 editionGO.SetActive(false);
                 viewGO.SetActive(true);
                 likeBtn.gameObject.SetActive(true);
-                likeBtn.Init(OnLikeToggle, Data.Instance.userData.isLiked(Id));
+                //Debug.Log("#ACA: " + Data.Instance.userData.isLiked(content.id));
+                likeBtn.Init(OnLikeToggle, content.likes, Data.Instance.userData.isLiked(content.id));
                 Data.Instance.cacheData.GetUser(content.userID, (userData, tex) => {
                     creatorField.text = userData.username;
                     creatorThumb.sprite = tex != null ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f)) : null;

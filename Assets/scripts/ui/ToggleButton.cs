@@ -4,10 +4,10 @@ namespace UI
 {
     public class ToggleButton : MonoBehaviour
     {
-        [SerializeField] GameObject on;
-        [SerializeField] GameObject off;
-        bool isOn;
-        System.Action<bool> OnToggle;
+        [SerializeField] protected GameObject on;
+        [SerializeField] protected GameObject off;
+        protected bool isOn;
+        protected System.Action<bool> OnToggle;
         System.Action<int> OnButtonClicked;
         public int id;
         public void Show(bool show)

@@ -56,6 +56,7 @@ namespace UI.MainApp.Home.User
                 imageCache = new Dictionary<int, Texture2D>();
             imageCache.Clear();
             downloading.Clear();
+            SetCurrentScrollIndex(scrollRect.normalizedPosition);
         }
 
         protected virtual void Init() {

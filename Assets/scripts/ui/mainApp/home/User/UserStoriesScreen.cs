@@ -19,7 +19,8 @@ namespace UI.MainApp.Home.User
 
             imageCache = new Dictionary<int, Texture2D>();
         }
-        protected virtual void OnDestroy() {
+        protected override void OnDestroy() {
+            base.OnDestroy();
             Events.OnFilmMetadataUpdated -= OnFilmMetadataUpdated;
             Events.OnFilmMetadataAdded -= OnFilmMetadataAdded;
             Events.OnFilmMetadataRemoved -= OnFilmMetadataRemoved;
