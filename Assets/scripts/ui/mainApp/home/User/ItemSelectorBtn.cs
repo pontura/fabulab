@@ -61,6 +61,7 @@ namespace UI.MainApp.Home.User
             print("SHOW userView " + userView);
             if (userView) {
                 UpdatePublicState();
+                likeBtn.gameObject.SetActive(false);
             } else {
                 infoBtn.gameObject.SetActive(false);
                 likeBtn.gameObject.SetActive(true);
@@ -77,6 +78,7 @@ namespace UI.MainApp.Home.User
             metadataType = type;
             itemUserId = cd.userID;
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
+            likeBtn.gameObject.SetActive(false);
         }
         virtual public void Init(string id, Sprite sprite) {
             thumb.sprite = sprite;

@@ -13,7 +13,7 @@ namespace UI.MainApp.Home.User
             Events.OnCharacterMetadataAdded += OnCharacterMetadataAdded;
             Events.OnCharacterMetadataRemoved += OnCharacterMetadataRemoved;
         }
-        protected virtual void OnDestroy() {
+        protected override void OnDestroy() {
             Events.OnCharacterMetadataUpdated -= OnCharacterMetadataUpdated;
             Events.OnCharacterMetadataAdded -= OnCharacterMetadataAdded;
             Events.OnCharacterMetadataRemoved -= OnCharacterMetadataRemoved;
