@@ -30,7 +30,7 @@ namespace UI.MainApp.Home.User
             AddOnClick(OnClicked);
             SetLikeButton();
         }
-        public void Init(SOPartData cd, System.Action<string> OnClicked, bool storyEditing)
+        public void InitForStoryEdition(SOPartData cd, System.Action<string> OnClicked)
         {
             Id = cd.id;
             /*if(userView)
@@ -46,7 +46,7 @@ namespace UI.MainApp.Home.User
             likeBtn.Init(OnLikeToggle, Data.Instance.userData.isLiked(Id));
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
             AddOnClick(OnClicked);
-            SetLikeButton(storyEditing);
+            likeBtn.gameObject.SetActive(false);
         }        
         protected void OnInfoClicked(bool isPublic)
         {

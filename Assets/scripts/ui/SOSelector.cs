@@ -43,8 +43,7 @@ namespace UI
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
-                bool storyEditing = false;
-                go.Init(cd, OpenWork, storyEditing);
+                go.InitForStoryEdition(cd, OpenWork);
             }
             isActive = true;
             Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);

@@ -42,10 +42,9 @@ namespace UI.MainApp.Home.User
             }
            LoadNext();
         }
-        [SerializeField] bool storyEditing = false;
         protected virtual void AddElement(SOPartData part) {
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-            go.Init(part, SelectWork, storyEditing);
+            go.InitForStoryEdition(part, SelectWork);
         }
 
         protected override void LoadNext()
