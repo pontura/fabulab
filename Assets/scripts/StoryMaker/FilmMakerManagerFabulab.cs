@@ -260,11 +260,16 @@ namespace Yaguar.StoryMaker.Editor
                 CamData currentScene = ScenesManagerFabulab.Instance.Scenes[ScenesManagerFabulab.Instance.currentSceneId-1].camData;
                 CamData nextScene = ScenesManagerFabulab.Instance.Scenes[ScenesManagerFabulab.Instance.currentSceneId].camData;
 
-                print("______ currentScene pos:" + currentScene.pos + "  nextScene.pos : " + nextScene.pos );
-                if(!currentScene.tween || (currentScene.pos == nextScene.pos && currentScene.zoom == nextScene.zoom))
+                 if(currentScene.zoom < 1) currentScene.zoom = defaultZoom;
+                 if(nextScene.zoom < 1) nextScene.zoom = defaultZoom;
+
+                print("______ currentScene pos:" + currentScene.pos + "  nextScene.pos : " + nextScene.pos  + " currentScene.zoom:" + currentScene.zoom);
+                if(!currentScene.tween)
                 {
-                    //no hace nada:
-                } else{
+                    Vector2 pos_from = GetPos(currentScene.pos, currentScene.zoom);
+                    scenarioCameraManager.OnUpdate(pos_from, currentScene.zoom);
+                }   
+                else{
                     float a = 0;
 
                     Vector2 pos_from = GetPos(currentScene.pos, currentScene.zoom);
@@ -275,6 +280,7 @@ namespace Yaguar.StoryMaker.Editor
                         float d = a/duration;
                         Vector2 pos = Vector2.Lerp(pos_from, pos_to, d);
                         float zoom = Mathf.Lerp(currentScene.zoom, nextScene.zoom, d);
+                       
 
                         scenarioCameraManager.OnUpdate(pos, zoom);
                         yield return new WaitForEndOfFrame();

@@ -137,8 +137,8 @@ namespace Yaguar.StoryMaker.Editor
                 if(scenes[i].camData.HasData())
                 {                    
                     json += "\"" + "camData_zoom" + "\":\"" + scenes[i].camData.zoom + "\",";
-                    json += "\"" + "camData_pos_x" + "\":\"" + scenes[i].camData.pos.x + "\",";
-                    json += "\"" + "camData_pos_y" + "\":\"" + scenes[i].camData.pos.y + "\",";
+                    json += "\"" + "camData_pos_x" + "\":\"" + scenes[i].camData.pos.x.ToString(System.Globalization.CultureInfo.InvariantCulture) + "\",";
+                    json += "\"" + "camData_pos_y" + "\":\"" + scenes[i].camData.pos.y.ToString(System.Globalization.CultureInfo.InvariantCulture) + "\",";
                     json += "\"" + "camData_tween" + "\":\"" + scenes[i].camData.tween + "\",";
                 }
 
