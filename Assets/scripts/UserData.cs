@@ -2,7 +2,6 @@ using BoardItems.BoardData;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UI;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
