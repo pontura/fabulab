@@ -86,8 +86,8 @@ namespace UI.MainApp.Home.User
                 if (btn != null) {
                     btn.Init(fd, MetadataTypes.so);
                     btn.UpdatePublicState();
-                    btn.transform.SetAsFirstSibling();
-                    ResetCache();
+                    //btn.transform.SetAsFirstSibling();
+                    //ResetCache();
                 } else {
                     OnPropMetadataAdded(fd);
                 }

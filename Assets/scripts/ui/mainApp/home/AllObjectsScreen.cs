@@ -31,13 +31,14 @@ namespace UI.MainApp.Home.User
                         Destroy(btn.gameObject);
                     } else {
                         btn.Init(fd, MetadataTypes.so, OpenWork);
-                        btn.transform.SetAsFirstSibling();
-                        ResetCache();
+                        //btn.transform.SetAsFirstSibling();
+                        //ResetCache();
                     }
                 } else {
                     if (fd.isPublic) {
                         AddPropMetadata(fd);
                         ResetCache();
+                        SetCurrentScrollIndex(scrollRect.normalizedPosition);
                     }
                 }
             }

@@ -44,8 +44,8 @@ namespace UI.MainApp.Home.User
             if (btn != null) {
                 btn.Init(fd.GetSprite());
                 btn.UpdatePublicState();
-                btn.transform.SetAsFirstSibling();
-                ResetCache();
+                //btn.transform.SetAsFirstSibling();
+                //ResetCache();
             } else {
                 OnCharacterMetadataAdded(fd);
             }

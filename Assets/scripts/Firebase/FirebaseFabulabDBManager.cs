@@ -1008,20 +1008,34 @@ namespace Yaguar.StoryMaker.DB
         }
 
         public void LoadUserLikeFromServer(System.Action<List<string>> callback, string userID = "") {
-            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-
+            
             if (userID == "")
                 userID = _uid;
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + userID + "/likes");
-            reference.GetValueAsync().ContinueWith(task => {
+            reference.GetValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#LoadUserLikeFromServer FAIL");
                     Debug.Log(task.Exception);
+                    callback(null);
                 } else if (task.IsCompleted) {
-                    Dictionary<string, string> d = JsonConvert.DeserializeObject<Dictionary<string, string>>(task.Result.GetRawJsonValue());
-                    callback(d.Keys.ToList<string>());
+                    List<string> keys = new List<string>();
+                    DataSnapshot snapshot = task.Result;
+                    foreach (var child in snapshot.Children) {
+                        keys.Add(child.Key);
+                    }
+                    callback(keys);
+                    /*Debug.Log("#ACACA 1");
+                    Debug.Log("#ACACA: "+task.Result.GetRawJsonValue());
+                    string data = task.Result.GetRawJsonValue();
+                    if (string.IsNullOrEmpty(data))
+                        callback(null);
+                    else {
+                        Debug.Log("#ACACA 3");
+                        Dictionary<string, string> d = JsonConvert.DeserializeObject<Dictionary<string, string>>(data);
+                        callback(d.Keys.ToList<string>());
+                    }*/
                 }
-            }, taskScheduler);
+            });
             Debug.Log("Server: LoadUserLikeFromServer");
             //Debug.Log(url);
         }
@@ -1030,7 +1044,7 @@ namespace Yaguar.StoryMaker.DB
             Dictionary<string, System.Object> childUpdates = new Dictionary<string, System.Object>();
             childUpdates[itemId] = "";
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + _uid + "/likes");
-            reference.UpdateChildrenAsync(childUpdates).ContinueWith(task => {
+            reference.UpdateChildrenAsync(childUpdates).ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#AddUserLikeToServer FAIL");
                     Debug.Log(task.Exception);

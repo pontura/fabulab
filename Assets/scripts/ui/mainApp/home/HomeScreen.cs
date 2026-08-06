@@ -18,7 +18,6 @@ namespace UI.MainApp.Home
         [SerializeField] ProfilePicture profilePicture;
         bool firstTime = true;
         private void Start() {
-            Events.OnAllFilmMetadataLoadDone += OnServerDataLoadDone;
             Events.ChangeName += OnChangeName;
             FirebaseAuthManager.Instance.OnSignedOut += OnSignedOut;
         }
@@ -38,17 +37,12 @@ namespace UI.MainApp.Home
 
         private void OnDestroy() {
             Events.ChangeName -= OnChangeName;
-            Events.OnAllFilmMetadataLoadDone -= OnServerDataLoadDone;
             FirebaseAuthManager.Instance.OnSignedOut -= OnSignedOut;
         }
 
         void OnSignedOut() {
             firstTime = true;
-        }
-
-        void OnServerDataLoadDone() {
-            tabs.Init(OnTabClicked);
-        }
+        }        
 
         public void Show(bool isOn)
         {

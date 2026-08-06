@@ -47,6 +47,7 @@ namespace BoardItems
 
         public bool loadedDone;
 
+        public bool ScenesDataLoadedDone { get; private set; }
 
         string initTimeStamp;
 
@@ -99,6 +100,8 @@ namespace BoardItems
             filmMetadata.ChildAdded -= OnFilmdAdded;
             filmMetadata.ChildChanged -= OnFilmChanged;
             filmMetadata.ChildRemoved -= OnFilmRemoved;
+
+            ScenesDataLoadedDone = false;
         }
 
         void OnTokenUpdated() {
@@ -204,6 +207,7 @@ namespace BoardItems
                     filmsData.Add(fd);
                 }
             }
+            ScenesDataLoadedDone = true;
             Events.OnAllFilmMetadataLoadDone();
             //Events.OnUpdateFilmIcon();
 

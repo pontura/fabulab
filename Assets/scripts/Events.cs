@@ -65,6 +65,7 @@ public static class Events
     public static System.Action<string> DuplicateSOBG = delegate { };
 
     public static System.Action OnAllFilmMetadataLoadDone = delegate { };
+    public static System.Action OnAllUserDataLoadDone = delegate { };
 
     public static System.Action<FilmDataFabulab> OnFilmMetadataAdded = delegate { };
     public static System.Action<FilmDataFabulab> OnFilmMetadataUpdated = delegate { };

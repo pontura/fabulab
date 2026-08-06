@@ -172,6 +172,8 @@ public class LoginManager : MonoBehaviour
         registerPopup.SetActive(false);
         introContainer.SetActive(false);
         emailContainer.SetActive(false);
+
+        Events.OnLoading(true);
     }
     
 

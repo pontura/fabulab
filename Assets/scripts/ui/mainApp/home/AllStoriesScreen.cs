@@ -44,13 +44,14 @@ namespace UI.MainApp.Home.User
                     btn.Init(fd.id,null);
                     btn.SetContent(fd, this, false);
                     btn.UpdatePublicState();
-                    btn.transform.SetAsFirstSibling();
-                    ResetCache();
+                    //btn.transform.SetAsFirstSibling();
+                    //ResetCache();
                 }
             } else {
                 if (fd.isPublic) {
                     AddFilmMetadata(fd);
                     ResetCache();
+                    SetCurrentScrollIndex(scrollRect.normalizedPosition);
                 }
             }
         }

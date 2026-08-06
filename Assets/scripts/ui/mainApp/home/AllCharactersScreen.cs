@@ -30,13 +30,14 @@ namespace UI.MainApp.Home.User
                         btn.Init(fd, MetadataTypes.characters, Duplicate);
                     else
                         btn.Init(fd, MetadataTypes.characters, OpenWork);
-                    btn.transform.SetAsFirstSibling();
-                    ResetCache();
+                    //btn.transform.SetAsFirstSibling();
+                    //ResetCache();
                 }
             } else {
                 if (fd.isPublic) {
                     AddCharacterMetadata(fd);
                     ResetCache();
+                    SetCurrentScrollIndex(scrollRect.normalizedPosition);
                 }
             }
         }       

@@ -42,8 +42,8 @@ namespace UI.MainApp.Home.User
             if (btn != null) {
                 btn.Init(fd.GetSprite());
                 btn.UpdatePublicState();
-                btn.transform.SetAsFirstSibling();
-                ResetCache();
+                //btn.transform.SetAsFirstSibling();
+                //ResetCache();
             }
         }
 
@@ -59,7 +59,7 @@ namespace UI.MainApp.Home.User
         
         protected override void LoadNext()
         {
-            Debug.Log("$ LoadNext ");
+            //Debug.Log("$ LoadNext ");
             foreach (FilmDataFabulab cd in Data.Instance.scenesData.userFilmsData)
             {
                 AddFilmMetadata(cd);                
