@@ -14,6 +14,7 @@ public static class Events
     public static System.Action OnUndoAdded = delegate { };
     public static System.Action<bool> OnBGColorizerOpen = delegate { };
     public static System.Action<bool> SetGroupToolsOn = delegate { };
+    public static System.Action<bool> SetTools = delegate { };
     public static System.Action<BodyPart> OnNewBodyPartSelected = delegate { };
     public static System.Action<ItemInScene, Vector3> OnStopDrag = delegate { };
     public static System.Action<ItemInScene> ItemBackToMenu = delegate { };

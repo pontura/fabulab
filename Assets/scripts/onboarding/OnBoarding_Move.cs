@@ -13,6 +13,7 @@ namespace OnBoarding
         [SerializeField] GameObject PresetDragAndDropToggle;
         [SerializeField] GameObject characterScrollContent;
         [SerializeField] Animation dragAndDropContainerAnim;
+        [SerializeField] GameObject btn;
         public override void OnShow()
         {            
             masker.SetActive(false);
@@ -22,21 +23,19 @@ namespace OnBoarding
             characterScrollContent.GetComponent<Animation>().Play("on");
             PresetDragAndDropToggle.gameObject.SetActive(false);
             Events.OnStopDrag += OnStopDrag;
-           //Events.OnStartDrag += OnStartDrag;
+            Events.SetTools += SetTools;
         }
-
-        private void OnStartDrag(ItemInScene scene, Vector3 vector)
+        void SetTools(bool isOn)
         {
-            masker.SetActive(true);
-           // Events.OnStartDrag -= OnStartDrag;
+            btn.SetActive(!isOn);
         }
-
         private void OnStopDrag(ItemInScene scene, Vector3 vector) {
             masker.SetActive(false);
             field.text = "Tocá las piezas en el dibujo para modificarlas";
         }
         public override void OnHide()
-        {
+        {            
+            Events.SetTools -= SetTools;
             Events.OnStopDrag -= OnStopDrag;
             dragAndDropContainerAnim.Play("off");
         }

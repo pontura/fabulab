@@ -177,7 +177,8 @@ namespace BoardItems
         }
         void SetBorders(bool isOn) {
             if (!UIManager.Instance.inputManager.groupOn) {
-                print("SetBorders " + isOn + " go: " + gameObject.name);
+                Events.SetTools(isOn);
+                print("Events.SetTools " + isOn);
                 if (borders == null) {
                     borders = gameObject.AddComponent<BordersCreator>();
                     if (GetComponent<BoardItemManager>())
