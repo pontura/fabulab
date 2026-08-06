@@ -72,20 +72,24 @@ namespace UI
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
             Events.OnBodyPartActive += OnBodyPartActive;
             Events.ShowScreen += OnShowScreen;
-            if (Data.Instance.userData.IsLogged()) {
-                Init();
-                Invoke(nameof(InitGalleryDelayed), Time.deltaTime*2);
-            }
+            Events.OnAllFilmMetadataLoadDone += Init;
+            Events.OnAllUserDataLoadDone += Init;
+            Invoke(nameof(InitGalleryDelayed), Time.deltaTime * 2);
+            /*if (Data.Instance.userData.IsLogged()) {
+                Init();                
+            }*/
         }
         private void OnDestroy()
         {
             FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
             Events.OnBodyPartActive -= OnBodyPartActive;
             Events.ShowScreen -= OnShowScreen;
+            Events.OnAllFilmMetadataLoadDone -= Init;
+            Events.OnAllUserDataLoadDone -= Init;
         }
 
         void OnTokenUpdated() {
-            Init();
+            //Init();
             Invoke(nameof(InitGalleryDelayed), Time.deltaTime * 2);
         }
 
@@ -122,12 +126,16 @@ namespace UI
             // InitGallery(gd, true, null);
             Events.InitGallery(gd, true, null);
         }
-        void Init()
+        public void Init()
         {
-            string uid = Data.Instance.userData.userDataInDatabase.uid;
-            if (uid != "" && uid!=null)
-                Data.Instance.cacheData.GetUser(uid, OnUserDone);
-            Home();
+            if (Data.Instance.userData.UserDataLoadedDone && Data.Instance.scenesData.ScenesDataLoadedDone) {
+                string uid = Data.Instance.userData.userDataInDatabase.uid;
+                if (uid != "" && uid != null)
+                    Data.Instance.cacheData.GetUser(uid, OnUserDone);
+                Debug.Log("# User Likes Count: " + Data.Instance.userData.userDataInDatabase.likes.Count);
+                Home();
+            } else
+                Invoke(nameof(Init), 1);
         }
 
         private void OnUserDone(CacheData.UserData uData, Texture2D tex)
@@ -137,6 +145,7 @@ namespace UI
 
         public void Home()
         {
+            Debug.Log("#Home");
             Events.ShowScreen(UIManager.screenType.Home);
         }
         public void Create()

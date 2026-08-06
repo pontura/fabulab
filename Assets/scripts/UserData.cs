@@ -2,6 +2,7 @@ using BoardItems.BoardData;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UI;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
@@ -21,6 +22,8 @@ public class UserData : MonoBehaviour
     public bool passport;
 
     public List<int> prizes;
+
+    public bool UserDataLoadedDone {  get; private set; }
 
     void Awake() {
         onboardingSteps = PlayerPrefs.GetInt("onboardingSteps", 0);
@@ -93,7 +96,8 @@ public class UserData : MonoBehaviour
         if (IsLogged()) {
             CheckAdmin();
             FirebaseStoryMakerDBManager.Instance.LoadUserLikeFromServer(OnLoadingUserLikesFromServer);
-        }
+        } else
+            Invoke("OnTokenUpdated", 1);         
     }
 
     void OnPassport(bool isPassport) {
@@ -133,11 +137,16 @@ public class UserData : MonoBehaviour
         userDataInDatabase.username = "";
         userDataInDatabase.email = "";
         userDataInDatabase.uid = "";
+        userDataInDatabase.likes = new();
         onboardingSteps = 0;
+        UserDataLoadedDone = false;
     }
 
     void OnLoadingUserLikesFromServer(List<string> l) {
-        userDataInDatabase.likes = l;
+        if (l!=null)
+            userDataInDatabase.likes = l;
+        UserDataLoadedDone = true;
+        Events.OnAllUserDataLoadDone();
     }
 
     public bool isLiked(string filmId) {
