@@ -33,6 +33,7 @@ namespace UI.MainApp.Home.User
                 Sprite s = wballon_prefab.balloonIcons[a];
                 go.Init(balloonType.ToString(), s);
                 go.AddOnClick(OpenWordBalloon);
+                go.SetLikeButton(true);
             }
             Events.OnLoading(false);
         }        

@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Yaguar.StoryMaker.DB;
+using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
 {
@@ -27,8 +28,9 @@ namespace UI.MainApp.Home.User
             infoBtn.gameObject.SetActive(false);
             likeBtn.gameObject.SetActive(false);            
             AddOnClick(OnClicked);
+            SetLikeButton();
         }
-        public void Init(SOPartData cd, System.Action<string> OnClicked)
+        public void Init(SOPartData cd, System.Action<string> OnClicked, bool storyEditing)
         {
             Id = cd.id;
             /*if(userView)
@@ -40,10 +42,11 @@ namespace UI.MainApp.Home.User
                 infoBtn.Init(OnInfoClicked, isPublic);
             }  else            */
             infoBtn.gameObject.SetActive(false);
-            likeBtn.gameObject.SetActive(true);
+           // likeBtn.gameObject.SetActive(true);
             likeBtn.Init(OnLikeToggle, Data.Instance.userData.isLiked(Id));
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
             AddOnClick(OnClicked);
+            SetLikeButton(storyEditing);
         }        
         protected void OnInfoClicked(bool isPublic)
         {
@@ -61,13 +64,11 @@ namespace UI.MainApp.Home.User
             print("SHOW userView " + userView);
             if (userView) {
                 UpdatePublicState();
-                likeBtn.gameObject.SetActive(false);
             } else {
-                infoBtn.gameObject.SetActive(false);
-                likeBtn.gameObject.SetActive(true);
+                infoBtn.gameObject.SetActive(false); 
                 likeBtn.Init(OnLikeToggle, cd.likes, Data.Instance.userData.isLiked(Id));
-            }
-                        
+            }    
+            SetLikeButton();   
             AddOnClick(OnClicked);
         }
 
@@ -86,6 +87,11 @@ namespace UI.MainApp.Home.User
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
             infoBtn.gameObject.SetActive(false);            
             loading.SetActive(false);
+        }
+        public void SetLikeButton(bool storyEditing = false)
+        {        
+            print("SetLikeButton " + storyEditing);    
+            likeBtn.gameObject.SetActive(!storyEditing);            
         }
 
         public void AddOnClick(System.Action<string> OnClicked)
@@ -108,7 +114,6 @@ namespace UI.MainApp.Home.User
             print("ItemSelectorBtn id: " + Id + " isPublic: " + isPublic);
             infoBtn.gameObject.SetActive(true);
             infoBtn.Init(OnInfoClicked, isPublic);
-            //likeBtn.gameObject.SetActive(false);
         }
 
 

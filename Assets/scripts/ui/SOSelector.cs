@@ -43,7 +43,8 @@ namespace UI
             {
                 ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
                 print("go " + go);
-                go.Init(cd, OpenWork);
+                bool storyEditing = false;
+                go.Init(cd, OpenWork, storyEditing);
             }
             isActive = true;
             Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
@@ -91,7 +92,7 @@ namespace UI
                     }
                 }, pMD.timestamp, pMD.userID);
             } else {
-                Debug.LogError("Couldn´t find Film Metadata with ID " + isb.Id);
+                Debug.LogError("Couldnï¿½t find Film Metadata with ID " + isb.Id);
             }
         }
     }

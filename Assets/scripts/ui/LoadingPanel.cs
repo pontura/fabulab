@@ -52,6 +52,7 @@ namespace UI
         }
         void OnLoading(bool isOn)
         {
+            CancelInvoke(nameof(SetOff));
             print("OnLoading " + isOn);
             if (!isOn)
             {
