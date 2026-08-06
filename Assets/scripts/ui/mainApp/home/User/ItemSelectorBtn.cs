@@ -68,7 +68,7 @@ namespace UI.MainApp.Home.User
                 infoBtn.gameObject.SetActive(false); 
                 likeBtn.Init(OnLikeToggle, cd.likes, Data.Instance.userData.isLiked(Id));
             }    
-            SetLikeButton();   
+            SetLikeButton(userView);
             AddOnClick(OnClicked);
         }
 
