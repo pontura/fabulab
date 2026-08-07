@@ -54,6 +54,8 @@ namespace UI.MainApp.Home.User
             if (btn != null) {
                 Debug.Log("% UserStoriesScreen OnFilmMetadataUpdated destroy");
                 Destroy(btn.gameObject);
+                ResetCache();
+                SetCurrentScrollIndex(scrollRect.normalizedPosition);
             }
         }
         

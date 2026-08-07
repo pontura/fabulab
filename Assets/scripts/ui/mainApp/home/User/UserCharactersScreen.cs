@@ -57,6 +57,8 @@ namespace UI.MainApp.Home.User
             ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == id);
             if (btn != null) {
                 Destroy(btn.gameObject);
+                ResetCache();
+                SetCurrentScrollIndex(scrollRect.normalizedPosition);
             }
         }
 
