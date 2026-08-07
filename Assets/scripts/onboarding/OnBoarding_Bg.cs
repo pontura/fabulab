@@ -69,9 +69,9 @@ namespace OnBoarding
         }
         IEnumerator AddCharacterToScene()
         {
-            StoryMakerEvents.SetEditing(true);
+            /*StoryMakerEvents.SetEditing(true);
             yield return new WaitForSeconds(0.25f);
-            storyEditorScreen.OnTabClicked(0);
+            storyEditorScreen.OnTabClicked(0);*/
             
             string originalCharacterID = "-On3wQ6Vy9jnpMtTTgWb"; //Character por defecto en story del onboarding:
             string newCharacterID =  Data.Instance.charactersData.userCharacters[Data.Instance.charactersData.userCharacters.Count - 1].id;
