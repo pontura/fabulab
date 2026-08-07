@@ -4,15 +4,21 @@ public class CharacterAnims : MonoBehaviour
 {
     Animator anim;
     string currentAnimName;
+    string lastAnim;
     private void Awake()
     {
         anim = GetComponent<Animator>();
     }
     public void Play(string animName)
     {
+        if (isWaitingForCallback) {
+            lastAnim = animName;
+            return;
+        }
+
         anim.speed = 1;
 
-      //  Debug.Log("$Play Anim 1: "+animName);
+        //  Debug.Log("$Play Anim 1: "+animName);
 
         if (animName == "" || animName == null)
             animName = Data.Instance.characterAnimsManager.defaultIdle.name;
@@ -38,9 +44,20 @@ public class CharacterAnims : MonoBehaviour
         anim.speed = 0;
         //Debug.Log("& Speed: " + anim.speed);
     }
+
+    bool isWaitingForCallback;
     public System.Action SetTemporalDefaultAnim() {
-        string lastAnim = currentAnimName;
+        lastAnim = currentAnimName;
         Play("");
-        return ()=>Play(lastAnim);
+        isWaitingForCallback = true;
+        Invoke(nameof(ResetWaitForCallback), 2f);
+        return ()=> {
+            isWaitingForCallback = false;
+            Play(lastAnim);
+        };        
+    }
+
+    void ResetWaitForCallback() {
+        isWaitingForCallback = false;
     }
 }

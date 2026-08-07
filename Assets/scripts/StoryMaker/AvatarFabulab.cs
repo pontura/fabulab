@@ -38,14 +38,15 @@ namespace Yaguar.StoryMaker.Editor
             asset.SetActive(true);
             characterManager = asset.GetComponent<CharacterManager>();
             characterManager.Init();
-                        
-            Invoke(nameof(SetDefaultAnim), 3*Time.deltaTime);
+
+            //Invoke(nameof(SetDefaultAnim), 1*Time.deltaTime);
+            SetDefaultAnim();
         }
         
         System.Action onColliderSetDone;
         void SetDefaultAnim() {
             onColliderSetDone = characterManager.SetTemporalDefaultAnim();
-            Invoke(nameof(SetAvatarCollider), 3 * Time.deltaTime);
+            Invoke(nameof(SetAvatarCollider), 4 * Time.deltaTime);
         }
 
         void SetAvatarCollider()
