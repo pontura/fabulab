@@ -68,7 +68,7 @@ namespace OnBoarding
             Next();
         }
         
-        void Oestroy()
+        void OnDestroy()
         {
             Events.OnBoardingDone -= OnBoardingDone;    
             Events.OnBoardingXtraStep -= OnBoardingXtraStep;        
