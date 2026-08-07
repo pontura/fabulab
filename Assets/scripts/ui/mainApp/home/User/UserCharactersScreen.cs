@@ -14,6 +14,7 @@ namespace UI.MainApp.Home.User
             Events.OnCharacterMetadataRemoved += OnCharacterMetadataRemoved;
         }
         protected override void OnDestroy() {
+            base.OnDestroy();
             Events.OnCharacterMetadataUpdated -= OnCharacterMetadataUpdated;
             Events.OnCharacterMetadataAdded -= OnCharacterMetadataAdded;
             Events.OnCharacterMetadataRemoved -= OnCharacterMetadataRemoved;

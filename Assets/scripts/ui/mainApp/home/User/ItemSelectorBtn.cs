@@ -30,9 +30,9 @@ namespace UI.MainApp.Home.User
             AddOnClick(OnClicked);
             SetLikeButton();
         }
-        public void InitForStoryEdition(SOPartData cd, System.Action<string> OnClicked)
+        public void InitForStoryEdition(string id, System.Action<string> OnClicked)
         {
-            Id = cd.id;
+            Id = id;
             /*if(userView)
             {
                 PropMetaData meta = Data.Instance.sObjectsData.GetMeta(cd.id);
@@ -43,7 +43,7 @@ namespace UI.MainApp.Home.User
             }  else            */
             infoBtn.gameObject.SetActive(false);
            // likeBtn.gameObject.SetActive(true);
-            likeBtn.Init(OnLikeToggle, Data.Instance.userData.isLiked(Id));
+            //likeBtn.Init(OnLikeToggle, Data.Instance.userData.isLiked(Id));
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
             AddOnClick(OnClicked);
             likeBtn.gameObject.SetActive(false);

@@ -25,6 +25,8 @@ namespace UI.MainApp.Home.User
             if (btn != null) {
                 if (!fd.isPublic) {
                     Destroy(btn.gameObject);
+                    ResetCache();
+                    SetCurrentScrollIndex(scrollRect.normalizedPosition);
                 } else {
                     if (StoryMakerEvents.isEditing)
                         btn.Init(fd, MetadataTypes.characters, Duplicate);

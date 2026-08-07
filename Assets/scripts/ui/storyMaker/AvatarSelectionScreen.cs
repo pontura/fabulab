@@ -20,7 +20,8 @@ namespace UI.MainApp.Home.User
             Cancel();
             Events.DuplicateCharacter += DuplicateCharacter;
         }
-        protected virtual void OnDestroy() {
+        protected override void OnDestroy() {
+            base.OnDestroy();
             Events.DuplicateCharacter -= DuplicateCharacter;
         }
 

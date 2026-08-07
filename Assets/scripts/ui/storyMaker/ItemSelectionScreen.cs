@@ -44,7 +44,7 @@ namespace UI.MainApp.Home.User
         }
         protected virtual void AddElement(SOPartData part) {
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-            go.InitForStoryEdition(part, SelectWork);
+            go.InitForStoryEdition(part.id, SelectWork);
         }
 
         protected override void LoadNext()

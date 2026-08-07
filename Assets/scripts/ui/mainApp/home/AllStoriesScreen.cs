@@ -40,10 +40,11 @@ namespace UI.MainApp.Home.User
             if (btn != null) {
                 if (!fd.isPublic) {
                     Destroy(btn.gameObject);
+                    ResetCache();
+                    SetCurrentScrollIndex(scrollRect.normalizedPosition);
                 } else {
                     btn.Init(fd.id,null);
                     btn.SetContent(fd, this, false);
-                    btn.UpdatePublicState();
                     //btn.transform.SetAsFirstSibling();
                     //ResetCache();
                 }

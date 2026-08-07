@@ -20,8 +20,9 @@ namespace UI.MainApp.Home.User
             Events.DuplicateSO += DuplicateSO;
             StoryMakerEvents.ShowSoButtons += ShowSoButtons;
         }
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             Events.DuplicateSO -= DuplicateSO;
             StoryMakerEvents.ShowSoButtons -= ShowSoButtons;
         }

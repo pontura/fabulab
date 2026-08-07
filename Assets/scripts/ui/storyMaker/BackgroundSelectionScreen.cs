@@ -17,8 +17,9 @@ namespace UI.MainApp.Home.User
             Cancel();
             Events.DuplicateSOBG += DuplicateSOBG;
         }
-        protected void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             Events.DuplicateSOBG -= DuplicateSOBG;
         }
 

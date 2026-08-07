@@ -19,7 +19,8 @@ namespace UI.MainApp.Home.User
             Events.OnPropMetadataRemoved += OnPropMetadataRemoved;
         }
 
-        protected virtual void OnDestroy() {
+        protected override void OnDestroy() {
+            base.OnDestroy();
             Events.OnPropMetadataUpdated -= OnPropMetadataUpdated;
             Events.OnPropMetadataAdded -= OnPropMetadataAdded;
             Events.OnPropMetadataRemoved -= OnPropMetadataRemoved;
@@ -45,8 +46,21 @@ namespace UI.MainApp.Home.User
                 ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
                 ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
                 if (btn != null) {
-                    btn.Init(fd, MetadataTypes.so);
-                    btn.transform.SetAsFirstSibling();
+                    if (!fd.isPublic) {
+                        Destroy(btn.gameObject);
+                        ResetCache();
+                        SetCurrentScrollIndex(scrollRect.normalizedPosition);
+                    } else {
+                        btn.Init(fd, MetadataTypes.so, OpenWork);
+                        //btn.transform.SetAsFirstSibling();
+                        //ResetCache();
+                    }
+                } else {
+                    if (fd.isPublic) {
+                        AddPropMetadata(fd);
+                        ResetCache();
+                        SetCurrentScrollIndex(scrollRect.normalizedPosition);
+                    }
                 }
             }
         }

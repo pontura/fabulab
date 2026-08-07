@@ -29,6 +29,8 @@ namespace UI.MainApp.Home.User
                 if (btn != null) {
                     if (!fd.isPublic) {
                         Destroy(btn.gameObject);
+                        ResetCache();
+                        SetCurrentScrollIndex(scrollRect.normalizedPosition);
                     } else {
                         btn.Init(fd, MetadataTypes.so, OpenWork);
                         //btn.transform.SetAsFirstSibling();
