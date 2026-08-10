@@ -26,16 +26,16 @@ namespace OnBoarding
             switch(step)
             {
                 case OnBoardingManager.steps.video_character:
-                    field.text = "Así se hace un personaje";
+                    field.text = "Así se hacen los personajes.";
                 break;
                 case OnBoardingManager.steps.video_object:
-                    field.text = "Así se hace un objeto";
+                    field.text = "Así se hace un objeto.";
                 break;
                   case OnBoardingManager.steps.video_story:
-                    field.text = "Así se hace una historia";
+                    field.text = "Así se hacen las historias.";
                 break;
                   case OnBoardingManager.steps.video_bg:
-                    field.text = "Así se hace un background";
+                    field.text = "Así se hace un escenario.";
                 break;
             }       
             videoPlayer.url = url;

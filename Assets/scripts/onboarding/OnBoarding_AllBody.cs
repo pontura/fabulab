@@ -23,8 +23,8 @@ namespace OnBoarding
             UIManager.Instance.ShowBack(false);
             secondButton.SetActive(false);
             thirdPanel.SetActive(false);
-            field.text = "Genial! ahora sigamos con el resto del cuerpo";   
-            field2.text = "Cuando termines apretá este botón";
+            field.text = "¡Genial! Sigamos con las demás partes del cuerpo.";   
+            field2.text = "Modificá las partes que quieras. Cuando termines apretá este botón.";
             characterScrollContent.GetComponent<Animation>().Play("off");
             presetsUI.Toggle(); 
             presetsUI.tabs.Clicked(presetsUI.tabs.All[0]);

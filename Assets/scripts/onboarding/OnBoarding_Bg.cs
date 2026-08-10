@@ -19,7 +19,7 @@ namespace OnBoarding
         public override void OnShow()
         {     
 
-            field.text = "Empecemos eligiendo un fondo.";
+            field.text = "Empecemos eligiendo un escenario.";
             field2.text = "Lindo, ¿no? Ahora pongamos algún objeto.";
 
             part1.gameObject.SetActive(true);

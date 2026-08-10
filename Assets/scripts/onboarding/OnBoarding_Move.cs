@@ -17,7 +17,7 @@ namespace OnBoarding
         public override void OnShow()
         {            
             masker.SetActive(false);
-            field.text = "Arrastrá y organizá las piezas a tu gusto";
+            field.text = "Podés mover y editar las piezas a tu gusto.";
             characterEdition.gameObject.SetActive(true);
             presetsUI.DragAndDrop();
             characterScrollContent.GetComponent<Animation>().Play("on");
@@ -31,7 +31,7 @@ namespace OnBoarding
         }
         private void OnStopDrag(ItemInScene scene, Vector3 vector) {
             masker.SetActive(false);
-            field.text = "Tocá las piezas en el dibujo para modificarlas";
+            field.text = "Tocá las piezas en el dibujo para modificarlas.";
         }
         public override void OnHide()
         {            
