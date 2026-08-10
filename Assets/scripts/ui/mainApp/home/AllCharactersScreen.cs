@@ -25,21 +25,19 @@ namespace UI.MainApp.Home.User
             if (btn != null) {
                 if (!fd.isPublic) {
                     Destroy(btn.gameObject);
-                    ResetCache();
-                    SetCurrentScrollIndex(scrollRect.normalizedPosition);
+                    Invoke(nameof(ResetAndSetScroll), Time.deltaTime * 3);
                 } else {
                     if (StoryMakerEvents.isEditing)
                         btn.Init(fd, MetadataTypes.characters, Duplicate);
                     else
                         btn.Init(fd, MetadataTypes.characters, OpenWork);
                     //btn.transform.SetAsFirstSibling();
-                    //ResetCache();
+                    ResetAndSetScroll();
                 }
             } else {
                 if (fd.isPublic) {
                     AddCharacterMetadata(fd);
-                    ResetCache();
-                    SetCurrentScrollIndex(scrollRect.normalizedPosition);
+                    ResetAndSetScroll();
                 }
             }
         }       

@@ -40,19 +40,17 @@ namespace UI.MainApp.Home.User
             if (btn != null) {
                 if (!fd.isPublic) {
                     Destroy(btn.gameObject);
-                    ResetCache();
-                    SetCurrentScrollIndex(scrollRect.normalizedPosition);
+                    Invoke(nameof(ResetAndSetScroll),Time.deltaTime * 3);
                 } else {
                     btn.Init(fd.id,null);
                     btn.SetContent(fd, this, false);
                     //btn.transform.SetAsFirstSibling();
-                    //ResetCache();
+                    ResetAndSetScroll();
                 }
             } else {
                 if (fd.isPublic) {
                     AddFilmMetadata(fd);
-                    ResetCache();
-                    SetCurrentScrollIndex(scrollRect.normalizedPosition);
+                    ResetAndSetScroll();
                 }
             }
         }

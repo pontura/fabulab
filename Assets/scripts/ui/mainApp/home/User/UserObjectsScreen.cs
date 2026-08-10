@@ -87,9 +87,10 @@ namespace UI.MainApp.Home.User
                     btn.Init(fd, MetadataTypes.so);
                     btn.UpdatePublicState();
                     //btn.transform.SetAsFirstSibling();
-                    //ResetCache();
+                    ResetAndSetScroll();
                 } else {
                     OnPropMetadataAdded(fd);
+                    ResetAndSetScroll();
                 }
             }
         }
@@ -99,8 +100,7 @@ namespace UI.MainApp.Home.User
             ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == id);
             if (btn != null) {
                 Destroy(btn.gameObject);
-                ResetCache();
-                SetCurrentScrollIndex(scrollRect.normalizedPosition);
+                Invoke(nameof(ResetAndSetScroll), Time.deltaTime * 3);
             }
         }
 

@@ -56,7 +56,11 @@ namespace UI.MainApp.Home.User
                 imageCache = new Dictionary<int, Texture2D>();
             imageCache.Clear();
             downloading.Clear();
-            //SetCurrentScrollIndex(scrollRect.normalizedPosition);
+        }
+
+        protected void ResetAndSetScroll() {
+            ResetCache();
+            SetCurrentScrollIndex(scrollRect.normalizedPosition);
         }
 
         protected virtual void Init() {
@@ -138,6 +142,7 @@ namespace UI.MainApp.Home.User
 
             // Cargar nuevas imágenes en el rango
             for (int i = startIndex; i <= endIndex; i++) {
+                //Debug.Log($"$ {i}: ImageCache={imageCache.ContainsKey(i)} dounloading={downloading.Contains(i)}");
                 if (!imageCache.ContainsKey(i) && !downloading.Contains(i)) {
                     ItemSelectorBtn isb = worksContainer.GetChild(i).GetComponent<ItemSelectorBtn>();
                     if (isb != null) {

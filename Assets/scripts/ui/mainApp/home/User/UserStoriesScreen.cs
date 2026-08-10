@@ -43,12 +43,12 @@ namespace UI.MainApp.Home.User
                 btn.Init(fd.GetSprite());
                 btn.UpdatePublicState();
                 //btn.transform.SetAsFirstSibling();
-                //ResetCache();
+                ResetAndSetScroll();
             }
         }
 
         void OnFilmMetadataRemoved(string id) {
-            Debug.Log("% UserStoriesScreen OnFilmMetadataUpdated");
+            Debug.Log("% UserStoriesScreen OnFilmMetadataRemoved");
             ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
             ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == id);
             if (btn != null) {
