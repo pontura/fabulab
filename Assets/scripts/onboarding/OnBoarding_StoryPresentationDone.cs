@@ -18,7 +18,7 @@ namespace OnBoarding
         {            
             part.SetActive(false);
             field.text = "Ahora mirá las cosas que se pueden hacer en Fabulab!";   
-            playButton.OnClick();     
+            playButton.OnClick();   
 
             StoryMakerEvents.OnMovieOver += OnMovieOver;
         }
@@ -32,6 +32,7 @@ namespace OnBoarding
 
         private void OnMovieOver()
         {
+            StoryMakerEvents.ClearScene();  
             part.SetActive(true);
         }
 

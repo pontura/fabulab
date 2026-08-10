@@ -259,6 +259,8 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public override void ClearScene() {
+            base.ClearScene();
+            print("ClearScene");
             if (StoryMakerEvents.isEditing)
             {
                 gameObject.SetActive(false);
