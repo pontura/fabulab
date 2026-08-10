@@ -12,7 +12,7 @@ namespace UI
             on.SetActive(this.isOn);
             off.SetActive(!this.isOn);
             countField.text = likeCount<=0?"":""+ likeCount;
-            Debug.Log("% ACA: "+countField.text);
+            //Debug.Log("% ACA: "+countField.text);
         }
     }
 }
