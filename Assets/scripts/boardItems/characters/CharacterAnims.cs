@@ -51,9 +51,12 @@ public class CharacterAnims : MonoBehaviour
         Play("");
         isWaitingForCallback = true;
         Invoke(nameof(ResetWaitForCallback), 2f);
-        return ()=> {
+        return () => {
             isWaitingForCallback = false;
+            bool wasPaused = anim.speed == 0;
             Play(lastAnim);
+            if( wasPaused )
+                Stop();
         };        
     }
 
