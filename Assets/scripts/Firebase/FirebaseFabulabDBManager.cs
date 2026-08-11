@@ -1,7 +1,6 @@
 ﻿using BoardItems;
 //using static BoardItems.AlbumData;
 using BoardItems.BoardData;
-using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
 using Firebase.Functions;
@@ -16,6 +15,7 @@ using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.DB;
 using Yaguar.StoryMaker.Editor;
+using static UnityEditor.Progress;
 
 namespace Yaguar.StoryMaker.DB
 {
@@ -50,6 +50,9 @@ namespace Yaguar.StoryMaker.DB
         void Start()
         {
             FirebaseAuthManager.Instance.OnFirebaseAuthenticated += OnFirebaseAuthenticated;
+
+            var functions = FirebaseFunctions.DefaultInstance;
+            functions.UseFunctionsEmulator("http://127.0.0.1:5001");
         }
 
         private void OnDestroy()
@@ -1183,6 +1186,44 @@ namespace Yaguar.StoryMaker.DB
                     return null;
                 default:
                     return token.ToString(); // fallback seguro
+            }
+        }
+
+        public void ReportContent(string type, string id) {
+            /*DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("reports/" + id);
+            reference.OrderByChild("userID").EqualTo(_uid).GetValueAsync().ContinueWithOnMainThread(task =>
+            {
+                if (task.IsFaulted || task.IsCanceled) {
+                    Debug.Log("#ReportContent FAIL");
+                    Debug.Log(task.Exception);
+                } else if (task.IsCompleted) {
+                    DataSnapshot snapshot = task.Result;
+                    // Si existe al menos un hijo con userID == uid
+                    if (snapshot.Exists && snapshot.ChildrenCount > 0) {
+                        Debug.Log("El usuario ya había reportado este contenido.");
+                    } else {
+                        Debug.Log("El usuario NO había reportado este contenido.");
+                        SendReport(type, id);
+                    }
+                }
+            });*/
+            SendReport(type, id);
+            Debug.Log("Server: ReportContent " + type + ", id: " + id);
+        }
+
+        async void SendReport(string type, string id) {
+            var functions = FirebaseFunctions.DefaultInstance;
+            functions.UseFunctionsEmulator("http://127.0.0.1:5001");
+            var callable = functions.GetHttpsCallable("reportContent");
+            Debug.Log(FirebaseAuthManager.Instance.Auth().CurrentUser.UserId+": "+ FirebaseAuthManager.Instance.Auth().CurrentUser.IsValid());
+            try {
+                var result = await callable.CallAsync(new Dictionary<string, object>
+                    {{ "contentId", id },{ "contentType", type }
+                });
+
+                Debug.Log("Reporte enviado correctamente. ID: " + result.Data);
+            } catch (System.Exception e) {
+                Debug.LogError("Error enviando reporte: " + e);
             }
         }
 

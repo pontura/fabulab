@@ -1,7 +1,9 @@
 using BoardItems;
+using BoardItems.BoardData;
 using Firebase.Analytics;
 using UnityEngine;
 using UnityEngine.UI;
+using Yaguar.StoryMaker.DB;
 
 namespace Yaguar.StoryMaker.Editor
 {
@@ -62,6 +64,7 @@ namespace Yaguar.StoryMaker.Editor
             filmMakerManagerFabulab.Prev();
             StoryMakerEvents.OnTimelinePlay(true);
         }
+
         void SetContent(FilmDataFabulab content)
         {
             titleField.text = content.name;
@@ -82,6 +85,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         private void OnReportConfirmed(bool doIt) {
             if (doIt) {
+                FirebaseStoryMakerDBManager.Instance.ReportContent(MetadataTypes.stories.ToString(), ScenesManager.Instance.currentFilmData.id);
                 Events.OnPopupTopSignalText("¡GRACIAS!");
             }
         }

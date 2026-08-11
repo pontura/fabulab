@@ -30,10 +30,13 @@ namespace OnBoarding
             StoryMakerEvents.OnMovieOver -= OnMovieOver;
         }
 
-        private void OnMovieOver()
-        {
-            StoryMakerEvents.ClearScene();  
+        private void OnMovieOver() {
             part.SetActive(true);
+            Invoke(nameof(ClearScene), Time.deltaTime * 2);
+        }
+
+        void ClearScene() {
+            StoryMakerEvents.ClearScene();
         }
 
         void OnDestroy()

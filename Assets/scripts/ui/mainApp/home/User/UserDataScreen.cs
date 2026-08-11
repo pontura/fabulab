@@ -42,12 +42,16 @@ namespace UI.MainApp.Home.User
         }
         void OnConfirm(bool ok) {
             if (ok) {
-                Events.OnConfirm("En el caso de continuar se borrará de manera irreversible tu usuario y todo lo que hayas guardado en la aplicación.", "CONTINUAR", "CANCELAR", OnReConfirm);
+                Invoke(nameof(LastConfirmation), Time.deltaTime * 3);
             }
         }
+
+        void LastConfirmation() {
+            Events.OnConfirm("En el caso de continuar se borrará de manera irreversible tu usuario y todo lo que hayas guardado en la aplicación.", "CONTINUAR", "CANCELAR", OnReConfirm);
+        }
+
         void OnReConfirm(bool ok) {
             if (ok) {
-                Events.OnConfirm("En el caso de continuar se borrará de manera irreversible tu usuario y todo lo que hayas guardado en la aplicación.", "CONTINUAR", "CANCELAR", OnConfirm);
                 FirebaseStoryMakerDBManager.Instance.DeleteAccount();
             }
         }
