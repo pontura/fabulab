@@ -220,24 +220,9 @@ namespace Yaguar.StoryMaker.Editor
 
         public override SceneObject GetSceneObjectInScene(SOData soData) {
             foreach (SceneObject so in sceneObjects) {
-
-                /*if (so != null && (so.GetData().id == soData.id && soData is SOAvatarData && so.GetData() is SOAvatarData) ||
-                    
-                    //si es un objeto chequea por posicion! quizas haya que mejorar esto...
-                    //so.GetData().itemName == soData.itemName && 
-                    (soData is SODataFabulab && so.GetData() is SODataFabulab && so.GetData().pos.Equals(soData.pos)) ||
-
-                    (soData is SOWordBalloonData && so.GetData() is SOWordBalloonData && so.GetData().pos.Equals(soData.pos))  ||
-
-                    (soData is SOWordBoxData && so.GetData() is SOWordBoxData && soData.id == so.GetData().id)
-                    
-                )
-                    return so;*/
-
                 if (so != null && so.GetData().itemName == soData.itemName)
                     return so;
             }
-
             return null;
         }
 

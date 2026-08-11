@@ -127,8 +127,12 @@ namespace Yaguar.StoryMaker.Editor
         {
             Stop();
 
+
             if(isEditing)
+            {                
+                StoryMakerEvents.OnTimelinePlay(false); 
                 StoryMakerEvents.OnSaveScene();
+            }
 
             int lastSceneId = ScenesManagerFabulab.Instance.currentSceneId;
             
