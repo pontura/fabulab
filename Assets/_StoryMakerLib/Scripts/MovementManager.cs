@@ -38,7 +38,7 @@ namespace Yaguar.StoryMaker.Editor
                     "oncomplete", "OnCompleteMoveing",
                     "oncompletetarget", this.gameObject
                     ));
-            print(distanceToMove + "   esta en: " + avatar.transform.position + "va a : " + to + "    id : " + avatar.GetData().id + " time " + timeToNextFrame);
+            //print(distanceToMove + "   esta en: " + avatar.transform.position + "va a : " + to + "    id : " + avatar.GetData().id + " time " + timeToNextFrame);
         }
 
         public void MoveElement(SOData soData, Vector3 to, float timeToNextFrame) {
