@@ -1,8 +1,10 @@
 ﻿using BoardItems;
 //using static BoardItems.AlbumData;
 using BoardItems.BoardData;
+using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
+using Firebase.Functions;
 using Firebase.Storage;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -1182,6 +1184,32 @@ namespace Yaguar.StoryMaker.DB
                 default:
                     return token.ToString(); // fallback seguro
             }
+        }
+
+        public async void DeleteAccount() {
+
+            if (_uid == null) {
+                Debug.LogWarning("No hay usuario autenticado.");
+                return;
+            }
+
+            if (Data.Instance.userData.isAdmin) {
+                Debug.LogWarning("Cuidado estás intentando borrar un usuario no permitido.");
+                return;
+            }
+
+
+            var functions = FirebaseFunctions.DefaultInstance;
+            var callable = functions.GetHttpsCallable("deleteUserDataCallable");
+
+            try {
+                await callable.CallAsync(new { uid = _uid });
+                Debug.Log("Cuenta y datos eliminados correctamente.");
+                Events.OnPopupTopSignalText("Cuenta eliminada");
+                FirebaseAuthManager.Instance.SignOut();
+            } catch (System.Exception e) {
+                Debug.LogError("Error eliminando cuenta: " + e);
+            }            
         }
     }
 }
