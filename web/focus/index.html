@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fabulab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1f3a5c;
+    --orange:#e2612b;
+    --pink:#da5a8d;
+    --blue:#3a6ea8;
+    --green-link:#5a9e6f;
+    --gold:#f0b429;
+    --star-empty:#d9dfe4;
+    --card-radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Nunito',sans-serif;
+    color:#33475a;
+    background:#cfe0e8;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.brand{font-family:'Baloo 2',cursive;}
+  a{color:var(--green-link);text-decoration:underline;}
+  img{max-width:100%;display:block;}
+
+  .wrap{max-width:1100px;margin:0 auto;padding:0 40px;}
+
+  /* ===== HEADER / HERO ===== */
+  .hero-section{
+    background:linear-gradient(180deg,#c9dce6 0%,#d3e2ea 60%,#dbe7ec 100%);
+    padding-bottom:70px;
+  }
+  header.wrap{
+    display:flex;justify-content:space-between;align-items:center;
+    padding-top:36px;padding-bottom:10px;
+  }
+  .brand{
+    font-size:34px;font-weight:800;letter-spacing:2px;
+    color:#eef4f7;
+    -webkit-text-stroke:1px #c3d3dd;
+  }
+  .brand-logo{height:34px;width:auto;}
+  nav ul{list-style:none;display:flex;gap:34px;}
+  nav a{
+    color:var(--navy);text-decoration:none;font-weight:700;
+    font-size:14px;letter-spacing:.5px;
+  }
+
+  .hero-body{
+    display:flex;align-items:center;gap:40px;padding-top:40px;flex-wrap:wrap;
+  }
+  .hero-art{
+    position:relative;width:340px;flex-shrink:0;
+  }
+  .hero-art img{width:100%;border-radius:12px;}
+  .hero-text{flex:1;min-width:280px;}
+  .hero-text h1{
+    color:var(--orange);font-size:34px;line-height:1.25;font-weight:700;margin-bottom:16px;
+  }
+  .hero-text p{font-size:16px;line-height:1.5;}
+  .hero-text p b{color:var(--navy);}
+
+  /* simple geometric mascots (approximation of the illustration) */
+  .shape{position:absolute;}
+  .shape.pacman{
+    width:70px;height:70px;background:#f2a1c4;border-radius:50%;
+    clip-path:polygon(100% 74%,50% 50%,100% 26%,100% 0,0 0,0 100%,100% 100%);
+    top:0;left:70px;transform:rotate(20deg);
+  }
+  .shape.diamond{
+    width:46px;height:46px;border:5px solid #f2d24e;transform:rotate(45deg);
+    top:10px;left:150px;
+  }
+  .shape.dot-blue{width:34px;height:34px;border-radius:50%;background:#7bafc4;top:150px;left:230px;}
+  .shape.dot-orange{width:20px;height:20px;border-radius:50%;background:#e2612b;top:225px;left:55px;}
+  .shape.rect-olive{width:34px;height:14px;background:#9aa06a;top:235px;left:135px;transform:rotate(-8deg);}
+
+  .astro{position:absolute;top:60px;left:30px;width:110px;text-align:center;}
+  .astro .head{width:60px;height:60px;border-radius:50%;background:#eef2f4;border:4px solid #c7d3d8;margin:0 auto;position:relative;}
+  .astro .head::after{content:"";position:absolute;top:18px;left:14px;width:32px;height:20px;border-radius:50%;background:#a9d4e0;}
+  .astro .body{width:70px;height:80px;background:#eef2f4;border:4px solid #c7d3d8;border-radius:16px;margin:-6px auto 0;}
+
+  .treechar{position:absolute;top:50px;left:150px;width:110px;text-align:center;}
+  .treechar .foliage{width:80px;height:70px;border-radius:50% 50% 45% 45%;background:#5c8a4c;margin:0 auto;position:relative;}
+  .treechar .foliage span{position:absolute;width:10px;height:10px;background:#e2612b;border-radius:50%;}
+  .treechar .foliage span:nth-child(1){top:14px;left:14px;}
+  .treechar .foliage span:nth-child(2){top:30px;left:40px;}
+  .treechar .foliage span:nth-child(3){top:10px;left:55px;}
+  .treechar .trunk{width:34px;height:56px;background:#8a5a34;margin:0 auto;}
+
+  /* ===== SECTION 2 : TEST CLUB ===== */
+  .club-section{
+    background:linear-gradient(180deg,#c2d5df 0%,#cddbe2 100%);
+    padding:70px 0 90px;
+  }
+  .club-inner{display:flex;gap:50px;align-items:flex-start;flex-wrap:wrap;}
+  .club-left{flex:1.3;min-width:320px;}
+  .club-left h2{color:var(--navy);font-size:28px;margin-bottom:16px;font-weight:700;}
+  .club-left > p{margin-bottom:26px;font-size:15px;max-width:420px;}
+
+  .step-card{
+    background:#fff;border-radius:var(--card-radius);
+    padding:16px 22px;margin-bottom:16px;
+    box-shadow:0 4px 10px rgba(30,60,90,.08);
+    max-width:440px;
+  }
+  .stars{color:var(--gold);font-size:15px;letter-spacing:2px;margin-bottom:6px;}
+  .stars .empty{color:var(--star-empty);}
+  .step-card p{font-size:14.5px;line-height:1.4;}
+  .gplay-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    background:#4c9a5a;color:#fff;border-radius:8px;
+    padding:6px 14px;margin-top:10px;font-size:12px;font-weight:700;
+  }
+  .thumb-row{display:flex;gap:8px;}
+  .thumb-row img{width:90px;border-radius:8px;flex-shrink:0;}
+  .step-card.five{display:flex;gap:14px;align-items:center;}
+
+  .club-right{position:relative;flex:1;min-width:260px;}
+  .club-right img{width:100%;border-radius:12px;}
+
+  /* ===== SECTION 3 : DESAFIOS ===== */
+  .challenge-section{
+    background:linear-gradient(180deg,#d7e2e6 0%,#e6dde3 60%,#ecdfe6 100%);
+    padding:80px 0 90px;text-align:center;
+  }
+  .confetti{max-width:260px;margin:0 auto 30px;}
+  .confetti img{width:100%;}
+
+  .challenge-section h2{color:var(--pink);font-size:28px;margin-bottom:14px;}
+  .challenge-section > .wrap > p{max-width:520px;margin:0 auto 40px;font-size:15px;}
+
+  .grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:left;
+  }
+  .card{border-radius:10px;overflow:hidden;box-shadow:0 4px 10px rgba(30,60,90,.1);background:#fff;}
+  .card .caption{padding:12px 12px 14px;font-size:13.5px;font-weight:700;color:#33475a;line-height:1.3;min-height:52px;}
+  .card .art{height:120px;}
+  .card .art img{width:100%;height:100%;object-fit:cover;display:block;}
+  .c1{background:linear-gradient(180deg,#bcd9a0,#6b9c53);}
+  .c2{background:repeating-conic-gradient(#dcdcdc 0% 25%,#8a8a8a 0% 50%) 0/16px 16px;}
+  .c3{background:radial-gradient(circle at 30% 30%,#3a3a55,#0f0f1e);}
+  .c4{background:#e0c264;}
+  .c5{background:linear-gradient(180deg,#c94b5c,#a12f42);}
+  .c6{background:#a9b98f;}
+  .c7{background:linear-gradient(180deg,#5f7fbf,#3d5a99);}
+  .c8{background:linear-gradient(180deg,#3d5f66,#294449);}
+
+  /* ===== SECTION 4 : EXPERTOS ===== */
+  .experts-section{
+    background:linear-gradient(180deg,#ecdfe6 0%,#dcdfe9 60%,#cfd9e8 100%);
+    padding:80px 0 60px;text-align:center;
+  }
+  .experts-section h2{color:var(--blue);font-size:24px;margin-bottom:24px;font-weight:700;}
+  .experts-section p{max-width:640px;margin:0 auto 40px;font-size:14.5px;line-height:1.6;}
+  .experts-section p b{color:var(--navy);}
+
+  .badges{display:flex;justify-content:center;gap:50px;margin-bottom:50px;flex-wrap:wrap;}
+  .badge{font-size:12px;color:var(--navy);font-weight:700;line-height:1.4;}
+  .badge .laurel{font-size:22px;color:var(--gold);display:block;margin-bottom:4px;}
+
+  .brand-row{display:flex;align-items:center;justify-content:center;gap:24px;}
+  .yaguar{font-family:'Baloo 2';font-weight:800;font-size:20px;letter-spacing:2px;color:#3a4a5c;}
+  .socials{display:flex;gap:14px;}
+  .socials span{
+    width:26px;height:26px;border-radius:50%;background:#5b7691;display:inline-block;
+  }
+
+  /* ===== FOOTER ===== */
+  footer{
+    background:linear-gradient(90deg,#3d6bab,#4778b8);
+    color:#fff;text-align:center;padding:26px 0 30px;
+  }
+  footer p{font-size:13px;margin-bottom:16px;opacity:.9;}
+  .footer-logos{display:flex;justify-content:center;align-items:center;gap:26px;flex-wrap:wrap;font-weight:700;font-size:13px;}
+  .footer-logos .sep{opacity:.5;}
+
+  @media(max-width:820px){
+    .grid{grid-template-columns:repeat(2,1fr);}
+    .badges{gap:26px;}
+  }
+  @media(max-width:560px){
+    .hero-body{flex-direction:column;}
+    .club-inner{flex-direction:column;}
+    nav ul{gap:16px;flex-wrap:wrap;}
+    header.wrap{flex-direction:column;gap:14px;}
+    .grid{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero-section">
+  <header class="wrap">
+    <img class="brand-logo" src="images/logo.png" alt="Fabulab">
+    <nav>
+      <ul>
+        <li><a href="#demo">PROBAR DEMO</a></li>
+        <li><a href="#desafios">DESAFÍOS</a></li>
+        <li><a href="#nosotros">NOSOTROS</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="wrap hero-body">
+    <div class="hero-art">
+      <img src="images/splash.png" alt="Fabulab ilustración">
+    </div>
+    <div class="hero-text">
+      <h1>¡La primera app para crear tus propios dibujos animados originales!</h1>
+      <p>¡Se uno de los primeros en probar este <b>laboratorio fabuloso</b> de creatividad!</p>
+    </div>
+  </div>
+</section>
+
+<!-- TEST CLUB -->
+<section class="club-section" id="demo">
+  <div class="wrap club-inner">
+    <div class="club-left">
+      <h2>¡Unite al Fabulab Test Club hoy mismo!</h2>
+      <p>¿Nos ayudás a crear la app más creativa y divertida del mundo? ¡Esto es lo que tenés que hacer!</p>
+
+      <div class="step-card">
+        <div class="stars">★<span class="empty">★★★★</span></div>
+        <p>Completá este pequeño <a href="#">cuestionario inicial</a>.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="stars">★★<span class="empty">★★★</span></div>
+        <p>Descargá Fabulab y divertite creando personajes, escenarios, objetos y dibujos animados.</p>
+        <div class="gplay-badge">▶ BAJÁ EL DEMO EN<br>Google Play</div>
+      </div>
+
+      <div class="step-card">
+        <div class="stars">★★★<span class="empty">★★</span></div>
+        <p>¡Compartí un personaje y una historia con la comunidad!</p>
+      </div>
+
+      <div class="step-card">
+        <div class="stars">★★★★<span class="empty">★</span></div>
+        <p>Después de jugarlo, <b>completá</b> este <a href="#">último cuestionario</a>.</p>
+      </div>
+
+      <div class="step-card five">
+        <div class="thumb-row">
+          <img src="images/tablets.png" alt="Tablet">
+        </div>
+        <div>
+          <div class="stars">★★★★★</div>
+          <p>Si nos mandás un <b>video</b> vía <a href="#">wetransfer</a> de los primeros minutos de uso donde se vea a la persona, sus manos y el dispositivo... ¡te amamos!</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="club-right">
+      <img src="images/robot.png" alt="Robot Fabulab">
+    </div>
+  </div>
+</section>
+
+<!-- DESAFIOS -->
+<section class="challenge-section" id="desafios">
+  <div class="wrap">
+    <div class="confetti">
+      <img src="images/formas.png" alt="Formas decorativas">
+    </div>
+    <h2>¡Tenemos más desafíos para tu creatividad!</h2>
+    <p>¿La estás pasando bien en Fabulab? Aquí hay algunos desafíos extra para que te sigas divirtiendo.</p>
+
+    <div class="grid">
+      <div class="card">
+        <div class="caption">Creá una historia que transcurra en el campo.</div>
+        <div class="art c1"><img src="images/image1.png" alt="Historia en el campo"></div>
+      </div>
+      <div class="card">
+        <div class="caption">Creá una historia en blanco y negro.</div>
+        <div class="art c2"></div>
+      </div>
+      <div class="card">
+        <div class="caption">Inventá una nave espacial y usala en una historia.</div>
+        <div class="art c3"></div>
+      </div>
+      <div class="card">
+        <div class="caption">Creá una historia donde todos los personajes sean plantas.</div>
+        <div class="art c4"></div>
+      </div>
+      <div class="card">
+        <div class="caption">Creá una historia que transcurra en marte.</div>
+        <div class="art c5"></div>
+      </div>
+      <div class="card">
+        <div class="caption">Inventá el personaje más bizarro que se te ocurra.</div>
+        <div class="art c6"></div>
+      </div>
+      <div class="card">
+        <div class="caption">Usá personajes de distintos cuentos en la misma historia.</div>
+        <div class="art c7"></div>
+      </div>
+      <div class="card">
+        <div class="caption">Hacé una historia donde haya muchos vehículos.</div>
+        <div class="art c8"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERTOS -->
+<section class="experts-section" id="nosotros">
+  <div class="wrap">
+    <h2>Creada por expertos<br>en software educativo y cultural.</h2>
+    <p>Nuestro equipo de desarrollo lleva más de 12 años creando <b>experiencias interactivas</b> para ministerios, museos, escuelas y todo tipo de entidades culturales y educativas, públicas y privadas. Algunos de nuestros proyectos han sido premiados en Argentina y en el exterior. ¡Visitá nuestras redes y conocelos!</p>
+
+    <div class="badges">
+      <div class="badge"><span class="laurel">🏆</span>GANADOR<br>comKids 2022</div>
+      <div class="badge"><span class="laurel">🏆</span>NOMINADO<br>JapanPrize 2022</div>
+      <div class="badge"><span class="laurel">🏆</span>GANADOR<br>másMat</div>
+      <div class="badge"><span class="laurel">🏆</span>GANADOR<br>CAIFE 2026</div>
+    </div>
+
+    <div class="brand-row">
+      <div class="yaguar">YAGUAR</div>
+      <div class="socials">
+        <span title="Instagram"></span>
+        <span title="Facebook"></span>
+        <span title="LinkedIn"></span>
+        <span title="YouTube"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Seleccionado por</p>
+  <div class="footer-logos">
+    <span>🏛 MADRID IN GAME</span>
+    <span class="sep">|</span>
+    <span>start IN up PROGRAM</span>
+    <span class="sep">|</span>
+    <span>IncuBAte</span>
+  </div>
+</footer>
+
+</body>
+</html>
