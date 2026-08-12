@@ -36,6 +36,7 @@ namespace OnBoarding
         }
 
         void ClearScene() {
+            StoryMakerEvents.SetEditing(false);
             StoryMakerEvents.ClearScene();
         }
 
