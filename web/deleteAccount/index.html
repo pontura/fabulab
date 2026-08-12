@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fabulab · Eliminar cuenta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1f3a5c;
+    --orange:#e2612b;
+    --pink:#da5a8d;
+    --blue:#3a6ea8;
+    --green-link:#5a9e6f;
+    --gold:#f0b429;
+    --card-radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Nunito',sans-serif;
+    color:#33475a;
+    background:linear-gradient(180deg,#c9dce6 0%,#d3e2ea 40%,#e6dde3 100%);
+    min-height:100vh;
+  }
+  h1,h2,.brand{font-family:'Baloo 2',cursive;}
+  a{color:var(--green-link);}
+  img{max-width:100%;display:block;}
+
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px;}
+
+  header.wrap{
+    display:flex;justify-content:space-between;align-items:center;
+    padding-top:36px;padding-bottom:10px;
+  }
+  .brand-logo{height:34px;width:auto;}
+  .brand-fallback{
+    font-size:28px;font-weight:800;letter-spacing:2px;
+    color:#eef4f7;-webkit-text-stroke:1px #c3d3dd;
+  }
+
+  main{padding:40px 0 80px;}
+
+  .intro h1{color:var(--orange);font-size:30px;line-height:1.25;margin-bottom:14px;}
+  .intro p{font-size:15.5px;line-height:1.6;margin-bottom:8px;}
+  .intro p b{color:var(--navy);}
+  .app-name{color:var(--navy);}
+
+  .steps{margin-top:40px;}
+  .steps > p.lead{color:var(--navy);font-weight:700;font-size:17px;margin-bottom:20px;}
+
+  .step-card{
+    background:#fff;border-radius:var(--card-radius);
+    padding:20px 24px;margin-bottom:18px;
+    box-shadow:0 4px 10px rgba(30,60,90,.08);
+    display:flex;gap:18px;align-items:flex-start;
+  }
+  .step-num{
+    flex-shrink:0;width:38px;height:38px;border-radius:50%;
+    background:var(--orange);color:#fff;font-family:'Baloo 2';font-weight:700;
+    display:flex;align-items:center;justify-content:center;font-size:17px;
+  }
+  .step-card:nth-child(2) .step-num{background:var(--pink);}
+  .step-card:nth-child(3) .step-num{background:var(--blue);}
+  .step-card:nth-child(4) .step-num{background:#4c9a5a;}
+
+  .step-body{flex:1;}
+  .step-body p{font-size:15.5px;line-height:1.4;font-weight:700;color:#33475a;}
+  .step-shot{
+    margin-top:12px;width:180px;border-radius:8px;
+    border:1px solid #e2e8ec;
+  }
+
+  .note{
+    margin-top:36px;background:rgba(255,255,255,.6);border-radius:var(--card-radius);
+    padding:18px 22px;font-size:14px;line-height:1.6;color:#33475a;
+  }
+  .note b{color:var(--navy);}
+
+  footer{
+    text-align:center;padding:22px 0;font-size:13px;color:#5b7691;
+  }
+
+  @media(max-width:560px){
+    .step-card{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <img class="brand-logo" src="images/logo.png" alt="Fabulab" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'brand-fallback',textContent:'FABULAB'}))">
+</header>
+
+<main class="wrap">
+  <section class="intro">
+    <h1>Eliminar cuenta de usuario</h1>
+    <p>Si querés eliminar tu cuenta de <b class="app-name">Fabulab</b> y todos los datos asociados almacenados en nuestra base de Firebase, seguí estos pasos desde la aplicación.</p>
+  </section>
+
+  <section class="steps">
+    <p class="lead">Pasos para eliminar tu cuenta:</p>
+
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <p>Cliqueá en el perfil del usuario (abajo a la derecha).</p>
+        <!-- <img class="step-shot" src="images/paso1.png" alt="Perfil del usuario"> -->
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <p>Cliqueá en <b>Info del usuario</b>.</p>
+        <!-- <img class="step-shot" src="images/paso2.png" alt="Info del usuario"> -->
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <p>Cliqueá en <b>Borrar cuenta</b>.</p>
+        <!-- <img class="step-shot" src="images/paso3.png" alt="Borrar cuenta"> -->
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <p>Confirmá la eliminación de la cuenta.</p>
+        <!-- <img class="step-shot" src="images/paso4.png" alt="Confirmar eliminación"> -->
+      </div>
+    </div>
+  </section>
+
+  <section class="note">
+    <p><b>Importante:</b> al confirmar este proceso, tu cuenta y los datos personales asociados serán eliminados de forma permanente de nuestros servidores y no podrán recuperarse.</p>
+  </section>
+</main>
+
+<footer>
+  &copy; 2026 Fabulab. Todos los derechos reservados.
+</footer>
+
+</body>
+</html>
