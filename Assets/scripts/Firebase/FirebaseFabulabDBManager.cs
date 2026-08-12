@@ -51,8 +51,8 @@ namespace Yaguar.StoryMaker.DB
         {
             FirebaseAuthManager.Instance.OnFirebaseAuthenticated += OnFirebaseAuthenticated;
 
-            var functions = FirebaseFunctions.DefaultInstance;
-            functions.UseFunctionsEmulator("http://127.0.0.1:5001");
+            //var functions = FirebaseFunctions.DefaultInstance;
+            //functions.UseFunctionsEmulator("http://127.0.0.1:5001");
         }
 
         private void OnDestroy()
@@ -1212,10 +1212,8 @@ namespace Yaguar.StoryMaker.DB
         }
 
         async void SendReport(string type, string id) {
-            var functions = FirebaseFunctions.DefaultInstance;
-            functions.UseFunctionsEmulator("http://127.0.0.1:5001");
-            var callable = functions.GetHttpsCallable("reportContent");
-            Debug.Log(FirebaseAuthManager.Instance.Auth().CurrentUser.UserId+": "+ FirebaseAuthManager.Instance.Auth().CurrentUser.IsValid());
+            var functions = FirebaseFunctions.DefaultInstance;            
+            var callable = functions.GetHttpsCallable("reportContent");            
             try {
                 var result = await callable.CallAsync(new Dictionary<string, object>
                     {{ "contentId", id },{ "contentType", type }
@@ -1243,14 +1241,16 @@ namespace Yaguar.StoryMaker.DB
             var functions = FirebaseFunctions.DefaultInstance;
             var callable = functions.GetHttpsCallable("deleteUserDataCallable");
 
+            Events.OnLoading(true);
             try {
-                await callable.CallAsync(new { uid = _uid });
+                await callable.CallAsync(new Dictionary<string, object>{{ "uid", _uid }});
                 Debug.Log("Cuenta y datos eliminados correctamente.");
                 Events.OnPopupTopSignalText("Cuenta eliminada");
                 FirebaseAuthManager.Instance.SignOut();
             } catch (System.Exception e) {
                 Debug.LogError("Error eliminando cuenta: " + e);
-            }            
+            }
+            Events.OnLoading(false);
         }
     }
 }
