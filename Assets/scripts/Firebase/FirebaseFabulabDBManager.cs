@@ -15,7 +15,6 @@ using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.DB;
 using Yaguar.StoryMaker.Editor;
-using static UnityEditor.Progress;
 
 namespace Yaguar.StoryMaker.DB
 {
