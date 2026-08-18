@@ -1,5 +1,6 @@
 using BoardItems.BoardData;
 using BoardItems.Characters;
+using OnBoarding;
 using UnityEngine;
 using Yaguar.StoryMaker.DB;
 using Yaguar.StoryMaker.Editor;
@@ -240,6 +241,12 @@ namespace UI.MainApp
             Events.OnSaveCharacterDone();
             if(StoryMakerEvents.isEditing)
                 UIManager.Instance.BackToStoryFromAvatar(id);
+        }
+
+        [SerializeField] OnBoarding_Movie onboarding_Movie;
+        public void HelpClicked()
+        {
+            onboarding_Movie.Help();
         }
     }
 

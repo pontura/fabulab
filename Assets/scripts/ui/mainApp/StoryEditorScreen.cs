@@ -1,6 +1,7 @@
 using BoardItems;
 using Common.UI;
 using Firebase.Analytics;
+using OnBoarding;
 using System;
 using UI.MainApp.Home.User;
 using UnityEngine;
@@ -399,6 +400,12 @@ namespace UI.MainApp
             storyName.gameObject.SetActive(enable);
             actionUI.SetOn(enable);
             emojisUI.SetOn(enable);
+        }
+        
+        [SerializeField] OnBoarding_Movie onboarding_Movie;
+        public void HelpClicked()
+        {
+            onboarding_Movie.Help();
         }
     }
 }

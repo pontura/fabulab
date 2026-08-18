@@ -7,6 +7,27 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
+
+.winner
+{
+	min-width:130px;
+	color:black;
+}
+.award-box {
+    position: relative;
+    text-align: center;
+    color: white;
+    padding: 0 1rem;
+    align-items: center;
+    justify-content: center;
+    max-width: 200px;
+    margin: 0 auto;
+}
+.flex {
+    display: flex;
+}
+
+
   :root{
     --navy:#1f3a5c;
     --orange:#e2612b;
@@ -28,7 +49,7 @@
   a{color:var(--green-link);text-decoration:underline;}
   img{max-width:100%;display:block;}
 
-  .wrap{max-width:1100px;margin:0 auto;padding:0 40px;}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 40px; color:black}
 
   /* ===== HEADER / HERO ===== */
   .hero-section{
@@ -191,6 +212,19 @@
     header.wrap{flex-direction:column;gap:14px;}
     .grid{grid-template-columns:1fr 1fr;}
   }
+  
+  
+.winner h2{
+	font-size:18px; !important
+	margin-top:0px;
+	margin-bottom:2px;
+}
+.winner p{
+	font-size:12px; !important
+	margin-top:0px;
+	margin-bottom:2px;
+}
+
 </style>
 </head>
 <body>
@@ -276,35 +310,35 @@
     <div class="grid">
       <div class="card">
         <div class="caption">Creá una historia que transcurra en el campo.</div>
-        <div class="art c1"><img src="images/image1.png" alt="Historia en el campo"></div>
+        <div class="art c1"><img src="images/image1.jpg" alt="Historia en el campo"></div>
       </div>
       <div class="card">
         <div class="caption">Creá una historia en blanco y negro.</div>
-        <div class="art c2"></div>
+        <div class="art c1"><img src="images/image2.jpg" alt="Historia en el campo"></div>
       </div>
       <div class="card">
         <div class="caption">Inventá una nave espacial y usala en una historia.</div>
-        <div class="art c3"></div>
+        <div class="art c1"><img src="images/image3.jpg" alt="Historia en el campo"></div>
       </div>
       <div class="card">
         <div class="caption">Creá una historia donde todos los personajes sean plantas.</div>
-        <div class="art c4"></div>
+        <div class="art c1"><img src="images/image4.jpg" alt="Historia en el campo"></div>
       </div>
       <div class="card">
         <div class="caption">Creá una historia que transcurra en marte.</div>
-        <div class="art c5"></div>
+        <div class="art c1"><img src="images/image5.jpg" alt="Historia en el campo"></div>
       </div>
       <div class="card">
         <div class="caption">Inventá el personaje más bizarro que se te ocurra.</div>
-        <div class="art c6"></div>
+        <div class="art c1"><img src="images/image6.jpg" alt="Historia en el campo"></div>
       </div>
       <div class="card">
         <div class="caption">Usá personajes de distintos cuentos en la misma historia.</div>
-        <div class="art c7"></div>
+        <div class="art c1"><img src="images/image7.jpg" alt="Historia en el campo"></div>
       </div>
       <div class="card">
         <div class="caption">Hacé una historia donde haya muchos vehículos.</div>
-        <div class="art c8"></div>
+        <div class="art c1"><img src="images/image8.jpg" alt="Historia en el campo"></div>
       </div>
     </div>
   </div>
@@ -317,19 +351,65 @@
     <p>Nuestro equipo de desarrollo lleva más de 12 años creando <b>experiencias interactivas</b> para ministerios, museos, escuelas y todo tipo de entidades culturales y educativas, públicas y privadas. Algunos de nuestros proyectos han sido premiados en Argentina y en el exterior. ¡Visitá nuestras redes y conocelos!</p>
 
     <div class="badges">
-      <div class="badge"><span class="laurel">🏆</span>GANADOR<br>comKids 2022</div>
-      <div class="badge"><span class="laurel">🏆</span>NOMINADO<br>JapanPrize 2022</div>
-      <div class="badge"><span class="laurel">🏆</span>GANADOR<br>másMat</div>
-      <div class="badge"><span class="laurel">🏆</span>GANADOR<br>CAIFE 2026</div>
+			<div class="col w-25 award-box flex">
+				<div>
+					<img src="images/assets_award_a.png" alt="Award" loading="lazy">
+				</div>
+				<div class="winner">
+					<h2>GANADOR</h2>
+					<p>Inventar El Mundo</p>
+				</div>
+				<div>
+					<img src="images/assets_award_b.png" alt="Award" loading="lazy">
+				</div>
+			</div>
+			<div class="col w-25 award-box flex">
+				<div>
+					<img src="images/assets_award_a.png" alt="Award" loading="lazy">
+				</div>
+				<div class="winner">
+					<h2>NOMINADO</h2>
+					<p>JapanPrize 2022</p>
+				</div>
+				<div>
+					<img src="images/assets_award_b.png" alt="Award" loading="lazy">
+				</div>
+			</div>
+
+			<div class="col w-25 award-box flex">
+				<div>
+					<img src="images/assets_award_a.png" alt="Award" loading="lazy">
+				</div>
+				<div class="winner">
+					<h2>GANADOR</h2>
+					<p>másMat</p>
+				</div>
+				<div>
+					<img src="images/assets_award_b.png" alt="Award" loading="lazy">
+				</div>
+			</div>
+
+			<div class="col w-25 award-box flex">
+				<div>
+					<img src="images/assets_award_a.png" alt="Award" loading="lazy">
+				</div>
+				<div class="winner">
+					<h2>GANADOR</h2>
+					<p>CAIFE 2026</p>
+				</div>
+				<div>
+					<img src="images/assets_award_b.png" alt="Award" loading="lazy">
+				</div>
+			</div>
     </div>
 
     <div class="brand-row">
       <div class="yaguar">YAGUAR</div>
       <div class="socials">
-        <span title="Instagram"></span>
-        <span title="Facebook"></span>
-        <span title="LinkedIn"></span>
-        <span title="YouTube"></span>
+        <a href="https://www.instagram.com/yaguarxyz/" target = "_blank"><span title="Instagram"><img src="images/icon_instagram.png" /></span></a>
+        <a href="https://www.facebook.com/yaguarXYZ" target = "_blank"><span title="Facebook"><img src="images/icon_facebook.png" /></span></a>
+        <a href="https://www.linkedin.com/company/yaguarxyz" target = "_blank"><span title="LinkedIn"><img src="images/icon_linkedin.png" /></span></a>
+        <a href="https://www.youtube.com/@yaguarxyz" target = "_blank"><span title="YouTube"><img src="images/icon_youtube.png" /></span></a>
       </div>
     </div>
   </div>

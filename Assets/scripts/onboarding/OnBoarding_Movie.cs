@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Video;
 
 namespace OnBoarding
@@ -13,6 +12,14 @@ namespace OnBoarding
         public TMPro.TMP_Text field;
         Action OnXtraStepDone;
 
+        public void Help() // se inicializa fuera del onoarding:
+        {
+             loading.SetActive(true);
+             gameObject.SetActive(true);
+             OnShow();
+        }
+
+
         public override void OnBoardingXtraStep(OnBoardingManager.steps step, Action OnXtraStepDone)
         {
             loading.SetActive(true);
@@ -20,6 +27,7 @@ namespace OnBoarding
             base.OnBoardingXtraStep(step, OnXtraStepDone);
             OnBoarding(step);
         }        
+        
         public override void OnShow()
         {
             videoPlayer.Stop();
@@ -58,7 +66,10 @@ namespace OnBoarding
         {             
             videoPlayer.loopPointReached -= OnVideoFinished;
             videoPlayer.Stop();
-            OnXtraStepDone();
+
+            if(OnXtraStepDone != null)
+                OnXtraStepDone();
+                
             Hide();
         }
     }

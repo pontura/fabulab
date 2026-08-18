@@ -1,5 +1,6 @@
 using BoardItems.BoardData;
 using BoardItems.Characters;
+using OnBoarding;
 using UnityEngine;
 using Yaguar.StoryMaker.Editor;
 
@@ -95,6 +96,21 @@ namespace UI.MainApp
             if(StoryMakerEvents.isEditing)
             {   
                 UIManager.Instance.BackToStory(soData);
+            }
+        }
+
+        [SerializeField] OnBoarding_Movie onboarding_Objects;
+        [SerializeField] OnBoarding_Movie onboarding_BG;
+        public void HelpClicked()
+        {
+             switch (Data.Instance.sObjectsData.Type)
+            {
+                case BoardItems.BoardData.SObjectData.types.generic:                    
+                    onboarding_Objects.Help();
+                    break;
+                case BoardItems.BoardData.SObjectData.types.background:                    
+                    onboarding_BG.Help();
+                    break;
             }
         }
        
