@@ -1,3 +1,4 @@
+using Firebase.Analytics;
 using UnityEngine;
 using Yaguar.Auth;
 
@@ -136,12 +137,14 @@ public class LoginManager : MonoBehaviour
                         feedback.text = "No fue posible linkear la cuenta con Play Games.";
                     } else {
                         registerPopup.SetActive(false);
+                        FirebaseAnalytics.LogEvent("sync_playgames");
                     }
                 });
             } else {
                 feedback.text = "No fue posible linkear la cuenta con Play Games.";
             }
         });
+        FirebaseAnalytics.LogEvent("click_sync_playgames");
     }
 
     public void SignInAnonymously() {
@@ -191,9 +194,10 @@ public class LoginManager : MonoBehaviour
 
 
             //Data.Instance.firebaseAuthManager.SignUpUserAnon();
-            if(isToSyncUserToEmail)             
+            if (isToSyncUserToEmail) {
                 FirebaseAuthManager.Instance.LinkWithEmail(usernameField.text, emailField.text, passField.text);
-            else
+                FirebaseAnalytics.LogEvent("sync_email");
+            } else
                 FirebaseAuthManager.Instance.SignUpUserEmail(usernameField.text, emailField.text, passField.text);
 
         }
@@ -223,6 +227,7 @@ public class LoginManager : MonoBehaviour
         signUpBtn.SetActive(true);
         isToSyncUserToEmail = true;
         ShowEmailAuth();
+        FirebaseAnalytics.LogEvent("click_sync_email");
     }
 
     public void ToRegister() {
