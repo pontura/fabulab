@@ -152,6 +152,9 @@ namespace UI.MainApp
         }
         public BodyPart GetBodyPart(CharacterPartsHelper.parts part)
         {
+            if(UIManager.Instance.boardUI.activeBoardItem==null)
+                return null;
+
             BoardItems.BodyPart[] all = UIManager.Instance.boardUI.activeBoardItem.GetComponentsInChildren<BoardItems.BodyPart>();
             foreach (BoardItems.BodyPart b in all)
             {

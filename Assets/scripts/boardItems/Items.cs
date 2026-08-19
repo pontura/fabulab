@@ -692,8 +692,13 @@ namespace BoardItems
             GameObject go = new GameObject();
             BoardItemManager boardItemManager_to_add = go.AddComponent<BoardItemManager>();
 
-            if (container == null)
-                container = boardItemManager.GetBodyPart((CharacterPartsHelper.parts)soID.part).transform;
+            if (container == null) {
+                container = boardItemManager.GetBodyPart((CharacterPartsHelper.parts)soID.part)?.transform;
+                if (container == null) {
+                    Destroy(go.gameObject);
+                    return;
+                }
+            }
             Destroy(go.gameObject);
 
             //AddSceneObjectTo(o, boardItemManager_to_add, container, soID);
