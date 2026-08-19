@@ -74,16 +74,24 @@ namespace UI.MainApp
         //}
         public void Done()
         {
-            SaveWork();
-            UIManager.Instance.boardUI.toolsMenu.SetOff();
-
+            string soID = Data.Instance.sObjectsData.GetCurrent();
+            PropMetaData soMD = Data.Instance.sObjectsData.userMetaData.Find(x => x.id == soID);
+            if (soMD != null) {
+                SaveWork();
+            } else {
+                SaveNew();
+            }
             Firebase.Analytics.FirebaseAnalytics.LogEvent("object_save_clicked");
-        }       
-        
+        }
+        void SaveNew() {
+            Data.Instance.sObjectsData.SetCurrentID("");
+            Invoke("SaveWork", 0.1f);
+        }
         void SaveWork()
         {
             Events.OnNewBodyPartSelected(null);
             UIManager.Instance.boardUI.screenshot.TakeShot(Vector2Int.zero, OnTakeShotDone);
+            UIManager.Instance.boardUI.toolsMenu.SetOff();
         }
         public void OnTakeShotDone(Texture2D tex)
         {
