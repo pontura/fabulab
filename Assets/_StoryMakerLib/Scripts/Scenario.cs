@@ -60,14 +60,15 @@ namespace Yaguar.StoryMaker.Editor
             sceneObejctsManager.ClearScene();
         }
 
-        [SerializeField] Renderer targetRenderer;
-        public void Screenshot(System.Action<Texture2D> OnDone)
+        [SerializeField] Renderer targetRenderer;GameObject target;
+        public void Screenshot(GameObject target, System.Action<Texture2D> OnDone)
         { 
+            this.target = target;
             print("Screenshot");
             targetRenderer.GetComponent<Animator>().SetInteger("zoom", 9);
-            StartCoroutine(CaptureRoutine(OnDone));
+            StartCoroutine(CaptureRoutine(target, OnDone));
         }
-        IEnumerator CaptureRoutine(System.Action<Texture2D> OnDone)
+        IEnumerator CaptureRoutine(GameObject target, System.Action<Texture2D> OnDone)
         {           
             yield return new WaitForSeconds(0.1f); 
 
@@ -121,7 +122,8 @@ namespace Yaguar.StoryMaker.Editor
                 Cam.targetTexture = null;
                 RenderTexture.active = null;
                 Destroy(rt);
-                OnDone(null);
+                if(target != null)
+                    OnDone(null);
                 yield break;
             }
 
@@ -138,7 +140,8 @@ namespace Yaguar.StoryMaker.Editor
             yield return new WaitForSeconds(0.1f);
             Destroy(rt);
 
-            OnDone(texture);
+            if(target != null)
+                OnDone(texture);
         }
     }
 }
