@@ -8,6 +8,8 @@ namespace UI.MainApp
     {
         [SerializeField] Image image;
 
+        string _uid;
+
         private void Start() {
             FirebaseAuthManager.Instance.OnFirebaseAuthenticated += OnFirebaseAuthenticated;
             Events.OnProfilePictureUpdated += OnProfilePictureUpdated;
@@ -19,27 +21,33 @@ namespace UI.MainApp
         }
 
         void OnFirebaseAuthenticated(string username, string email, string uid) {
-            if (uid != "" && uid != null)
+            if (uid != "" && uid != null) {
                 Data.Instance.cacheData.GetUser(uid, OnReady);
+                _uid = uid;
+            }
         }
 
         public void InitOwner()
         {            
             string uid = Data.Instance.userData.userDataInDatabase.uid;
-            if (uid != "" && uid != null)
+            if (uid != "" && uid != null) {
                 Data.Instance.cacheData.GetUser(uid, OnReady);
+                _uid = uid;
+            }
         }
         public void Init(string uid)
         {
             Data.Instance.cacheData.GetUser(uid, OnReady);
+            _uid = uid;
         }
         private void OnReady(CacheData.UserData data, Texture2D tex)
         {
-            OnProfilePictureUpdated(tex);
+            image.sprite = tex != null ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f)) : null;
         }
 
         void OnProfilePictureUpdated(Texture2D tex) {
-            image.sprite = tex != null ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f)) : null;
+            if(_uid == Data.Instance.userData.userDataInDatabase.uid) 
+                image.sprite = tex != null ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f)) : null;
         }
     }
 }
