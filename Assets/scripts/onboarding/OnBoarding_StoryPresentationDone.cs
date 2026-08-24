@@ -23,6 +23,10 @@ namespace OnBoarding
             StoryMakerEvents.OnMovieOver += OnMovieOver;
         }
 
+        public override void OnHide()
+        {
+            StoryMakerEvents.OnMovieOver -= OnMovieOver;
+        }
         private void OnBoardingStepDone(OnBoardingManager.steps steps)
         {
             if(active && steps != step) return;            
@@ -31,6 +35,7 @@ namespace OnBoarding
         }
 
         private void OnMovieOver() {
+            StoryMakerEvents.OnMovieOver -= OnMovieOver;
             part.SetActive(true);
             Invoke(nameof(ClearScene), Time.deltaTime * 2);
         }
