@@ -68,7 +68,6 @@ namespace UI.MainApp.Home
             this.tabActive = id;
             print("OnTabClicked " + id + " name: "  +gameObject.name);
 
-            userDataScreen.Show(false);
             charactersScreen.Show(false);
 
             storiesScreen.Show(false);
@@ -88,10 +87,6 @@ namespace UI.MainApp.Home
                 case 2:
                     AudioManager.Instance.uiSfxManager.Play("click");
                     objects.Show(true);
-                    break;
-                case 3:
-                    AudioManager.Instance.uiSfxManager.PlayTransp("click", 2);
-                    userDataScreen.Show(true);
                     break;
             }
         }

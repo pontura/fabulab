@@ -12,11 +12,13 @@ namespace UI.MainApp.Home
         [SerializeField] AllStoriesScreen stories;
         [SerializeField] AllCharactersScreen charactersScreen;
         [SerializeField] AllObjectsScreen objects;
+        [SerializeField] UserScreen userScreen;
         
         [SerializeField] TMPro.TMP_Text usernameField;
 
         [SerializeField] ProfilePicture profilePicture;
         bool firstTime = true;
+
         private void Start() {
             Events.ChangeName += OnChangeName;
             FirebaseAuthManager.Instance.OnSignedOut += OnSignedOut;
@@ -76,6 +78,7 @@ namespace UI.MainApp.Home
             charactersScreen.Show(false);
             objects.Show(false);
             stories.Show(false);
+            userScreen.Show(false);   
 
             switch (id)
             {
@@ -91,7 +94,9 @@ namespace UI.MainApp.Home
                     AudioManager.Instance.uiSfxManager.PlayTransp("click", 2);
                     objects.Show(true);
                     break;
-                case 3: // USER                    
+                case 3: // USER    
+                    AudioManager.Instance.uiSfxManager.Play("click");
+                    userScreen.Show(true);                
                     Events.ShowScreen(UIManager.screenType.UserScreen);
                     break;
             }

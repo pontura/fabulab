@@ -43,6 +43,9 @@ namespace Common.UI
         public void Clicked(TabButton tabButton)
         {
             ResetAll();
+            print(gameObject.name);
+            print(tabButton);
+            print(tabButton.id);
             lastTabClicked = tabButton;
             tabButton.SetActive();
             OnActive(tabButton.id);

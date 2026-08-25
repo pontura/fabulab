@@ -6,7 +6,7 @@ namespace UI.MainApp.Home
     public class HomePage : MainScreen
     {
         [SerializeField] HomeScreen home;
-        [SerializeField] UserScreen user;
+       // [SerializeField] UserScreen user;
 
         public screens screen;
         public enum screens
@@ -23,13 +23,12 @@ namespace UI.MainApp.Home
                     screen = screens.home;
                     Show(true);
                     home.Show(true);
-                    user.Show(false);
+                  //  user.Show(false);
                     break;
                 case UIManager.screenType.UserScreen:
                     screen = screens.user;
                     Show(true);
-                    home.Show(false);
-                    user.Show(true);
+                   // user.Show(true);
                     break;
                 default:
                     Show(false);
