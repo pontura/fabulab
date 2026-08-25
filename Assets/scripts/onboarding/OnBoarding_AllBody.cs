@@ -26,7 +26,7 @@ namespace OnBoarding
             field.text = "¡Genial! Sigamos con las demás partes del cuerpo.";   
             field2.text = "Modificá las partes que quieras. Cuando termines apretá este botón.";
             characterScrollContent.GetComponent<Animation>().Play("off");
-            presetsUI.Toggle(); 
+           // presetsUI.Toggle(); 
             presetsUI.tabs.Clicked(presetsUI.tabs.All[0]);
             Events.OnSaveCharacterDone += OnSaveCharacterDone;  
         }
@@ -50,11 +50,19 @@ namespace OnBoarding
             secondButton.SetActive(false);
             thirdPanel.SetActive(true);
         }
+        [SerializeField] ConfirmationScreen confirmationScreen;
          public void ThirdButtonClicked()
         {
             //Done();
-            characterEdition.OnSaveClicked();
+            confirmationScreen.OnConfirm("Damos por terminado a tu personaje?", "Si, listo!", "No aún...", OnConfirmed, false);
         }
+
+        private void OnConfirmed(bool success)
+        {
+            if(success)
+                characterEdition.OnSaveClicked();
+        }
+
         public void HidePanel()
         {
             gameObject.SetActive(false);

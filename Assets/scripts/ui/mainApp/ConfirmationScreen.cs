@@ -18,8 +18,19 @@ public class ConfirmationScreen : MonoBehaviour
     {
         Events.OnConfirm -= OnConfirm;
     }
+    bool resetBoardOnComplete;
     private void OnConfirm(string title, string btn1, string btn2, Action<bool> OnDone)
     {
+        print("OnConfirm ");
+        titleField.text = title;
+        okBtnField.text = btn1;
+        cancelBtnField.text = btn2;
+        this.OnDone = OnDone;
+        gameObject.SetActive(true);
+    }
+    public void OnConfirm(string title, string btn1, string btn2, Action<bool> OnDone, bool resetBoardOnComplete = false)
+    {
+        this.resetBoardOnComplete = resetBoardOnComplete;
         print("OnConfirm ");
         titleField.text = title;
         okBtnField.text = btn1;
@@ -30,7 +41,8 @@ public class ConfirmationScreen : MonoBehaviour
     public void Yes()
     {
         OnDone(true);
-        UIManager.Instance.boardUI.ResetBoardConfirmed();
+        if(resetBoardOnComplete)
+            UIManager.Instance.boardUI.ResetBoardConfirmed();
         Close();
     }
     public void No()

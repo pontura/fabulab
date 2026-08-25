@@ -15,15 +15,24 @@ namespace OnBoarding
         [SerializeField] Animation dragAndDropContainerAnim;
         [SerializeField] GameObject btn;
         public override void OnShow()
-        {            
+        {       
             masker.SetActive(false);
-            field.text = "Podés mover y editar las piezas a tu gusto.";
-            characterEdition.gameObject.SetActive(true);
-            presetsUI.DragAndDrop();
-            characterScrollContent.GetComponent<Animation>().Play("on");
-            PresetDragAndDropToggle.gameObject.SetActive(false);
-            Events.OnStopDrag += OnStopDrag;
-            Events.SetTools += SetTools;
+            //dragAndDropContainerAnim.Play("off");
+        //    // Done();  
+        //     field.text = "Podés mover y editar las piezas a tu gusto.";
+        //     characterEdition.gameObject.SetActive(true);
+        //     presetsUI.DragAndDrop();
+        //     characterScrollContent.GetComponent<Animation>().Play("on");
+        //     PresetDragAndDropToggle.gameObject.SetActive(false);
+        //     Events.OnStopDrag += OnStopDrag;
+        //     Events.SetTools += SetTools;
+            
+            Invoke("Delayed", 0.1f);
+        }
+        void Delayed()
+        {
+            print("DONE::");
+            Done();
         }
         void SetTools(bool isOn)
         {
@@ -35,9 +44,9 @@ namespace OnBoarding
         }
         public override void OnHide()
         {            
-            Events.SetTools -= SetTools;
-            Events.OnStopDrag -= OnStopDrag;
-            dragAndDropContainerAnim.Play("off");
+            // Events.SetTools -= SetTools;
+            // Events.OnStopDrag -= OnStopDrag;
+            // dragAndDropContainerAnim.Play("off");
         }
     }
 }

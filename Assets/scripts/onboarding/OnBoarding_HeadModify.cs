@@ -12,27 +12,33 @@ namespace OnBoarding
         [SerializeField] GameObject characterScrollContent;
         [SerializeField] Animation dragAndDropContainerAnim;
         public override void OnShow()
-        {            
-            field.text = "Agregá alguna pieza.";     
-            characterEdition.gameObject.SetActive(true);
-            presetsUI.DragAndDrop();
-            characterScrollContent.GetComponent<Animation>().Play("on");
-            PresetDragAndDropToggle.gameObject.SetActive(false);
-            Events.OnStopDrag += OnStopDrag;
-            dragAndDropContainerAnim.Play("on");
+        {         
+           // field.text = "Agregá alguna pieza.";     
+            // characterEdition.gameObject.SetActive(true);
+            // presetsUI.DragAndDrop();
+            // characterScrollContent.GetComponent<Animation>().Play("on");
+            // PresetDragAndDropToggle.gameObject.SetActive(false);
+            // //Events.OnStopDrag += OnStopDrag;
+            // dragAndDropContainerAnim.Play("on");
+            
+            Invoke("Delayed", 0.1f);
         }
-
+        void Delayed()
+        {
+            print("DONE::");
+            Done();
+        }
         private void OnStopDrag(ItemInScene scene, Vector3 vector)
         {
             if(!active) return;
-            Events.OnStopDrag -= OnStopDrag;
+           // Events.OnStopDrag -= OnStopDrag;
             scene.SetTools(true);
             Done();
         }
         public override void ShowPanelsBack() {}
         public override void OnHide()
         {
-            characterScrollContent.GetComponent<Animation>().Play("off");
+          //  characterScrollContent.GetComponent<Animation>().Play("off");
         }
     }
 }
