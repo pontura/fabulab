@@ -1,6 +1,7 @@
 using BoardItems;
 using BoardItems.BoardData;
 using Common.UI;
+using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 using UI.MainApp.Home.User;
 using UnityEngine;
@@ -53,18 +54,18 @@ namespace UI.MainApp.Home
 
         public void Show(bool isOn)
         {
-            
+            gameObject.SetActive(isOn); 
+            print("userData Sho hambuguerMenu " + isOn);
             if (isOn)
             {  
-                AudioManager.Instance.musicManager.Play("board");
-                hamburguerOn = false;
-                hambuguerMenu.SetActive(false);
-                gameObject.SetActive(isOn);
+                AudioManager.Instance.musicManager.Play("board");               
                 userDataScreen.Show(true);
                 profilePicture.InitOwner();
                 string username = Data.Instance.userData.userDataInDatabase.username;
                 OnChangeName(username);
                 SetPublicFields();
+                hamburguerOn = false;
+                hambuguerMenu.SetActive(false);
             }
             if (isOn && firstTime)
             {              
@@ -112,6 +113,7 @@ namespace UI.MainApp.Home
         } 
         public void ToggleHamburguer()
         {
+            print("ToggleHamburguer " + hamburguerOn);
             hamburguerOn = !hamburguerOn;
             hambuguerMenu.SetActive(hamburguerOn);
         }
