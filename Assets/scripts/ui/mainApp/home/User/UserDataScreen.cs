@@ -38,7 +38,7 @@ namespace UI.MainApp.Home.User
 
         public void DeleteAccount() {
             AudioManager.Instance.uiSfxManager.PlayTransp("click", -5);
-            Events.OnConfirm("¿Estás seguro de que querés borrar tu cuenta?", "SI", "NO", OnConfirm);
+            Events.OnConfirm("ï¿½Estï¿½s seguro de que querï¿½s borrar tu cuenta?", "SI", "NO", OnConfirm);
         }
         void OnConfirm(bool ok) {
             if (ok) {
@@ -47,7 +47,7 @@ namespace UI.MainApp.Home.User
         }
 
         void LastConfirmation() {
-            Events.OnConfirm("En el caso de continuar se borrará de manera irreversible tu usuario y todo lo que hayas guardado en la aplicación.", "CONTINUAR", "CANCELAR", OnReConfirm);
+            Events.OnConfirm("En el caso de continuar se borrarï¿½ de manera irreversible tu usuario y todo lo que hayas guardado en la aplicaciï¿½n.", "CONTINUAR", "CANCELAR", OnReConfirm);
         }
 
         void OnReConfirm(bool ok) {

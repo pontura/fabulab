@@ -58,6 +58,7 @@ namespace UI.MainApp.Home
             gameObject.SetActive(isOn);
             if (isOn && firstTime)
             {
+                userDataScreen.Show(true);
                 hamburguerOn = false;
                 hambuguerMenu.SetActive(false);
                 AudioManager.Instance.musicManager.Play("board");
