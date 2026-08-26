@@ -3,10 +3,8 @@ using BoardItems.BoardData;
 using Common.UI;
 using System.Collections.Generic;
 using UI.MainApp.Home.User;
-using UnityEditor;
 using UnityEngine;
 using Yaguar.Auth;
-using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home
 {
@@ -55,21 +53,25 @@ namespace UI.MainApp.Home
 
         public void Show(bool isOn)
         {
-            gameObject.SetActive(isOn);
-            if (isOn && firstTime)
-            {
-                userDataScreen.Show(true);
+            
+            if (isOn)
+            {  
+                AudioManager.Instance.musicManager.Play("board");
                 hamburguerOn = false;
                 hambuguerMenu.SetActive(false);
-                AudioManager.Instance.musicManager.Play("board");
-                firstTime = false;
+                gameObject.SetActive(isOn);
+                userDataScreen.Show(true);
                 profilePicture.InitOwner();
-                tabs.Init(OnTabClicked);
-                List<string> tabNames = new List<string>() { "Historias", "Personajes", "Objetos", "Info" };
-                tabs.SetTabNames(tabNames);
                 string username = Data.Instance.userData.userDataInDatabase.username;
                 OnChangeName(username);
                 SetPublicFields();
+            }
+            if (isOn && firstTime)
+            {              
+                firstTime = false;
+                tabs.Init(OnTabClicked);
+                List<string> tabNames = new List<string>() { "Historias", "Personajes", "Objetos", "Info" };
+                tabs.SetTabNames(tabNames);
             }
             else
             {
