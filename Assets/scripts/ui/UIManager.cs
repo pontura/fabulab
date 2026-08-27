@@ -128,7 +128,10 @@ namespace UI
         }
         public void Init()
         {
-            if (Data.Instance.userData.UserDataLoadedDone && Data.Instance.scenesData.ScenesDataLoadedDone) {
+            if (
+                Data.Instance.userData.UserDataLoadedDone && 
+                Data.Instance.gamesManager.done && 
+                Data.Instance.scenesData.ScenesDataLoadedDone) {
                 string uid = Data.Instance.userData.userDataInDatabase.uid;
                 if (uid != "" && uid != null)
                     Data.Instance.cacheData.GetUser(uid, OnUserDone);

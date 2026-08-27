@@ -21,6 +21,7 @@ public class Data : MonoBehaviour
     public CacheData cacheData;
     public CharacterAnimsManager characterAnimsManager;
     public TagsManager tagsManager;
+    public GamesManager gamesManager;
 
     public static Data Instance {  get  {  return mInstance;  }  }
 
@@ -49,5 +50,6 @@ public class Data : MonoBehaviour
         animationsManager = GetComponent<AnimationsManager>();
         characterAnimsManager = GetComponent<CharacterAnimsManager>();
         tagsManager = GetComponent<TagsManager>();
+        gamesManager = GetComponent<GamesManager>();
     }
 }

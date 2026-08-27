@@ -1,6 +1,7 @@
 ﻿using BoardItems;
 using Firebase.Analytics;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Yaguar.StoryMaker.Editor;
 
@@ -8,6 +9,39 @@ namespace UI.MainApp.Home.User
 {
     public class AllStoriesScreen : UserStoriesScreen
     {       
+        protected override void Init()
+        {
+              if (firstLoadDone)
+                return;
+
+            if(Data.Instance.scenesData.filmsData.Count > 0) {
+                firstLoadDone = true;
+
+                foreach (Transform child in worksContainer) {
+                    if (child.tag != "Persistent")
+                        Destroy(child.gameObject);
+                }
+                
+                TitleLine t = Instantiate(titleLine, worksContainer);
+                t.Init("JUEGOS");
+                List<GameData>  all = Data.Instance.gamesManager.GetGamesBySection("stories");
+                foreach(GameData gd in all)
+                {
+                    GameButton gb = Instantiate(gameButton, worksContainer);
+                    gb.Init(gd, OnClicked);
+                }
+
+                t = Instantiate(titleLine, worksContainer);
+                t.Init("Últimas Historias");
+                LoadNext();
+            }
+        }
+
+        private void OnClicked(GameData gameData)
+        {
+            print("clicked " + gameData);
+            OpenWork(gameData.ids[0]);
+        }
 
         protected override void LoadNext()
         {

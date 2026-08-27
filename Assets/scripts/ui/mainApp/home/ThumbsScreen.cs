@@ -8,6 +8,9 @@ namespace UI.MainApp.Home.User
 {
     public class ThumbsScreen : MonoBehaviour
     {
+        public GameButton gameButton;
+        public TitleLine titleLine;
+
         [SerializeField] protected ItemSelectorBtn workBtn_prefab;
         [SerializeField] protected Transform worksContainer;
 
