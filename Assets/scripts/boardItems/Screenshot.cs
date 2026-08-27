@@ -28,6 +28,7 @@ namespace BoardItems
         
         IEnumerator CaptureRoutine(System.Action<Texture2D> OnDone)
         {
+            Color bgCam = targetCamera.backgroundColor;
             canvas.enabled = false;
             yield return null; // esperar 1 frame completo
             yield return new WaitForEndOfFrame();
@@ -83,7 +84,7 @@ namespace BoardItems
             // Textura final: siempre del tamaño completo del objeto, rellena de negro
             Texture2D texture = new Texture2D(fullWidth, fullHeight, TextureFormat.RGB24, false);
             Color[] black = new Color[fullWidth * fullHeight];
-            for (int i = 0; i < black.Length; i++) black[i] = Color.black;
+            for (int i = 0; i < black.Length; i++) black[i] = bgCam;
             texture.SetPixels(black);
 
             if (captureWidth > 0 && captureHeight > 0)
