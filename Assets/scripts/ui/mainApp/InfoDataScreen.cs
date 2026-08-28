@@ -32,16 +32,17 @@ namespace UI.MainApp
             metadataType = type;
             isPublic = false;
             if (type == MetadataTypes.stories) {
-                tagsEditor.gameObject.SetActive(false);
+                tagsEditor.gameObject.SetActive(true);
                 FilmDataFabulab filmDataFabulab = Data.Instance.scenesData.GetMeta(id);
                 isPublic = filmDataFabulab.isPublic;
                 nameField.text = filmDataFabulab.name;
+                tagsEditor.Init(filmDataFabulab.tags, type.ToString());
             } else {
                 CharacterMetaData md = type == MetadataTypes.so ? Data.Instance.sObjectsData.GetMeta(id) : Data.Instance.charactersData.GetMeta(id);
                 isPublic = md.isPublic;
                 tagsEditor.gameObject.SetActive(true);
                 nameField.text = md.name;
-                tagsEditor.Init(md.tags);
+                tagsEditor.Init(md.tags,type.ToString());
             }
             shareBtn.Init(isPublic,OnSharedChanged); 
             workImage.sprite = s;            
@@ -78,7 +79,7 @@ namespace UI.MainApp
 
         bool StoryHasChanged() {
             FilmDataFabulab filmDataFabulab = Data.Instance.scenesData.GetMeta(id);
-            return isPublic != filmDataFabulab.isPublic || nameField.text != filmDataFabulab.name;
+            return isPublic != filmDataFabulab.isPublic || nameField.text != filmDataFabulab.name || !CompareTags(filmDataFabulab.tags, tagsEditor.GetSelectedTags());
         }
         bool ItemHasChanged() {
             CharacterMetaData md = metadataType == MetadataTypes.so ? Data.Instance.sObjectsData.GetMeta(id) : Data.Instance.charactersData.GetMeta(id);

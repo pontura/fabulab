@@ -10,6 +10,7 @@ public class TagData
 {
     public string id;
     public string name;
+    public List<string> itemTypes;
 }
 
 public class TagsManager : MonoBehaviour
