@@ -9,8 +9,11 @@ namespace UI.MainApp.Home.User
 {
     public class AllStoriesScreen : UserStoriesScreen
     {       
+        string id;
+        bool isGame;
         protected override void Init()
         {
+            isGame = false;
               if (firstLoadDone)
                 return;
 
@@ -39,8 +42,17 @@ namespace UI.MainApp.Home.User
 
         private void OnClicked(GameData gameData)
         {
-            print("clicked " + gameData);
-            OpenWork(gameData.ids[0]);
+            isGame = true;
+            string storyId = null;
+            if (gameData.ids != null) {
+                foreach (GameIdEntry entry in gameData.ids) {
+                    if (entry.storyIds != null && entry.storyIds.Count > 0) {
+                        storyId = entry.storyIds[0];
+                        break;
+                    }
+                }
+            }
+            OpenWork(storyId);
         }
 
         protected override void LoadNext()
@@ -89,8 +101,9 @@ namespace UI.MainApp.Home.User
             }
         }
 
-        string id;
         public override void OpenWork(string id) {
+            
+            print("OpenWork " + id + " isGame_: " + isGame);
             this.id = id;
             Events.OnLoadingParent(null, LoadingDone);
         }
@@ -109,8 +122,8 @@ namespace UI.MainApp.Home.User
         }
         
         void SetStoryEditionState() {
-            StoryMakerEvents.EnableStoryEdition(false);
-            StoryMakerEvents.EnableInputManager(false);
+            StoryMakerEvents.EnableStoryEdition(isGame);
+            StoryMakerEvents.EnableInputManager(isGame);
         }        
     }
 }

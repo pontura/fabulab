@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 4781433556235439642}
   - component: {fileID: 1818131810870519092}
   - component: {fileID: 5797612725518905383}
+  - component: {fileID: 7450757528173779027}
   m_Layer: 0
   m_Name: DATA
   m_TagString: Untagged
@@ -71,6 +72,7 @@ MonoBehaviour:
   cacheData: {fileID: 4781433556235439642}
   characterAnimsManager: {fileID: 0}
   tagsManager: {fileID: 0}
+  gamesManager: {fileID: 0}
 --- !u!114 &4740097183744302633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,6 +90,7 @@ MonoBehaviour:
     email: 
     uid: 
     deviceID: 
+    likes: []
   onboardingSteps: 0
   isAdmin: 0
   passport: 0
@@ -537,3 +540,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TagsManager
   <Tags>k__BackingField: []
+--- !u!114 &7450757528173779027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000013221123710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd5aadc98c76a3747adcd51314974298, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GamesManager
+  <Games>k__BackingField: []
+  thumbnails:
+  - id: como_termina
+    thumbnail: {fileID: 3286163911610860551, guid: 24964b67c9262ad45ba23464edc5830f, type: 3}

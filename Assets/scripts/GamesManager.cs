@@ -1,10 +1,49 @@
 using Firebase.Database;
 using Firebase.Extensions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[Serializable]
+public class GameIdEntry
+{
+    public string id;
+    public List<string> storyIds;
+}
+
+public class GameIdEntryListConverter : JsonConverter<List<GameIdEntry>>
+{
+    public override void WriteJson(JsonWriter writer, List<GameIdEntry> value, JsonSerializer serializer)
+    {
+        writer.WriteStartObject();
+        if (value != null)
+        {
+            foreach (GameIdEntry entry in value)
+            {
+                writer.WritePropertyName(entry.id);
+                serializer.Serialize(writer, entry.storyIds);
+            }
+        }
+        writer.WriteEndObject();
+    }
+
+    public override List<GameIdEntry> ReadJson(JsonReader reader, Type objectType, List<GameIdEntry> existingValue, bool hasExistingValue, JsonSerializer serializer)
+    {
+        List<GameIdEntry> result = new();
+        if (reader.TokenType == JsonToken.Null)
+            return result;
+
+        JObject obj = JObject.Load(reader);
+        foreach (JProperty prop in obj.Properties())
+        {
+            result.Add(new GameIdEntry { id = prop.Name, storyIds = prop.Value.ToObject<List<string>>(serializer) });
+        }
+        return result;
+    }
+}
 
 [Serializable]
 public class GameData
@@ -14,7 +53,7 @@ public class GameData
     public string title;
     public string description;
     [JsonIgnore] public Sprite thumbnail;
-    public string[] ids;
+    [JsonConverter(typeof(GameIdEntryListConverter))] public List<GameIdEntry> ids;
 }
 
 public static class GameSection
