@@ -78,11 +78,20 @@ public class GamesManager : MonoBehaviour
     [SerializeField] private List<GameThumbnail> thumbnails;
 
     public event Action OnGamesLoaded;
-
+    public string activaGameData;
 
     void Start()
     {
         LoadGames();
+    }
+    void OnDestroy()
+    {
+    }
+
+    public void OnSetActiveGame(string id)
+    {
+        print("OnSetActiveGame " + id);
+        activaGameData  = id;
     }
 
     public void AddGame(string newGameTitle, string newGameSection, string newGameDescription, Action<bool, GameData> callback = null)

@@ -13,6 +13,7 @@ namespace UI.MainApp.Home
         [SerializeField] AllCharactersScreen charactersScreen;
         [SerializeField] AllObjectsScreen objects;
         [SerializeField] UserScreen userScreen;
+        [SerializeField] GameSelector gameSelector;
         
         [SerializeField] TMPro.TMP_Text usernameField;
 

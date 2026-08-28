@@ -11,8 +11,10 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] Toggle toggleTransition;
         [SerializeField] GameObject durationBtn;
         [SerializeField] VideoPlayerFabulab videoPlayerFabulab;
+        [SerializeField] GameSelector gameSelector;
         [SerializeField] CamerasEditorUI camerasEditorUI;
         [SerializeField] ScenarioCameraManager scenarioCameraManager;
+
          float defaultZoom = 60;
         [SerializeField] Vector2 limitsCamZoom1;
         
@@ -41,6 +43,8 @@ namespace Yaguar.StoryMaker.Editor
             scenarioCameraManager.Init(enable);
             camerasEditorUI.Init(enable);
             camerasEditorUI.Show(enable);
+
+            gameSelector.Show(Data.Instance.gamesManager.activaGameData != "");
 
             if(enable)
                 timeline.GetComponent<Animator>().Play("editor");

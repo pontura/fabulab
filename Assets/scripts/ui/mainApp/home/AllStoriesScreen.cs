@@ -31,7 +31,7 @@ namespace UI.MainApp.Home.User
                 foreach(GameData gd in all)
                 {
                     GameButton gb = Instantiate(gameButton, worksContainer);
-                    gb.Init(gd, OnClicked);
+                    gb.Init(gd, OnGameClicked);
                 }
 
                 t = Instantiate(titleLine, worksContainer);
@@ -40,18 +40,10 @@ namespace UI.MainApp.Home.User
             }
         }
 
-        private void OnClicked(GameData gameData)
+        private void OnGameClicked(GameData gameData)
         {
-            isGame = true;
-            string storyId = gameData.id;
-            // if (gameData.ids != null) {
-            //     foreach (GameIdEntry entry in gameData.ids) {
-            //         if (entry.storyIds != null && entry.storyIds.Count > 0) {
-            //             storyId = entry.storyIds[0];
-            //             break;
-            //         }
-            //     }
-            // }
+            string storyId = gameData.ids[0].id;
+            Data.Instance.gamesManager.OnSetActiveGame(storyId);
             OpenWork(storyId);
         }
 

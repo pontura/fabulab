@@ -66,7 +66,7 @@ namespace Yaguar.StoryMaker.Editor
             collider.offset = localBounds.center;
             collider.size = localBounds.size;
             //collider.size = new Vector2(10f, localBounds.size.y);
-            Debug.Log($"% offset:{collider.offset} size: {collider.size}");
+           // Debug.Log($"% offset:{collider.offset} size: {collider.size}");
 
             foreach (Collider2D coll in GetComponentsInChildren<Collider2D>()) {
                 if (coll == collider) 
