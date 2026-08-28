@@ -11,13 +11,20 @@ namespace UI.MainApp.Home
         [SerializeField] Toggle tagToggle;
         [SerializeField] List<Toggle> toggles;
         [SerializeField] Transform container;
-        public void Init(List<string> activeTagIds)
+        List<string> tagIds;
+        public void Init(List<string> activeTagIds, string itemType)
         {
             toggles = new List<Toggle>();
+            tagIds = new List<string>();
             Utils.RemoveAllChildsIn(container);
             int a = 0;
             foreach (TagData tag in Data.Instance.tagsManager.Tags)
             {
+                Debug.Log("#"+tag.name);
+                if (tag.itemTypes!= null) {
+                    if(!tag.itemTypes.Contains(itemType))
+                        continue;
+                }
                 Toggle t = Instantiate(tagToggle, container);
                 t.GetComponentInChildren<Text>().text = tag.name;
                 t.isOn = false;
@@ -27,6 +34,7 @@ namespace UI.MainApp.Home
                             t.isOn = true;
                // t.onValueChanged.AddListener(isOn => { OnTagClicked(a); });
                 toggles.Add(t);
+                tagIds.Add(tag.id);
                 a++;
             }
         }
@@ -36,7 +44,7 @@ namespace UI.MainApp.Home
             int id = 0;
             foreach( Toggle t in toggles)
             {
-                if(t.isOn) selectedTagsId.Add(Data.Instance.tagsManager.Tags[id].id);
+                if(t.isOn) selectedTagsId.Add(tagIds[id]);
                 id++;
             }
             return selectedTagsId;

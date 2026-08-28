@@ -16,6 +16,15 @@ namespace BoardItems
     {
         public int likes;
         public bool isPublic;
+        public List<string> tags;
+        public void AddTag(string tagID) {
+            if (tags == null) {
+                tags = new List<string>();
+            }
+            if (!tags.Contains(tagID)) {
+                tags.Add(tagID);
+            }
+        }
         public bool IsMyStory() {
             if (userID == null || (Data.Instance.userData.userDataInDatabase != null && userID == Data.Instance.userData.userDataInDatabase.uid))
                 return true;
@@ -32,6 +41,7 @@ namespace BoardItems
         public int speed;
         public string timestamp;
         public bool isPublic;
+        public List<string> tags;
     }
 
     public class ScenesData : MonoBehaviour {
@@ -177,6 +187,7 @@ namespace BoardItems
                     fd.userID = e.Value.userID;
                     fd.speed = e.Value.speed;
                     fd.isPublic = e.Value.isPublic;
+                    fd.tags = e.Value.tags;
                     if (e.Value.timestamp == null || e.Value.timestamp == "")
                         fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
                     else
@@ -265,6 +276,7 @@ namespace BoardItems
                     fd.userID = sfd.userID;
                     fd.speed = sfd.speed;
                     fd.isPublic = sfd.isPublic;
+                    fd.tags = sfd.tags;
                     if (sfd.timestamp == null || sfd.timestamp == "")
                         fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
                     else
@@ -451,12 +463,21 @@ namespace BoardItems
             sfd.userID = Data.Instance.userData.userDataInDatabase.uid;
             sfd.isPublic = fd.isPublic;
             sfd.timestamp = fd.timestamp;
+            if(fd.tags!=null)
+                sfd.tags = fd.tags;
             FirebaseStoryMakerDBManager.Instance.UpdateFilmDataToServer(fd.id, sfd, OnDone);
         }
 
         public void SaveInfo(string id, bool isPublic, List<string> selectedTagsID, System.Action<bool, string> OnDone) {
             FilmDataFabulab md = filmsData.Find(x => x.id == id);
-            md.isPublic = isPublic;            
+            md.isPublic = isPublic;
+            if (selectedTagsID.Count > 0) {
+                md.tags = new List<string>();
+                foreach (string t in selectedTagsID) {
+                    md.AddTag(t);
+                    print("AddTag " + t);
+                }
+            }
             SaveMetadata(md, OnDone);
         }
 
