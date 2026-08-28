@@ -43,15 +43,15 @@ namespace UI.MainApp.Home.User
         private void OnClicked(GameData gameData)
         {
             isGame = true;
-            string storyId = null;
-            if (gameData.ids != null) {
-                foreach (GameIdEntry entry in gameData.ids) {
-                    if (entry.storyIds != null && entry.storyIds.Count > 0) {
-                        storyId = entry.storyIds[0];
-                        break;
-                    }
-                }
-            }
+            string storyId = gameData.id;
+            // if (gameData.ids != null) {
+            //     foreach (GameIdEntry entry in gameData.ids) {
+            //         if (entry.storyIds != null && entry.storyIds.Count > 0) {
+            //             storyId = entry.storyIds[0];
+            //             break;
+            //         }
+            //     }
+            // }
             OpenWork(storyId);
         }
 
