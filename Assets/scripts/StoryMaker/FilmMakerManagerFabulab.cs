@@ -47,7 +47,7 @@ namespace Yaguar.StoryMaker.Editor
             camerasEditorUI.Show(enable);
 
             if(Data.Instance.gamesManager.IsEditing())
-                gameSelector.Show(false);
+                gameSelector.Show(false);  
             else
                 gameSelector.Show(Data.Instance.gamesManager.activaGameData != "");
 
