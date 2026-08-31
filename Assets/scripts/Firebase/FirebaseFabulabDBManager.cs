@@ -21,7 +21,9 @@ namespace Yaguar.StoryMaker.DB
     public class FirebaseStoryMakerDBManager : FirebaseDBManager
     {
         public new static FirebaseStoryMakerDBManager Instance { get { return mInstance; } }
-        static FirebaseStoryMakerDBManager mInstance = null;        
+        static FirebaseStoryMakerDBManager mInstance = null;
+
+        [SerializeField] long downloadedData;
 
         [Serializable]
         public class PostResponse
@@ -29,16 +31,14 @@ namespace Yaguar.StoryMaker.DB
             public string name;
         }
 
-        private void Awake()
-        {
-            if (Instance != null)
-            {
+        private void Awake() {
+            if (Instance != null) {
                 UnityEngine.Debug.LogError($"There should be only one {nameof(FirebaseStoryMakerDBManager)} in the Scene!. Destroying...");
                 Destroy(gameObject);
                 return;
             }
             mInstance = this;
-            DontDestroyOnLoad(this.gameObject);            
+            DontDestroyOnLoad(this.gameObject);
             _uid = PlayerPrefs.GetString("uid", "");
 
 #if UNITY_EDITOR
@@ -46,16 +46,14 @@ namespace Yaguar.StoryMaker.DB
             db.SetPersistenceEnabled(false);
 #endif
         }
-        void Start()
-        {
+        void Start() {
             FirebaseAuthManager.Instance.OnFirebaseAuthenticated += OnFirebaseAuthenticated;
 
             //var functions = FirebaseFunctions.DefaultInstance;
             //functions.UseFunctionsEmulator("http://127.0.0.1:5001");
         }
 
-        private void OnDestroy()
-        {
+        private void OnDestroy() {
             FirebaseAuthManager.Instance.OnFirebaseAuthenticated += OnFirebaseAuthenticated;
         }
 
@@ -64,8 +62,7 @@ namespace Yaguar.StoryMaker.DB
             _uid = uid;
         }
 
-        public override IFirebaseDBManager GetInstance()
-        {
+        public override IFirebaseDBManager GetInstance() {
             return FirebaseStoryMakerDBManager.Instance;
         }
 
@@ -101,9 +98,9 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log("#Save" + type + "ToServer FAIL");
                     Debug.Log(task.Exception);
                 } else {
-                    try { 
-                    callback(true, key);
-                    Debug.Log("Response: " + key);
+                    try {
+                        callback(true, key);
+                        Debug.Log("Response: " + key);
                     } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");
                     }
@@ -113,7 +110,7 @@ namespace Yaguar.StoryMaker.DB
         }
 
         public void DeletePart(string type, string id, System.Action<string> callback, string userId) {
-            if (!Data.Instance.userData.isAdmin && userId!=Data.Instance.userData.userDataInDatabase.uid)
+            if (!Data.Instance.userData.isAdmin && userId != Data.Instance.userData.userDataInDatabase.uid)
                 return;
 
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference(type + "/" + userId + "/" + id);
@@ -122,22 +119,22 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log("#DeleteCharacter FAIL");
                     Debug.Log(task.Exception);
                 } else {
-                    DeletePartMetadataFromServer(type,id);
+                    DeletePartMetadataFromServer(type, id);
                     DeleteImage(type, id, userId);
-                    try { 
+                    try {
                         callback(id);
                     } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");
                     }
                 }
             });
-            Debug.Log("Server: DeletePart "+type+" "+id);
+            Debug.Log("Server: DeletePart " + type + " " + id);
             //Debug.Log(url);
         }
 
         public void DeletePartMetadataFromServer(string type, string id) {
             //Debug.Log("ACA");
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/"+ type+"/" + id);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/" + type + "/" + id);
             reference.RemoveValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#DeletePartMetadataFromServer FAIL");
@@ -147,24 +144,24 @@ namespace Yaguar.StoryMaker.DB
             Debug.Log("Server: DeletePartMetadataFromServer");
             //Debug.Log(url);
         }
-        public void LoadUserAssetsFromServer(string type, System.Action<Dictionary<string, CharacterServerData>> callback)
-        {
+        public void LoadUserAssetsFromServer(string type, System.Action<Dictionary<string, CharacterServerData>> callback) {
 
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference(type + "/" + _uid);
             reference.GetValueAsync().ContinueWithOnMainThread(task => {
 
-                if (task.IsFaulted || task.IsCanceled)
-                {
+                if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#LoadUserCharactersFromServer FAIL");
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
                     try {
                         //SceneDataFabulabLyna[] sds = JsonConvert.DeserializeObject<SceneDataFabulabLyna[]>(task.Result.GetRawJsonValue());
                         //Debug.Log(task.Result.GetRawJsonValue());
+                        long downloaded = task.Result.GetRawJsonValue().Length;
+                        downloadedData += downloaded;
+                        Debug.Log("! Downloaded: " + downloaded);
                         DataSnapshot snapshot = task.Result;
                         Dictionary<string, CharacterServerData> d = new Dictionary<string, CharacterServerData>();
-                        foreach (var child in snapshot.Children)
-                        {
+                        foreach (var child in snapshot.Children) {
                             string json = JsonConvert.SerializeObject(child.Value);
                             //Debug.Log(json);
                             if (!json.Contains("#"))
@@ -173,9 +170,7 @@ namespace Yaguar.StoryMaker.DB
                         /*Dictionary<string, string> d = JsonConvert.DeserializeObject<Dictionary<string, string>>(task.Result.GetRawJsonValue());
                         Debug.Log("# " + d.Count);*/
                         callback(d);
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");
                     }
 
@@ -184,27 +179,24 @@ namespace Yaguar.StoryMaker.DB
             Debug.Log("Server: LoadUserCharactersFromServer");
             //print("LoadCharacterFromServer url : " + url);
         }
-        public void LoadUserAssetsFromServer(string type, System.Action<Dictionary<string, SObjectServerData>> callback)
-        {
+        public void LoadUserAssetsFromServer(string type, System.Action<Dictionary<string, SObjectServerData>> callback) {
 
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference(type + "/" + _uid);
             reference.GetValueAsync().ContinueWithOnMainThread(task => {
 
-                if (task.IsFaulted || task.IsCanceled)
-                {
+                if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#LoadUserCharactersFromServer FAIL");
                     Debug.Log(task.Exception);
-                }
-                else if (task.IsCompleted)
-                {
-                    try
-                    {
+                } else if (task.IsCompleted) {
+                    try {
+                        long downloaded = task.Result.GetRawJsonValue().Length;
+                        downloadedData += downloaded;
+                        Debug.Log("! Downloaded: " + downloaded);
                         //SceneDataLyna[] sds = JsonConvert.DeserializeObject<SceneDataLyna[]>(task.Result.GetRawJsonValue());
                         //Debug.Log(task.Result.GetRawJsonValue());
                         DataSnapshot snapshot = task.Result;
                         Dictionary<string, SObjectServerData> d = new Dictionary<string, SObjectServerData>();
-                        foreach (var child in snapshot.Children)
-                        {
+                        foreach (var child in snapshot.Children) {
                             string json = JsonConvert.SerializeObject(child.Value);
                             //Debug.Log(json);
                             if (!json.Contains("#"))
@@ -213,9 +205,7 @@ namespace Yaguar.StoryMaker.DB
                         /*Dictionary<string, string> d = JsonConvert.DeserializeObject<Dictionary<string, string>>(task.Result.GetRawJsonValue());
                         Debug.Log("# " + d.Count);*/
                         callback(d);
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");
                     }
 
@@ -226,31 +216,31 @@ namespace Yaguar.StoryMaker.DB
         }
 
 
-        public void LoadCharacterFromServer(string characterId, System.Action<bool, string, CharacterServerData> callback, string userId=null)
-        {
+        public void LoadCharacterFromServer(string characterId, System.Action<bool, string, CharacterServerData> callback, string userId = null) {
             if (userId == null)
                 userId = Data.Instance.userData.userDataInDatabase.uid;
 
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("characters/" + userId + "/" + characterId);
             reference.GetValueAsync().ContinueWithOnMainThread(task => {
-                if (task.IsFaulted || task.IsCanceled)
-                {
+                if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#LoadCharacterFromServer FAIL");
                     callback(false, "", null);
                     Debug.Log(task.Exception);
-                }
-                else if (task.IsCompleted)
-                {
-                    try { 
-                    //SceneDataFabulabLyna[] sds = JsonConvert.DeserializeObject<SceneDataFabulabLyna[]>(task.Result.GetRawJsonValue());
-                    string data = task.Result.GetRawJsonValue();                    
-                    Debug.Log("# "+data);
-                    callback(true, task.Result.Key, JsonConvert.DeserializeObject<CharacterServerData>(data));
+                } else if (task.IsCompleted) {
+                    try {
+
+                        //SceneDataFabulabLyna[] sds = JsonConvert.DeserializeObject<SceneDataFabulabLyna[]>(task.Result.GetRawJsonValue());
+                        string data = task.Result.GetRawJsonValue();
+                        long downloaded = data.Length;
+                        downloadedData += downloaded;
+                        Debug.Log("! Downloaded: " + downloaded);
+                        //Debug.Log("# "+data);
+                        callback(true, task.Result.Key, JsonConvert.DeserializeObject<CharacterServerData>(data));
                     } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");
                     }
                 }
-            });            
+            });
             Debug.Log("Server: LoadCharacterFromServer");
             //print("LoadCharacterFromServer url : " + url);
         }
@@ -270,7 +260,10 @@ namespace Yaguar.StoryMaker.DB
                     try {
                         //SceneDataFabulabLyna[] sds = JsonConvert.DeserializeObject<SceneDataFabulabLyna[]>(task.Result.GetRawJsonValue());
                         string data = task.Result.GetRawJsonValue();
-                      //  Debug.Log("# " + data);
+                        long downloaded = data.Length;
+                        downloadedData += downloaded;
+                        Debug.Log("! Downloaded: " + downloaded);
+                        //  Debug.Log("# " + data);
                         callback(true, task.Result.Key, JsonConvert.DeserializeObject<SObjectServerData>(data));
                     } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");
@@ -282,16 +275,15 @@ namespace Yaguar.StoryMaker.DB
         }
 
 
-        public void UpdateMetadataToServer(string type, string id, ServerCharacterMetaData swmd, System.Action<bool, string> OnDone = null)
-        {
+        public void UpdateMetadataToServer(string type, string id, ServerCharacterMetaData swmd, System.Action<bool, string> OnDone = null) {
             if (id == null || id.Length == 0) {
                 Debug.LogError("Trying to save metadata without id");
                 return;
             }
 
             Debug.Log("#Save Metadata To Server type: " + type + ", id: " + id);
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/" + type  + "/" + id);
-            var jObject = JObject.FromObject(swmd);            
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/" + type + "/" + id);
+            var jObject = JObject.FromObject(swmd);
             //string s = JsonConvert.SerializeObject(swmd);
             if (type == "so")
                 jObject = JObject.FromObject(swmd as ServerPropMetaData);
@@ -310,8 +302,8 @@ namespace Yaguar.StoryMaker.DB
                 }
             });
 
-            Debug.Log("Server: SaveMetadataToServer "+ id);      
-                 
+            Debug.Log("Server: SaveMetadataToServer " + id);
+
         }
 
 
@@ -325,6 +317,9 @@ namespace Yaguar.StoryMaker.DB
                 } else if (task.IsCompleted) {
                     //Debug.Log("#Load " + type + " MetadataFromServer IsCompleted");
                     try {
+                        long downloaded = task.Result.GetRawJsonValue().Length;
+                        downloadedData += downloaded;
+                        Debug.Log("! Downloaded "+type+": "+ downloaded);
                         //Debug.Log(task.Result.GetRawJsonValue());
                         DataSnapshot snapshot = task.Result;
 
@@ -349,8 +344,7 @@ namespace Yaguar.StoryMaker.DB
                                 fd.tags = new List<string>();
 
                                 //Debug.Log("______________isPublic " +child.HasChild("isPublic"));     
-                                if (child.HasChild("isPublic"))
-                                {              
+                                if (child.HasChild("isPublic")) {
                                     //Debug.Log("______________tiene isPublic " + (bool)child.Child("isPublic").Value );                      
                                     fd.isPublic = (bool)child.Child("isPublic").Value;
                                 }
@@ -378,7 +372,7 @@ namespace Yaguar.StoryMaker.DB
                                         fd.thumb = tex;
                                     }, fd.userID);
                                 }*/
-                                                                
+
                                 metas.Add(fd);
                             }
                             //Dictionary<string, ServerCharacterMetaData> d = JsonConvert.DeserializeObject<Dictionary<string, ServerCharacterMetaData>>(task.Result.GetRawJsonValue());
@@ -387,7 +381,7 @@ namespace Yaguar.StoryMaker.DB
                             Debug.LogWarning("snapshot not exist");
                         }
                     } catch (Exception ex) {
-                        Debug.LogError(type+" "+$"Error en callback: {ex}");
+                        Debug.LogError(type + " " + $"Error en callback: {ex}");
                     }
                 }
             });
@@ -410,19 +404,22 @@ namespace Yaguar.StoryMaker.DB
                     //Debug.Log(task.Result.GetRawJsonValue());
 
                     try {
-                                             
+
+                        long downloaded = task.Result.GetRawJsonValue().Length;
+                        downloadedData += downloaded;
+                        Debug.Log("! Downloaded: " + downloaded);
 
                         DataSnapshot snapshot = task.Result;
                         Dictionary<string, SOPartServerData> d = new Dictionary<string, SOPartServerData>();
                         foreach (var child in snapshot.Children) {
-                                string json = JsonConvert.SerializeObject(child.Value);
-                                //Debug.Log(json);
-                                if (!json.Contains("#"))
-                                    d.Add(child.Key, JsonConvert.DeserializeObject<SOPartServerData>(json));
+                            string json = JsonConvert.SerializeObject(child.Value);
+                            //Debug.Log(json);
+                            if (!json.Contains("#"))
+                                d.Add(child.Key, JsonConvert.DeserializeObject<SOPartServerData>(json));
                         }
                         //string data = task.Result.GetRawJsonValue();
                         //Debug.Log(data);
-                        if (d.Count>0) {
+                        if (d.Count > 0) {
                             //Dictionary<string, string> d = JsonConvert.DeserializeObject<Dictionary<string, string>>(task.Result.GetRawJsonValue());
                             //Debug.Log("# " + d.Count);
                             callback(partId, d);
@@ -445,14 +442,14 @@ namespace Yaguar.StoryMaker.DB
                 return;
             }
 
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/" + type + "/" + partId + "/"  + presetId);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/" + type + "/" + partId + "/" + presetId);
             string s = JsonConvert.SerializeObject(presetData);
             reference.SetRawJsonValueAsync(s).ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#UpdateBodypartPresetToServer FAIL");
                     Debug.Log(task.Exception);
                 } else {
-                    try { 
+                    try {
                         callback(true, presetId, partId);
                     } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");
@@ -464,7 +461,7 @@ namespace Yaguar.StoryMaker.DB
         }
 
         public void SaveBodypartPresetToServer(SOPartServerData presetData, string type, string partId, System.Action<bool, string, string> callback) {
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/" + type + "/" + partId );
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("presets/" + type + "/" + partId);
             string s = JsonConvert.SerializeObject(presetData);
             string key = reference.Push().Key;
             reference.Child(key).SetRawJsonValueAsync(s).ContinueWithOnMainThread(task => {
@@ -495,9 +492,9 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log("#DeleteBodypartPreset FAIL");
                     Debug.Log(task.Exception);
                 } else {
-                    try { 
-                    DeleteBodypartPresetMetadataFromServer(presetId);
-                    callback((string)presetId);
+                    try {
+                        DeleteBodypartPresetMetadataFromServer(presetId);
+                        callback((string)presetId);
                     } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");
                     }
@@ -523,25 +520,28 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log("#LoadBodypartPresetMetadataFromServer FAIL");
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
-                    try { 
-                    DataSnapshot snapshot = task.Result;
-                    Dictionary<string, ServerPartMetaData> d = new Dictionary<string, ServerPartMetaData>();
-                    foreach (var child in snapshot.Children) {
-                        //Debug.Log(child.Key + " => " + child.Child("name").Value);
-                        ServerPartMetaData spmd = new ServerPartMetaData();
-                        spmd.partID = child.Child("partID").Value as string;
-                        if (child.HasChild("timestamp"))
-                            spmd.timestamp = child.Child("timestamp").Value as string;
-                        else
-                            spmd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
-                        d.Add(child.Key, spmd);
-                    }
+                    try {
+                        long downloaded = task.Result.GetRawJsonValue().Length;
+                        downloadedData += downloaded;
+                        Debug.Log(" " + downloaded);
+                        DataSnapshot snapshot = task.Result;
+                        Dictionary<string, ServerPartMetaData> d = new Dictionary<string, ServerPartMetaData>();
+                        foreach (var child in snapshot.Children) {
+                            //Debug.Log(child.Key + " => " + child.Child("name").Value);
+                            ServerPartMetaData spmd = new ServerPartMetaData();
+                            spmd.partID = child.Child("partID").Value as string;
+                            if (child.HasChild("timestamp"))
+                                spmd.timestamp = child.Child("timestamp").Value as string;
+                            else
+                                spmd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
+                            d.Add(child.Key, spmd);
+                        }
 
-                    /*string result = task.Result.GetRawJsonValue();
-                    Debug.Log(result);
-                    Dictionary<string, ServerPartMetaData> d = JsonConvert.DeserializeObject<Dictionary<string, ServerPartMetaData>>(result);
-                    Debug.Log(d == null);*/
-                    callback(d);
+                        /*string result = task.Result.GetRawJsonValue();
+                        Debug.Log(result);
+                        Dictionary<string, ServerPartMetaData> d = JsonConvert.DeserializeObject<Dictionary<string, ServerPartMetaData>>(result);
+                        Debug.Log(d == null);*/
+                        callback(d);
                         // Do something with snapshot...
                     } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");
@@ -553,15 +553,12 @@ namespace Yaguar.StoryMaker.DB
             //Debug.Log(url);
         }
 
-        
-        public void DeleteBodypartPresetMetadataFromServer(string presetId)
-        {
+
+        public void DeleteBodypartPresetMetadataFromServer(string presetId) {
             //Debug.Log("ACA");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/presets/bodypart/" + presetId);
-            reference.RemoveValueAsync().ContinueWithOnMainThread(task =>
-            {
-                if (task.IsFaulted || task.IsCanceled)
-                {
+            reference.RemoveValueAsync().ContinueWithOnMainThread(task => {
+                if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#DeleteBodypartPresetMetadataFromServer FAIL");
                     Debug.Log(task.Exception);
                 }
@@ -598,11 +595,14 @@ namespace Yaguar.StoryMaker.DB
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/");
             reference.OrderByChild("userID").EqualTo(_uid).GetValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
-                    Debug.Log("#LoadUserFilmDataFromServer FAIL");                    
+                    Debug.Log("#LoadUserFilmDataFromServer FAIL");
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
                     try {
                         string data = task.Result.GetRawJsonValue();
+                        long downloaded = data.Length;
+                        downloadedData += downloaded;
+                        Debug.Log("! Downloaded: " + downloaded);
                         if (data != null) {
                             Dictionary<string, ServerFilmData> d = JsonConvert.DeserializeObject<Dictionary<string, ServerFilmData>>(task.Result.GetRawJsonValue());
                             callback(filmsData, d);
@@ -623,11 +623,14 @@ namespace Yaguar.StoryMaker.DB
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/");
             reference.GetValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
-                    Debug.Log("#LoadAllFilmDataFromServer FAIL");                    
+                    Debug.Log("#LoadAllFilmDataFromServer FAIL");
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
                     try {
                         string data = task.Result.GetRawJsonValue();
+                        long downloaded = data.Length;
+                        downloadedData += downloaded;
+                        Debug.Log("! Downloaded: " + downloaded);
                         if (data != null) {
                             Dictionary<string, ServerFilmData> d = JsonConvert.DeserializeObject<Dictionary<string, ServerFilmData>>(task.Result.GetRawJsonValue());
                             callback(filmsData, d);
@@ -665,7 +668,7 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log("#UpdateFilmToServer FAIL");
                     Debug.Log(task.Exception);
                 } else {
-                    try { 
+                    try {
                         callback(true, filmId);
                     } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");
@@ -686,9 +689,9 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log("#SaveFilmToServer FAIL");
                     Debug.Log(task.Exception);
                 } else {
-                    try { 
-                    callback(true, key);
-                    Debug.Log("Response: " + key);
+                    try {
+                        callback(true, key);
+                        Debug.Log("Response: " + key);
                     } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");
                     }
@@ -708,7 +711,7 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log("#DeleteFilm FAIL");
                     Debug.Log(task.Exception);
                 } else {
-                    try { 
+                    try {
                         DeleteFilmData(fd.id);
                         DeleteImage("stories", fd.id, fd.userID);
                         callback(fd.id);
@@ -736,19 +739,24 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
                     try {
+
+                        long downloaded = task.Result.GetRawJsonValue().Length;
+                        downloadedData += downloaded;
+                        Debug.Log("! Downloaded: " + downloaded);
+
                         var children = task.Result.Children.OrderBy(c => int.Parse(c.Key)); //Ordena los key evitando el orden lexigráfico (10 antes que 2)
                         List<SceneDataFabulab> scene = new List<SceneDataFabulab>();
-                        
+
                         foreach (var child in children) {
                             //Debug.Log(child.Key + " => " + child.Child("name").Value);
                             //SceneDataFabulab sdf = JsonUtility.FromJson<SceneDataFabulab>(child.GetRawJsonValue());
                             SceneDataFabulab sdf = new SceneDataFabulab();
                             sdf.bgID = child.Child("bgID").Value as string;
                             sdf.camData = new CamData();
-                            if(child.HasChild("transition"))
+                            if (child.HasChild("transition"))
                                 sdf.transition = bool.Parse(child.Child("transition").Value as string);
                             if (child.HasChild("duration"))
-                                sdf.duration = float.Parse(child.Child("duration").Value as string,System.Globalization.CultureInfo.InvariantCulture);
+                                sdf.duration = float.Parse(child.Child("duration").Value as string, System.Globalization.CultureInfo.InvariantCulture);
                             else
                                 sdf.duration = ScenesManagerFabulab.Instance.Keyframe_default_duration;
                             if (child.HasChild("lightingId"))
@@ -756,17 +764,16 @@ namespace Yaguar.StoryMaker.DB
                             if (child.HasChild("lightingValue"))
                                 sdf.lightingValue = int.Parse(child.Child("lightingValue").Value as string);
                             if (child.HasChild("camData_pos_x"))
-                                sdf.camData.pos.x = float.Parse(child.Child("camData_pos_x").Value as string,System.Globalization.CultureInfo.InvariantCulture);
+                                sdf.camData.pos.x = float.Parse(child.Child("camData_pos_x").Value as string, System.Globalization.CultureInfo.InvariantCulture);
                             if (child.HasChild("camData_pos_y"))
-                                sdf.camData.pos.y = float.Parse(child.Child("camData_pos_y").Value as string,System.Globalization.CultureInfo.InvariantCulture);
+                                sdf.camData.pos.y = float.Parse(child.Child("camData_pos_y").Value as string, System.Globalization.CultureInfo.InvariantCulture);
                             if (child.HasChild("camData_zoom"))
                                 sdf.camData.zoom = int.Parse(child.Child("camData_zoom").Value as string);
-                            if (child.HasChild("camData_tween"))
-                            {
-                                sdf.camData.tween = bool.Parse(child.Child("camData_tween").Value as string);                                
+                            if (child.HasChild("camData_tween")) {
+                                sdf.camData.tween = bool.Parse(child.Child("camData_tween").Value as string);
                             }
-                                
-                            List <SceneElement> elements = new List<SceneElement>();
+
+                            List<SceneElement> elements = new List<SceneElement>();
                             foreach (var se in child.Child("scenesElements").Children) {
                                 SceneElement sceneElement = null;
                                 if ((long)se.Child("type").Value == (long)SceneElementType.AVATAR) {
@@ -794,16 +801,13 @@ namespace Yaguar.StoryMaker.DB
         }
 
 
-        public void InventoryItemToServer(string type, string data)
-        {
+        public void InventoryItemToServer(string type, string data) {
             Dictionary<string, System.Object> childUpdates = new Dictionary<string, System.Object>();
             childUpdates[data] = "";
 
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("inventory/" + _uid + "/" + type);
-            reference.UpdateChildrenAsync(childUpdates).ContinueWithOnMainThread( task =>
-            {
-                if (task.IsFaulted || task.IsCanceled)
-                {
+            reference.UpdateChildrenAsync(childUpdates).ContinueWithOnMainThread(task => {
+                if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#InventoryItemToServer FAIL");
                     Debug.Log(task.Exception);
                 }
@@ -856,20 +860,18 @@ namespace Yaguar.StoryMaker.DB
             Debug.Log("Server: LoadCataloguesFromServer");
             //Debug.Log(url);
         }*/
-        
-        public void GetUser(string uid, System.Action<string, string> callback)
-        {
+
+        public void GetUser(string uid, System.Action<string, string> callback) {
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + uid);
-            reference.GetValueAsync().ContinueWithOnMainThread(task =>
-            {
-                if (task.IsFaulted || task.IsCanceled)
-                {
+            reference.GetValueAsync().ContinueWithOnMainThread(task => {
+                if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#GetUsernameFromServer FAIL");
                     Debug.Log(task.Exception);
-                }
-                else if (task.IsCompleted)
-                {
+                } else if (task.IsCompleted) {
                     try {
+                        long downloaded = task.Result.GetRawJsonValue().Length;
+                        downloadedData += downloaded;
+                        Debug.Log("! Downloaded: " + downloaded);
                         callback(uid, task.Result.GetRawJsonValue());
                     } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");
@@ -880,14 +882,13 @@ namespace Yaguar.StoryMaker.DB
         }
         public void SaveProfilePicture(Texture2D texture, System.Action<string> callback) {
 
-            UploadTexture(texture, "profile", _uid, onDone:() => {
-                Debug.Log("Imagen de perfil actualizada correctamente");                
+            UploadTexture(texture, "profile", _uid, onDone: () => {
+                Debug.Log("Imagen de perfil actualizada correctamente");
                 Dictionary<string, System.Object> childUpdates = new Dictionary<string, System.Object>();
                 childUpdates["thumb_timestamp"] = DateTime.Now.ToUniversalTime().ToString("o");
                 callback(childUpdates["thumb_timestamp"].ToString());
                 DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + _uid);
-                reference.UpdateChildrenAsync(childUpdates).ContinueWithOnMainThread(task =>
-                {
+                reference.UpdateChildrenAsync(childUpdates).ContinueWithOnMainThread(task => {
                     if (task.IsFaulted || task.IsCanceled) {
                         Debug.Log("#SaveProfilePicture timestamp FAIL " + task.Exception);
                     }
@@ -927,12 +928,12 @@ namespace Yaguar.StoryMaker.DB
                 }
                 Debug.Log("Imagen subida correctamente");
             });*/
-            Debug.Log("Imagen eliminada correctamente: "+ fileName);
+            Debug.Log("Imagen eliminada correctamente: " + fileName);
             if (onDone != null)
                 onDone();
         }
 
-        public async Task UploadTexture(Texture2D texture, string folder, string fileName, string userId = null, System.Action onDone=null) {
+        public async Task UploadTexture(Texture2D texture, string folder, string fileName, string userId = null, System.Action onDone = null) {
             string uid = _uid;
             if (userId != null) {
                 uid = userId;
@@ -951,7 +952,7 @@ namespace Yaguar.StoryMaker.DB
                 }
                 Debug.Log("Imagen subida correctamente");
             });*/
-            Debug.Log("Imagen subida correctamente: "+fileName);
+            Debug.Log("Imagen subida correctamente: " + fileName);
             if (onDone != null)
                 onDone();
         }
@@ -989,30 +990,30 @@ namespace Yaguar.StoryMaker.DB
             const long maxAllowedSize = 5 * 1024 * 1024; // 5 MB
             //byte[] fileContents = await storageRef.GetBytesAsync(maxAllowedSize);
             storageRef.GetBytesAsync(maxAllowedSize).ContinueWithOnMainThread(task =>
-             {
-                 if (task.IsFaulted || task.IsCanceled) {
-                     Debug.LogError($"Error al descargar la images/{uid}/{folder}/{fileName}.jpg : " + task.Exception);
-                     onComplete?.Invoke(null);
-                     return;
-                 } else if (task.IsCompleted) {
-                     try {
-                         // Convertir a Texture2D en el hilo principal
-                         byte[] fileContents = task.Result;
-                         Texture2D texture = new Texture2D(2, 2);
-                         texture.LoadImage(fileContents);
-                         Debug.Log("Imagen descargada correctamente");
-                         onComplete?.Invoke(texture);
-                         Data.Instance.cacheData.SaveImageCache(folder, fileName, fileContents,serverTimestamp);
-                     } catch (Exception ex) {
-                         Debug.LogError($"Error en callback: {ex}");
-                     }
-                 }
-                 Debug.Log($"Server DownloadTexture: images/{uid}/{folder}/{fileName}.jpg");
-             });
+            {
+                if (task.IsFaulted || task.IsCanceled) {
+                    Debug.LogError($"Error al descargar la images/{uid}/{folder}/{fileName}.jpg : " + task.Exception);
+                    onComplete?.Invoke(null);
+                    return;
+                } else if (task.IsCompleted) {
+                    try {
+                        // Convertir a Texture2D en el hilo principal
+                        byte[] fileContents = task.Result;
+                        Texture2D texture = new Texture2D(2, 2);
+                        texture.LoadImage(fileContents);
+                        Debug.Log("Imagen descargada correctamente");
+                        onComplete?.Invoke(texture);
+                        Data.Instance.cacheData.SaveImageCache(folder, fileName, fileContents, serverTimestamp);
+                    } catch (Exception ex) {
+                        Debug.LogError($"Error en callback: {ex}");
+                    }
+                }
+                Debug.Log($"Server DownloadTexture: images/{uid}/{folder}/{fileName}.jpg");
+            });
         }
 
         public void LoadUserLikeFromServer(System.Action<List<string>> callback, string userID = "") {
-            
+
             if (userID == "")
                 userID = _uid;
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + userID + "/likes");
@@ -1022,6 +1023,11 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log(task.Exception);
                     callback(null);
                 } else if (task.IsCompleted) {
+
+                    long downloaded = task.Result.GetRawJsonValue().Length;
+                    downloadedData += downloaded;
+                    Debug.Log("! Downloaded: " + downloaded);
+
                     List<string> keys = new List<string>();
                     DataSnapshot snapshot = task.Result;
                     foreach (var child in snapshot.Children) {
@@ -1054,27 +1060,27 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log(task.Exception);
                 }
             });
-            Debug.Log("Server: AddUserLikeToServer "+ itemId);
+            Debug.Log("Server: AddUserLikeToServer " + itemId);
             //print("AddUserLikeToServer url : " + url);
         }
 
         public void RemoveUserLikeToServer(string itemId) {
             Dictionary<string, System.Object> childUpdates = new Dictionary<string, System.Object>();
             childUpdates[itemId] = "";
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + _uid + "/likes/"+itemId);
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + _uid + "/likes/" + itemId);
             reference.RemoveValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#RemoveUserLikeToServer FAIL");
                     Debug.Log(task.Exception);
                 }
             });
-            
-            Debug.Log("Server: RemoveUserLikeToServer "+ itemId);
+
+            Debug.Log("Server: RemoveUserLikeToServer " + itemId);
             //print("AddUserLikeToServer url : " + url);
         }
 
         public void AddLikeCountToFilm(string type, string id) {
-           
+
             if (id == null || id.Length == 0) {
                 Debug.LogError("Trying to update likes without id");
                 return;
@@ -1099,10 +1105,9 @@ namespace Yaguar.StoryMaker.DB
             Debug.Log("Server: RemoveLikeCountToFilm" + type + ", id: " + id);
         }
 
-        public void IncrementNode(DatabaseReference reference, int maxValue=int.MaxValue) {
+        public void IncrementNode(DatabaseReference reference, int maxValue = int.MaxValue) {
 
-            reference.RunTransaction(mutableData =>
-            {
+            reference.RunTransaction(mutableData => {
                 long currentValue = 0;
                 if (mutableData.Value != null) {
                     if (mutableData.Value is long longVal) {
@@ -1113,11 +1118,10 @@ namespace Yaguar.StoryMaker.DB
                         Debug.LogWarning("Tipo inesperado en nodo: " + mutableData.Value.GetType());
                         return TransactionResult.Abort();
                     }
-                }                
+                }
                 mutableData.Value = currentValue + 1 > maxValue ? maxValue : currentValue + 1;
                 return TransactionResult.Success(mutableData);
-            }).ContinueWithOnMainThread(task =>
-            {
+            }).ContinueWithOnMainThread(task => {
                 if (task.Exception != null) {
                     Debug.LogError("Error en la transacción: " + task.Exception);
                 } else if (task.IsCompleted) {
@@ -1128,8 +1132,7 @@ namespace Yaguar.StoryMaker.DB
 
         public void DecrementNode(DatabaseReference reference, int minValue = int.MinValue) {
 
-            reference.RunTransaction(mutableData =>
-            {
+            reference.RunTransaction(mutableData => {
                 long currentValue = 0;
                 if (mutableData.Value != null) {
                     if (mutableData.Value is long longVal) {
@@ -1143,8 +1146,7 @@ namespace Yaguar.StoryMaker.DB
                 }
                 mutableData.Value = currentValue - 1 < minValue ? minValue : currentValue - 1;
                 return TransactionResult.Success(mutableData);
-            }).ContinueWithOnMainThread(task =>
-            {
+            }).ContinueWithOnMainThread(task => {
                 if (task.Exception != null) {
                     Debug.LogError("Error en la transacción: " + task.Exception);
                 } else if (task.IsCompleted) {
@@ -1211,8 +1213,8 @@ namespace Yaguar.StoryMaker.DB
         }
 
         async void SendReport(string type, string id) {
-            var functions = FirebaseFunctions.DefaultInstance;            
-            var callable = functions.GetHttpsCallable("reportContent");            
+            var functions = FirebaseFunctions.DefaultInstance;
+            var callable = functions.GetHttpsCallable("reportContent");
             try {
                 var result = await callable.CallAsync(new Dictionary<string, object>
                     {{ "contentId", id },{ "contentType", type }
@@ -1242,7 +1244,7 @@ namespace Yaguar.StoryMaker.DB
 
             Events.OnLoading(true);
             try {
-                await callable.CallAsync(new Dictionary<string, object>{{ "uid", _uid }});
+                await callable.CallAsync(new Dictionary<string, object> { { "uid", _uid } });
                 Debug.Log("Cuenta y datos eliminados correctamente.");
                 Events.OnPopupTopSignalText("Cuenta eliminada");
                 FirebaseAuthManager.Instance.SignOut();
