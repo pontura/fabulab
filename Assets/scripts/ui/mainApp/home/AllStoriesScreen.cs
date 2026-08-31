@@ -101,9 +101,10 @@ namespace UI.MainApp.Home.User
         }
         public void OpenGame(string id)
         {
-            Data.Instance.gamesManager.SetPlaying(true);
             isGame = true;
-            OpenWork(id);
+            Data.Instance.gamesManager.SetPlaying(true);
+            string newID = Data.Instance.gamesManager.CheckIfStoryWasMade();
+            OpenWork(newID);
         }
         public override void OpenWork(string id) {
             

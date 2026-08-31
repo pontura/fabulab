@@ -368,6 +368,8 @@ namespace UI.MainApp
                 Data.Instance.scenesData.currentFilmData.thumb = tex;
                 Data.Instance.scenesData.currentFilmData.name = storyName.text;
                 Data.Instance.scenesData.currentFilmData.timestamp = DateTime.UtcNow.ToString("o");
+                Data.Instance.scenesData.currentFilmData.tags = new System.Collections.Generic.List<string>();
+                
                 Data.Instance.scenesData.SaveFilm();
                 SetChangesMade(false);
             });

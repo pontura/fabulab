@@ -401,6 +401,13 @@ namespace BoardItems
         void OnFilmSavedToServer(bool succes, string id) {
             Debug.Log("& OnFilmSavedToServer");
             ScenesManagerFabulab.Instance.currentFDataID = id;
+
+            if(Data.Instance.gamesManager.IsEditing())
+            {
+                Data.Instance.scenesData.currentFilmData.tags.Add("games");
+                Data.Instance.gamesManager.AddStoryToGameEntry(id);
+            }
+
             Data.Instance.cacheData.AddToFilmCache(ScenesManagerFabulab.Instance.currentFDataID, ScenesManagerFabulab.Instance.Scenes);
             SaveTexture();
         }

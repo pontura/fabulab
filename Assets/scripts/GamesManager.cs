@@ -1,3 +1,4 @@
+using BoardItems;
 using Firebase.Database;
 using Firebase.Extensions;
 using Newtonsoft.Json;
@@ -5,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Yaguar.StoryMaker.Editor;
 
 
 [Serializable]
@@ -54,6 +56,15 @@ public class GameData
     public string description;
     [JsonIgnore] public Sprite thumbnail;
     [JsonConverter(typeof(GameIdEntryListConverter))] public List<GameIdEntry> ids;
+    public GameIdEntry GetGameOdEntry(string id)
+    {
+        foreach(GameIdEntry e in ids)
+        {
+            if(e.id == id)
+                return e;
+        }
+        return null;
+    }
 }
 
 public static class GameSection
@@ -78,7 +89,8 @@ public class GamesManager : MonoBehaviour
     [SerializeField] private List<GameThumbnail> thumbnails;
 
     public event Action OnGamesLoaded;
-    public string activaGameData;
+    public string activaGameData; //= "como_termina"
+    public string currentID; //= "-P0-PtuXcNxPfL_P7qq2"
     public bool playing;
 
     void Start()
@@ -94,7 +106,26 @@ public class GamesManager : MonoBehaviour
             return true;
         return false;
     }
-
+    public string CheckIfStoryWasMade()
+    {
+        Debug.Log("activaGameData_____________" + activaGameData);
+        GameData gd = GetGame(activaGameData);
+        Debug.Log("gd_____________" + gd.id + " currentID:" + currentID);
+        GameIdEntry g = gd.GetGameOdEntry(currentID);
+        foreach(string s in g.storyIds)
+        {
+            Debug.Log("_____________" + s);
+            foreach(FilmDataFabulab f in Data.Instance.scenesData.userFilmsData)
+            {
+                if(f.id == s)
+                {                    
+                    Debug.Log("sale: _____________" + f.id);
+                    return f.id;
+                }
+            }
+        }
+        return currentID;
+    }
     public void OnSetActiveGame(string id)
     {
         print("OnSetActiveGame " + id);
@@ -102,6 +133,7 @@ public class GamesManager : MonoBehaviour
     }
      public void SetPlaying(bool _playing)
     {
+        currentID  = ScenesManager.Instance.currentFilmData.id;
         print("OnSetActiveGame playing " + _playing);
         playing  = _playing;
     }
@@ -135,6 +167,57 @@ public class GamesManager : MonoBehaviour
             Games.Add(newGame);
             Debug.Log($"#GamesManager Game '{newGameTitle}' creado con id {key}");
             callback?.Invoke(true, newGame);
+        });
+    }
+    public void AddStoryToGameEntry(string storyId, Action<bool> callback = null)
+    {
+        AddStoryToGameEntry(activaGameData, currentID, storyId, callback);
+    }
+    public void AddStoryToGameEntry(string gameId, string entryId, string storyId, Action<bool> callback = null)
+    {
+        Debug.Log("AddStoryToGameEntry gameId: " + gameId + "_ _entry: " +  entryId + "_ storyId: " +   storyId);
+        GameData game = Games.Find(g => g.id == gameId);
+        if (game == null)
+        {
+            Debug.LogWarning($"#GamesManager AddStoryToGameEntry: Game '{gameId}' no encontrado");
+            callback?.Invoke(false);
+            return;
+        }
+
+        game.ids ??= new List<GameIdEntry>();
+        GameIdEntry entry = game.ids.Find(e => e.id == entryId);
+        bool isNewEntry = entry == null;
+        if (isNewEntry)
+        {
+            entry = new GameIdEntry { id = entryId, storyIds = new List<string>() };
+        }
+
+        if (entry.storyIds != null && entry.storyIds.Contains(storyId))
+        {
+            callback?.Invoke(true);
+            return;
+        }
+
+        List<string> updatedStoryIds = entry.storyIds != null ? new(entry.storyIds) : new List<string>();
+        updatedStoryIds.Add(storyId);
+        string json = JsonConvert.SerializeObject(updatedStoryIds);
+
+        DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("games").Child(gameId).Child("ids").Child(entryId);
+        reference.SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted || task.IsCanceled)
+            {
+                Debug.LogError("#GamesManager AddStoryToGameEntry FAIL: " + task.Exception);
+                callback?.Invoke(false);
+                return;
+            }
+
+            entry.storyIds = updatedStoryIds;
+            if (isNewEntry)
+                game.ids.Add(entry);
+
+            Debug.Log($"#GamesManager Story '{storyId}' agregado a game '{gameId}' entry '{entryId}'");
+            callback?.Invoke(true);
         });
     }
 
@@ -182,4 +265,5 @@ public class GamesManager : MonoBehaviour
     {
         return Games.FindAll(g => g.section == section);
     }
+   
 }
