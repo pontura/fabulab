@@ -80,13 +80,12 @@ namespace UI.MainApp
         }
         private void OnEnable()
         {
-            print("OnEnable EnableStoryEdition " + GetComponent<FilmMakerManager>().isEditing);
             Invoke(nameof(Init), Time.deltaTime * 4);
         }
 
         void Init()
         {
-            print("Init EnableStoryEdition " + GetComponent<FilmMakerManager>().isEditing + "frames: " + ScenesManagerFabulab.Instance.Scenes.Count);
+            print("Init EnableStoryEdition " + GetComponent<FilmMakerManager>().isEditing + " frames: " + ScenesManagerFabulab.Instance.Scenes.Count);
             SetChangesMade(false);
             if (!GetComponent<FilmMakerManager>().GetComponent<FilmMakerManager>().isEditing) return;            
             tabs.Init(OnTabClicked, 4);

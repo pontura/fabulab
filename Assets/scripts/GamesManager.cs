@@ -79,6 +79,7 @@ public class GamesManager : MonoBehaviour
 
     public event Action OnGamesLoaded;
     public string activaGameData;
+    public bool playing;
 
     void Start()
     {
@@ -87,11 +88,22 @@ public class GamesManager : MonoBehaviour
     void OnDestroy()
     {
     }
+    public bool IsEditing()
+    {
+        if(playing && activaGameData != "")
+            return true;
+        return false;
+    }
 
     public void OnSetActiveGame(string id)
     {
         print("OnSetActiveGame " + id);
         activaGameData  = id;
+    }
+     public void SetPlaying(bool _playing)
+    {
+        print("OnSetActiveGame playing " + _playing);
+        playing  = _playing;
     }
 
     public void AddGame(string newGameTitle, string newGameSection, string newGameDescription, Action<bool, GameData> callback = null)

@@ -11,9 +11,17 @@ namespace UI.MainApp.Home.User
     {       
         string id;
         bool isGame;
+
+        public void OnEnable()
+        {
+            Data.Instance.gamesManager.SetPlaying(false);
+            Data.Instance.gamesManager.OnSetActiveGame("");
+        }
+
         protected override void Init()
         {
             isGame = false;
+
               if (firstLoadDone)
                 return;
 
@@ -39,11 +47,10 @@ namespace UI.MainApp.Home.User
                 LoadNext();
             }
         }
-
         private void OnGameClicked(GameData gameData)
         {
             string storyId = gameData.ids[0].id;
-            Data.Instance.gamesManager.OnSetActiveGame(storyId);
+            Data.Instance.gamesManager.OnSetActiveGame(gameData.id);
             OpenWork(storyId);
         }
 
@@ -92,7 +99,12 @@ namespace UI.MainApp.Home.User
                 }
             }
         }
-
+        public void OpenGame(string id)
+        {
+            Data.Instance.gamesManager.SetPlaying(true);
+            isGame = true;
+            OpenWork(id);
+        }
         public override void OpenWork(string id) {
             
             print("OpenWork " + id + " isGame_: " + isGame);
@@ -114,8 +126,8 @@ namespace UI.MainApp.Home.User
         }
         
         void SetStoryEditionState() {
-            StoryMakerEvents.EnableStoryEdition(isGame);
-            StoryMakerEvents.EnableInputManager(isGame);
+            StoryMakerEvents.EnableStoryEdition(Data.Instance.gamesManager.IsEditing());
+            StoryMakerEvents.EnableInputManager(Data.Instance.gamesManager.IsEditing());
         }        
     }
 }

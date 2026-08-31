@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UI.MainApp.Home.User;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,6 +33,7 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.OnTimelineSetJump -= OnTimelineSetJump;
         }
         void EnableStoryEdition(bool enable) {
+            print("StoryMakerEvents.EnableStoryEdition " + enable);
             isEditing = enable;
             deleteButton.gameObject.SetActive(enable);
             newButton.gameObject.SetActive(enable);
@@ -44,10 +46,13 @@ namespace Yaguar.StoryMaker.Editor
             camerasEditorUI.Init(enable);
             camerasEditorUI.Show(enable);
 
-            gameSelector.Show(Data.Instance.gamesManager.activaGameData != "");
+            if(Data.Instance.gamesManager.IsEditing())
+                gameSelector.Show(false);
+            else
+                gameSelector.Show(Data.Instance.gamesManager.activaGameData != "");
 
-            if(enable)
-                timeline.GetComponent<Animator>().Play("editor");
+            if(enable || Data.Instance.gamesManager.IsEditing())
+                timeline.GetComponent<Animator>().Play("edit");
             else
                 timeline.GetComponent<Animator>().Play("player");
             //  buttonsGroup.spacing = enable ? 5 : 10;
