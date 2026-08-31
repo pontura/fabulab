@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using UI.MainApp;
+using Unity.Multiplayer.Center.Common.Analytics;
 using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
@@ -9,8 +12,10 @@ namespace Yaguar.StoryMaker.Editor
     {
         public ShotButtons shotButtons;
         [SerializeField] GhostImage ghostImage;
-
+        [SerializeField] GameObject gamesLockScreen;
+        int playingGameFrames;
         public float offset = 10;
+
         protected override void Start() {
             print("OnStopDraw Start");      
             StoryMakerEvents.OnStopDraw += OnStopDraw;
@@ -27,12 +32,21 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.OnMovieOver -= OnMovieOver;
         }
 
+        public override void OnEnabled()
+        {
+           
+            if(all.Count>1)
+                ghostImage.Show(true);
+
+            Invoke("OnEnabledDelayed", 0.1f);
+        }
       
 
         void UpdateDraw()
         {
             if(!filmMakerUI.isEditing) return;
-            print("UpdateDraw activeAnimatedKeyframeID: " + activeAnimatedKeyframeID);
+            
+
             if(activeAnimatedKeyframeID <= all.Count)
                 all[activeAnimatedKeyframeID - 1].UpdateScreenshot();
             UpdateDrawDone();
@@ -62,12 +76,6 @@ namespace Yaguar.StoryMaker.Editor
         {
             StopAllCoroutines();
             ghostImage.Show(false);
-        }
-        public override  void OnEnabled()
-        {
-            if(all.Count>1)
-                ghostImage.Show(true);
-            Invoke("OnEnabledDelayed", 0.1f);
         }
         void OnEnabledDelayed()
         {            
@@ -132,7 +140,9 @@ namespace Yaguar.StoryMaker.Editor
             Events.OnLoading(false);
             shotButtons.Show(false);
             OnStop();
+               
         }
+       
         IEnumerator CreateAllInitialThumbs()
         {
             int id = 1;
@@ -175,6 +185,7 @@ namespace Yaguar.StoryMaker.Editor
             {
                 ghostImage.Show(false);
             }
+            CheckForKeyframeInteraction();
         }
         void SetCams()
         {
@@ -190,5 +201,34 @@ namespace Yaguar.StoryMaker.Editor
         public override void OnStop() {  if(filmMakerUI.isEditing) shotButtons.Show(true); }
         
         public virtual void UpdateDrawDone() {}
+
+        void CheckForKeyframeInteraction()
+        {
+            bool avoidInteraction = filmMakerUI.isPlayingGame && ScenesManagerFabulab.Instance.currentSceneId <= playingGameFrames;
+            print("CheckForKeyframeInteraction avoidInteraction " + avoidInteraction +ScenesManagerFabulab.Instance.currentSceneId  +" <=" +  playingGameFrames );
+            if(avoidInteraction)
+                gamesLockScreen.SetActive(true);
+            else 
+                gamesLockScreen.SetActive(false);
+        }
+
+        public override void EnableStoryEdition(bool isEdition)
+        {
+            playingGameFrames = all.Count;
+            print("TimelineFabulab OnEnabled FilmMakerUI.isPlayingGame " + filmMakerUI.isPlayingGame + " playingGameFrames:" + playingGameFrames + " activeAnimatedKeyframeID: " + activeAnimatedKeyframeID);
+            print("TimelineFabulab FilmMakerUI.isPlayingGame " + filmMakerUI.isPlayingGame + " activeAnimatedKeyframeID: " + activeAnimatedKeyframeID);
+            gamesLockScreen.SetActive(filmMakerUI.isPlayingGame);
+            if(filmMakerUI.isPlayingGame)
+                StartCoroutine(InitGame());
+        }
+        IEnumerator InitGame()
+        {
+            yield return new WaitForSeconds(0.1f);
+            SetJump(playingGameFrames);
+            yield return new WaitForSeconds(0.1f);
+            filmMakerUI.New();
+            yield return new WaitForSeconds(0.1f);
+            CheckForKeyframeInteraction();
+        }
     }
 }

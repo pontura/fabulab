@@ -20,9 +20,10 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] protected Button playButton;
         [SerializeField] protected Button deleteButton;
 
-        [SerializeField] protected TimelineInSceneUI timelineInSceneUI;
         [SerializeField] protected Timeline timeline;
-        [SerializeField] public bool isEditing;
+        
+        public bool isEditing;
+        public bool isPlayingGame;
 
         public event Action<Action<bool>> DeleteDialog;
         public event Action OnMaxFrames;
@@ -59,8 +60,6 @@ namespace Yaguar.StoryMaker.Editor
         protected void Restart()
         {
             Debug.Log("Restart");
-            //timeline.Reset();
-            timelineInSceneUI.RefreshField(1);
         }
         public virtual void OnTimelinePlay(bool isOn)
         {
@@ -106,7 +105,6 @@ namespace Yaguar.StoryMaker.Editor
             if (isOn)
             {
                 panel.SetActive(true);
-                timelineInSceneUI.Init();
                 SetButtons();
             }
             else
@@ -137,8 +135,6 @@ namespace Yaguar.StoryMaker.Editor
                 deleteButton.interactable = true;
             else
                 deleteButton.interactable = false;
-
-            timelineInSceneUI.RefreshField(ScenesManager.Instance.currentSceneId);
 
 
         }

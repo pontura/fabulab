@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using BoardItems;
 using UnityEngine;
+using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
 {
@@ -10,10 +11,10 @@ namespace UI.MainApp.Home.User
         [SerializeField] Transform container;
         [SerializeField] AllStoriesScreen allStoriesScreen;
         GameData gameData;
-        int idSelected;
+
         public void Show(bool isOn)
         {
-            idSelected = 0;
+            print("GameSelector Show " + isOn);
             gameObject.SetActive(isOn);
             gameData = Data.Instance.gamesManager.GetGame(Data.Instance.gamesManager.activaGameData);
             if(isOn)
@@ -30,23 +31,12 @@ namespace UI.MainApp.Home.User
         }
         void OnClick(string id)
         {
-            StIDSelected(id);
             allStoriesScreen.OpenWork(id);
-        }
-        void StIDSelected(string id)
-        {
-            idSelected = 0;
-            foreach(GameIdEntry g in gameData.ids)
-            {
-                if(g.id == id)
-                    return;
-                idSelected++;
-            }
         }
         public void OnStartPlaying()
         {
-            print("OnStartPlaying idSelected: " + idSelected);
-            allStoriesScreen.OpenGame(gameData.ids[idSelected].id);
+            print("OnStartPlaying idSelected: " + ScenesManager.Instance.currentFilmData.id);
+            allStoriesScreen.OpenGame(ScenesManager.Instance.currentFilmData.id);
         }
     }
 }

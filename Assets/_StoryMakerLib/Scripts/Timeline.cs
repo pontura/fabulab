@@ -246,5 +246,9 @@ namespace Yaguar.StoryMaker.Editor
         {
             //print("change light " + value);
         }
+        public virtual void EnableStoryEdition(bool isEdition)
+        {
+            
+        }
     }
 }

@@ -33,7 +33,6 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.OnTimelineSetJump -= OnTimelineSetJump;
         }
         void EnableStoryEdition(bool enable) {
-            print("StoryMakerEvents.EnableStoryEdition " + enable);
             isEditing = enable;
             deleteButton.gameObject.SetActive(enable);
             newButton.gameObject.SetActive(enable);
@@ -46,7 +45,10 @@ namespace Yaguar.StoryMaker.Editor
             camerasEditorUI.Init(enable);
             camerasEditorUI.Show(enable);
 
-            if(Data.Instance.gamesManager.IsEditing())
+            isPlayingGame = Data.Instance.gamesManager.IsEditing();
+            print("StoryMakerEvents.EnableStoryEdition " + enable + " isPlayingGame: " + isPlayingGame);
+
+            if(isPlayingGame)
                 gameSelector.Show(false);  
             else
                 gameSelector.Show(Data.Instance.gamesManager.activaGameData != "");
@@ -55,6 +57,8 @@ namespace Yaguar.StoryMaker.Editor
                 timeline.GetComponent<Animator>().Play("edit");
             else
                 timeline.GetComponent<Animator>().Play("player");
+
+            timeline.EnableStoryEdition(enable);
             //  buttonsGroup.spacing = enable ? 5 : 10;
         }
 
@@ -80,8 +84,6 @@ namespace Yaguar.StoryMaker.Editor
                 deleteButton.interactable = true;
             else
                 deleteButton.interactable = false;
-
-            timelineInSceneUI.RefreshField(ScenesManagerFabulab.Instance.currentSceneId);
 
 
         }
