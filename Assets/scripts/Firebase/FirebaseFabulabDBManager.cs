@@ -1012,6 +1012,28 @@ namespace Yaguar.StoryMaker.DB
             });
         }
 
+        public void LoadUserOnboardingsStates(System.Action<UserData.Onboardings> callback) {
+
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + _uid + "/onboardings");
+            reference.GetValueAsync().ContinueWithOnMainThread(task => {
+                if (task.IsFaulted || task.IsCanceled) {
+                    Debug.Log("#LoadUserOnboardingsStates FAIL");
+                    Debug.Log(task.Exception);
+                    callback(null);
+                } else if (task.IsCompleted) {
+
+                    long downloaded = task.Result.GetRawJsonValue().Length;
+                    downloadedData += downloaded;
+                    Debug.Log("! Downloaded: " + downloaded);
+
+                    UserData.Onboardings onboardings = JsonUtility.FromJson<UserData.Onboardings>(task.Result.GetRawJsonValue());
+                    callback(onboardings);                    
+                }
+            });
+            Debug.Log("Server: LoadUserOnboardingsStates");
+            //Debug.Log(url);
+        }
+
         public void LoadUserLikeFromServer(System.Action<List<string>> callback, string userID = "") {
 
             if (userID == "")

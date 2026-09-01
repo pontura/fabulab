@@ -36,25 +36,15 @@ namespace OnBoarding
         {
             public steps[] steps;
         }
-        public bool charactersDone;
-        public bool objectsDone;
-        public bool storiesDone;
-        public bool bgDone;
 
         void Start()
         {
-            bgDone = PlayerPrefs.GetInt("bgDone", 0) == 1;
-            charactersDone = PlayerPrefs.GetInt("charactersDone", 0)== 1;
-            storiesDone = PlayerPrefs.GetInt("storiesDone", 0)== 1;
-            objectsDone = PlayerPrefs.GetInt("objectsDone", 0)== 1;        
-
             foreach (OnBoardingMain go in onboardingScreens)
-                go.Init();  
+                go.Init();
 
+            Events.OnboardingStatesCheck += OnboardingStatesCheck;
             Events.OnBoardingDone += OnBoardingDone;
-            Events.OnBoardingXtraStep += OnBoardingXtraStep;
-            if(Data.Instance.userData.onboardingSteps >0) return;
-            Reset();
+            Events.OnBoardingXtraStep += OnBoardingXtraStep;            
         }
         public void Reset()
         {
@@ -71,30 +61,31 @@ namespace OnBoarding
         void OnDestroy()
         {
             Events.OnBoardingDone -= OnBoardingDone;    
-            Events.OnBoardingXtraStep -= OnBoardingXtraStep;        
+            Events.OnBoardingXtraStep -= OnBoardingXtraStep;
+            Events.OnboardingStatesCheck -= OnboardingStatesCheck;
+        }
+
+        void OnboardingStatesCheck() {
+            if (!Data.Instance.userData.userDataInDatabase.onboardings.initial)
+                Reset();
         }
 
         public void OnBoardingXtraStep(steps step, System.Action o)
         {
             print("OnBoardingXtraStep " + step);
-            switch(step)
-            {
+            switch (step) {
                 case steps.video_bg:
-                    bgDone = true;
-                    PlayerPrefs.SetInt("bgDone", 1);
-                break;
+                    Data.Instance.userData.OnBoardingBgsStepDone();
+                    break;
                 case steps.video_character:
-                    charactersDone = true;
-                    PlayerPrefs.SetInt("charactersDone", 1);
+                    Data.Instance.userData.OnBoardingCharactersStepDone();
                 break;
                 case steps.video_story:
-                    storiesDone = true;
-                    PlayerPrefs.SetInt("storiesDone", 1);
-                break;
+                    Data.Instance.userData.OnBoardingStoriesStepDone();
+                    break;
                 case steps.video_object:
-                    objectsDone = true;
-                    PlayerPrefs.SetInt("objectsDone", 1);
-                break;
+                    Data.Instance.userData.OnBoardingObjectsStepDone();
+                    break;
             }
         }
 

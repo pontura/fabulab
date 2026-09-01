@@ -156,13 +156,13 @@ namespace UI
         {
             if (id == 1)
             {
-                if(!skipOnBoarding && !onboardingManager.storiesDone)
+                if(!skipOnBoarding && !Data.Instance.userData.userDataInDatabase.onboardings.stories)
                     Events.OnBoardingXtraStep(OnBoardingManager.steps.video_story, NewStory);
                 else
                     NewStory();
             }
             else if (id == 2) {
-                if(!skipOnBoarding && !onboardingManager.charactersDone)
+                if(!skipOnBoarding && !Data.Instance.userData.userDataInDatabase.onboardings.characters)
                     Events.OnBoardingXtraStep(OnBoardingManager.steps.video_character, NewCharacter);
                 else
                 {
@@ -173,7 +173,7 @@ namespace UI
                     );
                 }
             } else if (id == 3) {
-                  if(!skipOnBoarding && !onboardingManager.objectsDone)
+                  if(!skipOnBoarding && !Data.Instance.userData.userDataInDatabase.onboardings.objects)
                     Events.OnBoardingXtraStep(OnBoardingManager.steps.video_object, NewObject);
                 else
                 {
@@ -184,7 +184,7 @@ namespace UI
                     );
                 }
             } else if (id == 4) {
-                 if(!skipOnBoarding && !onboardingManager.bgDone)
+                 if(!skipOnBoarding && !Data.Instance.userData.userDataInDatabase.onboardings.bgs)
                     Events.OnBoardingXtraStep(OnBoardingManager.steps.video_bg, NewBG);
                 else
                 {
