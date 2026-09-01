@@ -7,6 +7,7 @@ public class ThumbButton : MonoBehaviour
 
     [SerializeField] Image thumb;
     [SerializeField] GameObject loading;
+    [SerializeField] GameObject selected;
     System.Action<string> OnClick;
     string id;
 
@@ -33,5 +34,9 @@ public class ThumbButton : MonoBehaviour
         thumb.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
         loading.SetActive(false);
         loading.SetActive(false);
+    }
+    public void SetSelected(bool isOn)
+    {
+        selected.SetActive(isOn);
     }
 }
