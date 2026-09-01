@@ -214,7 +214,6 @@ namespace Yaguar.StoryMaker.Editor
 
         public override void EnableStoryEdition(bool isEdition)
         {
-            playingGameFrames = all.Count;
             print("TimelineFabulab OnEnabled FilmMakerUI.isPlayingGame " + filmMakerUI.isPlayingGame + " playingGameFrames:" + playingGameFrames + " activeAnimatedKeyframeID: " + activeAnimatedKeyframeID);
             print("TimelineFabulab FilmMakerUI.isPlayingGame " + filmMakerUI.isPlayingGame + " activeAnimatedKeyframeID: " + activeAnimatedKeyframeID);
             gamesLockScreen.SetActive(filmMakerUI.isPlayingGame);
@@ -222,7 +221,8 @@ namespace Yaguar.StoryMaker.Editor
                 StartCoroutine(InitGame());
         }
         IEnumerator InitGame()
-        {
+        {            
+            playingGameFrames = Data.Instance.gamesManager.totalLockedGameFrames;
             yield return new WaitForSeconds(0.1f);
             SetJump(playingGameFrames);
             yield return new WaitForSeconds(0.1f);

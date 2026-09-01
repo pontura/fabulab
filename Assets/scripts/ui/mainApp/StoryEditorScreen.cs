@@ -55,10 +55,16 @@ namespace UI.MainApp
             StoryMakerEvents.NoneItemSelected += NoneItemSelected;
             StoryMakerEvents.OnStartNewStory += OnStartNewStory;
         }
-        // void OnDisable()
-        // {
-        //     StoryMakerEvents.SetEditing(false);
-        // }
+         void OnDisable()
+         {
+            actionUI.SetOn(false);
+            emojisUI.SetOn(false);
+            timeline.SetActive(true);
+            itemList.SetActive(false);
+            characterScreen.Show(false);
+            backgroundScreen.Show(false);
+            objectsScreen.Show(false);
+         }
         void OnDestroy()
         {
             StoryMakerEvents.ShowSoButtons -= ShowSoButtons;

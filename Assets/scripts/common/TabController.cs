@@ -14,7 +14,7 @@ namespace Common.UI
         }
         System.Action<int> OnActive;
         [HideInInspector] public TabButton lastTabClicked;
-        void Start()
+        void Awake()
         {
             int id = 0;
             foreach (TabButton tabButton in all)

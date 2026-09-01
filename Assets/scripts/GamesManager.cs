@@ -96,6 +96,7 @@ public class GamesManager : MonoBehaviour
     public string activaGameData; //= "como_termina"
     public string currentID; //= "-P0-PtuXcNxPfL_P7qq2"
     public bool playing;
+    public int totalLockedGameFrames;
 
     void Start()
     {
@@ -142,6 +143,7 @@ public class GamesManager : MonoBehaviour
     {
         currentID  = ScenesManager.Instance.currentFilmData.id;
         print("OnSetActiveGame playing " + _playing);
+        totalLockedGameFrames = ScenesManagerFabulab.Instance.Scenes.Count;
         playing  = _playing;
     }
 

@@ -11,24 +11,34 @@ namespace UI.MainApp.Home
         public screens screen;
         public enum screens
         {
-            home,
+            stories,
+            characters,
+            objects,
             user
         }
-
+        void Start()
+        {
+            home.Init(this);
+        }
+        public void OnSelected(screens s)
+        {
+            screen = s;
+        }
         protected override void ShowScreen(UIManager.screenType type)
         {
             switch (type)
             {
                 case UIManager.screenType.Home:
-                    screen = screens.home;
                     Show(true);
+                    screen = screens.stories;
                     home.Show(true);
-                  //  user.Show(false);
+                    home.OnTabSelect(screen);
                     break;
                 case UIManager.screenType.UserScreen:
-                    screen = screens.user;
                     Show(true);
-                   // user.Show(true);
+                    home.Show(true);
+                    screen = screens.user;
+                    home.OnTabSelect(screen);
                     break;
                 default:
                     Show(false);

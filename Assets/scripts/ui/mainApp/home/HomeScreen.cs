@@ -20,6 +20,13 @@ namespace UI.MainApp.Home
         [SerializeField] ProfilePicture profilePicture;
         bool firstTime = true;
 
+        HomePage homePage;
+
+        public void Init(HomePage homePage)
+        {
+            this.homePage = homePage;
+        }
+
         private void Start() {
             Events.ChangeName += OnChangeName;
             FirebaseAuthManager.Instance.OnSignedOut += OnSignedOut;
@@ -60,21 +67,39 @@ namespace UI.MainApp.Home
                 profilePicture.InitOwner();
                 string username = Data.Instance.userData.userDataInDatabase.username;
                 OnChangeName(username);
-            }else
-            {
-                if(tabs.lastTabClicked.id == 3) // si el ultimo tab fue el user, fuerza a historias:
-                {
-                    OnTabClicked(0);
-                    tabs.SetActive(0);
-                } else
-                    tabs.ReOpen();                
             }
+            // else
+            // {
+            //     if(tabs.lastTabClicked.id == 3) // si el ultimo tab fue el user, fuerza a historias:
+            //     {
+            //         OnTabClicked(0);
+            //         tabs.SetActive(0);
+            //     } else
+            //         tabs.ReOpen();                
+            // }
         }
         int tabActive;
+        public void OnTabSelect(HomePage.screens s)
+        {
+            int id = 0;
+            switch(s)
+            {
+                case HomePage.screens.stories:
+                    id = 0; break;
+                case HomePage.screens.characters:
+                    id = 1; break;
+                case HomePage.screens.objects:
+                    id = 2; break;
+                case HomePage.screens.user:
+                    id = 3; break;
+            }
+            OnTabClicked(id);
+        }
         void OnTabClicked(int id)
         {
             this.tabActive = id;
             print("On home TabClicked " + id);
+            tabs.SetActive(id);
 
             charactersScreen.Show(false);
             objects.Show(false);
@@ -84,18 +109,22 @@ namespace UI.MainApp.Home
             switch (id)
             {
                 case 0:
+                    homePage.OnSelected(HomePage.screens.stories);
                     AudioManager.Instance.uiSfxManager.PlayTransp("click", -3);
                     stories.Show(true);
                     break;
                 case 1:
+                    homePage.OnSelected(HomePage.screens.characters);
                     AudioManager.Instance.uiSfxManager.Play("click");
                     charactersScreen.Show(true);
                     break;
                 case 2:
+                    homePage.OnSelected(HomePage.screens.objects);
                     AudioManager.Instance.uiSfxManager.PlayTransp("click", 2);
                     objects.Show(true);
                     break;
                 case 3: // USER    
+                    homePage.OnSelected(HomePage.screens.user);
                     AudioManager.Instance.uiSfxManager.Play("click");
                     userScreen.Show(true);                
                     Events.ShowScreen(UIManager.screenType.UserScreen);
