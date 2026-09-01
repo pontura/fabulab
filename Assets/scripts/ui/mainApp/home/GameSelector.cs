@@ -30,8 +30,8 @@ namespace UI.MainApp.Home.User
                     buttons.Add(i);
                     i.Init(cd.id, OnClick);
                 }
+                SetSelected(gameData.ids[0].id);
             }
-            SetSelected(gameData.ids[0].id);
         }
         void SetSelected(string id)
         {

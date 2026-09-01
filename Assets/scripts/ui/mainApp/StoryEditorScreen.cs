@@ -284,6 +284,7 @@ namespace UI.MainApp
             
             //CreateThumb();
             SceneDataFabulab sdf = ScenesManagerFabulab.Instance.GetActiveScene();
+            if(sdf == null) return;
             sdf.Reset();
             SOData bgData = Scenario.Instance.sceneObejctsManager.bgData;
             if (sdf.bgID != bgData.id || string.IsNullOrEmpty(sdf.bgID)) {
