@@ -84,6 +84,10 @@ public class GameThumbnail
 
 public class GamesManager : MonoBehaviour
 {
+    public bool IsGamePlayed(string id)
+    {
+        return currentID == id;
+    }
     public bool done {  get; private set; }
     [field:SerializeField] public List<GameData> Games { get; private set; }
     [SerializeField] private List<GameThumbnail> thumbnails;
@@ -108,19 +112,22 @@ public class GamesManager : MonoBehaviour
     }
     public string CheckIfStoryWasMade()
     {
-        Debug.Log("activaGameData_____________" + activaGameData);
+        //Debug.Log("activaGameData_____________" + activaGameData);
         GameData gd = GetGame(activaGameData);
-        Debug.Log("gd_____________" + gd.id + " currentID:" + currentID);
+        //Debug.Log("gd_____________" + gd.id + " currentID:" + currentID);
         GameIdEntry g = gd.GetGameOdEntry(currentID);
-        foreach(string s in g.storyIds)
+        if(g != null && g.storyIds != null)
         {
-            Debug.Log("_____________" + s);
-            foreach(FilmDataFabulab f in Data.Instance.scenesData.userFilmsData)
+            foreach(string s in g.storyIds)
             {
-                if(f.id == s)
-                {                    
-                    Debug.Log("sale: _____________" + f.id);
-                    return f.id;
+               // Debug.Log("_____________" + s);
+                foreach(FilmDataFabulab f in Data.Instance.scenesData.userFilmsData)
+                {
+                    if(f.id == s)
+                    {                    
+                        //Debug.Log("sale: _____________" + f.id);
+                        return f.id;
+                    }
                 }
             }
         }

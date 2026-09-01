@@ -83,7 +83,7 @@ namespace UI.MainApp
             Invoke(nameof(Init), Time.deltaTime * 4);
         }
 
-        void Init()
+        public void Init()
         {
             print("Init EnableStoryEdition " + GetComponent<FilmMakerManager>().isEditing + " frames: " + ScenesManagerFabulab.Instance.Scenes.Count);
             SetChangesMade(false);

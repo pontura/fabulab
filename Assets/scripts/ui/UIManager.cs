@@ -311,8 +311,9 @@ namespace UI
         {
             if(StoryMakerEvents.isEditing)
                 Events.ShowScreen(screenType.Home);
-            else 
-             if (backToScreen.Count < 3)
+            else if (backToScreen.Count < 3)
+                Events.ShowScreen(screenType.Home);
+            else if(Data.Instance.gamesManager.IsEditing())
                 Events.ShowScreen(screenType.Home);
             else
                 Events.ShowScreen(backToScreen[backToScreen.Count - 2]);

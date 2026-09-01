@@ -571,8 +571,18 @@ namespace Yaguar.StoryMaker.DB
         }
 
         public void UpdateFilmDataToServer(string filmId, ServerFilmData fd, System.Action<bool, string> OnDone = null) {
-            Debug.Log("#UpdateFilmDataToServer");
+            Debug.Log("#UpdateFilmDataToServer filmId:" + filmId);
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/" + filmId);
+
+            if(Data.Instance.gamesManager.IsGamePlayed(filmId))
+            {
+                Debug.Log("#UpdateFilmDataToServer GAME!: " + filmId);
+                if(fd.tags == null || fd.tags.Count == 0)
+                    fd.tags = new List<string> {  "games"  };
+                    
+                Debug.Log("#UpdateFilmDataToServer GAME!: total tags: " + fd.tags.Count);
+            }
+
             string s = JsonConvert.SerializeObject(fd);
             var jObject = JObject.FromObject(fd);
             Dictionary<string, object> data = NormalizeDictionary(jObject);

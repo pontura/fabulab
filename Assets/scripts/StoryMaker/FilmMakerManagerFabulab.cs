@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UI.MainApp;
 using UI.MainApp.Home.User;
 using UnityEngine;
 using UnityEngine.UI;
@@ -54,7 +55,10 @@ namespace Yaguar.StoryMaker.Editor
                 gameSelector.Show(Data.Instance.gamesManager.activaGameData != "");
 
             if(enable || Data.Instance.gamesManager.IsEditing())
+            {
+                GetComponent<StoryEditorScreen>().Init();
                 timeline.GetComponent<Animator>().Play("edit");
+            }
             else
                 timeline.GetComponent<Animator>().Play("player");
 
