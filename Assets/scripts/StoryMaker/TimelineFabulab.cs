@@ -223,7 +223,7 @@ namespace Yaguar.StoryMaker.Editor
         IEnumerator InitGame()
         {            
             playingGameFrames = Data.Instance.gamesManager.totalLockedGameFrames;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.5f);
             SetJump(playingGameFrames);
             yield return new WaitForSeconds(0.1f);
             filmMakerUI.New();
