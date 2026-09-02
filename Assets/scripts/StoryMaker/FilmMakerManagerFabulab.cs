@@ -225,6 +225,11 @@ namespace Yaguar.StoryMaker.Editor
             {
                 string backgroundID = ScenesManagerFabulab.Instance.GetBackground(ScenesManagerFabulab.Instance.currentSceneId);
                 string nextBackgroundID = ScenesManagerFabulab.Instance.GetBackground(nextSceneid);
+                string prevBackgroundID = "";
+
+                if(ScenesManagerFabulab.Instance.currentSceneId>1)
+                    prevBackgroundID = ScenesManagerFabulab.Instance.GetBackground(ScenesManagerFabulab.Instance.currentSceneId - 1);
+
                 print(ScenesManagerFabulab.Instance.currentSceneId + " nextSceneid : " + nextSceneid + " backgroundID: " + backgroundID + " : " + nextBackgroundID);
                 if (backgroundID == nextBackgroundID)
                 {
@@ -232,6 +237,9 @@ namespace Yaguar.StoryMaker.Editor
                     Debug.Log("# Delay: " + delay);
                     StartCoroutine(MoveAvatarsAfter(delay));
                     StartCoroutine(MoveCamera(timeline.keyframe_duration));
+                } else if (backgroundID != prevBackgroundID)
+                {
+                    SetCameraNewScene();
                 }
             } else if(State == states.STOPPED) {
                 Invoke(nameof(SetPaused), Time.deltaTime);
@@ -269,6 +277,13 @@ namespace Yaguar.StoryMaker.Editor
             CamData currentScene = ScenesManagerFabulab.Instance.Scenes[ScenesManagerFabulab.Instance.currentSceneId-1].camData;
             Vector2 pos_from = GetPos(currentScene.pos, currentScene.zoom);
             scenarioCameraManager.OnUpdate(pos_from, currentScene.zoom);
+        }
+        void SetCameraNewScene()
+        { 
+            print("___________SetCameraNewScene");
+            CamData currentScene = ScenesManagerFabulab.Instance.Scenes[ScenesManagerFabulab.Instance.currentSceneId-1].camData;
+            if(currentScene.zoom < 1) currentScene.zoom = defaultZoom;
+            scenarioCameraManager.OnUpdate(currentScene.pos, currentScene.zoom);
         }
         protected override IEnumerator MoveCamera(float duration)
         { 
