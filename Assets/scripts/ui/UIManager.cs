@@ -290,10 +290,10 @@ namespace UI
             {
                 if( Data.Instance.gamesManager.watchingFilmsMade)
                 {
-                    if(!gameStories.gameObject.activeSelf)
-                        gameStories.ShowFromHome(true);
-                    else
+                    if(gameStories.isOn)
                         gameStories.BackToPlay();
+                    else
+                        gameStories.ShowFromHome(true);
                     return;
                 }
                 StoryMakerEvents.SetEditing(false);

@@ -5,10 +5,12 @@ namespace UI.MainApp.Home.User
 {
     public class GamesStories : AllStoriesScreen
     {
+        public bool isOn;
+
         protected override void Init()
         {
             isGame = false;
-
+            isOn = true;
               if (firstLoadDone)
                 return;
 
@@ -20,6 +22,8 @@ namespace UI.MainApp.Home.User
         }
         public void ShowFromHome(bool isOn)
         {
+            if(isOn)
+                this.isOn = true;
             gameObject.SetActive(isOn);
         }
         protected override void LoadNext()
@@ -49,14 +53,17 @@ namespace UI.MainApp.Home.User
             go.Init(fd.id, null);
             go.GetComponent<ItemSelectorStory>().SetContent(fd, this, false);
         }
-        public override void OpenWork(string id) {
-            
+        public override void OpenWork(string id) 
+        {
+            isOn = false;
             ShowFromHome(false);
             this.id = id;
             Events.OnLoadingParent(null, LoadingDone);
         }
         public void BackToPlay()
-        {
+        { 
+            Data.Instance.gamesManager.watchingFilmsMade = false;
+            isOn = false;
             ShowFromHome(false);
             List<GameData>  all = Data.Instance.gamesManager.GetGamesBySection("stories");
             GameData gs =  all[0]; // TO-DO ahora siempre va al unico juego que hay:
