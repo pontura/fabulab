@@ -150,7 +150,7 @@ namespace Yaguar.StoryMaker.Editor
             return avatars;
         }
 
-        public virtual Avatar GetAvatarInSceneById(string id)
+        public virtual Avatar GetAvatarInSceneByItemName(string id)
         {
             foreach (SceneObject a in sceneObjects)
             {
