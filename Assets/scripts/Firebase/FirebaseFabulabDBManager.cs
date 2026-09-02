@@ -1017,17 +1017,20 @@ namespace Yaguar.StoryMaker.DB
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + _uid + "/onboardings");
             reference.GetValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
-                    Debug.Log("#LoadUserOnboardingsStates FAIL");
+                    Debug.Log("LoadUserOnboardingsStates FAIL");
                     Debug.Log(task.Exception);
                     callback(null);
                 } else if (task.IsCompleted) {
+                    if (string.IsNullOrEmpty(task.Result.GetRawJsonValue()))
+                        callback(new UserData.Onboardings());
+                    else {
+                        long downloaded = task.Result.GetRawJsonValue().Length;
+                        downloadedData += downloaded;
+                        Debug.Log("! Downloaded: " + downloaded);
 
-                    long downloaded = task.Result.GetRawJsonValue().Length;
-                    downloadedData += downloaded;
-                    Debug.Log("! Downloaded: " + downloaded);
-
-                    UserData.Onboardings onboardings = JsonUtility.FromJson<UserData.Onboardings>(task.Result.GetRawJsonValue());
-                    callback(onboardings);                    
+                        UserData.Onboardings onboardings = JsonUtility.FromJson<UserData.Onboardings>(task.Result.GetRawJsonValue());
+                        callback(onboardings);
+                    }
                 }
             });
             Debug.Log("Server: LoadUserOnboardingsStates");

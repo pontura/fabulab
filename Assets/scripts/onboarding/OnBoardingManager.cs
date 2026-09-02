@@ -37,12 +37,15 @@ namespace OnBoarding
             public steps[] steps;
         }
 
+        private void Awake() {
+            Events.OnboardingStatesCheck += OnboardingStatesCheck;
+        }
+
         void Start()
         {
             foreach (OnBoardingMain go in onboardingScreens)
                 go.Init();
 
-            Events.OnboardingStatesCheck += OnboardingStatesCheck;
             Events.OnBoardingDone += OnBoardingDone;
             Events.OnBoardingXtraStep += OnBoardingXtraStep;            
         }
