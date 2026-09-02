@@ -10,7 +10,7 @@ namespace UI.MainApp.Home.User
         [SerializeField] ThumbButton btn;
         [SerializeField] List<ThumbButton> buttons;
         [SerializeField] Transform container;
-        [SerializeField] AllStoriesScreen allStoriesScreen;
+        [SerializeField] AllStoriesScreen allGameStoriesScreen;
         GameData gameData;
 
         public void Show(bool isOn)
@@ -21,6 +21,7 @@ namespace UI.MainApp.Home.User
             gameData = Data.Instance.gamesManager.GetGame(Data.Instance.gamesManager.activaGameData);
             if(isOn)
             {
+                allGameStoriesScreen.gameObject.SetActive(false);
                 Utils.RemoveAllChildsIn(container);
                 foreach(GameIdEntry g in gameData.ids)
                 {
@@ -45,13 +46,18 @@ namespace UI.MainApp.Home.User
         }
         void OnClick(string id)
         {
-            allStoriesScreen.OpenWork(id);
+            allGameStoriesScreen.OpenWork(id);
             SetSelected(id);
         }
         public void OnStartPlaying()
         {
             print("OnStartPlaying idSelected: " + ScenesManager.Instance.currentFilmData.id);
-            allStoriesScreen.OpenGame(ScenesManager.Instance.currentFilmData.id);
+            allGameStoriesScreen.OpenGame(ScenesManager.Instance.currentFilmData.id);
+        }
+        public void OpenGameStories()
+        {
+            allGameStoriesScreen.gameObject.SetActive(true);
+            allGameStoriesScreen.Show(true);
         }
     }
 }

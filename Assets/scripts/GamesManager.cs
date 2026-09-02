@@ -84,6 +84,7 @@ public class GameThumbnail
 
 public class GamesManager : MonoBehaviour
 {
+    public bool watchingFilmsMade;
     public bool IsGamePlayed(string id)
     {
         return currentID == id;

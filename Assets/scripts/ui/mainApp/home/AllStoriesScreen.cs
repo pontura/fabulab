@@ -9,8 +9,8 @@ namespace UI.MainApp.Home.User
 {
     public class AllStoriesScreen : UserStoriesScreen
     {       
-        string id;
-        bool isGame;
+        public string id;
+        public bool isGame;
 
         public void OnEnable()
         {
@@ -47,7 +47,7 @@ namespace UI.MainApp.Home.User
                 LoadNext();
             }
         }
-        private void OnGameClicked(GameData gameData)
+        public void OnGameClicked(GameData gameData)
         {
             string storyId = gameData.ids[0].id;
             Data.Instance.gamesManager.OnSetActiveGame(gameData.id);
@@ -112,8 +112,7 @@ namespace UI.MainApp.Home.User
             this.id = id;
             Events.OnLoadingParent(null, LoadingDone);
         }
-       
-        void LoadingDone()
+        public void LoadingDone()
         {
             Events.OnLoading(true);
             UIManager.Instance.boardUI.SetEditingType(BoardUI.editingTypes.NONE);

@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UI.MainApp;
 using UI.MainApp.Home;
+using UI.MainApp.Home.User;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.Editor;
@@ -29,6 +30,7 @@ namespace UI
         public InfoDataScreen infoDataScreen;
         public OnBoardingManager onboardingManager;
         public HomePage homePage;
+        public GamesStories gameStories;
 
         public bool hasUnsavedChanges;
 
@@ -286,7 +288,14 @@ namespace UI
             }
             else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.StoryMaker)
             {
-              
+                if( Data.Instance.gamesManager.watchingFilmsMade)
+                {
+                    if(!gameStories.gameObject.activeSelf)
+                        gameStories.ShowFromHome(true);
+                    else
+                        gameStories.BackToPlay();
+                    return;
+                }
                 StoryMakerEvents.SetEditing(false);
 
                 if(homePage.screen == HomePage.screens.user)
