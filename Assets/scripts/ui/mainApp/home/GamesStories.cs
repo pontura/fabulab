@@ -5,12 +5,9 @@ namespace UI.MainApp.Home.User
 {
     public class GamesStories : AllStoriesScreen
     {
-        public bool isOn;
-
         protected override void Init()
         {
             isGame = false;
-            isOn = true;
               if (firstLoadDone)
                 return;
 
@@ -22,13 +19,11 @@ namespace UI.MainApp.Home.User
         }
         public void ShowFromHome(bool isOn)
         {
-            if(isOn)
-                this.isOn = true;
             gameObject.SetActive(isOn);
         }
         protected override void LoadNext()
         {
-            Data.Instance.gamesManager.watchingFilmsMade = true;
+          //  Data.Instance.gamesManager.watchingFilmsMade = true;
             List<GameData>  all = Data.Instance.gamesManager.GetGamesBySection("stories");
             int gameId = 1;
             foreach(GameData gd in all)
@@ -48,6 +43,10 @@ namespace UI.MainApp.Home.User
             }
             Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
         }
+         protected override void OnLoadedDone() {
+            base.OnLoadedDone();
+            UIManager.Instance.AddBackTo(UIManager.screenType.GamesStories, true);
+        }
         protected override void AddFilmMetadata(FilmDataFabulab fd) {
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
             go.Init(fd.id, null);
@@ -55,15 +54,19 @@ namespace UI.MainApp.Home.User
         }
         public override void OpenWork(string id) 
         {
-            isOn = false;
             ShowFromHome(false);
             this.id = id;
             Events.OnLoadingParent(null, LoadingDone);
         }
+        public override void SetStoryEditionState()
+        {            
+            base.SetStoryEditionState();
+            if(Data.Instance.gamesManager.playing)
+                UIManager.Instance.AddBackTo(UIManager.screenType.GameStoriesCreator, true);
+        }
         public void BackToPlay()
         { 
-            Data.Instance.gamesManager.watchingFilmsMade = false;
-            isOn = false;
+          //  Data.Instance.gamesManager.watchingFilmsMade = false;
             ShowFromHome(false);
             List<GameData>  all = Data.Instance.gamesManager.GetGamesBySection("stories");
             GameData gs =  all[0]; // TO-DO ahora siempre va al unico juego que hay:

@@ -56,6 +56,7 @@ namespace UI.MainApp.Home.User
         }
         public void OpenGameStories()
         {
+            UIManager.Instance.AddBackTo(UIManager.screenType.GamesStories, true);
             allGameStoriesScreen.gameObject.SetActive(true);
             allGameStoriesScreen.Show(true);
         }

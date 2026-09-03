@@ -86,6 +86,7 @@ namespace UI.MainApp.Home.User
             Events.OnLoading(true);
             UIManager.Instance.boardUI.SetEditingType(BoardUI.editingTypes.NONE);
             Events.ShowScreen(UIManager.screenType.StoryMaker);
+            UIManager.Instance.AddBackTo(UIManager.screenType.StoryMaker, true);
             Data.Instance.scenesData.LoadUserFilm(iD);
             Invoke(nameof(SetUserStoryEditionState), Time.deltaTime * 2);
             Firebase.Analytics.FirebaseAnalytics.LogEvent(

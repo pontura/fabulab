@@ -44,7 +44,9 @@ namespace UI
             WorkDetail,
             UserScreen,
             Creation_Objects,
-            StoryMaker
+            StoryMaker,
+            GamesStories,
+            GameStoriesCreator
         }
 
         public static UIManager Instance
@@ -115,6 +117,7 @@ namespace UI
                     backBtn.SetActive(true);
                     break;
                 case screenType.Home:
+                    backToScreen.Clear();
                     backBtn.SetActive(false);
                     break;
                 default:
@@ -270,6 +273,13 @@ namespace UI
                     break;
             }
         }
+        public void AddBackTo(screenType type, bool resetAll = false)
+        {
+            if (resetAll)
+                backToScreen.Clear();
+            print("AddBackTo " + type + " resetAll: " + resetAll   );
+            backToScreen.Add(type);
+        }
         public void Back()
         {
              if (backToScreen.Count > 0)
@@ -277,6 +287,7 @@ namespace UI
             else
                 print("BACK");
             inputManager.Back();
+            
            if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.WorkDetail)
             {
                 Events.OnNewBodyPartSelected(null);
@@ -286,16 +297,28 @@ namespace UI
             {
                 Events.OnConfirm("Vas a perder todos los cambios", "Confirmar y Salir", "Cancelar", ExitConfirmed);
             }
+            else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.GameStoriesCreator)
+            {
+                gameStories.BackToPlay();
+                AddBackTo(UIManager.screenType.GamesStories, true);
+            }
+            else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.GamesStories)
+            {
+                ReOpenGames();
+            }
             else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.StoryMaker)
             {
-                if( Data.Instance.gamesManager.watchingFilmsMade)
+                if (backToScreen.Count > 1 && backToScreen[backToScreen.Count - 2] == screenType.GamesStories)
                 {
-                    if(gameStories.isOn)
-                        gameStories.BackToPlay();
-                    else
-                        gameStories.ShowFromHome(true);
+                    gameStories.ShowFromHome(true);
+                    AddBackTo(UIManager.screenType.GamesStories, true);
                     return;
                 }
+                // if( Data.Instance.gamesManager.watchingFilmsMade)
+                // {
+                //     gameStories.ShowFromHome(true);
+                //     return;
+                // }
                 StoryMakerEvents.SetEditing(false);
 
                 if(homePage.screen == HomePage.screens.user)
@@ -310,18 +333,31 @@ namespace UI
         }
 
         bool CheckLastScreenUnsaved() {
+            if(backToScreen.Count >0 && backToScreen[backToScreen.Count - 1] == screenType.GameStoriesCreator)
+                return true;
             return hasUnsavedChanges &&
                 (backToScreen[backToScreen.Count - 1] == screenType.Creation_Character ||
                 backToScreen[backToScreen.Count - 1] == screenType.Creation_Objects ||
                 backToScreen[backToScreen.Count - 1] == screenType.StoryMaker);
         }
-
+        void ReOpenGames()
+        {
+            hasUnsavedChanges = false;        
+            Data.Instance.gamesManager.SetPlaying(false);
+            gameStories.BackToPlay();
+            AddBackTo(UIManager.screenType.StoryMaker, true);
+        }
         void SetBack()
         {
             if(StoryMakerEvents.isEditing)
                 Events.ShowScreen(screenType.Home);
             else if (backToScreen.Count < 3)
-                Events.ShowScreen(screenType.Home);
+            {
+                if(backToScreen[backToScreen.Count - 1] == screenType.GameStoriesCreator)
+                    ReOpenGames();
+                else
+                    Events.ShowScreen(screenType.Home);
+            }
             else if(Data.Instance.gamesManager.IsEditing())
                 Events.ShowScreen(screenType.Home);
             else

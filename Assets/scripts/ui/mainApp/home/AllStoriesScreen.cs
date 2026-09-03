@@ -125,7 +125,7 @@ namespace UI.MainApp.Home.User
             );
         }
         
-        void SetStoryEditionState() {
+        public virtual void SetStoryEditionState() {
             StoryMakerEvents.EnableStoryEdition(Data.Instance.gamesManager.IsEditing());
             StoryMakerEvents.EnableInputManager(Data.Instance.gamesManager.IsEditing());
         }        
