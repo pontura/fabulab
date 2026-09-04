@@ -135,6 +135,11 @@ public class GamesManager : MonoBehaviour
         }
         return currentID;
     }
+    public void CheckIfNewGame() // se fija si la historia abierta es la historia original o no y si es borra los datos.
+    {
+        if(currentID == Data.Instance.scenesData.currentFilmData.id)
+            Data.Instance.scenesData.ResetCurrentFilmData();
+    }
     public void OnSetActiveGame(string id)
     {
         print("OnSetActiveGame " + id);

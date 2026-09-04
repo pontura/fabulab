@@ -648,5 +648,12 @@ namespace BoardItems
             return filmsData.Find(x => x.id == id);
         }
 
+        public void ResetCurrentFilmData() {
+            currentFilmData = new FilmDataFabulab();
+            ScenesManagerFabulab.Instance.currentFilmData = currentFilmData;
+            currentFilmData.tags = new List<string>();
+            currentFilmData.tags.Add("games");
+        }
+
     }           
 }

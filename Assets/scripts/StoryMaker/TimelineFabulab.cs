@@ -137,6 +137,10 @@ namespace Yaguar.StoryMaker.Editor
         { 
             filmMakerUI.JumpTo(1);
             UpdateKeyframes();
+            if(Data.Instance.gamesManager.playing)
+            {
+                Data.Instance.gamesManager.CheckIfNewGame();
+            }
             Events.OnLoading(false);
             shotButtons.Show(false);
             OnStop();
