@@ -28,6 +28,8 @@ namespace BoardItems
         
         IEnumerator CaptureRoutine(System.Action<Texture2D> OnDone)
         {
+            int cameraZoomOffset = 25;
+            targetCamera.orthographicSize += cameraZoomOffset; 
             Color bgCam = targetCamera.backgroundColor;
             canvas.enabled = false;
             yield return null; // esperar 1 frame completo
@@ -111,82 +113,12 @@ namespace BoardItems
             }
 
             OnDone(texture);
+            targetCamera.orthographicSize -= cameraZoomOffset;
             yield return new WaitForEndOfFrame();
 
             canvas.enabled = true;
         }
-        IEnumerator CaptureRoutine_OLD(System.Action<Texture2D> OnDone)
-        {
-            canvas.enabled = (false);
-            yield return null; // esperar 1 frame completo
-            yield return new WaitForEndOfFrame();
-
-            Bounds bounds = targetRenderer.bounds;
-
-            // Obtener los 8 puntos del bounding box
-            Vector3[] points = new Vector3[8];
-
-            Vector3 center = bounds.center;
-            Vector3 extents = bounds.extents;
-
-            points[0] = center + new Vector3(-extents.x, -extents.y, -extents.z);
-            points[1] = center + new Vector3(-extents.x, -extents.y, extents.z);
-            points[2] = center + new Vector3(-extents.x, extents.y, -extents.z);
-            points[3] = center + new Vector3(-extents.x, extents.y, extents.z);
-            points[4] = center + new Vector3(extents.x, -extents.y, -extents.z);
-            points[5] = center + new Vector3(extents.x, -extents.y, extents.z);
-            points[6] = center + new Vector3(extents.x, extents.y, -extents.z);
-            points[7] = center + new Vector3(extents.x, extents.y, extents.z);
-
-            Vector2 min = new Vector2(float.MaxValue, float.MaxValue);
-            Vector2 max = new Vector2(float.MinValue, float.MinValue);
-
-            foreach (var p in points)
-            {
-                Vector3 sp = targetCamera.WorldToScreenPoint(p);
-                if (sp.z < 0) continue;
-
-                min = Vector2.Min(min, sp);
-                max = Vector2.Max(max, sp);
-            }
-
-            float xMin = Mathf.Clamp(min.x, 0, Screen.width);
-            float yMin = Mathf.Clamp(min.y, 0, Screen.height);
-            float xMax = Mathf.Clamp(max.x, 0, Screen.width);
-            float yMax = Mathf.Clamp(max.y, 0, Screen.height);
-
-            float width = xMax - xMin;
-            float height = yMax - yMin;
-
-            //if (width <= 0 || height <= 0)
-            //{
-            //    OnDone(null);
-            //    canvas.gameObject.SetActive(true);
-            //    yield break;
-            //}
-
-            Rect rect = new Rect(xMin, yMin, width, height);
-
-            Texture2D texture = new Texture2D((int)rect.width, (int)rect.height, TextureFormat.RGB24, false);
-            texture.ReadPixels(rect, 0, 0);
-            texture.Apply();
-
-            // Guardar archivo local
-            // byte[] bytes = texture.EncodeToPNG();
-            // System.IO.File.WriteAllBytes(Application.dataPath + "/screenshot.png", bytes);
-            // Debug.Log("Screenshot guardado en: " + Application.dataPath + "/screenshot.png");
-
-            if (!targetSize.Equals(Vector2Int.zero)){
-                texture = TextureUtils.GPUScaleTexture(texture, targetSize.x,targetSize.y);
-                targetSize = Vector2Int.zero;
-            }
-
-
-            OnDone(texture);
-            yield return new WaitForEndOfFrame();
-
-            canvas.enabled = (true);
-        }
+        
 
         public void TakeShot(Vector2Int size, System.Action<Texture2D> OnDone)
         {
