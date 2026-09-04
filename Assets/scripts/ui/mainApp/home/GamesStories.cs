@@ -48,6 +48,11 @@ namespace UI.MainApp.Home.User
             UIManager.Instance.AddBackTo(UIManager.screenType.GamesStories, true);
         }
         protected override void AddFilmMetadata(FilmDataFabulab fd) {
+            if(fd == null) 
+            {
+                Debug.LogError("AddFilmMetadata fd is null");
+                return;
+            }
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
             go.Init(fd.id, null);
             go.GetComponent<ItemSelectorStory>().SetContent(fd, this, false);
