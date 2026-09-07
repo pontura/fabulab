@@ -30,16 +30,25 @@ namespace UI.MainApp.Home.User
                     ThumbButton i = Instantiate(btn, container);
                     buttons.Add(i);
                     i.Init(cd.id, OnClick);
+                    i.SetDone(WasMade(g));
                 }
                 SetSelected(gameData.ids[0].id);
             }
+        }
+        public bool WasMade(GameIdEntry g)
+        {
+            foreach(string s in g.storyIds)
+            {
+                FilmDataFabulab cdMadeByUser = Data.Instance.scenesData.userFilmsData.Find(x => x.id == s);
+                if(cdMadeByUser != null) return true;
+            }
+            return false;
         }
         void SetSelected(string id)
         {
             int i = 0;
             foreach(GameIdEntry g in gameData.ids)
             {                  
-                print(id  + "__________________" + g.id);
                 buttons[i].SetSelected(g.id ==ScenesManager.Instance.currentFDataID);
                 i++;
             }
