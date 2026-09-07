@@ -8,6 +8,7 @@ namespace UI.MainApp.Home.User
     public class GameSelector : MonoBehaviour
     {
         [SerializeField] ThumbButton btn;
+        [SerializeField] TMPro.TMP_Text field;
         [SerializeField] List<ThumbButton> buttons;
         [SerializeField] Transform container;
         [SerializeField] AllStoriesScreen allGameStoriesScreen;
@@ -21,6 +22,7 @@ namespace UI.MainApp.Home.User
             gameData = Data.Instance.gamesManager.GetGame(Data.Instance.gamesManager.activaGameData);
             if(isOn)
             {
+                field.text = gameData.description;
                 allGameStoriesScreen.gameObject.SetActive(false);
                 Utils.RemoveAllChildsIn(container);
                 foreach(GameIdEntry g in gameData.ids)
