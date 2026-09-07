@@ -1,0 +1,140 @@
+{
+  "rules": {
+     "tags": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "games": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "stories": {
+        ".read": true,
+        "$uid": {
+        		".write": "$uid === auth.uid || 'K4TkdHr6QCNOPMATDGSHQuXLIkO2' === auth.uid"
+      		}
+     },
+     "so": {
+        ".read": true,
+        "$uid": {
+        		".write": "$uid === auth.uid || 'K4TkdHr6QCNOPMATDGSHQuXLIkO2' === auth.uid"
+      		}
+     },
+    "characters": {
+        ".read": true,
+        "$uid": {
+        		".write": "$uid === auth.uid || 'K4TkdHr6QCNOPMATDGSHQuXLIkO2' === auth.uid"
+      		},
+        "mdata": {
+        		".indexOn": ["likes","userID"],
+              "$mWorkKeys": {
+
+                "likes": {
+                  ".write": true
+                },
+              ".write": "data.child('userID').val() == auth.uid || newData.child('userID').val() == auth.uid || 'K4TkdHr6QCNOPMATDGSHQuXLIkO2' === auth.uid",
+
+              "$uid": {
+                "userID": {
+                  ".write": "$uid === auth.uid"
+                },
+                "thumb": {
+                  ".write": "$uid === auth.uid"
+                }
+
+              }
+      			}
+         }
+    },
+      "presets": {
+        ".read": true,
+        "$uid": {
+        		".write": "'K4TkdHr6QCNOPMATDGSHQuXLIkO2' === auth.uid"
+      		},
+         "mdata": {
+        	".read": true,
+            "$uid": {
+        		".write": "'K4TkdHr6QCNOPMATDGSHQuXLIkO2' === auth.uid"
+      		}
+         }
+    },
+    "metadata": {
+        ".read": true,
+        "characters": {
+        	".indexOn": ["userID","likes"],
+              "$mWorkKeys": {
+
+                "likes": {
+                  ".write": true
+                },
+              ".write": "data.child('userID').val() == auth.uid || newData.child('userID').val() == auth.uid || 'K4TkdHr6QCNOPMATDGSHQuXLIkO2' === auth.uid"
+
+      			}
+        },
+        "so": {
+        ".indexOn": ["userID","likes"],
+            "$mWorkKeys": {
+
+              "likes": {
+                ".write": true
+              },
+            ".write": "data.child('userID').val() == auth.uid || newData.child('userID').val() == auth.uid || 'K4TkdHr6QCNOPMATDGSHQuXLIkO2' === auth.uid"
+
+          }
+        },
+         "presets": {
+          "$uid": {
+        		".write": "'K4TkdHr6QCNOPMATDGSHQuXLIkO2' === auth.uid"
+      		}
+         },
+
+           "stories": {
+
+        		".indexOn": ["userID","likes"],
+              "$mFilmKeys": {
+
+                "likes": {
+                  ".write": true
+                },
+              ".write": "data.child('userID').val() == auth.uid || newData.child('userID').val() == auth.uid || 'K4TkdHr6QCNOPMATDGSHQuXLIkO2' === auth.uid",
+
+              "$uid": {
+                "userID": {
+                  ".write": "$uid === auth.uid"
+                },
+                "name": {
+                  ".write": "$uid === auth.uid"
+                },
+                "thumb": {
+                  ".write": "$uid === auth.uid"
+                }
+      			  }
+           }
+         }
+      },
+    "users":
+      {
+          ".read": "auth != null && auth.uid === 'K4TkdHr6QCNOPMATDGSHQuXLIkO2'",
+          "$uid": {
+        		".write": "$uid === auth.uid || auth.uid === 'K4TkdHr6QCNOPMATDGSHQuXLIkO2'",
+              ".read": true,
+             // ".read": "$uid === auth.uid",
+              "likes": {
+        				".read": true
+      				},
+              "username": {
+        				".read": true
+      				}
+      		}
+      },
+      "reports": {
+        ".read": true,
+      "$contentId": {
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid",
+          ".read": true
+        		}
+      		}
+    	}
+  }
+}
