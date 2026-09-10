@@ -208,10 +208,10 @@ namespace Yaguar.StoryMaker.Editor
             }
         }
 
-        public override Avatar GetAvatarInSceneById(string id) {
+        public override Avatar GetAvatarInSceneByItemName(string itemName) {
             foreach (SceneObject a in sceneObjects) {
                 if (a is AvatarFabulab) {
-                    if (a.GetData().id == id)
+                    if (a.GetData().itemName == itemName)
                         return a as AvatarFabulab;
                 }
             }

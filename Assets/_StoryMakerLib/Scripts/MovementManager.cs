@@ -9,9 +9,9 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] float minDistanceToMove = 1.5f;
         [SerializeField] float velocityThresh = 18f;
 
-        public void MoveCharacter(string avatarID, Vector3 to, float timeToNextFrame)
-        {
-            Avatar avatar = Scenario.Instance.sceneObejctsManager.GetAvatarInSceneById(avatarID);
+        public void MoveCharacter(string itemName, Vector3 to, float timeToNextFrame) {
+            Avatar avatar = Scenario.Instance.sceneObejctsManager.GetAvatarInSceneByItemName(itemName);
+
             if (avatar == null)
                 return;
 

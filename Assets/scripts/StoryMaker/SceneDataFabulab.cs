@@ -432,7 +432,7 @@ namespace Yaguar.StoryMaker.Editor
                         Vector3 to = ElementShouldMoveTo(data.type, soData, soData.itemName);
                         if (to != Vector3.zero) {
                             if (data.type == SceneElementType.AVATAR) {
-                                Scenario.Instance.movementManager.MoveCharacter(soData.id, to, timeToNextFrame);
+                                Scenario.Instance.movementManager.MoveCharacter(soData.itemName, to, timeToNextFrame);
                             } else if (data.type == SceneElementType.PROP) {
                                 Scenario.Instance.movementManager.MoveElement(soData, to, timeToNextFrame);
                             }

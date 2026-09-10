@@ -1,4 +1,6 @@
 using BoardItems.BoardData;
+using Firebase.Database;
+using Firebase.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,9 +16,18 @@ public class UserData : MonoBehaviour
     {
         public string deviceID;
         public List<string> likes;
+        public Onboardings onboardings;
     }
 
-    public int onboardingSteps;
+    [Serializable]
+    public class Onboardings {
+        public bool initial;
+        public bool characters;
+        public bool objects;
+        public bool bgs;
+        public bool stories;        
+    }
+    
     public bool isAdmin;
     public bool passport;
 
@@ -24,8 +35,7 @@ public class UserData : MonoBehaviour
 
     public bool UserDataLoadedDone {  get; private set; }
 
-    void Awake() {
-        onboardingSteps = PlayerPrefs.GetInt("onboardingSteps", 0);
+    void Awake() {        
         userDataInDatabase.username = PlayerPrefs.GetString("username", "");
         userDataInDatabase.email = PlayerPrefs.GetString("email", "");
         userDataInDatabase.uid = PlayerPrefs.GetString("uid", "");
@@ -44,10 +54,42 @@ public class UserData : MonoBehaviour
 
     }
     public void OnBoardingAllStepsDone()
-    {
-        PlayerPrefs.SetInt("onboardingSteps", 1);
-        onboardingSteps = 1;
+    {        
+        userDataInDatabase.onboardings.initial = true;
+        SetOnboardingStateDone(nameof(userDataInDatabase.onboardings.initial));
     }
+    public void OnBoardingCharactersStepDone() {
+        userDataInDatabase.onboardings.characters = true;
+        SetOnboardingStateDone(nameof(userDataInDatabase.onboardings.characters));
+    }
+
+    public void OnBoardingObjectsStepDone() {
+        userDataInDatabase.onboardings.objects = true;
+        SetOnboardingStateDone(nameof(userDataInDatabase.onboardings.objects));
+    }
+
+    public void OnBoardingBgsStepDone() {
+        userDataInDatabase.onboardings.bgs = true;
+        SetOnboardingStateDone(nameof(userDataInDatabase.onboardings.bgs));
+    }
+
+    public void OnBoardingStoriesStepDone() {
+        userDataInDatabase.onboardings.stories = true;
+        SetOnboardingStateDone(nameof(userDataInDatabase.onboardings.stories));
+    }
+
+    void SetOnboardingStateDone(string key) {
+        DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("users/" + userDataInDatabase.uid + "/onboardings");
+        Dictionary<string, System.Object> childUpdates = new Dictionary<string, System.Object>();
+        childUpdates[key] = true;
+        reference.UpdateChildrenAsync(childUpdates).ContinueWithOnMainThread(task => {
+            if (task.IsFaulted || task.IsCanceled) {
+                Debug.Log($"Update {key} onboarding state FAIL " + task.Exception);
+            }
+            Debug.Log($"Server: Update {key} onboarding state done!");
+        });
+    }
+
     private void Start() {               
 
         FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
@@ -92,9 +134,13 @@ public class UserData : MonoBehaviour
 
     void OnTokenUpdated() {
         //ResetUserData();
-        if (IsLogged()) {
+        if (IsLogged()) {            
             CheckAdmin();
             FirebaseStoryMakerDBManager.Instance.LoadUserLikeFromServer(OnLoadingUserLikesFromServer);
+            FirebaseStoryMakerDBManager.Instance.LoadUserOnboardingsStates((onboardings) => {
+                userDataInDatabase.onboardings = onboardings;
+                Events.OnboardingStatesCheck();
+            });
         } else
             Invoke("OnTokenUpdated", 1);         
     }
@@ -136,8 +182,7 @@ public class UserData : MonoBehaviour
         userDataInDatabase.username = "";
         userDataInDatabase.email = "";
         userDataInDatabase.uid = "";
-        userDataInDatabase.likes = new();
-        onboardingSteps = 0;
+        userDataInDatabase.likes = new();        
         UserDataLoadedDone = false;
     }
 
