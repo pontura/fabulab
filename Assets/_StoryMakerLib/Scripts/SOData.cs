@@ -19,6 +19,7 @@ public class SOData
         this.id = source.id;
         this.customization = source.customization;
         this.force_z = source.force_z;
+        this.goLeft = source.goLeft;
     }
 
     public override bool Equals(object obj) {
