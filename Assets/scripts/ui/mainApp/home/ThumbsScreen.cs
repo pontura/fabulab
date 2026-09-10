@@ -151,7 +151,7 @@ namespace UI.MainApp.Home.User
                     if (isb != null) {
                         LoadImage(i, isb);
                     } else {
-                        Debug.LogError("Couldn´t find ItemSelectorBtn with index " + i);
+                        Debug.Log("Couldn´t find ItemSelectorBtn with index " + i);
                     }
                 }
             }
