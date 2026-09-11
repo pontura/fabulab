@@ -23,6 +23,7 @@ namespace Yaguar.StoryMaker.DB
         public new static FirebaseStoryMakerDBManager Instance { get { return mInstance; } }
         static FirebaseStoryMakerDBManager mInstance = null;
 
+        [SerializeField] bool getDownloadedData;
         [SerializeField] long downloadedData;
 
         [Serializable]
@@ -156,9 +157,11 @@ namespace Yaguar.StoryMaker.DB
                     try {
                         //SceneDataFabulabLyna[] sds = JsonConvert.DeserializeObject<SceneDataFabulabLyna[]>(task.Result.GetRawJsonValue());
                         //Debug.Log(task.Result.GetRawJsonValue());
-                        long downloaded = task.Result.GetRawJsonValue().Length;
-                        downloadedData += downloaded;
-                        Debug.Log("! Downloaded: " + downloaded);
+                        if (getDownloadedData) {
+                            long downloaded = task.Result.GetRawJsonValue().Length;
+                            downloadedData += downloaded;
+                            Debug.Log("! Downloaded: " + downloaded);
+                        }
                         DataSnapshot snapshot = task.Result;
                         Dictionary<string, CharacterServerData> d = new Dictionary<string, CharacterServerData>();
                         foreach (var child in snapshot.Children) {
@@ -189,9 +192,11 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
                     try {
-                        long downloaded = task.Result.GetRawJsonValue().Length;
-                        downloadedData += downloaded;
-                        Debug.Log("! Downloaded: " + downloaded);
+                        if (getDownloadedData) {
+                            long downloaded = task.Result.GetRawJsonValue().Length;
+                            downloadedData += downloaded;
+                            Debug.Log("! Downloaded: " + downloaded);
+                        }
                         //SceneDataLyna[] sds = JsonConvert.DeserializeObject<SceneDataLyna[]>(task.Result.GetRawJsonValue());
                         //Debug.Log(task.Result.GetRawJsonValue());
                         DataSnapshot snapshot = task.Result;
@@ -231,9 +236,11 @@ namespace Yaguar.StoryMaker.DB
 
                         //SceneDataFabulabLyna[] sds = JsonConvert.DeserializeObject<SceneDataFabulabLyna[]>(task.Result.GetRawJsonValue());
                         string data = task.Result.GetRawJsonValue();
-                        long downloaded = data.Length;
-                        downloadedData += downloaded;
-                        Debug.Log("! Downloaded: " + downloaded);
+                        if (getDownloadedData) {
+                            long downloaded = data.Length;
+                            downloadedData += downloaded;
+                            Debug.Log("! Downloaded: " + downloaded);
+                        }
                         //Debug.Log("# "+data);
                         callback(true, task.Result.Key, JsonConvert.DeserializeObject<CharacterServerData>(data));
                     } catch (Exception ex) {
@@ -259,10 +266,13 @@ namespace Yaguar.StoryMaker.DB
                 } else if (task.IsCompleted) {
                     try {
                         //SceneDataFabulabLyna[] sds = JsonConvert.DeserializeObject<SceneDataFabulabLyna[]>(task.Result.GetRawJsonValue());
+                        
                         string data = task.Result.GetRawJsonValue();
-                        long downloaded = data.Length;
-                        downloadedData += downloaded;
-                        Debug.Log("! Downloaded: " + downloaded);
+                        if (getDownloadedData) {
+                            long downloaded = data.Length;
+                            downloadedData += downloaded;
+                            Debug.Log("! Downloaded: " + downloaded);
+                        }
                         //  Debug.Log("# " + data);
                         callback(true, task.Result.Key, JsonConvert.DeserializeObject<SObjectServerData>(data));
                     } catch (Exception ex) {
@@ -317,9 +327,11 @@ namespace Yaguar.StoryMaker.DB
                 } else if (task.IsCompleted) {
                     //Debug.Log("#Load " + type + " MetadataFromServer IsCompleted");
                     try {
-                        long downloaded = task.Result.GetRawJsonValue().Length;
-                        downloadedData += downloaded;
-                        Debug.Log("! Downloaded "+type+": "+ downloaded);
+                        if (getDownloadedData) {
+                            long downloaded = task.Result.GetRawJsonValue().Length;
+                            downloadedData += downloaded;
+                            Debug.Log("! Downloaded " + type + ": " + downloaded);
+                        }
                         //Debug.Log(task.Result.GetRawJsonValue());
                         DataSnapshot snapshot = task.Result;
 
@@ -404,10 +416,11 @@ namespace Yaguar.StoryMaker.DB
                     //Debug.Log(task.Result.GetRawJsonValue());
 
                     try {
-
-                        long downloaded = task.Result.GetRawJsonValue().Length;
-                        downloadedData += downloaded;
-                        Debug.Log("! Downloaded: " + downloaded);
+                        if (getDownloadedData) {
+                            long downloaded = task.Result.GetRawJsonValue().Length;
+                            downloadedData += downloaded;
+                            Debug.Log("! Downloaded: " + downloaded);
+                        }
 
                         DataSnapshot snapshot = task.Result;
                         Dictionary<string, SOPartServerData> d = new Dictionary<string, SOPartServerData>();
@@ -521,9 +534,11 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
                     try {
-                        long downloaded = task.Result.GetRawJsonValue().Length;
-                        downloadedData += downloaded;
-                        Debug.Log(" " + downloaded);
+                        if (getDownloadedData) {
+                            long downloaded = task.Result.GetRawJsonValue().Length;
+                            downloadedData += downloaded;
+                            Debug.Log(" " + downloaded);
+                        }
                         DataSnapshot snapshot = task.Result;
                         Dictionary<string, ServerPartMetaData> d = new Dictionary<string, ServerPartMetaData>();
                         foreach (var child in snapshot.Children) {
@@ -610,9 +625,11 @@ namespace Yaguar.StoryMaker.DB
                 } else if (task.IsCompleted) {
                     try {
                         string data = task.Result.GetRawJsonValue();
-                        long downloaded = data.Length;
-                        downloadedData += downloaded;
-                        Debug.Log("! Downloaded: " + downloaded);
+                        if (getDownloadedData) {
+                            long downloaded = data.Length;
+                            downloadedData += downloaded;
+                            Debug.Log("! Downloaded: " + downloaded);
+                        }
                         if (data != null) {
                             Dictionary<string, ServerFilmData> d = JsonConvert.DeserializeObject<Dictionary<string, ServerFilmData>>(task.Result.GetRawJsonValue());
                             callback(filmsData, d);
@@ -638,9 +655,11 @@ namespace Yaguar.StoryMaker.DB
                 } else if (task.IsCompleted) {
                     try {
                         string data = task.Result.GetRawJsonValue();
-                        long downloaded = data.Length;
-                        downloadedData += downloaded;
-                        Debug.Log("! Downloaded: " + downloaded);
+                        if (getDownloadedData) {
+                            long downloaded = data.Length;
+                            downloadedData += downloaded;
+                            Debug.Log("! Downloaded: " + downloaded);
+                        }
                         if (data != null) {
                             Dictionary<string, ServerFilmData> d = JsonConvert.DeserializeObject<Dictionary<string, ServerFilmData>>(task.Result.GetRawJsonValue());
                             callback(filmsData, d);
@@ -749,10 +768,11 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
                     try {
-
-                        long downloaded = task.Result.GetRawJsonValue().Length;
-                        downloadedData += downloaded;
-                        Debug.Log("! Downloaded: " + downloaded);
+                        if (getDownloadedData) {
+                            long downloaded = task.Result.GetRawJsonValue().Length;
+                            downloadedData += downloaded;
+                            Debug.Log("! Downloaded: " + downloaded);
+                        }
 
                         var children = task.Result.Children.OrderBy(c => int.Parse(c.Key)); //Ordena los key evitando el orden lexigráfico (10 antes que 2)
                         List<SceneDataFabulab> scene = new List<SceneDataFabulab>();
@@ -879,9 +899,11 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log(task.Exception);
                 } else if (task.IsCompleted) {
                     try {
-                        long downloaded = task.Result.GetRawJsonValue().Length;
-                        downloadedData += downloaded;
-                        Debug.Log("! Downloaded: " + downloaded);
+                        if (getDownloadedData) {
+                            long downloaded = task.Result.GetRawJsonValue().Length;
+                            downloadedData += downloaded;
+                            Debug.Log("! Downloaded: " + downloaded);
+                        }
                         callback(uid, task.Result.GetRawJsonValue());
                     } catch (Exception ex) {
                         Debug.LogError($"Error en callback: {ex}");
@@ -1034,9 +1056,11 @@ namespace Yaguar.StoryMaker.DB
                     if (string.IsNullOrEmpty(task.Result.GetRawJsonValue()))
                         callback(new UserData.Onboardings());
                     else {
-                        long downloaded = task.Result.GetRawJsonValue().Length;
-                        downloadedData += downloaded;
-                        Debug.Log("! Downloaded: " + downloaded);
+                        if (getDownloadedData) {
+                            long downloaded = task.Result.GetRawJsonValue().Length;
+                            downloadedData += downloaded;
+                            Debug.Log("! Downloaded: " + downloaded);
+                        }
 
                         UserData.Onboardings onboardings = JsonUtility.FromJson<UserData.Onboardings>(task.Result.GetRawJsonValue());
                         callback(onboardings);
@@ -1058,10 +1082,11 @@ namespace Yaguar.StoryMaker.DB
                     Debug.Log(task.Exception);
                     callback(null);
                 } else if (task.IsCompleted) {
-
-                    long downloaded = task.Result.GetRawJsonValue().Length;
-                    downloadedData += downloaded;
-                    Debug.Log("! Downloaded: " + downloaded);
+                    if (getDownloadedData) {
+                        long downloaded = task.Result.GetRawJsonValue().Length;
+                        downloadedData += downloaded;
+                        Debug.Log("! Downloaded: " + downloaded);
+                    }
 
                     List<string> keys = new List<string>();
                     DataSnapshot snapshot = task.Result;
