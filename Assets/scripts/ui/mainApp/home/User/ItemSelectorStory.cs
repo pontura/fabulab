@@ -56,7 +56,7 @@ namespace UI.MainApp.Home.User
                 likeBtn.Init(OnLikeToggle, content.likes, Data.Instance.userData.isLiked(content.id));
                 Data.Instance.cacheData.GetUser(content.userID, (userData, tex) => {
                     creatorField.text = userData.username;
-                    creatorThumb.sprite = tex != null ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f)) : null;
+                    creatorThumb.sprite = tex != null ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f)) : creatorThumb.sprite;
 
                 });
             }
