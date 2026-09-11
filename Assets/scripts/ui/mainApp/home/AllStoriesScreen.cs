@@ -59,6 +59,10 @@ namespace UI.MainApp.Home.User
             Debug.Log("% AllStoriesScreen LoadNext");
             foreach(FilmDataFabulab cd in Data.Instance.scenesData.filmsData)
             {
+                if(!isGame && cd.tags != null && cd.tags.Contains("games"))
+                {
+                   //esquiva los juegos 
+                }else
                 AddFilmMetadata(cd);
             }
 
