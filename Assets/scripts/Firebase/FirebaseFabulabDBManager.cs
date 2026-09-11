@@ -586,7 +586,7 @@ namespace Yaguar.StoryMaker.DB
             Debug.Log("#UpdateFilmDataToServer filmId:" + filmId);
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/" + filmId);
 
-            if(Data.Instance.gamesManager.IsGamePlayed(filmId))
+            if(Data.Instance.gamesManager.playing)
             {
                 Debug.Log("#UpdateFilmDataToServer GAME!: " + filmId);
                 if(fd.tags == null || fd.tags.Count == 0)
