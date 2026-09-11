@@ -44,11 +44,7 @@ namespace UI.MainApp.Home.User
                 infoBtn.gameObject.SetActive(true);
                 infoBtn.Init(OnInfoClicked, isPublic);
                 likeBtn.gameObject.SetActive(false);
-            } else {
-                GetComponent<Button>().onClick.AddListener(() => {
-                    AudioManager.Instance.uiSfxManager.PlayTransp("click", 5);
-                    userStoriesScreen.OpenWork(content.id); 
-                });
+            } else {                
                 editionGO.SetActive(false);
                 viewGO.SetActive(true);
                 likeBtn.gameObject.SetActive(true);
@@ -60,6 +56,10 @@ namespace UI.MainApp.Home.User
 
                 });
             }
+            GetComponent<Button>().onClick.AddListener(() => {
+                AudioManager.Instance.uiSfxManager.PlayTransp("click", 5);
+                userStoriesScreen.OpenWork(content.id);
+            });
         }
         public void Edit()
         {
