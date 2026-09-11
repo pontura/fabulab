@@ -42,7 +42,7 @@ namespace UI.MainApp
         }
         private void OnReady(CacheData.UserData data, Texture2D tex)
         {
-            image.sprite = tex != null ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f)) : null;
+            image.sprite = tex != null ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f)) : image.sprite;
         }
 
         void OnProfilePictureUpdated(Texture2D tex) {
