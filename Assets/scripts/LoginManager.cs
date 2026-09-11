@@ -176,7 +176,8 @@ public class LoginManager : MonoBehaviour
         introContainer.SetActive(false);
         emailContainer.SetActive(false);
 
-        Events.OnLoading(true);
+        if(!isToSyncUserToEmail)// En el caso de sync email no prende el loading, pero al logear si porque carga las historias para el home
+            Events.OnLoading(true);
     }
     
 
