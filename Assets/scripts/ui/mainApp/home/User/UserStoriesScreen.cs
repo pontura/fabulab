@@ -64,7 +64,8 @@ namespace UI.MainApp.Home.User
             //Debug.Log("$ LoadNext ");
             foreach (FilmDataFabulab cd in Data.Instance.scenesData.userFilmsData)
             {
-                AddFilmMetadata(cd);                
+                if(cd.tags != null && !cd.tags.Contains("games"))
+                    AddFilmMetadata(cd);                
             }
 
             Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
