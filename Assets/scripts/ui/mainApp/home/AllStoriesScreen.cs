@@ -8,9 +8,9 @@ using Yaguar.StoryMaker.Editor;
 namespace UI.MainApp.Home.User
 {
     public class AllStoriesScreen : UserStoriesScreen
-    {       
-        public string id;
-        public bool isGame;
+    {
+        [SerializeField] protected bool isGame;
+        protected string id;
 
         public void OnEnable()
         {

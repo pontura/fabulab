@@ -1,5 +1,6 @@
-using System.Collections.Generic;
 using BoardItems;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 namespace UI.MainApp.Home.User
 {
@@ -47,15 +48,31 @@ namespace UI.MainApp.Home.User
             base.OnLoadedDone();
             UIManager.Instance.AddBackTo(UIManager.screenType.GamesStories, true);
         }
-        protected override void AddFilmMetadata(FilmDataFabulab fd) {
+
+        //hacemos una nueva versión que no herede para que no se agreguen en tiempo real historias porque habría que filtrar y mostrarlas debajo del título correcto
+        new void AddFilmMetadata(FilmDataFabulab fd) {
             if(fd == null) 
             {
                 Debug.LogError("AddFilmMetadata fd is null");
                 return;
             }
-            ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-            go.Init(fd.id, null);
-            go.GetComponent<ItemSelectorStory>().SetContent(fd, this, false);
+            if (fd.tags != null && fd.tags.Contains("games")){
+                ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
+                go.Init(fd.id, null);
+                go.GetComponent<ItemSelectorStory>().SetContent(fd, this, false);
+            }
+        }
+
+        protected override void OnFilmMetadataUpdated(FilmDataFabulab fd) {
+            Debug.Log("% GamesStories OnFilmMetadataUpdated " + gameObject.name);
+            ItemSelectorStory[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorStory>();
+            ItemSelectorStory btn = Array.Find(itemBtns, x => x.Id == fd.id);
+            if (btn != null) {                
+                btn.Init(fd.id, null);
+                btn.SetContent(fd, this, false);
+                //btn.transform.SetAsFirstSibling();
+                ResetAndSetScroll();
+            }
         }
         public override void OpenWork(string id) 
         {
