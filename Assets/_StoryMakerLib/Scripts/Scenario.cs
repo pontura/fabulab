@@ -39,6 +39,7 @@ namespace Yaguar.StoryMaker.Editor
         {
 
             StoryMakerEvents.ClearScene += ClearScene;
+            StoryMakerEvents.HideScene += HideScene;
             //sceneObjects = GetComponentsInChildren<SceneObject>();
             //WaitTillScenesLoaded();
         }
@@ -46,6 +47,7 @@ namespace Yaguar.StoryMaker.Editor
         void OnDestroy()
         {
             StoryMakerEvents.ClearScene -= ClearScene;
+            StoryMakerEvents.HideScene -= HideScene;
         }
 
       
@@ -53,6 +55,10 @@ namespace Yaguar.StoryMaker.Editor
         public void ResetScenario()
         {
             sceneObejctsManager.ResetScene();
+        }
+
+        void HideScene() {
+            gameObject.SetActive(false);
         }
 
         void ClearScene()

@@ -25,7 +25,10 @@ namespace UI.MainApp
                     break;
                 default:
                     if (last == UIManager.screenType.StoryMaker) {
-                        StoryMakerEvents.ClearScene();
+                        if (!StoryMakerEvents.isEditing)
+                            StoryMakerEvents.ClearScene();
+                        else
+                            StoryMakerEvents.HideScene();
                         Show(false);
                         StoryMakerEvents.EnableInputManager(false);
                         iTween.Stop();
