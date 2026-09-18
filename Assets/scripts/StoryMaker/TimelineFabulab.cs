@@ -94,7 +94,7 @@ namespace Yaguar.StoryMaker.Editor
         {
             filmMakerUI.OnTimelinePlay(false);
             if(ScenesManagerFabulab.Instance.GetActiveScene()!=null)
-                keyframe_duration = Mathf.Max(ScenesManagerFabulab.Instance.GetActiveScene().duration,0.5f) - (speed);
+                keyframe_duration = Mathf.Max(ScenesManagerFabulab.Instance.GetActiveScene().duration,Min_speed) - (speed);
             else
                 keyframe_duration = ScenesManagerFabulab.Instance.Keyframe_default_duration - (speed);
         }
@@ -146,7 +146,7 @@ namespace Yaguar.StoryMaker.Editor
             OnLoadDone();
         }
         public override float OnChangeDuration(float value) {
-            float duration = Mathf.Lerp(min_speed, max_speed, value);
+            float duration = Mathf.Lerp(Min_speed, Max_speed, value);
             all[activeAnimatedKeyframeID - 1].SetDuration(duration);
             if (ScenesManagerFabulab.Instance.GetActiveScene() != null)
                 ScenesManagerFabulab.Instance.GetActiveScene().duration = duration;

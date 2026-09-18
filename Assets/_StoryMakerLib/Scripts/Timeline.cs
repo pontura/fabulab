@@ -7,8 +7,8 @@ namespace Yaguar.StoryMaker.Editor
     public class Timeline : MonoBehaviour
     {
         [SerializeField] DurationBtn durationBtn;
-        [SerializeField] protected float min_speed = 0.5f;
-        [SerializeField] protected float max_speed = 4;
+        [field: SerializeField] public float Min_speed { get; private set; } // 0.05 min speed 3 frames aprox
+        [field: SerializeField] public float Max_speed { get; private set; } // 4;
 
         public FilmMakerManager filmMakerUI;
         public KeyFrameUI keyframe;
@@ -53,7 +53,7 @@ namespace Yaguar.StoryMaker.Editor
                 StoryMakerEvents.UpdateDraw();
             }
 
-            float duration = (keyframe_duration - min_speed) / (max_speed - min_speed);
+            float duration = (keyframe_duration - Min_speed) / (Max_speed - Min_speed);
             durationBtn.Init(this, duration);
         }
         public virtual void OnDisabled(){}
@@ -191,7 +191,7 @@ namespace Yaguar.StoryMaker.Editor
             UpdateKeyframes();
             ForceMarkerPosition();
 
-            float sliderValue = (all[activeAnimatedKeyframeID - 1].duration - min_speed) / (max_speed - min_speed);
+            float sliderValue = (all[activeAnimatedKeyframeID - 1].duration - Min_speed) / (Max_speed - Min_speed);
 
             durationBtn?.SetDuration(all[activeAnimatedKeyframeID - 1].duration);
             durationBtn?.SetValue(sliderValue);
@@ -236,7 +236,7 @@ namespace Yaguar.StoryMaker.Editor
         }
         public virtual float OnChangeDuration(float value)
         {
-            float duration = Mathf.Lerp(min_speed, max_speed, value);
+            float duration = Mathf.Lerp(Min_speed, Max_speed, value);
             all[activeAnimatedKeyframeID-1].SetDuration(duration);
             UpdateKeyframes();
             ForceMarkerPosition();
