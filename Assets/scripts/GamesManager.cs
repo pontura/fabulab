@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Yaguar.StoryMaker.Editor;
 
-
 [Serializable]
 public class GameIdEntry
 {
@@ -54,6 +53,7 @@ public class GameData
     public string section;
     public string title;
     public string description;
+    public bool freeFirstFrame; // true: el primer frame de la plantilla queda editable (no se bloquea ni se crea un frame nuevo automaticamente)
     [JsonIgnore] public Sprite thumbnail;
     [JsonConverter(typeof(GameIdEntryListConverter))] public List<GameIdEntry> ids;
     public GameIdEntry GetGameOdEntry(string id)
@@ -149,7 +149,8 @@ public class GamesManager : MonoBehaviour
     {
         currentID  = ScenesManager.Instance.currentFilmData.id;
         print("OnSetActiveGame playing " + _playing);
-        totalLockedGameFrames = ScenesManagerFabulab.Instance.Scenes.Count;
+        GameData game = GetGame(activaGameData);
+        totalLockedGameFrames = (game != null && game.freeFirstFrame) ? 0 : ScenesManagerFabulab.Instance.Scenes.Count;
         playing  = _playing;
     }
 

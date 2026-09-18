@@ -86,6 +86,7 @@ export interface GameDef {
   title: string
   description: string
   section: string
+  freeFirstFrame?: boolean
   ids: Record<string, (string | null)[]>
 }
 

@@ -1,33 +1,51 @@
 using BoardItems;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 namespace UI.MainApp.Home.User
 {
     public class GamesStories : AllStoriesScreen
     {
+        string loadedGameId;
+
+        // a diferencia de AllStoriesScreen, esta pantalla depende del juego activo (lo setea GameSelector), asi que no lo reseteamos al activarse
+        new void OnEnable()
+        {
+            Data.Instance.gamesManager.SetPlaying(false);
+        }
+
         protected override void Init()
         {
             isGame = false;
-              if (firstLoadDone)
-                return;
-
-            if(Data.Instance.scenesData.filmsData.Count > 0) {
-                firstLoadDone = true;
-                
-                LoadNext();
-            }            
+            // la carga la maneja Show(), para poder recargar la lista cuando cambia el juego activo
         }
         public void ShowFromHome(bool isOn)
         {
             gameObject.SetActive(isOn);
         }
+        public override void Show(bool isOn)
+        {
+            base.Show(isOn);
+            if (!isOn || Data.Instance.scenesData.filmsData.Count == 0)
+                return;
+
+            string activeGameId = Data.Instance.gamesManager.activaGameData;
+            if (firstLoadDone && loadedGameId == activeGameId)
+                return;
+
+            firstLoadDone = true;
+            loadedGameId = activeGameId;
+
+            foreach (Transform child in worksContainer) {
+                if (child.tag != "Persistent")
+                    Destroy(child.gameObject);
+            }
+            LoadNext();
+        }
         protected override void LoadNext()
         {
-          //  Data.Instance.gamesManager.watchingFilmsMade = true;
-            List<GameData>  all = Data.Instance.gamesManager.GetGamesBySection("stories");
+            GameData gd = Data.Instance.gamesManager.GetGame(Data.Instance.gamesManager.activaGameData);
             int gameId = 1;
-            foreach(GameData gd in all)
+            if(gd != null)
             {
                 foreach(GameIdEntry gameIdEntry in gd.ids)
                 {
@@ -37,8 +55,8 @@ namespace UI.MainApp.Home.User
                     {
                         Debug.Log("% Game Story id: " + storyIds);
                         FilmDataFabulab cd = Data.Instance.scenesData.GetMeta(storyIds);
-                        AddFilmMetadata(cd);                              
-                    } 
+                        AddFilmMetadata(cd);
+                    }
                     gameId++;
                 }
             }
@@ -49,7 +67,7 @@ namespace UI.MainApp.Home.User
             UIManager.Instance.AddBackTo(UIManager.screenType.GamesStories, true);
         }
 
-        //hacemos una nueva versión que no herede para que no se agreguen en tiempo real historias porque habría que filtrar y mostrarlas debajo del título correcto
+        //hacemos una nueva versiï¿½n que no herede para que no se agreguen en tiempo real historias porque habrï¿½a que filtrar y mostrarlas debajo del tï¿½tulo correcto
         new void AddFilmMetadata(FilmDataFabulab fd) {
             if(fd == null) 
             {
@@ -87,11 +105,11 @@ namespace UI.MainApp.Home.User
                 UIManager.Instance.AddBackTo(UIManager.screenType.GameStoriesCreator, true);
         }
         public void BackToPlay()
-        { 
-          //  Data.Instance.gamesManager.watchingFilmsMade = false;
+        {
             ShowFromHome(false);
-            List<GameData>  all = Data.Instance.gamesManager.GetGamesBySection("stories");
-            GameData gs =  all[0]; // TO-DO ahora siempre va al unico juego que hay:
+            GameData gs = Data.Instance.gamesManager.GetGame(Data.Instance.gamesManager.activaGameData);
+            if (gs == null)
+                return;
             string storyId = gs.ids[0].id;
             Data.Instance.gamesManager.OnSetActiveGame(gs.id);
             OpenWork(storyId);

@@ -225,12 +225,20 @@ namespace Yaguar.StoryMaker.Editor
                 StartCoroutine(InitGame());
         }
         IEnumerator InitGame()
-        {            
+        {
             playingGameFrames = Data.Instance.gamesManager.totalLockedGameFrames;
             yield return new WaitForSeconds(0.5f);
-            SetJump(playingGameFrames);
-            yield return new WaitForSeconds(0.1f);
-            filmMakerUI.New();
+            if(playingGameFrames > 0)
+            {
+                SetJump(playingGameFrames);
+                yield return new WaitForSeconds(0.1f);
+                filmMakerUI.New();
+            }
+            else
+            {
+                // nada bloqueado: el primer frame de la plantilla queda editable, sin crear un frame nuevo automaticamente
+                SetJump(1);
+            }
             yield return new WaitForSeconds(0.1f);
             CheckForKeyframeInteraction();
         }

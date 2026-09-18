@@ -30,6 +30,11 @@ export function GameEditPage() {
     load()
   }
 
+  async function saveFreeFirstFrame(value: boolean) {
+    await writePath(`games/${id}/freeFirstFrame`, value)
+    load()
+  }
+
   async function saveStoryIds(storyId: string, raw: string) {
     let parsed: (string | null)[]
     try {
@@ -90,6 +95,17 @@ export function GameEditPage() {
         <div className="field-row">
           <label>Sección</label>
           <input defaultValue={game.section} onBlur={(e) => e.target.value !== game.section && saveField('section', e.target.value)} />
+        </div>
+        <div className="field-row">
+          <label>Primer frame libre</label>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <input
+              type="checkbox"
+              checked={!!game.freeFirstFrame}
+              onChange={(e) => saveFreeFirstFrame(e.target.checked)}
+            />
+            El frame 1 de la plantilla queda editable (no se bloquea ni se crea un frame nuevo automáticamente)
+          </label>
         </div>
 
         <div className="field-row">
