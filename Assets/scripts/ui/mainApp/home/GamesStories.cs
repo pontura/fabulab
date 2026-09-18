@@ -50,7 +50,7 @@ namespace UI.MainApp.Home.User
                 foreach(GameIdEntry gameIdEntry in gd.ids)
                 {
                     TitleLine t = Instantiate(titleLine, worksContainer);
-                    t.Init("Finales historia " + gameId);
+                    t.Init("Juego " + gameId);
                     foreach(string storyIds in gameIdEntry.storyIds)
                     {
                         Debug.Log("% Game Story id: " + storyIds);
