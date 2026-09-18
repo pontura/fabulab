@@ -64,7 +64,9 @@ namespace UI.MainApp.Home.User
             //Debug.Log("$ LoadNext ");
             foreach (FilmDataFabulab cd in Data.Instance.scenesData.userFilmsData)
             {
-                if((cd.tags != null && !cd.tags.Contains("games"))|| cd.tags == null)
+                if(Data.Instance.userData.isAdmin || (
+                    (cd.tags != null && !cd.tags.Contains("games"))|| cd.tags == null)
+                )
                     AddFilmMetadata(cd);                
             }
 
