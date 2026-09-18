@@ -735,8 +735,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Yaguar.StoryMaker.Editor.Timeline
   durationBtn: {fileID: 6659928736430118983}
-  min_speed: 0
-  max_speed: 4
+  <Min_speed>k__BackingField: 0.05
+  <Max_speed>k__BackingField: 4
   filmMakerUI: {fileID: 0}
   keyframe: {fileID: 3690019839751577319, guid: 56eb5ca493b0a6c43834b4d173166a56, type: 3}
   container: {fileID: 2864572558456856936}
@@ -2086,7 +2086,7 @@ MonoBehaviour:
   m_FillRect: {fileID: 5242427655631636792}
   m_HandleRect: {fileID: 3091899704930479607}
   m_Direction: 0
-  m_MinValue: 1
+  m_MinValue: 0
   m_MaxValue: 8
   m_WholeNumbers: 1
   m_Value: 1
@@ -3988,6 +3988,7 @@ MonoBehaviour:
   sliderField: {fileID: 5750117003174762691}
   durationField: {fileID: 6389108163338512156}
   sliderFactor: 0.125
+  minValue: 0
 --- !u!1 &6865353948971566755
 GameObject:
   m_ObjectHideFlags: 0

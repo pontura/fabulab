@@ -49,6 +49,7 @@ namespace Yaguar.StoryMaker.Editor
 
         public static System.Action Restart = delegate { };
         public static System.Action ClearScene = delegate { };
+        public static System.Action HideScene = delegate { };
         public static System.Action SetBackgroundLights= delegate { };
 
         public static System.Action EditCustomize = delegate { };

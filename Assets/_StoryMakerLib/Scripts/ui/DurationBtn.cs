@@ -13,6 +13,7 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] TMPro.TMP_Text sliderField;
         [SerializeField] TMPro.TMP_Text durationField;
         [SerializeField] float sliderFactor;
+        [SerializeField] float minValue = 0f;
         float duration;
         bool opened;
         float sliderValue;
@@ -37,8 +38,8 @@ namespace Yaguar.StoryMaker.Editor
         public void SetValue(float sliderValue)
         {
             this.sliderValue = sliderValue;
-            if (sliderValue < 0.05f)
-                bar.fillAmount = 0.05f;
+            if (sliderValue < minValue)
+                bar.fillAmount = minValue;
             else
                 bar.fillAmount = sliderValue;
         }

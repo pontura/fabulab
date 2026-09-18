@@ -219,7 +219,7 @@ namespace Yaguar.StoryMaker.Editor
             int nextSceneid = ScenesManagerFabulab.Instance.currentSceneId + 1;
             SceneDataFabulab aciveScene = ScenesManagerFabulab.Instance.GetActiveScene() ;
             if (aciveScene!= null)
-                timeline.keyframe_duration = Mathf.Max(aciveScene.duration, 0.5f);
+                timeline.keyframe_duration = Mathf.Max(aciveScene.duration, timeline.Min_speed);
 
             if (State == states.PLAYING && nextSceneid <= total)
             {
