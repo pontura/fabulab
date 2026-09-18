@@ -38,8 +38,11 @@ namespace UI.MainApp.Home.User
                 List<GameData>  all = Data.Instance.gamesManager.GetGamesBySection("stories");
                 foreach(GameData gd in all)
                 {
-                    GameButton gb = Instantiate(gameButton, worksContainer);
-                    gb.Init(gd, OnGameClicked);
+                    if(gd.show)
+                    {
+                        GameButton gb = Instantiate(gameButton, worksContainer);
+                        gb.Init(gd, OnGameClicked);
+                    }
                 }
 
                 t = Instantiate(titleLine, worksContainer);

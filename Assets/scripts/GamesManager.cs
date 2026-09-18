@@ -53,6 +53,7 @@ public class GameData
     public string section;
     public string title;
     public string description;
+    public bool show;
     public bool freeFirstFrame; // true: el primer frame de la plantilla queda editable (no se bloquea ni se crea un frame nuevo automaticamente)
     [JsonIgnore] public Sprite thumbnail;
     [JsonConverter(typeof(GameIdEntryListConverter))] public List<GameIdEntry> ids;
