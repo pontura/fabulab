@@ -70,9 +70,17 @@ namespace Yaguar.StoryMaker.Editor
         {
             int total = ScenesManagerFabulab.Instance.Scenes.Count;
             if (ScenesManagerFabulab.Instance.currentSceneId == 1)
+            {
+
                 prevButton.interactable = false;
+                prevAllButton.interactable = false;
+            }
             else
+            {
+                
                 prevButton.interactable = true;
+                prevAllButton.interactable = true;
+            }
 
             if (total > 1 || !isEditing)
                 playButton.interactable = true;
@@ -80,9 +88,15 @@ namespace Yaguar.StoryMaker.Editor
             // playButton.interactable = false;
 
             if (ScenesManagerFabulab.Instance.currentSceneId >= total)
+            {
                 nextButton.interactable = false;
+                nextAllButton.interactable = false;
+            }
             else
+            {
                 nextButton.interactable = true;
+                nextAllButton.interactable = true;                
+            }
 
             if (total > 1)
                 deleteButton.interactable = true;
