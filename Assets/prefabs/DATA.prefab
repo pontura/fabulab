@@ -91,7 +91,12 @@ MonoBehaviour:
     uid: 
     deviceID: 
     likes: []
-  onboardingSteps: 0
+    onboardings:
+      initial: 0
+      characters: 0
+      objects: 0
+      bgs: 0
+      stories: 0
   isAdmin: 0
   passport: 0
   prizes: 
@@ -420,6 +425,7 @@ MonoBehaviour:
     timestamp: 
     likes: 0
     isPublic: 0
+    tags: []
   loadedDone: 0
 --- !u!114 &4781433556235439642
 MonoBehaviour:
@@ -555,4 +561,10 @@ MonoBehaviour:
   <Games>k__BackingField: []
   thumbnails:
   - id: como_termina
-    thumbnail: {fileID: 3286163911610860551, guid: 24964b67c9262ad45ba23464edc5830f, type: 3}
+    thumbnail: {fileID: 21300000, guid: bb666484378b36d4b8a5780d1c090e60, type: 3}
+  - id: que_historia_hago
+    thumbnail: {fileID: 21300000, guid: 3ab1dfd556ce29c49955210ce1249fe4, type: 3}
+  activaGameData: 
+  currentID: 
+  playing: 0
+  totalLockedGameFrames: 0

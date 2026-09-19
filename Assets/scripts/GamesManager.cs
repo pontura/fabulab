@@ -282,5 +282,9 @@ public class GamesManager : MonoBehaviour
     {
         return Games.FindAll(g => g.section == section);
     }
+      public GameThumbnail GetThumb(string id)
+    {
+        return thumbnails.Find(g => g.id == id);
+    }
    
 }
