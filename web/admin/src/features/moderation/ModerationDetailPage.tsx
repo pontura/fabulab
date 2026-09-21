@@ -4,6 +4,8 @@ import { multiUpdate, readPath, writePath } from '../../rtdb'
 import type { MetadataEntry, Story, Tag, UserRecord } from '../../types'
 import { isContentKind, KIND_LABELS } from './shared'
 
+const STORY_PLAYER_URL = 'https://dev.yaguar.xyz/fabulab/player/index.html'
+
 export function ModerationDetailPage() {
   const { kind, id } = useParams()
   const navigate = useNavigate()
@@ -161,6 +163,19 @@ export function ModerationDetailPage() {
             </button>
           </div>
         </div>
+
+        {kind === 'stories' && (
+          <div className="field-row">
+            <label>Player</label>
+            <iframe
+              className="story-player"
+              title={`Player: ${meta.name || id}`}
+              src={`${STORY_PLAYER_URL}?id=${encodeURIComponent(id)}`}
+              allow="autoplay; fullscreen"
+              allowFullScreen
+            />
+          </div>
+        )}
 
         {speechLines.length > 0 && (
           <div className="field-row">

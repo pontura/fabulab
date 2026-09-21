@@ -65,11 +65,15 @@ namespace BoardItems
 
         void OnTokenUpdated() {
             Debug.Log("#OnTokenUpdated");
+            #if UNITY_WEBGL
+                LoadCharacterMetadataFromServer(); 
+            #else
             if (Data.Instance.userData.IsLogged()) {
                 CancelInvoke();
                 LoadCharacterMetadataFromServer();                
             } else
                 Invoke("OnTokenUpdated", 1);
+            #endif
         }
         void LoadCharacterMetadataFromServer() {
             Debug.Log("#LoadUserCharacterMetadataFromServer");
