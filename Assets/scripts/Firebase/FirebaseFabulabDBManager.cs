@@ -679,7 +679,7 @@ namespace Yaguar.StoryMaker.DB
         public void DeleteFilmData(string filmId) {
             //Debug.Log("ACA");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/" + filmId);
-            reference.RemoveValueAsync().ContinueWithOnMainThread(task => {
+            reference.RemoveValueAsync().ContinueWith(task => {
                 if (task.IsFaulted || task.IsCanceled) {
                     Debug.Log("#DeleteFilmData FAIL");
                     Debug.Log(task.Exception);
