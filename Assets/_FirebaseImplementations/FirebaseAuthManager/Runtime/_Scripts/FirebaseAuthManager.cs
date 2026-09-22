@@ -1,4 +1,4 @@
-﻿#if UNITY_WEBGL//  && !UNITY_EDITOR
+﻿#if UNITY_WEBGL && !UNITY_EDITOR
 // WebGL player: the Firebase Unity SDK is not available, so Auth runs over the Identity Toolkit REST API
 // (see Rest/FirebaseRestCore). Same public API as the SDK based implementation below.
 using System;
@@ -48,17 +48,8 @@ namespace Yaguar.Auth
         void Start()
         {
             FirebaseRestSession.SessionInvalidated += OnSessionInvalidated;
-            StartCoroutine(RestoreSession()); 
-            
-            Debug.Log("#AuthStateChanged webPlayerOnly");
-            Invoke("Delayed", 2);
+            StartCoroutine(RestoreSession());
         }
-        void Delayed()
-        {
-            Debug.Log("#AuthStateChanged webPlayerOnly");
-            OnTokenUpdated?.Invoke();
-        }
-         
 
         // The SDK reports the persisted user (or its absence) through StateChanged once the listeners are registered.
         IEnumerator RestoreSession()
@@ -231,7 +222,6 @@ namespace Yaguar.Auth
 {
     public class FirebaseAuthManager : MonoBehaviour
     {
-        public bool webPlayerOnly;
         public static FirebaseAuthManager Instance { get { return mInstance; } }
         static FirebaseAuthManager mInstance = null;
 
@@ -306,12 +296,6 @@ namespace Yaguar.Auth
 
         void AuthStateChanged(object sender, System.EventArgs eventArgs)
         {
-            if(webPlayerOnly)
-            {
-                Debug.Log("#AuthStateChanged webPlayerOnly");
-                OnTokenUpdated?.Invoke();
-                return;
-            }
             Debug.Log("#AuthStateChanged");
             if (_auth.CurrentUser != _user)
             {

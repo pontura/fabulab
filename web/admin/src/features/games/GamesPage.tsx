@@ -69,9 +69,7 @@ export function GamesPage() {
             {rows.map((row) => (
               <tr key={row.id} className="clickable" onClick={() => navigate(`/games/${row.id}`)}>
                 <td>{row.id}</td>
-                <td style={{ color: /^#[0-9a-f]{6}$/i.test(row.titleColor ?? '') ? row.titleColor : undefined }}>
-                  {row.title}
-                </td>
+                <td>{row.title}</td>
                 <td>{row.section}</td>
                 <td>{Object.keys(row.ids ?? {}).length}</td>
                 <td>

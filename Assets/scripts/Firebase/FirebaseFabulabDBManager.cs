@@ -647,7 +647,6 @@ namespace Yaguar.StoryMaker.DB
         }
 
         public void LoadAllFilmDataFromServer(List<FilmDataFabulab> filmsData, System.Action<List<FilmDataFabulab>, Dictionary<string, ServerFilmData>> callback) {
-            Debug.Log("LoadAllFilmDataFromServer");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/");
             reference.GetValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
