@@ -82,8 +82,7 @@ namespace UI.MainApp.Home.User
             likeBtn.gameObject.SetActive(false);
         }
         virtual public void Init(string id, Sprite sprite) {
-            if(sprite != null)
-                thumb.sprite = sprite;
+            thumb.sprite = sprite;
             Id = id;
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
             infoBtn.gameObject.SetActive(false);            
@@ -119,12 +118,7 @@ namespace UI.MainApp.Home.User
 
 
         public void SetSprite(Texture2D tex) {
-            // The download can finish after the list was rebuilt and this button destroyed. Player builds have no null
-            // checks, so touching a destroyed object crashes with "memory access out of bounds" instead of throwing.
-            if (this == null || thumb == null || loading == null)
-                return;
-            if(tex != null)
-                thumb.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
+            thumb.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
             loading.SetActive(false);
         }
 
