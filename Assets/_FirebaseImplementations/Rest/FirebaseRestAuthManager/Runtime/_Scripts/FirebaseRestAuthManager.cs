@@ -93,10 +93,6 @@ namespace Yaguar.Auth
             token = PlayerPrefs.GetString("token", "");
             refreshToken = PlayerPrefs.GetString("refreshToken", "");
 
-#if UNITY_WEBGL && !UNITY_EDITOR
-            // The Firebase Unity SDK does not exist in WebGL players: nothing to check, REST only needs the token.
-            OnFirebaseReady?.Invoke(databaseURL, token);
-#else
             Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
             {
                 var dependencyStatus = task.Result;
@@ -116,7 +112,6 @@ namespace Yaguar.Auth
                     // Firebase Unity SDK is not safe to use here.
                 }
             });
-#endif
 
             if (refreshToken != "")
                 Invoke(nameof(VerifyToken), 2);

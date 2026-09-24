@@ -17,8 +17,6 @@ namespace UI.MainApp.Home
             this.gameData = gameData;
             this.OnPlay = OnPlay;
             titleField.text = gameData.title;
-            if (!string.IsNullOrEmpty(gameData.titleColor) && ColorUtility.TryParseHtmlString(gameData.titleColor, out Color titleColor))
-                titleField.color = titleColor;
             textField.text = gameData.description;
             GameThumbnail gd = Data.Instance.gamesManager.GetThumb(gameData.id);
             if(gd != null)

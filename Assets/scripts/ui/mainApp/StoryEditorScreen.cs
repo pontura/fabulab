@@ -14,6 +14,7 @@ namespace UI.MainApp
     {
         AvatarSelectionScreen avatarSelectionScreen;
         ObjectSelectionScreen objectSelectionScreen;
+        [SerializeField] ToolsMenuStories toolsStories;
         [SerializeField] GameObject arrowSelect;
         [SerializeField] TabToolsManager tabTools;
         [SerializeField] TabController tabs;
@@ -414,6 +415,26 @@ namespace UI.MainApp
         public void HelpClicked()
         {
             onboarding_Movie.Help();
+        }
+
+        [SerializeField] float scaleFactor = 30;
+        public void Scale(bool up) {
+            if (Scenario.Instance.sceneObejctsManager.selected != null) {
+                float r = Scenario.Instance.sceneObejctsManager.selected.transform.localScale.x;
+                if (up) r += scaleFactor; else r -= scaleFactor;
+                Scenario.Instance.sceneObejctsManager.selected.Resize(r);
+            }
+        }
+        public void OpenTools() {
+            toolsStories.Init(Input.mousePosition);
+        }
+        public void Rotate(bool left) {
+            if (Scenario.Instance.sceneObejctsManager.selected != null) {
+                float value = 7.5f;
+                float r = Scenario.Instance.sceneObejctsManager.selected.GetData().rot;
+                if (left) r += value; else r -= value;
+                Scenario.Instance.sceneObejctsManager.selected.Rotate(r);
+            }
         }
     }
 }

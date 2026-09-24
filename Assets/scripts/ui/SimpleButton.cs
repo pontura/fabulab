@@ -11,8 +11,7 @@ namespace UI
         [SerializeField] protected Image thumb;
                 
         public virtual void Init(Sprite sprite) {
-            if(sprite != null) 
-                thumb.sprite = sprite;
+            thumb.sprite = sprite;
         }        
     }
 

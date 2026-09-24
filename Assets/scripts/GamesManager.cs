@@ -53,7 +53,6 @@ public class GameData
     public string section;
     public string title;
     public string description;
-    public string titleColor; // hex "#RRGGBB" del texto del titulo (vacio = color por defecto)
     public bool show;
     public bool freeFirstFrame; // true: el primer frame de la plantilla queda editable (no se bloquea ni se crea un frame nuevo automaticamente)
     [JsonIgnore] public Sprite thumbnail;

@@ -3,14 +3,6 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { multiUpdate, readPath, writePath } from '../../rtdb'
 import type { GameDef } from '../../types'
 
-// Acepta "#RGB" o "#RRGGBB" (con o sin #) y devuelve "#RRGGBB" en mayúsculas, o null si no es válido.
-function normalizeHex(value?: string): string | null {
-  const m = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec((value ?? '').trim())
-  if (!m) return null
-  const hex = m[1].length === 3 ? m[1].split('').map((c) => c + c).join('') : m[1]
-  return `#${hex.toUpperCase()}`
-}
-
 export function GameEditPage() {
   const { id } = useParams()
   const [game, setGame] = useState<GameDef | null>(null)
@@ -33,7 +25,7 @@ export function GameEditPage() {
   if (loading) return <p>Cargando…</p>
   if (!game) return <div className="empty-state">Juego no encontrado.</div>
 
-  async function saveField(field: 'title' | 'description' | 'section' | 'titleColor', value: string) {
+  async function saveField(field: 'title' | 'description' | 'section', value: string) {
     await writePath(`games/${id}/${field}`, value)
     load()
   }
@@ -81,9 +73,7 @@ export function GameEditPage() {
       <Link className="back-link" to="/games">
         ← Volver a Games
       </Link>
-      <h1 className="page-title" style={{ color: normalizeHex(game.titleColor) ?? undefined }}>
-        {game.title}
-      </h1>
+      <h1 className="page-title">{game.title}</h1>
 
       <div className="detail-card">
         <div className="field-row">
@@ -93,33 +83,6 @@ export function GameEditPage() {
         <div className="field-row">
           <label>Título</label>
           <input defaultValue={game.title} onBlur={(e) => e.target.value !== game.title && saveField('title', e.target.value)} />
-        </div>
-        <div className="field-row">
-          <label>Color del título (hex)</label>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <input
-              type="color"
-              value={normalizeHex(game.titleColor) ?? '#000000'}
-              onChange={(e) => saveField('titleColor', e.target.value)}
-            />
-            <input
-              key={game.titleColor ?? ''}
-              placeholder="#RRGGBB"
-              maxLength={7}
-              style={{ width: 100 }}
-              defaultValue={game.titleColor ?? ''}
-              onBlur={(e) => {
-                const value = e.target.value.trim()
-                if (value === (game.titleColor ?? '')) return
-                if (value !== '' && !normalizeHex(value)) {
-                  window.alert('Debe ser un color hex válido, ej: #FF8800')
-                  e.target.value = game.titleColor ?? ''
-                  return
-                }
-                saveField('titleColor', value === '' ? '' : normalizeHex(value)!)
-              }}
-            />
-          </div>
         </div>
         <div className="field-row">
           <label>Descripción</label>
