@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEditor;
 using UnityEngine;
 
 [System.Serializable]
@@ -14,6 +15,7 @@ public class FieldEntry
 public class ComponentEntry
 {
     public string name;
+    public string platform;
     public FieldEntry[] fields;
 }
 
@@ -33,6 +35,32 @@ public class ConfigApplier : MonoBehaviour
         PlatformConfig config = JsonUtility.FromJson<PlatformConfig>(configJson.text);
 
         foreach (var compEntry in config.components) {
+
+#if UNITY_EDITOR
+            if (compEntry.platform != "editor")
+                continue;
+#elif UNITY_ANDROID
+            if (compEntry.platform != "android")
+                continue;
+#elif UNITY_IOS
+            if (compEntry.platform != "ios")
+                continue;
+#elif UNITY_WEBGL
+            if (compEntry.platform != "webgl")
+                continue;
+#elif UNITY_STANDALONE_WIN
+            if (compEntry.platform != "win")
+                continue;
+#elif UNITY_STANDALONE_OSX
+            if (compEntry.platform != "osx")
+                continue;
+#elif UNITY_STANDALONE_LINUX
+            if (compEntry.platform != "linux")
+                continue;
+#else
+            continue;
+#endif
+
             Component comp = GetComponent(compEntry.name);
             if (comp == null) {
                 Debug.LogWarning($"No se encontró el componente {compEntry.name} en {gameObject.name}");
