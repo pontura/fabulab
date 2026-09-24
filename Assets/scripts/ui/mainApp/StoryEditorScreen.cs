@@ -66,6 +66,10 @@ namespace UI.MainApp
             characterScreen.Show(false);
             backgroundScreen.Show(false);
             objectsScreen.Show(false);
+            toolsStories?.Close();
+            arrowSelect?.SetActive(false);
+            editAvatar?.SetActive(false);
+            editObjects?.SetActive(false);
          }
         void OnDestroy()
         {
@@ -89,6 +93,7 @@ namespace UI.MainApp
         private void OnEnable()
         {
             Invoke(nameof(Init), Time.deltaTime * 4);
+            toolsStories.Close();
         }
 
         public void Init()
