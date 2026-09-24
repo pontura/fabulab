@@ -10,6 +10,7 @@ namespace UI.MainApp.Home.User
     public class AllStoriesScreen : UserStoriesScreen
     {
         [SerializeField] protected bool isGame;
+        [SerializeField] int titleIndex;
         protected string id;
 
         public void OnEnable()
@@ -84,7 +85,24 @@ namespace UI.MainApp.Home.User
             go.Init(fd.id, null);
             go.GetComponent<ItemSelectorStory>().SetContent(fd, this, false);
         }
-
+        protected override void OnFilmMetadataAdded(FilmDataFabulab fd) {
+            Debug.Log("% AllStoriesScreen OnFilmMetadataAdded");
+            AddFilmMetadata(fd);
+            if (fd.isPublic) {
+                var childrenWithComponent = GetComponentsInChildren<TitleLine>(true);
+                if (childrenWithComponent.Length == 0) {
+                    Debug.LogWarning("Not TitleLine class");
+                    worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
+                } else {
+                    Transform lastAdded = worksContainer.GetChild(worksContainer.childCount - 1);
+                    int index = childrenWithComponent[titleIndex].transform.GetSiblingIndex();
+                    lastAdded.SetSiblingIndex(index + 1);
+                }
+            }
+            if (firstImageCache) {
+                ResetCache();
+            }
+        }
         protected override void OnFilmMetadataUpdated(FilmDataFabulab fd) {
             Debug.Log("% AllStoriesScreen OnFilmMetadataUpdated " + gameObject.name);
             ItemSelectorStory[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorStory>();

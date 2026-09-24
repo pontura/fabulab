@@ -26,7 +26,7 @@ namespace UI.MainApp.Home.User
             Events.OnFilmMetadataRemoved -= OnFilmMetadataRemoved;
         }        
 
-        void OnFilmMetadataAdded(FilmDataFabulab fd) {
+        protected virtual void OnFilmMetadataAdded(FilmDataFabulab fd) {
             Debug.Log("% UserStoriesScreen OnFilmMetadataAdded");
             AddFilmMetadata(fd);
             worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
