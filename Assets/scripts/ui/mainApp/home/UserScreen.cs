@@ -1,16 +1,16 @@
 using BoardItems;
 using BoardItems.BoardData;
 using Common.UI;
-using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using UI.MainApp.Home.User;
 using UnityEngine;
 using Yaguar.Auth;
+using System.Linq;
 
 namespace UI.MainApp.Home
 {
-    public class UserScreen : MonoBehaviour
-    {
+    public class UserScreen : MonoBehaviour {
         [SerializeField] TabController tabs;
         [SerializeField] UserDataScreen userDataScreen;
         [SerializeField] UserStoriesScreen storiesScreen;
@@ -19,7 +19,7 @@ namespace UI.MainApp.Home
         [SerializeField] ProfilePicture profilePicture;
         [SerializeField] TMPro.TMP_Text usernameField;
         [SerializeField] GameObject hambuguerMenu;
-        
+
         [SerializeField] TMPro.TMP_Text publicStoriesField;
         [SerializeField] TMPro.TMP_Text publicChField;
         [SerializeField] TMPro.TMP_Text publicObjField;
@@ -28,23 +28,33 @@ namespace UI.MainApp.Home
         bool firstTime = true;
         private void Start() {
             Events.ChangeName += OnChangeName;
+            Events.OnCharacterMetadataUpdated += OnCharacterMetadataUpdated;
+            Events.OnCharacterMetadataRemoved += OnCharacterMetadataRemoved;
+            Events.OnPropMetadataUpdated += OnPropMetadataUpdated;
+            Events.OnPropMetadataRemoved += OnPropMetadataRemoved;
+            Events.OnFilmMetadataUpdated += OnFilmMetadataUpdated;
+            Events.OnFilmMetadataRemoved += OnFilmMetadataRemoved;
             FirebaseAuthManager.Instance.OnSignedOut += OnSignedOut;
         }
 
-        private void OnChangeName(string username)
-        {
+        private void OnChangeName(string username) {
             usernameField.text = username;
         }
-        public void Create()
-        {    
+        public void Create() {
             int screen = tabActive;
-            if(tabActive>1) 
+            if (tabActive > 1)
                 UIManager.Instance.Create();
             else
-                UIManager.Instance.CreateSelected(tabActive+1);
+                UIManager.Instance.CreateSelected(tabActive + 1);
         }
         private void OnDestroy() {
             Events.ChangeName -= OnChangeName;
+            Events.OnCharacterMetadataUpdated -= OnCharacterMetadataUpdated;
+            Events.OnCharacterMetadataRemoved -= OnCharacterMetadataRemoved;
+            Events.OnPropMetadataUpdated -= OnPropMetadataUpdated;
+            Events.OnPropMetadataRemoved -= OnPropMetadataRemoved;
+            Events.OnFilmMetadataUpdated -= OnFilmMetadataUpdated;
+            Events.OnFilmMetadataRemoved -= OnFilmMetadataRemoved;
             FirebaseAuthManager.Instance.OnSignedOut -= OnSignedOut;
         }
 
@@ -52,13 +62,11 @@ namespace UI.MainApp.Home
             firstTime = true;
         }
 
-        public void Show(bool isOn)
-        {
-            gameObject.SetActive(isOn); 
+        public void Show(bool isOn) {
+            gameObject.SetActive(isOn);
             print("userData Sho hambuguerMenu " + isOn);
-            if (isOn)
-            {  
-                AudioManager.Instance.musicManager.Play("board");               
+            if (isOn) {
+                AudioManager.Instance.musicManager.Play("board");
                 userDataScreen.Show(true);
                 profilePicture.InitOwner();
                 string username = Data.Instance.userData.userDataInDatabase.username;
@@ -67,32 +75,27 @@ namespace UI.MainApp.Home
                 hamburguerOn = false;
                 hambuguerMenu.SetActive(false);
             }
-            if (isOn && firstTime)
-            {              
+            if (isOn && firstTime) {
                 firstTime = false;
                 tabs.Init(OnTabClicked);
                 List<string> tabNames = new List<string>() { "Historias", "Personajes", "Objetos", "Info" };
                 tabs.SetTabNames(tabNames);
-            }
-            else
-            {
+            } else {
                 tabs.ReOpen();
             }
         }
         int tabActive;
-        void OnTabClicked(int id)
-        {
+        void OnTabClicked(int id) {
             this.tabActive = id;
-            print("OnTabClicked " + id + " name: "  +gameObject.name);
+            print("OnTabClicked " + id + " name: " + gameObject.name);
 
             charactersScreen.Show(false);
 
             storiesScreen.Show(false);
             objects.Show(false);
 
-            switch (id)
-            {
-              
+            switch (id) {
+
                 case 0:
                     AudioManager.Instance.uiSfxManager.PlayTransp("click", 5);
                     storiesScreen.Show(true);
@@ -107,44 +110,45 @@ namespace UI.MainApp.Home
                     break;
             }
         }
-        public void OnBoardingBack()
-        {
+        public void OnBoardingBack() {
             UIManager.Instance.onboardingManager.Reset();
-        } 
-        public void ToggleHamburguer()
-        {
+        }
+        public void ToggleHamburguer() {
             print("ToggleHamburguer " + hamburguerOn);
             hamburguerOn = !hamburguerOn;
             hambuguerMenu.SetActive(hamburguerOn);
         }
-        void SetPublicFields()
-        {
-            int publicStories = 0;
-            int publicCharacters = 0;
-            int publicObjects = 0;
+        void SetPublicFields() {
+            publicStoriesField.text = "" + Data.Instance.scenesData.userFilmsData.Count(x => x.isPublic);
+            publicChField.text = "" + Data.Instance.charactersData.userCharactersMetaData.Count(x => x.isPublic);
+            publicObjField.text = "" + Data.Instance.sObjectsData.userMetaData.Count(x => x.isPublic);
+        }
 
-            List<FilmDataFabulab> all_fd = Data.Instance.scenesData.userFilmsData;
-            foreach(FilmDataFabulab f in all_fd)
-            {
-                if(f.isPublic)
-                    publicStories++;
-            }
-            List<CharacterMetaData> cll_ch = Data.Instance.charactersData.userCharactersMetaData;
-            foreach(CharacterMetaData c in cll_ch)
-            {
-                if(c.isPublic)
-                    publicCharacters++;
-            }
-             List<PropMetaData> all_obj = Data.Instance.sObjectsData.userMetaData;
-            foreach(PropMetaData c in all_obj)
-            {
-                if(c.isPublic)
-                    publicObjects++;
-            }
+        void OnCharacterMetadataUpdated(CharacterMetaData fd) {
+            Debug.Log("# OnCharacterMetadataUpdated");
+            publicChField.text = "" + Data.Instance.scenesData.userFilmsData.Count(x => x.isPublic);
+        }
+        void OnCharacterMetadataRemoved(string id) {
+            Debug.Log("# OnCharacterMetadataUpdated");
+            publicChField.text = "" + Data.Instance.scenesData.userFilmsData.Count(x => x.isPublic);
+        }
+        void OnPropMetadataUpdated(CharacterMetaData fd) {
+            Debug.Log("# OnPropMetadataUpdated");
+            publicObjField.text = "" + Data.Instance.sObjectsData.userMetaData.Count(x => x.isPublic);
+        }
 
-            publicStoriesField.text = publicStories.ToString();
-            publicChField.text = publicCharacters.ToString();
-            publicObjField.text = publicObjects.ToString();
+        void OnPropMetadataRemoved(string id) {
+            Debug.Log("# OnPropMetadataRemoved");
+            publicObjField.text = "" + Data.Instance.sObjectsData.userMetaData.Count(x => x.isPublic);
+        }
+        void OnFilmMetadataUpdated(FilmDataFabulab fd) {
+            Debug.Log("# OnFilmMetadataUpdated");
+            publicStoriesField.text = "" + Data.Instance.scenesData.userFilmsData.Count(x => x.isPublic);
+        }
+
+        void OnFilmMetadataRemoved(string id) {
+            Debug.Log("# OnFilmMetadataRemoved");
+            publicStoriesField.text = "" + Data.Instance.scenesData.userFilmsData.Count(x => x.isPublic);
         }
     }
 }
