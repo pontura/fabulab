@@ -29,7 +29,8 @@ namespace UI.MainApp.Home.User
         void OnPropMetadataAdded(PropMetaData fd) {
             if (fd.type == type) {
                 AddPropMetadata(fd);
-                worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
+                if (fd.isPublic)
+                    worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
             }
         }
 

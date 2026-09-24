@@ -278,6 +278,16 @@ public class GamesManager : MonoBehaviour
         return Games.Find(g => g.id == gameId);
     }
 
+    public int GetIndexStory(string storyId) {
+        GameData gd = GetGame(activaGameData);
+        GameIdEntry gid = gd.ids.Find(x=>x.storyIds.Contains(storyId));
+        if (gid != null) {
+            return gd.ids.IndexOf(gid);
+        } else {
+            return -1;
+        }
+    }
+
     public List<GameData> GetGamesBySection(string section)
     {
         return Games.FindAll(g => g.section == section);

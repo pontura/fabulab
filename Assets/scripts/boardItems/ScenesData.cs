@@ -323,6 +323,7 @@ namespace BoardItems
             fd.speed = sfd.speed;
             fd.isPublic = sfd.isPublic;
             fd.likes = sfd.likes;
+            fd.tags = sfd.tags;
             if (sfd.timestamp == null || sfd.timestamp == "")
                 fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
             else

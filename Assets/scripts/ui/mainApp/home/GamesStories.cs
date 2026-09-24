@@ -81,6 +81,26 @@ namespace UI.MainApp.Home.User
             }
         }
 
+        protected override void OnFilmMetadataAdded(FilmDataFabulab fd) {
+            Debug.Log("% GamesStories OnFilmMetadataAdded");
+            AddFilmMetadata(fd);
+            if (fd!=null && fd.tags != null && fd.tags.Contains("games")) {
+                int titleIndex = Data.Instance.gamesManager.GetIndexStory(fd.id);
+                var childrenWithComponent = GetComponentsInChildren<TitleLine>(true);
+                if (childrenWithComponent.Length == 0 && titleIndex<0) {
+                    Debug.LogWarning("Not TitleLine class");
+                    worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
+                } else {
+                    Transform lastAdded = worksContainer.GetChild(worksContainer.childCount - 1);
+                    int index = childrenWithComponent[titleIndex].transform.GetSiblingIndex();
+                    lastAdded.SetSiblingIndex(index + 1);
+                }
+            }
+            if (firstImageCache) {
+                ResetCache();
+            }
+        }
+
         protected override void OnFilmMetadataUpdated(FilmDataFabulab fd) {
             Debug.Log("% GamesStories OnFilmMetadataUpdated " + gameObject.name);
             ItemSelectorStory[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorStory>();
@@ -89,6 +109,9 @@ namespace UI.MainApp.Home.User
                 btn.Init(fd.id, null);
                 btn.SetContent(fd, this, false);
                 //btn.transform.SetAsFirstSibling();
+                ResetAndSetScroll();
+            } else {
+                OnFilmMetadataAdded(fd);
                 ResetAndSetScroll();
             }
         }
