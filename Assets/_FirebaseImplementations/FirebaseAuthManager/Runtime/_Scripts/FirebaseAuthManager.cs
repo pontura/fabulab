@@ -13,6 +13,7 @@ namespace Yaguar.Auth
     {
         public static FirebaseAuthManager Instance { get { return mInstance; } }
         static FirebaseAuthManager mInstance = null;
+        public bool webPlayerOnly;
 
         [SerializeField] GameObject firebaseDBManager;
 
@@ -50,8 +51,11 @@ namespace Yaguar.Auth
             FirebaseRestSession.SessionInvalidated += OnSessionInvalidated;
             StartCoroutine(RestoreSession()); 
             
-            Debug.Log("#AuthStateChanged webPlayerOnly");
-            Invoke("Delayed", 2);
+            if(webPlayerOnly)
+            {
+                Debug.Log("#AuthStateChanged webPlayerOnly");
+                Invoke("Delayed", 2);
+            }
         }
         void Delayed()
         {
