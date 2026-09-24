@@ -2612,6 +2612,7 @@ GameObject:
   - component: {fileID: 7657603645105248965}
   - component: {fileID: 7636739060341454579}
   - component: {fileID: 1633129976061088045}
+  - component: {fileID: 13591019134512853}
   m_Layer: 5
   m_Name: AllObjects
   m_TagString: Untagged
@@ -2701,6 +2702,19 @@ MonoBehaviour:
   cacheSize: 24
   cacheExtraItemsCount: 6
   scrollbar: {fileID: 7729013744446463433}
+--- !u!114 &13591019134512853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395305294113503268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1d4328c152c8b14e91d3835226f8bc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ConfigApplier
+  configJson: {fileID: 4900000, guid: 44f60a06e398aae4285c6774a4b20800, type: 3}
 --- !u!1 &1410252198429283437
 GameObject:
   m_ObjectHideFlags: 0
@@ -10584,6 +10598,7 @@ GameObject:
   - component: {fileID: 2704856175571224228}
   - component: {fileID: 7345175595186863621}
   - component: {fileID: 8807197345237884503}
+  - component: {fileID: 2498173233976580511}
   m_Layer: 5
   m_Name: StoryEditorScreen
   m_TagString: Untagged
@@ -10842,6 +10857,19 @@ MonoBehaviour:
   - {fileID: 7105160616510789192}
   - {fileID: 7390305776657668949}
   panel: {fileID: 2162520106841888594}
+--- !u!114 &2498173233976580511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5430849478322427232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1d4328c152c8b14e91d3835226f8bc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ConfigApplier
+  configJson: {fileID: 4900000, guid: 1cb5832afd31cec47a4eb65a8aceb12c, type: 3}
 --- !u!1 &5484787417469400468
 GameObject:
   m_ObjectHideFlags: 0
@@ -20030,14 +20058,35 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 785673591989852574, guid: 643885f6571c86c468087693c0d7c828, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6610554370592983814}
   m_SourcePrefab: {fileID: 100100000, guid: 643885f6571c86c468087693c0d7c828, type: 3}
+--- !u!1 &47872600162041861 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 785673591989852574, guid: 643885f6571c86c468087693c0d7c828, type: 3}
+  m_PrefabInstance: {fileID: 742344176021526939}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6610554370592983814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47872600162041861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1d4328c152c8b14e91d3835226f8bc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ConfigApplier
+  configJson: {fileID: 4900000, guid: 712da0462930b574fb5f507615ca029f, type: 3}
 --- !u!114 &908304664211246657 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 493043415554168794, guid: 643885f6571c86c468087693c0d7c828, type: 3}
   m_PrefabInstance: {fileID: 742344176021526939}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 47872600162041861}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 388351eff805d5b4cb9659533a903c78, type: 3}
