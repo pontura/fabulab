@@ -60,6 +60,7 @@ namespace Yaguar.StoryMaker.DB
 
         void OnFirebaseAuthenticated(string username, string email, string uid) {
             Debug.Log("#OnFirebaseAuthenticated ");
+            Firebase.Analytics.FirebaseAnalytics.SetUserProperty("platform", "mobile");
             _uid = uid;
         }
 

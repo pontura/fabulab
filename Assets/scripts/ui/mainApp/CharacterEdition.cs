@@ -176,7 +176,7 @@ namespace UI.MainApp
                 Invoke("Save", 0.5f);
             }
 
-            Firebase.Analytics.FirebaseAnalytics.LogEvent("character_save_clicked");
+            FabulabAnalytics.LogEvent("character_save_clicked");
         }
         void Save()
         {

@@ -365,7 +365,7 @@ namespace UI.MainApp
                 savePanel.SetActive(false);
                 Invoke(nameof(SaveWork), Time.deltaTime * 2);
             }
-            FirebaseAnalytics.LogEvent("story_save_clicked");
+            FabulabAnalytics.LogEvent("story_save_clicked");
         }
         public void Cancel() {
             savePanel.SetActive(false);

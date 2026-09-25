@@ -504,9 +504,9 @@ namespace BoardItems
             if (chd != null)
             {
                 OnDone(chd);
-                Firebase.Analytics.FirebaseAnalytics.LogEvent(
+                FabulabAnalytics.LogEvent(
                     "open_others_object_" + chd.type,
-                    new Parameter("item_id", id)
+                    new System.Collections.Generic.Dictionary<string, object> { { "item_id", id } }
                 );
             }
             else
@@ -528,9 +528,9 @@ namespace BoardItems
                         {
                             Debug.Log("& othersData != null");
                             OnDone(chD);
-                            Firebase.Analytics.FirebaseAnalytics.LogEvent(
+                            FabulabAnalytics.LogEvent(
                                 "open_others_object_" + chD.type,
-                                new Parameter("item_id", id)
+                                new System.Collections.Generic.Dictionary<string, object> { { "item_id", id } }
                             );
                             return;
                         }
@@ -541,9 +541,9 @@ namespace BoardItems
                         chD.type = chmd.type;
                         othersData.Add(chD);
                         OnDone(chD);
-                        Firebase.Analytics.FirebaseAnalytics.LogEvent(
+                        FabulabAnalytics.LogEvent(
                             "open_others_object_" + chD.type,
-                            new Parameter("item_id", id)
+                            new System.Collections.Generic.Dictionary<string, object> { { "item_id", id } }
                         );
                     }
                     else

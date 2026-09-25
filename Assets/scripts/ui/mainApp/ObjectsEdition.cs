@@ -82,7 +82,7 @@ namespace UI.MainApp
             } else {
                 SaveNew();
             }
-            Firebase.Analytics.FirebaseAnalytics.LogEvent("object_save_clicked");
+            FabulabAnalytics.LogEvent("object_save_clicked");
         }
         void SaveNew() {
             Data.Instance.sObjectsData.SetCurrentID("");

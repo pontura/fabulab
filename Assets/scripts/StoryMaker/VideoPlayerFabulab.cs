@@ -48,11 +48,12 @@ namespace Yaguar.StoryMaker.Editor
             timeline.JumpTo(ScenesManager.Instance.currentSceneId);
             StoryMakerEvents.OnTimelinePlay(true);
 
-            Firebase.Analytics.FirebaseAnalytics.LogEvent(
-                "others_story_played",                
-                new Parameter("story_id", ScenesManager.Instance.currentFilmData.id),
-                new Parameter("story_user_id", ScenesManager.Instance.currentFilmData.userID)
-            );
+            FabulabAnalytics.LogEvent(
+                "others_story_played",
+                new System.Collections.Generic.Dictionary<string, object> {
+                    { "story_id", ScenesManager.Instance.currentFilmData.id },
+                    { "story_user_id", ScenesManager.Instance.currentFilmData.userID }
+                });
         }
         public void FastForward()
         {

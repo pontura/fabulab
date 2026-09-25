@@ -200,18 +200,18 @@ namespace UI
                         eventName = "open_others_character";
                         LoadOthersWork(id);
                     }
-                    Firebase.Analytics.FirebaseAnalytics.LogEvent(
+                    FabulabAnalytics.LogEvent(
                         eventName,
-                        new Parameter("item_id", id)
+						new System.Collections.Generic.Dictionary<string, object> { { "item_id", id } }
                     );
                     break;
                 default:
                     SObjectData cd = Data.Instance.sObjectsData.SetCurrentID(id);
                     if (cd != null) {
                         OpenWork(cd);
-                        Firebase.Analytics.FirebaseAnalytics.LogEvent(
+                        FabulabAnalytics.LogEvent(
                             "open_object_" + cd.type,
-                            new Parameter("item_id", id)
+							new System.Collections.Generic.Dictionary<string, object> { { "item_id", id } }
                         );
                     } else {                        
                         LoadOthersWork(id);

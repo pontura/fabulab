@@ -175,9 +175,9 @@ namespace UI
                 else
                 {
                     NewCharacter();
-                    FirebaseAnalytics.LogEvent(
+                    FabulabAnalytics.LogEvent(
                         "new_character",
-                        new Parameter("origin", "home")
+						new System.Collections.Generic.Dictionary<string, object> {{"origin", "home" }}
                     );
                 }
             } else if (id == 3) {
@@ -186,9 +186,9 @@ namespace UI
                 else
                 {
                     NewObject() ;
-                    FirebaseAnalytics.LogEvent(
+                    FabulabAnalytics.LogEvent(
                         "new_object_generic",
-                        new Parameter("origin", "home")
+						new System.Collections.Generic.Dictionary<string, object> { { "origin", "home" } }
                     );
                 }
             } else if (id == 4) {
@@ -197,9 +197,9 @@ namespace UI
                 else
                 {
                     NewBG() ;
-                    FirebaseAnalytics.LogEvent(
+                    FabulabAnalytics.LogEvent(
                         "new_object_background",
-                        new Parameter("origin", "home")
+						new System.Collections.Generic.Dictionary<string, object> { { "origin", "home" } }
                     );
                 }
             }
@@ -217,7 +217,7 @@ namespace UI
             Events.ShowScreen(UIManager.screenType.StoryMaker);
             Invoke(nameof(SetNewStoryEditionState), Time.deltaTime * 2);
 
-            FirebaseAnalytics.LogEvent("new_story");
+            FabulabAnalytics.LogEvent("new_story");
         }
         void SetNewStoryEditionState() {
             StoryMakerEvents.EnableStoryEdition(true);
