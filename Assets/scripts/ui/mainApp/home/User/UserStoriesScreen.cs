@@ -92,9 +92,9 @@ namespace UI.MainApp.Home.User
             UIManager.Instance.AddBackTo(UIManager.screenType.StoryMaker, true);
             Data.Instance.scenesData.LoadUserFilm(iD);
             Invoke(nameof(SetUserStoryEditionState), Time.deltaTime * 2);
-            Firebase.Analytics.FirebaseAnalytics.LogEvent(
+            FabulabAnalytics.LogEvent(
                 "story_edit",
-                new Parameter("story_id", iD)
+				new System.Collections.Generic.Dictionary<string, object> { { "story_id", iD } }
             );
         }
 

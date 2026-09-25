@@ -56,9 +56,9 @@ namespace UI.MainApp.Home.User
             {
                 case 0:
                     UIManager.Instance.CreateSelected(2);
-                    FirebaseAnalytics.LogEvent(
+                    FabulabAnalytics.LogEvent(
                         "new_character",
-                        new Parameter("origin", "story")
+						new System.Collections.Generic.Dictionary<string, object> { { "origin", "story" } }
                     );
                     break;
                 case 1:

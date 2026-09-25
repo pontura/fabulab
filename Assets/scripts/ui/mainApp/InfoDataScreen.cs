@@ -128,9 +128,9 @@ namespace UI.MainApp
                 parameterName = "item_id";
                 Close();
             }
-            Firebase.Analytics.FirebaseAnalytics.LogEvent(
+            FabulabAnalytics.LogEvent(
                 eventName,
-                new Parameter(parameterName, id)
+				new System.Collections.Generic.Dictionary<string, object> { { parameterName, id } }
             );
         }
 
@@ -157,9 +157,9 @@ namespace UI.MainApp
                 parameterName = "item_id";
                 Close();
             }
-            Firebase.Analytics.FirebaseAnalytics.LogEvent(
+            FabulabAnalytics.LogEvent(
                 eventName,
-                new Parameter(parameterName, id)
+				new System.Collections.Generic.Dictionary<string, object> { { parameterName, id } }
             );
         }
 

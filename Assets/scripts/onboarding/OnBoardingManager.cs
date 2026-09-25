@@ -56,7 +56,7 @@ namespace OnBoarding
             id = 0;
             onboardingSequenceID = PlayerPrefs.GetInt("onboardingSequenceID", 0);
 
-            FirebaseAnalytics.LogEvent("onboarding_start");
+            FabulabAnalytics.LogEvent("onboarding_start");
 
             Next();
         }
@@ -103,10 +103,9 @@ namespace OnBoarding
         {            
             steps s = GetStep();
             print(s);
-            FirebaseAnalytics.LogEvent(
+            FabulabAnalytics.LogEvent(
                 "onboarding_step",
-                new Parameter("step_id", (int)s),
-                new Parameter("step_name", s.ToString())
+				new System.Collections.Generic.Dictionary<string, object> { { "step_id", (int)s }, { "step_name", s.ToString() } }
             );
             if (s != steps.ready) 
             {
@@ -115,7 +114,7 @@ namespace OnBoarding
             else
             {
                 Data.Instance.userData.OnBoardingAllStepsDone();
-                FirebaseAnalytics.LogEvent("onboarding_complete");
+                FabulabAnalytics.LogEvent("onboarding_complete");
             }
 
             

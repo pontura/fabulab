@@ -144,9 +144,9 @@ namespace UI.MainApp.Home.User
             Events.ShowScreen(UIManager.screenType.StoryMaker);
             Data.Instance.scenesData.LoadFilm(id);
             Invoke(nameof(SetStoryEditionState), Time.deltaTime * 2);
-            Firebase.Analytics.FirebaseAnalytics.LogEvent(
+            FabulabAnalytics.LogEvent(
                 "others_story_opened",
-                new Parameter("story_id", id)                
+				new System.Collections.Generic.Dictionary<string, object> { { "story_id", id } }
             );
         }
         
