@@ -60,7 +60,8 @@ public static class FabulabAnalytics
 
             //case RuntimePlatform.WindowsEditor:
             case RuntimePlatform.WebGLPlayer:
-                string userId = Firebase.Auth.FirebaseAuth.DefaultInstance.CurrentUser?.UserId ?? null;
+                string userId = Data.Instance?.userData.userDataInDatabase.uid ?? null;
+                //string userId = Firebase.Auth.FirebaseAuth.DefaultInstance.CurrentUser?.UserId ?? null;
                 //Debug.Log($"## UserId: {userId}");
                 GA4Analytics.LogEvent(WebGLFirebaseId, WebGLMeasurementId, WebGLApiSecret, eventName, userId, parameters);
                 break;
