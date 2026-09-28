@@ -58,14 +58,15 @@ public static class FabulabAnalytics
                 );
                 break;
 
-            //case RuntimePlatform.WindowsEditor:
-            case RuntimePlatform.WebGLPlayer:
+            case RuntimePlatform.WindowsEditor:
                 string userId = Data.Instance?.userData.userDataInDatabase.uid ?? null;
                 //string userId = Firebase.Auth.FirebaseAuth.DefaultInstance.CurrentUser?.UserId ?? null;
                 //Debug.Log($"## UserId: {userId}");
                 GA4Analytics.LogEvent(WebGLFirebaseId, WebGLMeasurementId, WebGLApiSecret, eventName, userId, parameters);
                 break;
-
+            case RuntimePlatform.WebGLPlayer:                
+                GA4Analytics.LogEvent(eventName, parameters);
+                break;
             default:
                 Debug.LogWarning($"Plataforma {Application.platform} no soportada para Analytics");
                 break;
