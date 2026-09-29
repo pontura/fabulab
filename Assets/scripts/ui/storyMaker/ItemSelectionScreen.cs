@@ -9,6 +9,7 @@ namespace UI.MainApp.Home.User
 {
     public class ItemSelectionScreen : ThumbsScreen
     {
+        public bool isOn;
         [SerializeField] Button addBtn;
         [SerializeField] protected Scrollbar scrollbar;
 
