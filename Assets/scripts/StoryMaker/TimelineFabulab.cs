@@ -18,23 +18,22 @@ namespace Yaguar.StoryMaker.Editor
 
         protected override void Start() {
             print("OnStopDraw Start");      
-            StoryMakerEvents.OnStopDraw += OnStopDraw;
-            StoryMakerEvents.UpdateDraw += UpdateDraw;
-            StoryMakerEvents.OnMovieOver += OnMovieOver;
             base.Start();
             Invoke(nameof(SetTotalMarkers), Time.deltaTime * 3);
 
         }
+
         public override void OnDestroyed()
         {                 
-            StoryMakerEvents.OnStopDraw -= OnStopDraw;
-            StoryMakerEvents.UpdateDraw -= UpdateDraw;
-            StoryMakerEvents.OnMovieOver -= OnMovieOver;
+           
         }
 
         public override void OnEnabled()
         {
            
+            StoryMakerEvents.OnStopDraw += OnStopDraw;
+            StoryMakerEvents.UpdateDraw += UpdateDraw;
+            StoryMakerEvents.OnMovieOver += OnMovieOver;
             if(all.Count>1)
                 ghostImage.Show(true);
 
@@ -45,6 +44,7 @@ namespace Yaguar.StoryMaker.Editor
         void UpdateDraw()
         {
             if(!filmMakerUI.isEditing) return;
+            if(!gameObject.activeSelf) return;
             
 
             if(activeAnimatedKeyframeID <= all.Count)
@@ -73,7 +73,10 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public override void OnDisabled()
-        {
+        { 
+            StoryMakerEvents.OnStopDraw -= OnStopDraw;
+            StoryMakerEvents.UpdateDraw -= UpdateDraw;
+            StoryMakerEvents.OnMovieOver -= OnMovieOver;
             StopAllCoroutines();
             ghostImage.Show(false);
         }
