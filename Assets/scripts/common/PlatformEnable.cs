@@ -14,7 +14,7 @@ public class PlatformEnable : MonoBehaviour
 #elif UNITY_IOS
     gameObject.SetActive(ios);
 #elif UNITY_WEBGL
-    gameObject.SetActive(ios);
+    gameObject.SetActive(webgl);
 #elif UNITY_STANDALONE_WIN
     gameObject.SetActive(win);
 #elif UNITY_STANDALONE_OSX
