@@ -77,7 +77,15 @@ namespace UI.MainApp
             StoryMakerEvents.NoneItemSelected -= NoneItemSelected;
             StoryMakerEvents.OnStartNewStory -= OnStartNewStory;
         }
-
+        public void ShowToolsInStories(bool isOn)
+        {
+            print("Show tools in stories " + isOn);
+            toolsStories.Show(isOn);
+        }
+        
+        public void OpenTools() {
+            ShowToolsInStories(true);
+        }
         void OnStartNewStory() {
             storyName.text = Data.Instance.scenesData.currentFilmData.name;
         }
@@ -154,6 +162,7 @@ namespace UI.MainApp
 
         public void CloseTools()
         {
+            ShowToolsInStories(false);
             arrowSelect.SetActive(false);
             editAvatar.SetActive(false);
             editObjects.SetActive(false);
@@ -168,13 +177,15 @@ namespace UI.MainApp
             }            
             GetComponent<EditFieldUI>().ClosePanel();
         }
-        public void EditorActions() {
+        public void EditorActions() {            
+            ShowToolsInStories(false);
             actionUI.SetCharacterId(selectedSOId);
             actionUI.SetOn(true);
             emojisUI.SetOn(false);
         }
 
-        public void EditExpressions() {
+        public void EditExpressions() {            
+             ShowToolsInStories(false);
             emojisUI.SetCharacterId(selectedSOId);
             actionUI.SetOn(false);
             emojisUI.SetOn(true);
@@ -186,7 +197,8 @@ namespace UI.MainApp
             }
         }
 
-        public void ReplaceCharacter() {
+        public void ReplaceCharacter() {            
+             ShowToolsInStories(false);
             if (Scenario.Instance.sceneObejctsManager.selected != null) {
                 characterScreen.ReplaceEnabled = true;
                 objectSelectionScreen.Cancel();
@@ -228,6 +240,7 @@ namespace UI.MainApp
         }
 
         public void OnTabClicked(int id){
+             ShowToolsInStories(false);
             NoneItemSelected();
             objectSelectionScreen.Cancel();
             avatarSelectionScreen.Cancel();
@@ -424,9 +437,6 @@ namespace UI.MainApp
                 if (up) r += scaleFactor; else r -= scaleFactor;
                 Scenario.Instance.sceneObejctsManager.selected.Resize(r);
             }
-        }
-        public void OpenTools() {
-            toolsStories.Init(Input.mousePosition);
         }
         public void Rotate(bool left) {
             if (Scenario.Instance.sceneObejctsManager.selected != null) {

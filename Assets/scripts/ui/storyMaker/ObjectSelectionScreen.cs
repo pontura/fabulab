@@ -13,12 +13,19 @@ namespace UI.MainApp.Home.User
         [SerializeField] Toggle sendFront;
         [SerializeField] Toggle sendBack;
 
+
         protected override void Start() {
             base.Start();
             minIndex = 1;
             Cancel();
             Events.DuplicateSO += DuplicateSO;
             StoryMakerEvents.ShowSoButtons += ShowSoButtons;
+        }
+        public override void Show(bool isOn)
+        {
+            base.Show(isOn);
+            if(!isOn)
+                GetComponent<StoryEditorScreen>().ShowToolsInStories(isOn);
         }
         protected override void OnDestroy()
         {
@@ -111,6 +118,8 @@ namespace UI.MainApp.Home.User
         }
         void ShowSoButtons(Vector3 pos, SOData data)
         {
+            if(!isActive) return;
+            GetComponent<StoryEditorScreen>().ShowToolsInStories(true);
             SetFrontBack();
         }
         void SetFrontBack()

@@ -78,11 +78,13 @@ public class EditFieldUI : MonoBehaviour
     }
     public void Delete()
     {
+        GetComponent<UI.MainApp.StoryEditorScreen>().CloseTools();
         StoryMakerEvents.RemoveSceneObject();
         Close();
     }
     public void FontClicked(int id)
     {
+        GetComponent<UI.MainApp.StoryEditorScreen>().CloseTools();
         print("id: " + id);
         Fonts font = (Scenario.Instance.sceneObejctsManager as SceneObjectsManagerFabulab).FontAssets.GetFont(id);
         field.fontAsset = font.fontAsset;

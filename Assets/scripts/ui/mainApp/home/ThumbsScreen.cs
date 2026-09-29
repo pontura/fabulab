@@ -27,7 +27,7 @@ namespace UI.MainApp.Home.User
         protected bool firstLoadDone;
 
         protected int minIndex = 0;
-        protected bool isActive;
+        public  bool isActive;
 
         protected virtual void Start() {            
             imageCache = new Dictionary<int, Texture2D>();
