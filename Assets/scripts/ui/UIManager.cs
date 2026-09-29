@@ -127,12 +127,24 @@ namespace UI
         }
         void InitGalleryDelayed() // to-do inicia los items:
         {
+             if(GetComponent<WebVideoPlayer>() != null) 
+            {
+                Data.Instance.userData.userDataInDatabase.username = "testing";
+                Data.Instance.userData.userDataInDatabase.uid = "testing";
+                return; // pos si solo carga la cosa como player.
+            }
             GaleriasData.GalleryData gd = Data.Instance.galeriasData.GetGallery(1);
             // InitGallery(gd, true, null);
             Events.InitGallery(gd, true, null);
         }
         public void Init()
         {
+             print("uimanager init");
+            if(GetComponent<WebVideoPlayer>() != null && Data.Instance.scenesData.ScenesDataLoadedDone) 
+            {
+                print("WebVideoPlayer init");
+                GetComponent<WebVideoPlayer>().Init();
+            } else
             if (
                 Data.Instance.userData.UserDataLoadedDone && 
                 Data.Instance.gamesManager.done && 

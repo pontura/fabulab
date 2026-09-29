@@ -54,6 +54,7 @@ public class GameData
     public string title;
     public string description;
     public bool show;
+    public string titleColor; // hex "#RRGGBB" del texto del titulo (vacio = color por defecto)
     public bool freeFirstFrame; // true: el primer frame de la plantilla queda editable (no se bloquea ni se crea un frame nuevo automaticamente)
     [JsonIgnore] public Sprite thumbnail;
     [JsonConverter(typeof(GameIdEntryListConverter))] public List<GameIdEntry> ids;
