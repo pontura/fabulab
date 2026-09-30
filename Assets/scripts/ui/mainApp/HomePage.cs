@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace UI.MainApp.Home
@@ -30,7 +31,7 @@ namespace UI.MainApp.Home
             {
                 case UIManager.screenType.Home:
                     Show(true);
-                    screen = screens.stories;
+                    //screen = screens.stories;
                     home.Show(true);
                     home.OnTabSelect(screen);
                     break;
