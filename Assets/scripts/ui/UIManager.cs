@@ -299,8 +299,15 @@ namespace UI
             else
                 print("BACK");
             inputManager.Back();
-            
-           if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.WorkDetail)
+            if (backToScreen.Count > 0             
+            && StoryMakerEvents.isEditing
+            && (backToScreen[backToScreen.Count - 1] == screenType.Creation_Character || 
+            backToScreen[backToScreen.Count - 1] == screenType.Creation_Objects)
+            )
+            {
+                NewStory();
+            }
+           else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.WorkDetail)
             {
                 Events.OnNewBodyPartSelected(null);
                 Home();
