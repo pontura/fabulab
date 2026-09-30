@@ -33,7 +33,8 @@ namespace UI.MainApp
                     break;
                 case UIManager.screenType.Creation_Character:
                     AudioManager.Instance.musicManager.Play("album");
-                    SetChangesMade(false);
+                    if(!StoryMakerEvents.isEditing)
+                        SetChangesMade(false);
                   //  SetButtons();
                     Show(true);
                    // savePanel.SetActive(false);

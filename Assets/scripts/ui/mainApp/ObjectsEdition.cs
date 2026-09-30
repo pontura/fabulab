@@ -40,7 +40,8 @@ namespace UI.MainApp
                             break;
                     }
                     UIManager.Instance.boardUI.activeBoardItem.Init();
-                    SetChangesMade(false);
+                    if (!StoryMakerEvents.isEditing)
+                        SetChangesMade(false);
                     changesMade = false;
                     Show(true);
                   //  savePanel.SetActive(false);
