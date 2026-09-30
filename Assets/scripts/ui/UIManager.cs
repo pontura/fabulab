@@ -1,7 +1,6 @@
 ﻿using BoardItems;
 using BoardItems.BoardData;
 using BoardItems.Characters;
-using Firebase.Analytics;
 using OnBoarding;
 using System.Collections;
 using System.Collections.Generic;
@@ -49,16 +48,13 @@ namespace UI
             GameStoriesCreator
         }
 
-        public static UIManager Instance
-        {
-            get
-            {
+        public static UIManager Instance {
+            get {
                 return mInstance;
             }
         }
         [SerializeField] List<screenType> backToScreen;
-        void Awake()
-        {
+        void Awake() {
             homePage = GetComponent<HomePage>();
             infoDataScreen = GetComponent<InfoDataScreen>();
             confirmationScreen.Init();
@@ -71,8 +67,7 @@ namespace UI
             if (!mInstance)
                 mInstance = this;
         }
-        private void Start()
-        {
+        private void Start() {
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
             Events.OnBodyPartActive += OnBodyPartActive;
             Events.ShowScreen += OnShowScreen;
@@ -83,8 +78,7 @@ namespace UI
                 Init();                
             }*/
         }
-        private void OnDestroy()
-        {
+        private void OnDestroy() {
             FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
             Events.OnBodyPartActive -= OnBodyPartActive;
             Events.ShowScreen -= OnShowScreen;
@@ -98,20 +92,17 @@ namespace UI
         }
 
         public CharacterPartsHelper.parts part;
-        void OnBodyPartActive(CharacterPartsHelper.parts part)
-        {
+        void OnBodyPartActive(CharacterPartsHelper.parts part) {
             this.part = part;
         }
-        public void ShowBack(bool showIt)
-        {
-            backBtn.SetActive(showIt);            
+        public void ShowBack(bool showIt) {
+            backBtn.SetActive(showIt);
         }
-        private void OnShowScreen(screenType type)
-        {
+        private void OnShowScreen(screenType type) {
+            Debug.Log("? OnShowScreen");
             undoManager.Reset();
-            backToScreen.Add(type);
-            switch (type)
-            {
+			AddBackTo(type);
+            switch (type) {
                 case screenType.StoryMaker:
                     Scenario.Instance.gameObject.SetActive(true);
                     backBtn.SetActive(true);
@@ -127,8 +118,7 @@ namespace UI
         }
         void InitGalleryDelayed() // to-do inicia los items:
         {
-             if(GetComponent<WebVideoPlayer>() != null) 
-            {
+            if (GetComponent<WebVideoPlayer>() != null) {
                 Data.Instance.userData.userDataInDatabase.username = "testing";
                 Data.Instance.userData.userDataInDatabase.uid = "testing";
                 return; // pos si solo carga la cosa como player.
@@ -137,17 +127,15 @@ namespace UI
             // InitGallery(gd, true, null);
             Events.InitGallery(gd, true, null);
         }
-        public void Init()
-        {
-             print("uimanager init");
-            if(GetComponent<WebVideoPlayer>() != null && Data.Instance.scenesData.ScenesDataLoadedDone) 
-            {
+        public void Init() {
+            print("uimanager init");
+            if (GetComponent<WebVideoPlayer>() != null && Data.Instance.scenesData.ScenesDataLoadedDone) {
                 print("WebVideoPlayer init");
                 GetComponent<WebVideoPlayer>().Init();
             } else
             if (
-                Data.Instance.userData.UserDataLoadedDone && 
-                Data.Instance.gamesManager.done && 
+                Data.Instance.userData.UserDataLoadedDone &&
+                Data.Instance.gamesManager.done &&
                 Data.Instance.scenesData.ScenesDataLoadedDone) {
                 string uid = Data.Instance.userData.userDataInDatabase.uid;
                 if (uid != "" && uid != null)
@@ -158,69 +146,59 @@ namespace UI
                 Invoke(nameof(Init), 1);
         }
 
-        private void OnUserDone(CacheData.UserData uData, Texture2D tex)
-        {
+        private void OnUserDone(CacheData.UserData uData, Texture2D tex) {
             print("OnUserDone UID " + uData);
         }
 
-        public void Home()
-        {
+        public void Home() {
             Debug.Log("#Home");
             Events.ShowScreen(UIManager.screenType.Home);
         }
-        public void Create()
-        {
+        public void Create() {
             Events.ShowScreen(UIManager.screenType.Create);
         }
-        public void CreateSelected(int id, bool skipOnBoarding = false)
-        {
-            if (id == 1)
-            {
-                if(!skipOnBoarding && !Data.Instance.userData.userDataInDatabase.onboardings.stories)
+        public void CreateSelected(int id, bool skipOnBoarding = false) {
+            if (id == 1) {
+                if (!skipOnBoarding && !Data.Instance.userData.userDataInDatabase.onboardings.stories)
                     Events.OnBoardingXtraStep(OnBoardingManager.steps.video_story, NewStory);
                 else
                     NewStory();
-            }
-            else if (id == 2) {
-                if(!skipOnBoarding && !Data.Instance.userData.userDataInDatabase.onboardings.characters)
+            } else if (id == 2) {
+                if (!skipOnBoarding && !Data.Instance.userData.userDataInDatabase.onboardings.characters)
                     Events.OnBoardingXtraStep(OnBoardingManager.steps.video_character, NewCharacter);
-                else
-                {
+                else {
                     NewCharacter();
                     FabulabAnalytics.LogEvent(
                         "new_character",
-						new System.Collections.Generic.Dictionary<string, object> {{"origin", "home" }}
+                        new System.Collections.Generic.Dictionary<string, object> { { "origin", "home" } }
                     );
                 }
             } else if (id == 3) {
-                  if(!skipOnBoarding && !Data.Instance.userData.userDataInDatabase.onboardings.objects)
+                if (!skipOnBoarding && !Data.Instance.userData.userDataInDatabase.onboardings.objects)
                     Events.OnBoardingXtraStep(OnBoardingManager.steps.video_object, NewObject);
-                else
-                {
-                    NewObject() ;
+                else {
+                    NewObject();
                     FabulabAnalytics.LogEvent(
                         "new_object_generic",
-						new System.Collections.Generic.Dictionary<string, object> { { "origin", "home" } }
+                        new System.Collections.Generic.Dictionary<string, object> { { "origin", "home" } }
                     );
                 }
             } else if (id == 4) {
-                 if(!skipOnBoarding && !Data.Instance.userData.userDataInDatabase.onboardings.bgs)
+                if (!skipOnBoarding && !Data.Instance.userData.userDataInDatabase.onboardings.bgs)
                     Events.OnBoardingXtraStep(OnBoardingManager.steps.video_bg, NewBG);
-                else
-                {
-                    NewBG() ;
+                else {
+                    NewBG();
                     FabulabAnalytics.LogEvent(
                         "new_object_background",
-						new System.Collections.Generic.Dictionary<string, object> { { "origin", "home" } }
+                        new System.Collections.Generic.Dictionary<string, object> { { "origin", "home" } }
                     );
                 }
             }
         }
-        void NewObject()  {  NewObject(SObjectData.types.generic); }
-        void NewBG()  {  NewObject(SObjectData.types.background); }
+        void NewObject() { NewObject(SObjectData.types.generic); }
+        void NewBG() { NewObject(SObjectData.types.background); }
 
-        public void Albums()
-        {
+        public void Albums() {
             Events.ShowScreen(UIManager.screenType.Albums);
         }
         void NewStory() {
@@ -235,8 +213,7 @@ namespace UI
             StoryMakerEvents.EnableStoryEdition(true);
         }
 
-        void NewCharacter()
-        {
+        void NewCharacter() {
             Events.OnCharacterReset();
             Events.OnPropReset();
             Events.OnPresetReset();
@@ -245,14 +222,12 @@ namespace UI
             LoadWork(editingTypes.CHARACTER, newCharacterID);
             Data.Instance.charactersData.SetCurrentID("");
             Events.OnPresetReset();
-            Events.ShowScreen(UIManager.screenType.Creation_Character);            
-        }
-        void InitCharacterScreen()
-        {
             Events.ShowScreen(UIManager.screenType.Creation_Character);
         }
-        void NewObject(SObjectData.types type)
-        {
+        void InitCharacterScreen() {
+            Events.ShowScreen(UIManager.screenType.Creation_Character);
+        }
+        void NewObject(SObjectData.types type) {
             boardUI.items.DeleteAll();
             Data.Instance.sObjectsData.SetType(type);
             boardUI.SetEditingType(editingTypes.OBJECT);
@@ -263,17 +238,14 @@ namespace UI
             Events.InitGallery(gd, true, InitObjectsScreen);
             Events.EmptySceneItems();
         }
-        void InitObjectsScreen()
-        {
+        void InitObjectsScreen() {
             Events.ShowScreen(UIManager.screenType.Creation_Objects);
         }
-        public void LoadWork(editingTypes type, string id)
-        {
+        public void LoadWork(editingTypes type, string id) {
             boardUI.SetEditingType(type);
             boardUI.LoadWork(id);
             if (StoryMakerEvents.isEditing) return;
-            switch (type)
-            {
+            switch (type) {
                 case editingTypes.CHARACTER:
                     Data.Instance.charactersData.SetCurrentID(id);
                     Events.OnCharacterReset();
@@ -285,50 +257,41 @@ namespace UI
                     break;
             }
         }
-        public void AddBackTo(screenType type, bool resetAll = false)
-        {
+        public void AddBackTo(screenType type, bool resetAll = false) {
             if (resetAll)
                 backToScreen.Clear();
-            print("AddBackTo " + type + " resetAll: " + resetAll   );
+
+            if (backToScreen.Count>0 && backToScreen[backToScreen.Count - 1] == type)
+                return;
+
+			print("AddBackTo " + type + " resetAll: " + resetAll);            
             backToScreen.Add(type);
         }
-        public void Back()
-        {
-             if (backToScreen.Count > 0)
-                print("BACK " + backToScreen[backToScreen.Count - 1] );
+        public void Back() {
+            if (backToScreen.Count > 0)
+                print("BACK " + backToScreen[backToScreen.Count - 1]);
             else
                 print("BACK");
             inputManager.Back();
-            if (backToScreen.Count > 0             
+            if (backToScreen.Count > 0
             && StoryMakerEvents.isEditing
-            && (backToScreen[backToScreen.Count - 1] == screenType.Creation_Character || 
+            && (backToScreen[backToScreen.Count - 1] == screenType.Creation_Character ||
             backToScreen[backToScreen.Count - 1] == screenType.Creation_Objects)
-            )
-            {
-                NewStory();
-            }
-           else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.WorkDetail)
-            {
+            ) {
+				if (backToScreen.Count > 1) backToScreen.RemoveAt(backToScreen.Count - 1);
+				Events.ShowScreen(UIManager.screenType.StoryMaker);
+			} else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.WorkDetail) {
                 Events.OnNewBodyPartSelected(null);
                 Home();
-            }
-            else if (CheckLastScreenUnsaved())
-            {
+            } else if (CheckLastScreenUnsaved()) {
                 Events.OnConfirm("Vas a perder todos los cambios", "Confirmar y Salir", "Cancelar", ExitConfirmed);
-            }
-            else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.GameStoriesCreator)
-            {
+            } else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.GameStoriesCreator) {
                 gameStories.BackToPlay();
                 AddBackTo(UIManager.screenType.GamesStories, true);
-            }
-            else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.GamesStories)
-            {
+            } else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.GamesStories) {
                 ReOpenGames();
-            }
-            else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.StoryMaker)
-            {
-                if (backToScreen.Count > 1 && backToScreen[backToScreen.Count - 2] == screenType.GamesStories)
-                {
+            } else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.StoryMaker) {
+                if (backToScreen.Count > 1 && backToScreen[backToScreen.Count - 2] == screenType.GamesStories) {
                     gameStories.ShowFromHome(true);
                     AddBackTo(UIManager.screenType.GamesStories, true);
                     return;
@@ -340,100 +303,83 @@ namespace UI
                 // }
                 StoryMakerEvents.SetEditing(false);
 
-                if(homePage.screen == HomePage.screens.user)
+                if (homePage.screen == HomePage.screens.user)
                     SetBack();
                 else
                     Home();
-            }
-            else
-            {
+            } else {
                 SetBack();
             }
         }
 
         bool CheckLastScreenUnsaved() {
-            if(backToScreen.Count >0 && backToScreen[backToScreen.Count - 1] == screenType.GameStoriesCreator)
+            if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.GameStoriesCreator)
                 return true;
             return hasUnsavedChanges &&
                 (backToScreen[backToScreen.Count - 1] == screenType.Creation_Character ||
                 backToScreen[backToScreen.Count - 1] == screenType.Creation_Objects ||
                 backToScreen[backToScreen.Count - 1] == screenType.StoryMaker);
         }
-        void ReOpenGames()
-        {
-            hasUnsavedChanges = false;        
+        void ReOpenGames() {
+            hasUnsavedChanges = false;
             Data.Instance.gamesManager.SetPlaying(false);
             gameStories.BackToPlay();
             AddBackTo(UIManager.screenType.StoryMaker, true);
         }
-        void SetBack()
-        {
-            if(StoryMakerEvents.isEditing)
+        void SetBack() {
+            if (StoryMakerEvents.isEditing)
                 Events.ShowScreen(screenType.Home);
-            else if (backToScreen.Count < 3)
-            {
-                if(backToScreen[backToScreen.Count - 1] == screenType.GameStoriesCreator)
+            else if (backToScreen.Count < 3) {
+                if (backToScreen[backToScreen.Count - 1] == screenType.GameStoriesCreator)
                     ReOpenGames();
                 else
                     Events.ShowScreen(screenType.Home);
-            }
-            else if(Data.Instance.gamesManager.IsEditing())
+            } else if (Data.Instance.gamesManager.IsEditing())
                 Events.ShowScreen(screenType.Home);
             else
                 Events.ShowScreen(backToScreen[backToScreen.Count - 2]);
 
-            if(backToScreen.Count>1) backToScreen.RemoveAt(backToScreen.Count - 1);
+            if (backToScreen.Count > 1) backToScreen.RemoveAt(backToScreen.Count - 1);
             if (backToScreen.Count > 1) backToScreen.RemoveAt(backToScreen.Count - 1);
         }
-        void ExitConfirmed(bool exit)
-        {
+        void ExitConfirmed(bool exit) {
             if (exit)
                 SetBack();
         }
-        public void ShowWorkDetail(SOPartData wd)
-        {
-            if (StoryMakerEvents.isEditing)
-            {
+        public void ShowWorkDetail(SOPartData wd) {
+            if (StoryMakerEvents.isEditing) {
                 Events.ShowScreen(UIManager.screenType.StoryMaker);
-            }
-            else
-            {
+            } else {
                 Events.ShowScreen(UIManager.screenType.WorkDetail);
                 workDetailUI.ShowWorkDetail(wd.id, true);
             }
         }
-        public void BackToStory(SObjectData newSOData)
-        {
-            Events.ShowScreen(UIManager.screenType.StoryMaker);  
+        public void BackToStory(SObjectData newSOData) {
+            Events.ShowScreen(UIManager.screenType.StoryMaker);
             StartCoroutine(AddSoAsyncC(newSOData));
         }
-        IEnumerator AddSoAsyncC(SObjectData newSOData)
-        {
+        IEnumerator AddSoAsyncC(SObjectData newSOData) {
             Events.OnLoading(true);
             yield return new WaitForSeconds(0.5f);
-            
-            if (newSOData.type == SObjectData.types.generic)
-            {
+
+            if (newSOData.type == SObjectData.types.generic) {
                 SODataFabulab data = new SODataFabulab();
                 data.id = newSOData.id;
                 data.itemName = Utils.GetUniqueDateTimeId();
-                StoryMakerEvents.AddSceneObject(data);  
-            } else if (newSOData.type == SObjectData.types.background)
-            {
+                StoryMakerEvents.AddSceneObject(data);
+            } else if (newSOData.type == SObjectData.types.background) {
                 SOBGData data = new SOBGData();
                 data.id = newSOData.id;
                 data.itemName = Utils.GetUniqueDateTimeId();
-                StoryMakerEvents.AddSceneObject(data);  
-            } 
-            Events.OnLoading(false);                
+                StoryMakerEvents.AddSceneObject(data);
+            }
+            Events.OnLoading(false);
         }
-        public void BackToStoryFromAvatar(string id)
-        {            
-            Events.ShowScreen(UIManager.screenType.StoryMaker);  
+        public void BackToStoryFromAvatar(string id) {
+            Events.ShowScreen(UIManager.screenType.StoryMaker);
             StartCoroutine(AddAvatarAsyncC(id));
         }
-        IEnumerator AddAvatarAsyncC(string id)
-        {
+        IEnumerator AddAvatarAsyncC(string id) {
             Events.OnLoading(true);
             yield return new WaitForSeconds(0.5f);
 
@@ -442,7 +388,7 @@ namespace UI
             data.itemName = Utils.GetUniqueDateTimeId();
             StoryMakerEvents.AddSceneObject(data);
 
-            Events.OnLoading(false);           
+            Events.OnLoading(false);
         }
     }
 

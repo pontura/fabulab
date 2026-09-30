@@ -89,13 +89,13 @@ namespace UI.MainApp.Home.User
         private void OnDuplicated(bool success, string duplicateID)
         {
             this.duplicateID = duplicateID;
-            if (success)
-            {
+            if (success) {
                 loops = 0;
                 LoopTillMetaReady();
-            }
-            else
+            } else {
                 Events.OnLoading(false);
+				StoryMakerEvents.SetEditing(false);
+			}
         }
         private void LoopTillMetaReady()
         {
