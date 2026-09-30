@@ -119,6 +119,7 @@ namespace UI.MainApp
                 EditObject(pos, data.id);
             else if (data is SOInputData)
             {
+                ShowToolsInStories(false);
                 arrowSelect.SetActive(true);
                 arrowSelect.transform.position = pos;
             }
@@ -138,6 +139,7 @@ namespace UI.MainApp
         }
         void EditObject(Vector3 pos, string id)
         {
+            ShowToolsInStories(true);
             arrowSelect.SetActive(true);
             arrowSelect.transform.position = pos;
             this.selectedSOId = id;

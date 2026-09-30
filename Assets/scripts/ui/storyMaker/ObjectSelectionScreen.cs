@@ -119,7 +119,6 @@ namespace UI.MainApp.Home.User
         void ShowSoButtons(Vector3 pos, SOData data)
         {
             if(!isActive) return;
-            GetComponent<StoryEditorScreen>().ShowToolsInStories(true);
             SetFrontBack();
         }
         void SetFrontBack()
