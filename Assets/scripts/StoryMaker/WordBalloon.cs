@@ -77,7 +77,7 @@ namespace Yaguar.StoryMaker.Editor
             SetFont(fontId);
 
             image.sprite = balloonSprites[(int)balloonType];
-            data.pos.z = -50;
+            data.pos.z = -990;
             gameObject.transform.localPosition = data.pos.ToVector3();
 
             if (balloonType == balloonTypes.generic || balloonType == balloonTypes.title)
