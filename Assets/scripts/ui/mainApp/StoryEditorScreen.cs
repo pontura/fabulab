@@ -101,11 +101,12 @@ namespace UI.MainApp
         public void Init()
         {
             print("Init EnableStoryEdition " + GetComponent<FilmMakerManager>().isEditing + " frames: " + ScenesManagerFabulab.Instance.Scenes.Count);
+               
             if (!StoryMakerEvents.isEditing)
                 SetChangesMade(false);
             else
-                StoryMakerEvents.SetEditing(false);
-			if (!GetComponent<FilmMakerManager>().GetComponent<FilmMakerManager>().isEditing) return;            
+                StoryMakerEvents.SetEditing(GetComponent<FilmMakerManager>().GetComponent<FilmMakerManager>().isEditing);  
+                
             tabs.Init(OnTabClicked, 4);
         }
 
