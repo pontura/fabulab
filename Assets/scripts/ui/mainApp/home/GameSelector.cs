@@ -17,6 +17,11 @@ namespace UI.MainApp.Home.User
         public void Show(bool isOn)
         {
             buttons = new List<ThumbButton>();
+            if(Data.Instance.gamesManager.Watching)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
             print("GameSelector Show " + isOn);
             gameObject.SetActive(isOn);
             gameData = Data.Instance.gamesManager.GetGame(Data.Instance.gamesManager.activaGameData);

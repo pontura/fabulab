@@ -117,6 +117,10 @@ namespace UI.MainApp.Home.User
         }
         public override void OpenWork(string id) 
         {
+            print("OpenGame Work " + id + " isGame_: " + isGame + " screen active: " + gameObject.activeSelf);
+            if(gameObject.activeSelf)
+                Data.Instance.gamesManager.Watching = true;
+            
             ShowFromHome(false);
             this.id = id;
             Events.OnLoadingParent(null, LoadingDone);
@@ -135,7 +139,10 @@ namespace UI.MainApp.Home.User
                 return;
             string storyId = gs.ids[0].id;
             Data.Instance.gamesManager.OnSetActiveGame(gs.id);
-            OpenWork(storyId);
+
+            ShowFromHome(false);
+            this.id = storyId;
+            Events.OnLoadingParent(null, LoadingDone);
         }
     }
 }
