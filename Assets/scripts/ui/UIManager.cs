@@ -291,7 +291,9 @@ namespace UI
             } else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.GamesStories) {
                 ReOpenGames();
             } else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.StoryMaker) {
+                Data.Instance.gamesManager.Watching = false;
                 if (backToScreen.Count > 1 && backToScreen[backToScreen.Count - 2] == screenType.GamesStories) {
+                    
                     gameStories.ShowFromHome(true);
                     AddBackTo(UIManager.screenType.GamesStories, true);
                     return;

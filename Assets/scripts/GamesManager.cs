@@ -99,6 +99,12 @@ public class GamesManager : MonoBehaviour
     public string activaGameData; //= "como_termina"
     public string currentID; //= "-P0-PtuXcNxPfL_P7qq2"
     public bool playing;
+    [SerializeField] bool watching;
+    public bool Watching
+    {
+        get { return watching; }
+        set { print("set game watching: " + value); watching = value; }
+    }
     public int totalLockedGameFrames;
 
     void Start()
