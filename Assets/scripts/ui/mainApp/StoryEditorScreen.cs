@@ -3,6 +3,7 @@ using Common.UI;
 using Firebase.Analytics;
 using OnBoarding;
 using System;
+using System.Collections.Generic;
 using UI.MainApp.Home.User;
 using UnityEngine;
 using Yaguar.StoryMaker.DB;
@@ -32,8 +33,8 @@ namespace UI.MainApp
 
         [SerializeField] GameObject savePanel;
         [SerializeField] GameObject deleteStoryButton;
-        [SerializeField] GameObject saveNewStoryButton;
-        [SerializeField] GameObject saveStoryButton;
+        public SaveMenu saveMenu;
+        [SerializeField] GameObject saveBtn;
         [SerializeField] TMPro.TMP_InputField storyName;
         [SerializeField] bool changesMade;
         AddNew addNewPanel;
@@ -43,10 +44,12 @@ namespace UI.MainApp
 
         private void Start()
         {
+            saveMenu.Show(false);
             avatarSelectionScreen = GetComponent<AvatarSelectionScreen>();
             objectSelectionScreen = GetComponent<ObjectSelectionScreen>();
             addNewPanel = GetComponent<AddNew>();
             CloseTools();
+            StoryMakerEvents.ShowSaveBtn += ShowSaveBtn;
             StoryMakerEvents.ShowSoButtons += ShowSoButtons;
             StoryMakerEvents.OnSaveScene += OnSaveScene;
             StoryMakerEvents.EditActions += EditorActions;
@@ -68,6 +71,7 @@ namespace UI.MainApp
          }
         void OnDestroy()
         {
+            StoryMakerEvents.ShowSaveBtn -= ShowSaveBtn;
             StoryMakerEvents.ShowSoButtons -= ShowSoButtons;
             StoryMakerEvents.OnSaveScene -= OnSaveScene;
             StoryMakerEvents.EditActions -= EditorActions;
@@ -77,6 +81,13 @@ namespace UI.MainApp
             StoryMakerEvents.NoneItemSelected -= NoneItemSelected;
             StoryMakerEvents.OnStartNewStory -= OnStartNewStory;
         }
+
+        private void ShowSaveBtn(bool isOn)
+        {
+            print("ShowSaveBtn " + isOn);
+            saveBtn.gameObject.SetActive(isOn);
+        }
+
         public void ShowToolsInStories(bool isOn)
         {
             print("Show tools in stories " + isOn);
@@ -101,7 +112,8 @@ namespace UI.MainApp
         public void Init()
         {
             print("Init EnableStoryEdition " + GetComponent<FilmMakerManager>().isEditing + " frames: " + ScenesManagerFabulab.Instance.Scenes.Count);
-               
+            
+            StoryMakerEvents.ShowSaveBtn(GetComponent<FilmMakerManager>().isEditing);
             if (!StoryMakerEvents.isEditing)
                 SetChangesMade(false);
             else
@@ -365,18 +377,39 @@ namespace UI.MainApp
         public void SaveDialog() {
             savePanel.SetActive(true);
         }
-
-        public void Save() {
-            Data.Instance.scenesData.currentFilmData = new FilmDataFabulab();
-            Data.Instance.scenesData.currentFilmData.name = storyName.text;
-            ScenesManagerFabulab.Instance.currentFilmData = Data.Instance.scenesData.currentFilmData;
-            Data.Instance.scenesData.currentFilmData.userID = Data.Instance.userData.userDataInDatabase.uid;
-            ScenesManagerFabulab.Instance.currentFDataID = "";
-            savePanel.SetActive(false);
-            Invoke(nameof(SaveWork), Time.deltaTime * 2);
-        }
-        public void Replace()
+        public void CloseSaveMenu()
         {
+            saveMenu.Show(false);
+        }
+        public void StoryReadyClicked()
+        {            
+            saveMenu.Show(true);
+            if(Data.Instance.gamesManager.playing)
+                saveMenu.SetGame();
+            else
+            {
+                FilmDataFabulab fdata = Data.Instance.scenesData.GetMeta(ScenesManagerFabulab.Instance.currentFDataID);
+                if(fdata != null && fdata.isPublic)
+                    saveMenu.SetPublic(true);
+                else
+                    saveMenu.SetPublic(false);
+            }
+        }
+        bool saveAndPublish;
+        public void SaveAndPublish()
+        {
+            saveAndPublish = true;
+            InitSaving();
+        }
+        public void SaveDraft()
+        {   
+            saveAndPublish = false;
+            InitSaving();
+        }
+         void InitSaving()
+        {
+            CloseSaveMenu();
+            Events.OnLoading(true);
             if (ScenesManagerFabulab.Instance.currentFDataID == "")
                 Save();
             else
@@ -389,7 +422,15 @@ namespace UI.MainApp
         public void Cancel() {
             savePanel.SetActive(false);
         }
-
+        void Save() {
+            Data.Instance.scenesData.currentFilmData = new FilmDataFabulab();
+            Data.Instance.scenesData.currentFilmData.name = storyName.text;
+            ScenesManagerFabulab.Instance.currentFilmData = Data.Instance.scenesData.currentFilmData;
+            Data.Instance.scenesData.currentFilmData.userID = Data.Instance.userData.userDataInDatabase.uid;
+            ScenesManagerFabulab.Instance.currentFDataID = "";
+            savePanel.SetActive(false);
+            Invoke(nameof(SaveWork), Time.deltaTime * 2);
+        }
         void SaveWork() {
             UIManager.Instance.boardUI.screenshot.TakeShot(Data.Instance.scenesData.ThumbSize, (tex) => {
                 Data.Instance.scenesData.currentFilmData.thumb = tex;
@@ -397,11 +438,49 @@ namespace UI.MainApp
                 Data.Instance.scenesData.currentFilmData.timestamp = DateTime.UtcNow.ToString("o");
                 Data.Instance.scenesData.currentFilmData.tags = new System.Collections.Generic.List<string>();
                 
-                Data.Instance.scenesData.SaveFilm();
+                Data.Instance.scenesData.SaveFilm(OnSavedDone);
                 SetChangesMade(false);
             });
         }
+        void OnSavedDone(bool succes, string id) {
+             
+            if (succes)
+            { 
+                print("Historia guardada con id: " + id + " saveAndPublish: " + saveAndPublish);
+                if(saveAndPublish)
+                {
+                    print("Publicando: " + id);
+                    Data.Instance.scenesData.SaveInfo(id, true, new List<string>(), OnPublishDone);
+                    UIManager.Instance.Back();
+                } else
+                {      
+                    Events.OnLoading(false);           
+                    Events.OnConfirm("Querés continuar la historia o salir?", "Continuar", "Salir", OnConfirmExit);
+                }
+                Events.OnPopupTopSignalText("Historia guardada");
+            }
+            else
+            {
+                Events.OnLoading(false); 
+                Events.OnPopupTopSignalText("Error al guardar la historia");
+            }
+        }
 
+        private void OnPublishDone(bool arg1, string arg2)
+        {
+            Events.OnLoading(false);  
+        }
+
+        void OnConfirmExit(bool ok) {
+            if (ok)
+            {
+                print("Continuar historia");
+            } else
+            {
+                print("Salir historia");
+                UIManager.Instance.Back();
+            }
+        }
         public void Delete() {
             Events.OnConfirm("Confirm�s que quer�s borrar esta historia?", "SI", "NO", OnConfirm);
         }

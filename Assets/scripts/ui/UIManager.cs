@@ -273,6 +273,13 @@ namespace UI
             else
                 print("BACK");
             inputManager.Back();
+            
+            StoryEditorScreen storyEditorScreen = GetComponentInChildren<StoryEditorScreen>();
+            if ( storyEditorScreen != null && storyEditorScreen.saveMenu.isOn)
+            {
+                storyEditorScreen.CloseSaveMenu();
+                return;
+            }
             if (backToScreen.Count > 0
             && StoryMakerEvents.isEditing
             && (backToScreen[backToScreen.Count - 1] == screenType.Creation_Character ||
