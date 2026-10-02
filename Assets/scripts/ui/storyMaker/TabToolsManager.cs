@@ -1,4 +1,5 @@
 using UnityEngine;
+using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp
 {
@@ -21,7 +22,9 @@ namespace UI.MainApp
                     backgrounds.SetActive(true);
                     break;
                 case 4:
-                    timeline.SetActive(true);
+                    FilmMakerManager f = GetComponentInParent<FilmMakerManager>();
+                    if(f != null && f.isEditing)
+                        timeline.SetActive(true);
                     break;
             }
         }
