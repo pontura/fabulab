@@ -27,6 +27,7 @@ namespace UI.MainApp.Home.User
             gameData = Data.Instance.gamesManager.GetGame(Data.Instance.gamesManager.activaGameData);
             if(isOn)
             {
+                StoryMakerEvents.ShowSaveBtn(false);
                 field.text = gameData.description;
                 allGameStoriesScreen.gameObject.SetActive(false);
                 Utils.RemoveAllChildsIn(container);

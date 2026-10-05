@@ -386,7 +386,9 @@ namespace BoardItems
             }
             return exists;
         }
-        public void SaveFilm() {
+        System.Action<bool, string> OnSaveDone;
+        public void SaveFilm(System.Action<bool, string> OnSaveDone) {
+            this.OnSaveDone = OnSaveDone;
             Debug.Log("# SaveFilm");
             StoryMakerEvents.OnSaveScene();
             //Data.Instance.firebaseAuthManager.SaveFilmToServer(ScenesManagerFabulab.Instance.currentFDataID, scenes);
@@ -411,6 +413,9 @@ namespace BoardItems
 
             Data.Instance.cacheData.AddToFilmCache(ScenesManagerFabulab.Instance.currentFDataID, ScenesManagerFabulab.Instance.Scenes);
             SaveTexture();
+            
+            if(OnSaveDone != null)
+                OnSaveDone(succes, id);
         }
 
         void SaveTexture() {
@@ -475,7 +480,7 @@ namespace BoardItems
                 sfd.tags = fd.tags;
             FirebaseStoryMakerDBManager.Instance.UpdateFilmDataToServer(fd.id, sfd, OnDone);
         }
-
+    
         public void SaveInfo(string id, bool isPublic, List<string> selectedTagsID, System.Action<bool, string> OnDone) {
             FilmDataFabulab md = filmsData.Find(x => x.id == id);
             md.isPublic = isPublic;
