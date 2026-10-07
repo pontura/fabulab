@@ -1,11 +1,14 @@
 using BoardItems.BoardData;
 using Firebase.Database;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UI;
+using System.Reflection;
+using Unity.Mathematics;
 using UnityEngine;
 using Yaguar.Auth;
+using Yaguar.FirebaseRest;
 using Yaguar.StoryMaker.DB;
 using Yaguar.StoryMaker.Editor;
 
@@ -61,6 +64,10 @@ namespace BoardItems
 
         string initTimeStamp;
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+        StreamListener streamListener;
+#endif
+
         private void Start() {
             //Events.OnThemesLoadedComplete += LoadThemeFilmMetadataFromServer;
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
@@ -106,11 +113,14 @@ namespace BoardItems
 
         void OnSignedOut() {
             userFilmsData = new();
+#if UNITY_WEBGL && !UNITY_EDITOR
+            streamListener.CloseStream();
+#else
             var filmMetadata = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/");
             filmMetadata.ChildAdded -= OnFilmdAdded;
             filmMetadata.ChildChanged -= OnFilmChanged;
             filmMetadata.ChildRemoved -= OnFilmRemoved;
-
+#endif
             ScenesDataLoadedDone = false;
         }
 
@@ -167,10 +177,75 @@ namespace BoardItems
 
             initTimeStamp = DateTime.UtcNow.ToString("o");
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+            //Debug.Log("# AKA " + gameObject.name);
+            streamListener = gameObject.AddComponent<StreamListener>();
+            streamListener.OnDataReceived += (id, data, isPatch) => {
+                //Debug.Log($"OnDataReceived  id: {id}, data: {data} isPatch:{isPatch}");
+                FilmDataFabulab cmd = filmsData.Find(x => x.id == id);
+                if (cmd != null) {
+                    if (isPatch) {
+                        JObject patch = JObject.Parse(data);
+                        var type = typeof(FilmDataFabulab);
+                        foreach (var prop in patch.Properties()) {
+                            var field = type.GetField(prop.Name, BindingFlags.Public | BindingFlags.Instance);
+                            if (field != null) {
+                                object value = prop.Value.ToObject(field.FieldType);
+                                field.SetValue(cmd, value);
+                            }
+
+                            var property = type.GetProperty(prop.Name, BindingFlags.Public | BindingFlags.Instance);
+                            if (property != null && property.CanWrite) {
+                                object value = prop.Value.ToObject(property.PropertyType);
+                                property.SetValue(cmd, value);
+                            }
+                        }
+                    } else {
+                        cmd = Newtonsoft.Json.JsonConvert.DeserializeObject<FilmDataFabulab>(data);
+                        cmd.id = id;
+                    }
+
+                    FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.stories.ToString(), cmd.id, (tex) => {
+                        cmd.thumb = tex;
+                        Events.OnFilmMetadataUpdated(cmd);
+                    }, userId: cmd.userID);
+
+                    filmsData = filmsData.OrderByDescending(x => x.timestamp).ToList();
+                    userFilmsData = userFilmsData.OrderByDescending(x => x.timestamp).ToList();
+
+                    Data.Instance.cacheData.RemoveFilmCache(cmd.id);
+                    
+                } else {
+                    cmd = Newtonsoft.Json.JsonConvert.DeserializeObject<FilmDataFabulab>(data);
+                    cmd.id = id;
+
+                    FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.stories.ToString(), cmd.id, (tex) => {
+                        cmd.thumb = tex;
+                        Events.OnFilmMetadataAdded(cmd);
+                    }, userId: cmd.userID);
+                    filmsData.Insert(0, cmd);
+
+                    if (cmd.userID == Data.Instance.userData.userDataInDatabase.uid)
+                        userFilmsData.Insert(0, cmd);                    
+                }
+            };
+            streamListener.OnRemoved += (id) => {
+                FilmDataFabulab cmd = filmsData.Find(x => x.id == id);
+                if (cmd != null) {
+                    filmsData.Remove(cmd);
+                    userFilmsData.Remove(cmd);
+                    Data.Instance.cacheData.RemoveFilmCache(cmd.id);
+                    Events.OnFilmMetadataRemoved(cmd.id);
+                }
+            };
+
+            streamListener.Init("/metadata/stories.json");
+#else
             var filmMetadata = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/");
             filmMetadata.ChildAdded += OnFilmdAdded;
             filmMetadata.ChildChanged += OnFilmChanged;
             filmMetadata.ChildRemoved += OnFilmRemoved;
+#endif
         }
 
         public void OnAddFilmDataFromServer(List<FilmDataFabulab> filmsData, Dictionary<string, ServerFilmData> sfds) {
