@@ -1,14 +1,17 @@
 ﻿using BoardItems.BoardData;
 using Firebase.Analytics;
 using Firebase.Database;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UI;
 using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
 using Yaguar.StoryMaker.Editor;
+using Yaguar.FirebaseRest;
 
 namespace BoardItems
 {
@@ -330,10 +333,69 @@ namespace BoardItems
             FirebaseStoryMakerDBManager.Instance.LoadUserAssetsFromServer(MetadataTypes.so.ToString(), LoadAssetsFromServer);
 
             initTimeStamp = DateTime.UtcNow.ToString("o");
+#if UNITY_WEBGL && !UNITY_EDITOR
+            //Debug.Log("# AKA " + gameObject.name);
+            var listener = gameObject.AddComponent<StreamListener>();
+            listener.OnDataReceived += (id, data, isPatch) => {
+                PropMetaData cmd = metaData.Find(x => x.id == id);
+                if (cmd != null) {
+                    if (isPatch) {
+                        JObject patch = JObject.Parse(data);
+                        var type = typeof(PropMetaData);
+                        foreach (var prop in patch.Properties()) {
+                            var field = type.GetField(prop.Name, BindingFlags.Public | BindingFlags.Instance);
+                            if (field != null) {
+                                object value = prop.Value.ToObject(field.FieldType);
+                                field.SetValue(cmd, value);
+                            }
+
+                            var property = type.GetProperty(prop.Name, BindingFlags.Public | BindingFlags.Instance);
+                            if (property != null && property.CanWrite) {
+                                object value = prop.Value.ToObject(property.PropertyType);
+                                property.SetValue(cmd, value);
+                            }
+                        }
+                    } else {
+                        cmd = Newtonsoft.Json.JsonConvert.DeserializeObject<PropMetaData>(data);
+                        cmd.id = id;
+                    }
+
+                    FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.so.ToString(), cmd.id, (tex) => {
+                        cmd.thumb = tex;
+                        Events.OnPropMetadataUpdated(cmd);
+                    }, userId: cmd.userID);
+
+                    metaData = metaData.OrderByDescending(x => x.timestamp).ToList();
+                    userMetaData = userMetaData.OrderByDescending(x => x.timestamp).ToList();
+                } else {
+                    cmd = Newtonsoft.Json.JsonConvert.DeserializeObject<PropMetaData>(data);
+                    cmd.id = id;
+                    FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.so.ToString(), cmd.id, (tex) => {
+                        cmd.thumb = tex;
+                        Events.OnPropMetadataAdded(cmd);
+                    }, userId: cmd.userID);
+                    metaData.Insert(0, cmd);
+
+                    if (cmd.userID == Data.Instance.userData.userDataInDatabase.uid)
+                        userMetaData.Insert(0, cmd);
+                }
+            };
+            listener.OnRemoved += (id) => {
+                PropMetaData cmd = metaData.Find(x => x.id == id);
+                if (cmd != null) {
+                    metaData.Remove(cmd);
+                    userMetaData.Remove(cmd);
+                    Events.OnPropMetadataRemoved(cmd.id);
+                }
+            };
+
+            listener.Init("/metadata/so.json");
+#else
             var partMetadata = FirebaseDatabase.DefaultInstance.GetReference("metadata/so/");
             partMetadata.ChildAdded += OnPropAdded;
             partMetadata.ChildChanged += OnPropChanged;
             partMetadata.ChildRemoved += OnPropRemoved;
+#endif
         }
 
         void OnPropAdded(object sender, ChildChangedEventArgs args) {

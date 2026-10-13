@@ -1,6 +1,7 @@
 ﻿using BoardItems.BoardData;
 using BoardItems.Characters;
 using Firebase.Database;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,6 +11,8 @@ using UnityEngine;
 using Yaguar.Auth;
 using Yaguar.StoryMaker.DB;
 using static BoardItems.Characters.CharacterPartsHelper;
+using System.Reflection;
+using Yaguar.FirebaseRest;
 
 namespace BoardItems
 {
@@ -376,10 +379,74 @@ namespace BoardItems
             FirebaseStoryMakerDBManager.Instance.LoadUserAssetsFromServer(MetadataTypes.characters.ToString(), LoadCharactersFromServer);
 
             initTimeStamp = DateTime.UtcNow.ToString("o");
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+            //Debug.Log("# AKA " + gameObject.name);
+            var listener = gameObject.AddComponent<StreamListener>();
+            listener.OnDataReceived += (id, data, isPatch) => {
+                CharacterMetaData cmd = charactersMetaData.Find(x => x.id == id);
+                if (cmd != null) {
+                //Debug.Log("% AKA cmd!=null");
+                    if (isPatch) {
+                    //Debug.Log("% AKA isPatch==true");
+                        JObject patch = JObject.Parse(data);
+                        var type = typeof(CharacterMetaData);
+                        foreach (var prop in patch.Properties()) {
+                            var field = type.GetField(prop.Name, BindingFlags.Public | BindingFlags.Instance);
+                            if (field != null) {
+                                object value = prop.Value.ToObject(field.FieldType);
+                                field.SetValue(cmd, value);
+                            }
+
+                            var property = type.GetProperty(prop.Name, BindingFlags.Public | BindingFlags.Instance);
+                            if (property != null && property.CanWrite) {
+                                object value = prop.Value.ToObject(property.PropertyType);
+                                property.SetValue(cmd, value);
+                            }
+                        }
+                    } else {
+                    //Debug.Log("% AKA isPatch==false");
+                        cmd = Newtonsoft.Json.JsonConvert.DeserializeObject<CharacterMetaData>(data);
+                        cmd.id = id;
+                    }
+
+                    FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.characters.ToString(), cmd.id, (tex) => {
+                        cmd.thumb = tex;
+                        Events.OnCharacterMetadataUpdated(cmd);
+                    }, userId: cmd.userID);
+
+                    charactersMetaData = charactersMetaData.OrderByDescending(x => x.timestamp).ToList();
+                    userCharactersMetaData = userCharactersMetaData.OrderByDescending(x => x.timestamp).ToList();
+                } else {
+                    //Debug.Log("% AKA cmd==null");
+                    cmd = Newtonsoft.Json.JsonConvert.DeserializeObject<CharacterMetaData>(data);
+                    cmd.id = id;
+                    FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.characters.ToString(), cmd.id, (tex) => {
+                        cmd.thumb = tex;
+                        Events.OnCharacterMetadataAdded(cmd);
+                    }, userId: cmd.userID);
+                    charactersMetaData.Insert(0, cmd);
+
+                    if (cmd.userID == Data.Instance.userData.userDataInDatabase.uid)
+                        userCharactersMetaData.Insert(0, cmd);
+                }
+            };
+            listener.OnRemoved += (id) => {
+                CharacterMetaData cmd = charactersMetaData.Find(x => x.id == id);
+                if (cmd != null) {
+                    charactersMetaData.Remove(cmd);
+                    userCharactersMetaData.Remove(cmd);
+                    Events.OnCharacterMetadataRemoved(cmd.id);
+                }
+            };
+            
+            listener.Init("/metadata/characters.json");
+#else
             var charactersMetadata = FirebaseDatabase.DefaultInstance.GetReference("metadata/characters/");
             charactersMetadata.ChildAdded += OnCharacterAdded;
             charactersMetadata.ChildChanged += OnCharacterChanged;
             charactersMetadata.ChildRemoved += OnCharacterRemoved;
+#endif
         }
 
         void OnCharacterAdded(object sender, ChildChangedEventArgs args) {
