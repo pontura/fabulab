@@ -37,7 +37,7 @@ namespace OnBoarding
             secondButton.SetActive(true);
             presetsUI.tabs.Clicked(presetsUI.tabs.All[1]);
             thirdPanel.SetActive(false);
-            Invoke("HideSecondPanel", 2);
+            Invoke("HideSecondPanel", 6);
         }
         void HideSecondPanel()
         {

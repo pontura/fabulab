@@ -8,7 +8,9 @@ public class AudioManager : MonoBehaviour
     static AudioManager mInstance = null;
     public AudioMixer mixer;
     public AudioMixerGroup sfx;
-    public AudioMixerGroup uiSfx;    
+    public AudioMixerGroup uiSfx;   
+    public AudioMixerGroup voices;   
+    [SerializeField] AudioSource voicesSource;
 
     public SfxManager sfxManager;
     public UiSfxManager uiSfxManager;
@@ -28,6 +30,7 @@ public class AudioManager : MonoBehaviour
     void Awake() {
         if (!mInstance)
             mInstance = this;
+
 
         pitchSteps = new float[13];
         pitchSteps[0] = 1f;
@@ -52,5 +55,10 @@ public class AudioManager : MonoBehaviour
     private IEnumerator OnEnd(float clipLength, System.Action callback) {
         yield return new WaitForSeconds(clipLength);
         callback();
+    }
+    public void PlayVoice(AudioClip clip)
+    {
+        voicesSource.clip = clip;
+        voicesSource.Play();
     }
 }
