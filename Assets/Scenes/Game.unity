@@ -523,7 +523,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7159787713996794094, guid: 90e91995e378eed4aa9eb2641c9ff3f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 969925285}
   m_SourcePrefab: {fileID: 100100000, guid: 90e91995e378eed4aa9eb2641c9ff3f5, type: 3}
 --- !u!224 &88957603 stripped
 RectTransform:
@@ -535,7 +538,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4708054377193252126, guid: 90e91995e378eed4aa9eb2641c9ff3f5, type: 3}
   m_PrefabInstance: {fileID: 88957602}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 969925284}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79b59c93dc80d624aaf8ca199f000a99, type: 3}
@@ -722,6 +725,7 @@ GameObject:
   m_Component:
   - component: {fileID: 134602004}
   - component: {fileID: 134602005}
+  - component: {fileID: 134602006}
   m_Layer: 5
   m_Name: objects
   m_TagString: Untagged
@@ -774,6 +778,19 @@ MonoBehaviour:
   part2: {fileID: 1525597484}
   storyEditorScreen: {fileID: 7578047708490894394}
   objectSelectionScreen: {fileID: 2598230963447367819}
+--- !u!114 &134602006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 134602003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4049b858e1f9e44fb95136313dea3b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.VoiceOverPlayer
+  audio: {fileID: 8300000, guid: 7c3aba99d8d72144dbbaf6b8dc5cdfd5, type: 3}
 --- !u!1 &138616216
 GameObject:
   m_ObjectHideFlags: 0
@@ -1606,6 +1623,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 308418808}
+  - component: {fileID: 308418809}
   m_Layer: 5
   m_Name: panel
   m_TagString: Untagged
@@ -1637,6 +1655,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &308418809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308418807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4049b858e1f9e44fb95136313dea3b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.VoiceOverPlayer
+  audio: {fileID: 8300000, guid: ea61ff2ca1510d2479ed904f3a694662, type: 3}
 --- !u!1001 &331718231
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3285,6 +3316,7 @@ GameObject:
   m_Component:
   - component: {fileID: 572317171}
   - component: {fileID: 572317172}
+  - component: {fileID: 572317173}
   m_Layer: 5
   m_Name: background
   m_TagString: Untagged
@@ -3337,6 +3369,19 @@ MonoBehaviour:
   part2: {fileID: 750940672}
   storyEditorScreen: {fileID: 7578047708490894394}
   backgroundSelectionScreen: {fileID: 6577839209798853759}
+--- !u!114 &572317173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 572317170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4049b858e1f9e44fb95136313dea3b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.VoiceOverPlayer
+  audio: {fileID: 8300000, guid: 8644f6911a655df40b14f7f8d2614d84, type: 3}
 --- !u!1 &580706202
 GameObject:
   m_ObjectHideFlags: 0
@@ -4090,6 +4135,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6060733006543461950, guid: b1856c14e3ceef14b9f7d1e36c285c4b, type: 3}
   m_PrefabInstance: {fileID: 7258396981532460582}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &658539966 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7159787713996794094, guid: 90e91995e378eed4aa9eb2641c9ff3f5, type: 3}
+  m_PrefabInstance: {fileID: 1066162427}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &669533313
 GameObject:
   m_ObjectHideFlags: 0
@@ -4503,6 +4553,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 750940673}
+  - component: {fileID: 750940674}
   m_Layer: 5
   m_Name: 2
   m_TagString: Untagged
@@ -4532,6 +4583,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &750940674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750940672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4049b858e1f9e44fb95136313dea3b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.VoiceOverPlayer
+  audio: {fileID: 8300000, guid: 06a70fe69a75dc74aa314e9518dfb6a9, type: 3}
 --- !u!114 &760920255 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5230000822444397315, guid: 779681c670844c542926cfb3aa180848, type: 3}
@@ -5910,6 +5974,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &969925284 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7159787713996794094, guid: 90e91995e378eed4aa9eb2641c9ff3f5, type: 3}
+  m_PrefabInstance: {fileID: 88957602}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &969925285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 969925284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4049b858e1f9e44fb95136313dea3b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.VoiceOverPlayer
+  audio: {fileID: 8300000, guid: 83f134bc10b95ab419aa6b7450444a75, type: 3}
 --- !u!1 &983683652
 GameObject:
   m_ObjectHideFlags: 0
@@ -6669,7 +6751,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7159787713996794094, guid: 90e91995e378eed4aa9eb2641c9ff3f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1066162430}
   m_SourcePrefab: {fileID: 100100000, guid: 90e91995e378eed4aa9eb2641c9ff3f5, type: 3}
 --- !u!224 &1066162428 stripped
 RectTransform:
@@ -6681,12 +6766,25 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4708054377193252126, guid: 90e91995e378eed4aa9eb2641c9ff3f5, type: 3}
   m_PrefabInstance: {fileID: 1066162427}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 658539966}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79b59c93dc80d624aaf8ca199f000a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.OnBoarding_GenericText
+--- !u!114 &1066162430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 658539966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4049b858e1f9e44fb95136313dea3b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.VoiceOverPlayer
+  audio: {fileID: 8300000, guid: d7de65538a223a44b90a79089146faaa, type: 3}
 --- !u!1 &1069802082 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2252466182131905989, guid: b1956c79dcff80648b8cd892ab4b0ede, type: 3}
@@ -8928,6 +9026,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1525597485}
+  - component: {fileID: 1525597486}
   m_Layer: 5
   m_Name: 2
   m_TagString: Untagged
@@ -8957,6 +9056,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1525597486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1525597484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4049b858e1f9e44fb95136313dea3b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.VoiceOverPlayer
+  audio: {fileID: 8300000, guid: 3284ad8247c7b2e4eaedc929e2889905, type: 3}
 --- !u!1 &1545536646
 GameObject:
   m_ObjectHideFlags: 0
@@ -9459,10 +9571,6 @@ PrefabInstance:
     - target: {fileID: 3850388859532562295, guid: 801f5d1deddd1354488d2ab732552190, type: 3}
       propertyPath: m_Name
       value: Audio
-      objectReference: {fileID: 0}
-    - target: {fileID: 7804316501957329265, guid: 801f5d1deddd1354488d2ab732552190, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7804316501957329265, guid: 801f5d1deddd1354488d2ab732552190, type: 3}
       propertyPath: m_LocalPosition.x
@@ -12313,7 +12421,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4708054377193252126, guid: 90e91995e378eed4aa9eb2641c9ff3f5, type: 3}
   m_PrefabInstance: {fileID: 6500211551293188726}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 6500211551293188727}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79b59c93dc80d624aaf8ca199f000a99, type: 3}
@@ -12768,8 +12876,16 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6248489864032428634, guid: 954625022c1c375479c5f153f15bce12, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5726626510502150782}
   m_SourcePrefab: {fileID: 100100000, guid: 954625022c1c375479c5f153f15bce12, type: 3}
+--- !u!1 &1252203139003255137 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6248489864032428634, guid: 954625022c1c375479c5f153f15bce12, type: 3}
+  m_PrefabInstance: {fileID: 1252203139003255136}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1253750349326656603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14514,6 +14630,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2672666018155880397}
   - component: {fileID: 1165229828280071529}
+  - component: {fileID: 2852174338573327349}
   m_Layer: 5
   m_Name: choose_head
   m_TagString: Untagged
@@ -14521,6 +14638,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &2852174338573327349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2852174338573327348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4049b858e1f9e44fb95136313dea3b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.VoiceOverPlayer
+  audio: {fileID: 8300000, guid: 3adfb8331bbb7ac4fa1bc4846007c2ab, type: 3}
 --- !u!222 &2856264156223057189
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -15939,8 +16069,16 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7159787713996794094, guid: 90e91995e378eed4aa9eb2641c9ff3f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8318484413158456994}
   m_SourcePrefab: {fileID: 100100000, guid: 90e91995e378eed4aa9eb2641c9ff3f5, type: 3}
+--- !u!1 &5007477773369531938 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7159787713996794094, guid: 90e91995e378eed4aa9eb2641c9ff3f5, type: 3}
+  m_PrefabInstance: {fileID: 5007477773369531937}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5008040135488325880
 GameObject:
   m_ObjectHideFlags: 0
@@ -16813,6 +16951,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4097638693577516114}
   - component: {fileID: 9142209022911575222}
+  - component: {fileID: 9142209022911575223}
   m_Layer: 5
   m_Name: rest_body
   m_TagString: Untagged
@@ -16833,7 +16972,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3931089145996097209, guid: 954625022c1c375479c5f153f15bce12, type: 3}
   m_PrefabInstance: {fileID: 1252203139003255136}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1252203139003255137}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a10fbba770106e840aa4f4dad7bfc916, type: 3}
@@ -16844,6 +16983,19 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3951386653441138630, guid: 954625022c1c375479c5f153f15bce12, type: 3}
   m_PrefabInstance: {fileID: 1252203139003255136}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5726626510502150782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1252203139003255137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4049b858e1f9e44fb95136313dea3b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.VoiceOverPlayer
+  audio: {fileID: 8300000, guid: db6ca7bda4861c4459ae9d7a0d832153, type: 3}
 --- !u!224 &5746435484949293726
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17590,8 +17742,29 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7159787713996794094, guid: 90e91995e378eed4aa9eb2641c9ff3f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6500211551293188728}
   m_SourcePrefab: {fileID: 100100000, guid: 90e91995e378eed4aa9eb2641c9ff3f5, type: 3}
+--- !u!1 &6500211551293188727 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7159787713996794094, guid: 90e91995e378eed4aa9eb2641c9ff3f5, type: 3}
+  m_PrefabInstance: {fileID: 6500211551293188726}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6500211551293188728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6500211551293188727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4049b858e1f9e44fb95136313dea3b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.VoiceOverPlayer
+  audio: {fileID: 8300000, guid: eb436952b5c5220409880f145d175424, type: 3}
 --- !u!222 &6554305674315265247
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -18654,6 +18827,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2297733701933619858}
+  - component: {fileID: 7720593424109292152}
   m_Layer: 5
   m_Name: secondPanel
   m_TagString: Untagged
@@ -18661,6 +18835,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &7720593424109292152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7720593424109292151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4049b858e1f9e44fb95136313dea3b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.VoiceOverPlayer
+  audio: {fileID: 8300000, guid: d32e87b5d90654340a32c7781b79fbb6, type: 3}
 --- !u!95 &7886726446904712693
 Animator:
   serializedVersion: 7
@@ -18948,12 +19135,25 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4708054377193252126, guid: 90e91995e378eed4aa9eb2641c9ff3f5, type: 3}
   m_PrefabInstance: {fileID: 5007477773369531937}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 5007477773369531938}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79b59c93dc80d624aaf8ca199f000a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.OnBoarding_GenericText
+--- !u!114 &8318484413158456994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5007477773369531938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4049b858e1f9e44fb95136313dea3b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.VoiceOverPlayer
+  audio: {fileID: 8300000, guid: a5091ebfb4a43cb439515eb1bdca84cd, type: 3}
 --- !u!1001 &8372652014951966399
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19281,6 +19481,19 @@ MonoBehaviour:
   tools: {fileID: 1732034397}
   field2: {fileID: 1821920874}
   confirmationScreen: {fileID: 1042851287}
+--- !u!114 &9142209022911575223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5508783078703523146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4049b858e1f9e44fb95136313dea3b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.VoiceOverPlayer
+  audio: {fileID: 8300000, guid: b157ae889ab029d4bb0f2f50b9165947, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
