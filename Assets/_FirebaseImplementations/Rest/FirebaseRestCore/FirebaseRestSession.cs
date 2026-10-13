@@ -188,7 +188,9 @@ namespace Yaguar.FirebaseRest
             string token = await GetIdTokenAsync();
             if (token == null)
                 throw new FirebaseRestException("LinkEmail: no signed in user");
-            await AuthCallAsync("update", CredentialsJson(email, password, token), false);
+            // signUp + idToken links the credential (same call the JS SDK makes). "update" is treated as an
+            // email change and is rejected with OPERATION_NOT_ALLOWED when email enumeration protection is on.
+            await AuthCallAsync("signUp", CredentialsJson(email, password, token), false);
         }
 
         public static async Task SendPasswordResetAsync(string email)
