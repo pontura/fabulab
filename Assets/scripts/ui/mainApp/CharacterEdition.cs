@@ -68,8 +68,17 @@ namespace UI.MainApp
                 isEditingCharacter = true;
 
             isPreview = !isEditingCharacter;
-            
-            DoneBtn.SetActive(true);     
+
+            if(chID == "" || isMyAvatar)
+            {   
+                DoneBtn.SetActive(true);   
+            }
+            else
+            {            
+                DoneBtn.SetActive(false);     
+                bgColorsBtn.SetActive(false);
+            }
+
             if (StoryMakerEvents.isEditing)
             {
                 Events.ShowUndo(true);       
@@ -80,11 +89,18 @@ namespace UI.MainApp
                 SetTogglePreview();
                 Events.ShowUndo(false);
             }
-            tools.SetActive(chID == "" || isMyAvatar);
+            //tools.SetActive(chID == "" || isMyAvatar);
+            tools.SetActive(true);
 
         }
         public void TogglePreview()
         {
+            string chID = Data.Instance.charactersData.GetCurrent();
+            if(chID != "" || !isMyAvatar)
+            {
+                Data.Instance.sObjectsData.SetCurrentID("");                
+                DoneBtn.SetActive(true);     
+            }
            // if (!isMyAvatar) DoneBtn.SetActive(true); // si venias viendo un character de otro te permite guardar una copia, pero si es tu avatar te muestra el boton de guardar desde el principio.
             isPreview = !isPreview;
             SetTogglePreview();
