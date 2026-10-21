@@ -7,6 +7,11 @@ namespace UI.MainApp.Home.User
     public class UserDataScreen : MonoBehaviour
     {
         [SerializeField] TMPro.TMP_InputField TMP_InputField;
+        [SerializeField] TMPro.TextMeshProUGUI version;
+
+        private void Start() {
+            version.text = BuildInfo.FullVersion;
+        }
 
         public void Show(bool isOn)
         {

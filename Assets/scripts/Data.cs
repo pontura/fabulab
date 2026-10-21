@@ -51,5 +51,7 @@ public class Data : MonoBehaviour
         characterAnimsManager = GetComponent<CharacterAnimsManager>();
         tagsManager = GetComponent<TagsManager>();
         gamesManager = GetComponent<GamesManager>();
+
+        Debug.Log(BuildInfo.FullVersion);
     }
 }
