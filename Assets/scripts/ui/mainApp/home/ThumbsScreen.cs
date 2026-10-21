@@ -90,6 +90,8 @@ namespace UI.MainApp.Home.User
 
         protected virtual void OnLoadedDone()
         {
+            if (imageCache == null)
+                imageCache = new Dictionary<int, Texture2D>();
             scrollRect.onValueChanged.AddListener(OnScrollChanged);
             SetCurrentScrollIndex(scrollRect.normalizedPosition);
             Events.OnLoading(false);            

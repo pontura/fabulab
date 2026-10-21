@@ -1025,7 +1025,8 @@ namespace Yaguar.StoryMaker.DB
             storageRef.GetBytesAsync(maxAllowedSize).ContinueWithOnMainThread(task =>
             {
                 if (task.IsFaulted || task.IsCanceled) {
-                    Debug.LogError($"Error al descargar la images/{uid}/{folder}/{fileName}.jpg : " + task.Exception);
+                    if(folder!="profile")
+                        Debug.LogError($"Error al descargar la images/{uid}/{folder}/{fileName}.jpg : " + task.Exception);
                     onComplete?.Invoke(null);
                     return;
                 } else if (task.IsCompleted) {

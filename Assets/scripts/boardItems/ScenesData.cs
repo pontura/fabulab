@@ -252,7 +252,7 @@ namespace BoardItems
             if (sfds == null) return;
 
             //int count = 0;
-            foreach (KeyValuePair<string, ServerFilmData> e in sfds.OrderByDescending(x => x.Value.timestamp).ToList()) {
+            foreach (KeyValuePair<string, ServerFilmData> e in sfds.OrderByDescending(x => x.Value.likes).ToList()) {
                 if (filmsData.Find(x => x.id == e.Key) == null) {
                     FilmDataFabulab fd = new FilmDataFabulab();
                     fd.id = e.Key;
@@ -409,7 +409,7 @@ namespace BoardItems
                 Events.OnFilmMetadataUpdated(fd);
             }, userId: fd.userID);
             
-            filmsData = filmsData.OrderByDescending(x => x.timestamp).ToList();
+            filmsData = filmsData.OrderByDescending(x => x.likes).ToList();
             userFilmsData = userFilmsData.OrderByDescending(x => x.timestamp).ToList();
 
             Data.Instance.cacheData.RemoveFilmCache(fd.id);
@@ -532,7 +532,7 @@ namespace BoardItems
 
                 FirebaseStoryMakerDBManager.Instance.UploadTexture(fd.thumb, MetadataTypes.stories.ToString(), fd.id, fd.userID);
 
-                filmsData = filmsData.OrderByDescending(x => x.timestamp).ToList();
+                filmsData = filmsData.OrderByDescending(x => x.likes).ToList();
 
                 if (FirebaseAuthManager.Instance.IsAnonymousUser()) {
                     Events.ShowRegisterPopup();

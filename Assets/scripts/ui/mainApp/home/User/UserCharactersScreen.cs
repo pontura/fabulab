@@ -89,7 +89,8 @@ namespace UI.MainApp.Home.User
             Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
         }
 
-        public override void OpenWork(string id) { 
+        public override void OpenWork(string id) {
+            Data.Instance.charactersData.Game = false;
             UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);    
         }
 

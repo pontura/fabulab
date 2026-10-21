@@ -17,6 +17,16 @@ using Yaguar.FirebaseRest;
 namespace BoardItems
 {
     public class CharactersData : MonoBehaviour {
+
+        public string gameTag = "game_superheroe";
+        [SerializeField] bool isGame;
+
+        public bool Game
+        {
+            get{return isGame;}
+            set{isGame = value;}
+        }
+
         [field:SerializeField] public Vector2Int ThumbSize { get; private set; }
 
         public List<CharacterData> userCharacters;
@@ -260,6 +270,12 @@ namespace BoardItems
             {
                 md = new CharacterMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentCharacter.thumb, timestamp = tstamp };
                 md.AddCreator(md.userID);
+                if(Game)
+                {
+                    md.tags = new List<string>();
+                    md.tags.Add(Data.Instance.charactersData.gameTag);
+                    print("agrega tag " + Data.Instance.charactersData.gameTag);
+                }
                 userCharactersMetaData.Add(md);
                 charactersMetaData.Add(md);
             }
@@ -271,7 +287,7 @@ namespace BoardItems
             }
 
             userCharactersMetaData = userCharactersMetaData.OrderByDescending(x => x.timestamp).ToList();
-            charactersMetaData = charactersMetaData.OrderByDescending(x => x.timestamp).ToList();
+            charactersMetaData = charactersMetaData.OrderByDescending(x => x.likes).ToList();
 
             currentCharacter.id = id;
             currentID = id;
@@ -343,7 +359,7 @@ namespace BoardItems
       
         public void OnLoadCharacterDataFromServer(List<CharacterMetaData> sfds)
         {            
-            charactersMetaData = sfds.OrderByDescending(x => x.timestamp).ToList();
+            charactersMetaData = sfds.OrderByDescending(x => x.likes).ToList();
             /*int count = 0;
             foreach (CharacterMetaData uc in charactersMetaData) {
                 if (count > 0) {
@@ -539,7 +555,7 @@ namespace BoardItems
                 Events.OnCharacterMetadataUpdated(fd);
             }, userId: fd.userID);
 
-            charactersMetaData = charactersMetaData.OrderByDescending(x => x.timestamp).ToList();
+            charactersMetaData = charactersMetaData.OrderByDescending(x => x.likes).ToList();
             userCharactersMetaData = userCharactersMetaData.OrderByDescending(x => x.timestamp).ToList();
             
 
@@ -609,7 +625,15 @@ namespace BoardItems
         {
             return userCharactersMetaData.Find(x => x.id == id) != null;
         }
-
+        public CharacterMetaData GetUserCharacterForGame(string tag)
+        {
+            foreach(CharacterMetaData c in userCharactersMetaData)
+            {
+                if(c.tags.Count>0 && c.tags.Contains(tag))
+                    return c;
+            }
+            return null;
+        }
         public void SetCurrentID(string id)
         {
             if(id == "")

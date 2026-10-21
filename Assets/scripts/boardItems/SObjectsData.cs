@@ -233,7 +233,7 @@ namespace BoardItems
                 md.timestamp = tstamp;
             }
 
-            metaData = metaData.OrderByDescending(x => x.timestamp).ToList();
+            metaData = metaData.OrderByDescending(x => x.likes).ToList();
             userMetaData = userMetaData.OrderByDescending(x => x.timestamp).ToList();
 
             currentSO.id = id;
@@ -302,7 +302,7 @@ namespace BoardItems
         public void OnLoadSODataFromServer(List<CharacterMetaData> sfds)
         {
             //Debug.Log("% OnLoadSODataFromServer !!");
-            foreach (CharacterMetaData sfd in sfds.OrderByDescending(x => x.timestamp).ToList()) {
+            foreach (CharacterMetaData sfd in sfds.OrderByDescending(x => x.likes).ToList()) {
                 PropMetaData pmd = sfd as PropMetaData;
                 metaData.Add(pmd);
                 /*
@@ -494,7 +494,7 @@ namespace BoardItems
                 Events.OnPropMetadataUpdated(pmd);
             }, userId:pmd.userID);
 
-            metaData = metaData.OrderByDescending(x => x.timestamp).ToList();
+            metaData = metaData.OrderByDescending(x => x.likes).ToList();
             userMetaData = userMetaData.OrderByDescending(x => x.timestamp).ToList();            
 
         }

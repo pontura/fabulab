@@ -1,3 +1,4 @@
+using System.Runtime.Serialization.Formatters;
 using BoardItems.BoardData;
 using BoardItems.Characters;
 using OnBoarding;
@@ -24,6 +25,7 @@ namespace UI.MainApp
         [SerializeField] PreviewUI previewUI;
         [SerializeField] GameObject DoneBtn;
         [SerializeField] bool changesMade;
+        [SerializeField] CharactersGames charactersGames;
 
         protected override void ShowScreen(UIManager.screenType type)
         {
@@ -39,6 +41,7 @@ namespace UI.MainApp
                     Show(true);
                    // savePanel.SetActive(false);
                     Invoke("Delayed", 0.1f);
+                    charactersGames.Show(Data.Instance.charactersData.Game);
                     break;
                 default:
                     Show(false);
@@ -68,8 +71,17 @@ namespace UI.MainApp
                 isEditingCharacter = true;
 
             isPreview = !isEditingCharacter;
-            
-            DoneBtn.SetActive(true);     
+
+            if(chID == "" || isMyAvatar)
+            {   
+                DoneBtn.SetActive(true);   
+            }
+            else
+            {            
+                DoneBtn.SetActive(false);     
+                bgColorsBtn.SetActive(false);
+            }
+
             if (StoryMakerEvents.isEditing)
             {
                 Events.ShowUndo(true);       
@@ -80,11 +92,31 @@ namespace UI.MainApp
                 SetTogglePreview();
                 Events.ShowUndo(false);
             }
-            tools.SetActive(chID == "" || isMyAvatar);
+            //tools.SetActive(chID == "" || isMyAvatar);
+            tools.SetActive(!Data.Instance.charactersData.Game);
 
+        }
+        public void PlayGame()
+        {
+            tools.SetActive(true);
+            charactersGames.Show(false);
+            CharacterMetaData c = Data.Instance.charactersData.GetUserCharacterForGame(Data.Instance.charactersData.gameTag);
+            if( c != null)
+                UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, c.id);
+            else
+            {                
+                UIManager.Instance.boardUI.items.DeleteAll();
+                TogglePreview();
+            }
         }
         public void TogglePreview()
         {
+            string chID = Data.Instance.charactersData.GetCurrent();
+            if(chID != "" || !isMyAvatar)
+            {
+                Data.Instance.sObjectsData.SetCurrentID("");                
+                DoneBtn.SetActive(true);     
+            }
            // if (!isMyAvatar) DoneBtn.SetActive(true); // si venias viendo un character de otro te permite guardar una copia, pero si es tu avatar te muestra el boton de guardar desde el principio.
             isPreview = !isPreview;
             SetTogglePreview();
