@@ -60,7 +60,6 @@ namespace UI.MainApp.Home.User
 
         protected override void LoadNext()
         {
-            Debug.Log("% AllStoriesScreen LoadNext");
             foreach(FilmDataFabulab cd in Data.Instance.scenesData.filmsData)
             {
                 if(!isGame && cd.tags != null && cd.tags.Contains("games"))
