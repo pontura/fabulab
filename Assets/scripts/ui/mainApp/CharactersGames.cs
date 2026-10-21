@@ -45,6 +45,8 @@ namespace UI.MainApp
 
                 });
             }
+            
+            Events.OnCharacterAnim("", "idle");
         }
     }
 }
