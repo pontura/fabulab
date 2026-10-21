@@ -284,7 +284,7 @@ namespace BoardItems
             }
 
             userCharactersMetaData = userCharactersMetaData.OrderByDescending(x => x.timestamp).ToList();
-            charactersMetaData = charactersMetaData.OrderByDescending(x => x.timestamp).ToList();
+            charactersMetaData = charactersMetaData.OrderByDescending(x => x.likes).ToList();
 
             currentCharacter.id = id;
             currentID = id;
@@ -356,7 +356,7 @@ namespace BoardItems
       
         public void OnLoadCharacterDataFromServer(List<CharacterMetaData> sfds)
         {            
-            charactersMetaData = sfds.OrderByDescending(x => x.timestamp).ToList();
+            charactersMetaData = sfds.OrderByDescending(x => x.likes).ToList();
             /*int count = 0;
             foreach (CharacterMetaData uc in charactersMetaData) {
                 if (count > 0) {
@@ -488,7 +488,7 @@ namespace BoardItems
                 Events.OnCharacterMetadataUpdated(fd);
             }, userId: fd.userID);
 
-            charactersMetaData = charactersMetaData.OrderByDescending(x => x.timestamp).ToList();
+            charactersMetaData = charactersMetaData.OrderByDescending(x => x.likes).ToList();
             userCharactersMetaData = userCharactersMetaData.OrderByDescending(x => x.timestamp).ToList();
             
 
