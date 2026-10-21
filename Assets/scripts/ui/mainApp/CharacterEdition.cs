@@ -1,3 +1,4 @@
+using System.Runtime.Serialization.Formatters;
 using BoardItems.BoardData;
 using BoardItems.Characters;
 using OnBoarding;
@@ -24,6 +25,7 @@ namespace UI.MainApp
         [SerializeField] PreviewUI previewUI;
         [SerializeField] GameObject DoneBtn;
         [SerializeField] bool changesMade;
+        [SerializeField] CharactersGames charactersGames;
 
         protected override void ShowScreen(UIManager.screenType type)
         {
@@ -39,6 +41,7 @@ namespace UI.MainApp
                     Show(true);
                    // savePanel.SetActive(false);
                     Invoke("Delayed", 0.1f);
+                    charactersGames.Show(Data.Instance.charactersData.Game);
                     break;
                 default:
                     Show(false);
@@ -90,8 +93,21 @@ namespace UI.MainApp
                 Events.ShowUndo(false);
             }
             //tools.SetActive(chID == "" || isMyAvatar);
-            tools.SetActive(true);
+            tools.SetActive(!Data.Instance.charactersData.Game);
 
+        }
+        public void PlayGame()
+        {
+            tools.SetActive(true);
+            charactersGames.Show(false);
+            CharacterMetaData c = Data.Instance.charactersData.GetUserCharacterForGame(Data.Instance.charactersData.gameTag);
+            if( c != null)
+                UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, c.id);
+            else
+            {                
+                UIManager.Instance.boardUI.items.DeleteAll();
+                TogglePreview();
+            }
         }
         public void TogglePreview()
         {

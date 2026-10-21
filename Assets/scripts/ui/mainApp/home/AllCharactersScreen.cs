@@ -7,6 +7,24 @@ namespace UI.MainApp.Home.User
 {
     public class AllCharactersScreen : UserCharactersScreen
     {
+
+        protected override void Start()
+        {
+            base.Start();
+            GameData gameData = new GameData();
+            gameData.title = "Hacé tu Superheroe";
+            gameData.description = "¿Querés participar del concurso de superheroes?";
+            if(gameButton != null)
+                gameButton.Init(gameData, OnGameClicked);
+        }
+
+        private void OnGameClicked(GameData data)
+        {
+            Data.Instance.charactersData.Game = true;
+            string hardcodedCharacterID = "-P-vL3PW-6wXaldES5wD";
+            UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, hardcodedCharacterID);  
+        }
+
         protected override void AddCharacterMetadata(CharacterMetaData cd) {
             if (!cd.isPublic)
                 return;
