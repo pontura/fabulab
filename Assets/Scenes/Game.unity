@@ -3098,6 +3098,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 9128642672211237511, guid: f6ecf26b20d96764090fdd2479517307, type: 3}
   m_PrefabInstance: {fileID: 554299738}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &554313428 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8416719502868404219, guid: 779681c670844c542926cfb3aa180848, type: 3}
+  m_PrefabInstance: {fileID: 1470281932041618756}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &555079144
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18956,7 +18961,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.OnBoarding_StoryPresentationDone
   step: 12
   panel: {fileID: 7159787713412431294}
-  hideOnActive: []
+  hideOnActive:
+  - {fileID: 554313428}
   active: 0
   field: {fileID: 1027738200}
   part: {fileID: 308418807}
