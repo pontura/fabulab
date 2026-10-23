@@ -13604,6 +13604,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 779681c670844c542926cfb3aa180848, type: 3}
+--- !u!1 &1470281932041618757 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8416719502868404219, guid: 779681c670844c542926cfb3aa180848, type: 3}
+  m_PrefabInstance: {fileID: 1470281932041618756}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1488413526238034401
 GameObject:
   m_ObjectHideFlags: 0
@@ -18956,7 +18961,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.OnBoarding_StoryPresentationDone
   step: 12
   panel: {fileID: 7159787713412431294}
-  hideOnActive: []
+  hideOnActive:
+  - {fileID: 1470281932041618757}
   active: 0
   field: {fileID: 1027738200}
   part: {fileID: 308418807}
