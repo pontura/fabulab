@@ -770,7 +770,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OnBoarding.OnBoarding_Objects
   step: 10
   panel: {fileID: 134602003}
-  hideOnActive: []
+  hideOnActive:
+  - {fileID: 2086204525}
   active: 0
   field: {fileID: 1940874091}
   field2: {fileID: 1243005656}
@@ -11765,6 +11766,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1351559564173586648, guid: 68c11a58e0ee70742b90fd1a9e81cd91, type: 3}
   m_PrefabInstance: {fileID: 3475857460101538625}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2086204525 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1707357913939478637, guid: 779681c670844c542926cfb3aa180848, type: 3}
+  m_PrefabInstance: {fileID: 1470281932041618756}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2097141767
 GameObject:
   m_ObjectHideFlags: 0
@@ -13519,6 +13525,14 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 28.9
       objectReference: {fileID: 0}
+    - target: {fileID: 5386166819804221438, guid: 779681c670844c542926cfb3aa180848, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -23.099976
+      objectReference: {fileID: 0}
+    - target: {fileID: 5386166819804221438, guid: 779681c670844c542926cfb3aa180848, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -20.709991
+      objectReference: {fileID: 0}
     - target: {fileID: 5430849478322427232, guid: 779681c670844c542926cfb3aa180848, type: 3}
       propertyPath: m_Name
       value: StoryEditorScreen
@@ -13948,7 +13962,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1844330006090133347, guid: 6d357af800e192e49a439d820a748495, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 3.299469
+      value: 3.2994385
       objectReference: {fileID: 0}
     - target: {fileID: 1844330006090133347, guid: 6d357af800e192e49a439d820a748495, type: 3}
       propertyPath: m_AnchoredPosition.y
