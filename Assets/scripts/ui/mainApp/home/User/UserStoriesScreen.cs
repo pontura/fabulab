@@ -26,7 +26,7 @@ namespace UI.MainApp.Home.User
             Events.OnFilmMetadataRemoved -= OnFilmMetadataRemoved;
         }        
 
-        protected virtual void OnFilmMetadataAdded(FilmDataFabulab fd) {
+        protected virtual void OnFilmMetadataAdded(FilmData fd) {
             Debug.Log("% UserStoriesScreen OnFilmMetadataAdded");
             AddFilmMetadata(fd);
             worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
@@ -35,7 +35,7 @@ namespace UI.MainApp.Home.User
             }
         }
 
-        protected virtual void OnFilmMetadataUpdated(FilmDataFabulab fd) {
+        protected virtual void OnFilmMetadataUpdated(FilmData fd) {
             Debug.Log("% UserStoriesScreen OnFilmMetadataUpdated "+gameObject.name);
             ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
             ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
@@ -62,7 +62,7 @@ namespace UI.MainApp.Home.User
         protected override void LoadNext()
         {
             //Debug.Log("$ LoadNext ");
-            foreach (FilmDataFabulab cd in Data.Instance.scenesData.userFilmsData)
+            foreach (FilmData cd in Data.Instance.scenesData.userFilmsData)
             {
                 if(Data.Instance.userData.isAdmin || (
                     (cd.tags != null && !cd.tags.Contains("games"))|| cd.tags == null)
@@ -74,7 +74,7 @@ namespace UI.MainApp.Home.User
 
         }
 
-        protected virtual void AddFilmMetadata(FilmDataFabulab fd) {
+        protected virtual void AddFilmMetadata(FilmData fd) {
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
             go.Init(fd.id, null);
             go.GetComponent<ItemSelectorStory>().SetContent(fd, this, true);
@@ -108,7 +108,7 @@ namespace UI.MainApp.Home.User
         }
         
         protected override void LoadImage(int index, ItemSelectorBtn isb) {
-            FilmDataFabulab fd = Data.Instance.scenesData.filmsData.Find(x => x.id == isb.Id);
+            FilmData fd = Data.Instance.scenesData.filmsData.Find(x => x.id == isb.Id);
             if (fd != null) {
                 downloading.Add(index);
               //  Debug.Log($"$ DownloadTexture index: {index} Id: {fd.id}");

@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
 {
-    public class Prop : Objeto
+    public class Prop : SceneObject
     {
-        protected GameObject asset;
+        GameObject asset;
         [SerializeField] GameObject prop_to_instantiate;
         [field: SerializeField] public SceneObjectManager objectManager { private set; get; }
 

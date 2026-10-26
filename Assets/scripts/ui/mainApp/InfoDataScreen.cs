@@ -33,10 +33,10 @@ namespace UI.MainApp
             isPublic = false;
             if (type == MetadataTypes.stories) {
                 tagsEditor.gameObject.SetActive(true);
-                FilmDataFabulab filmDataFabulab = Data.Instance.scenesData.GetMeta(id);
-                isPublic = filmDataFabulab.isPublic;
-                nameField.text = filmDataFabulab.name;
-                tagsEditor.Init(filmDataFabulab.tags, type.ToString());
+                FilmData filmData = Data.Instance.scenesData.GetMeta(id);
+                isPublic = filmData.isPublic;
+                nameField.text = filmData.name;
+                tagsEditor.Init(filmData.tags, type.ToString());
             } else {
                 CharacterMetaData md = type == MetadataTypes.so ? Data.Instance.sObjectsData.GetMeta(id) : Data.Instance.charactersData.GetMeta(id);
                 isPublic = md.isPublic;
@@ -78,8 +78,8 @@ namespace UI.MainApp
         }
 
         bool StoryHasChanged() {
-            FilmDataFabulab filmDataFabulab = Data.Instance.scenesData.GetMeta(id);
-            return isPublic != filmDataFabulab.isPublic || nameField.text != filmDataFabulab.name || !CompareTags(filmDataFabulab.tags, tagsEditor.GetSelectedTags());
+            FilmData filmData = Data.Instance.scenesData.GetMeta(id);
+            return isPublic != filmData.isPublic || nameField.text != filmData.name || !CompareTags(filmData.tags, tagsEditor.GetSelectedTags());
         }
         bool ItemHasChanged() {
             CharacterMetaData md = metadataType == MetadataTypes.so ? Data.Instance.sObjectsData.GetMeta(id) : Data.Instance.charactersData.GetMeta(id);
@@ -140,7 +140,7 @@ namespace UI.MainApp
             if (metadataType == MetadataTypes.stories) {
                 Events.OnLoadingParent(null, () => {
                     LoadingStoryDone();
-                    ScenesManagerFabulab.Instance.currentFDataID = "";
+                    ScenesManager.Instance.currentFDataID = "";
                 });
                 eventName = "story_duplicate";
                 parameterName = "story_id";

@@ -33,7 +33,7 @@ namespace UI.MainApp.Home.User
                 Utils.RemoveAllChildsIn(container);
                 foreach(GameIdEntry g in gameData.ids)
                 {
-                    FilmDataFabulab cd = Data.Instance.scenesData.GetMeta(g.id);
+                    FilmData cd = Data.Instance.scenesData.GetMeta(g.id);
                     
                     ThumbButton i = Instantiate(btn, container);
                     buttons.Add(i);
@@ -47,7 +47,7 @@ namespace UI.MainApp.Home.User
         {
             foreach(string s in g.storyIds)
             {
-                FilmDataFabulab cdMadeByUser = Data.Instance.scenesData.userFilmsData.Find(x => x.id == s);
+                FilmData cdMadeByUser = Data.Instance.scenesData.userFilmsData.Find(x => x.id == s);
                 if(cdMadeByUser != null) return true;
             }
             return false;

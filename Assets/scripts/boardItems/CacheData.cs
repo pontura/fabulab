@@ -8,10 +8,10 @@ using Yaguar.StoryMaker.Editor;
 
 public class CacheData : MonoBehaviour
 {
-    public Dictionary<string, List<SceneDataFabulab>> filmsCache;
+    public Dictionary<string, List<SceneData>> filmsCache;
     public List<UserData> users;
 
-    [SerializeField] List<SceneDataFabulab> filmData;
+    [SerializeField] List<SceneData> filmData;
 
     [SerializeField] private int maxUnusedDays = 30; // tiempo de vida si no se usa
     private string cacheDir;
@@ -41,7 +41,7 @@ public class CacheData : MonoBehaviour
     [Serializable]
     public class FilmDataCachePage {
         public int id;
-        public List<FilmDataFabulab> filmsData;
+        public List<FilmData> filmsData;
     }
 
     [Serializable]
@@ -54,12 +54,12 @@ public class CacheData : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        filmsCache = new Dictionary<string, List<SceneDataFabulab>>();
+        filmsCache = new Dictionary<string, List<SceneData>>();
         cacheDir = Application.persistentDataPath + "/imageCache";
         CleanCache();
     }            
 
-    public void AddToFilmCache(string id, List<SceneDataFabulab> source) {
+    public void AddToFilmCache(string id, List<SceneData> source) {
     //   Debug.Log("AddToFilmCache");
         if(filmsCache.ContainsKey(id))
             filmsCache[id] =  CloneFilmData(source);
@@ -71,14 +71,14 @@ public class CacheData : MonoBehaviour
         filmsCache.Remove(id);
     }
 
-    List<SceneDataFabulab> CloneFilmData(List<SceneDataFabulab> source) {
-        List<SceneDataFabulab> nueva = new List<SceneDataFabulab>();
-        foreach (SceneDataFabulab item in source)
+    List<SceneData> CloneFilmData(List<SceneData> source) {
+        List<SceneData> nueva = new List<SceneData>();
+        foreach (SceneData item in source)
             nueva.Add(item.Clone());
         return nueva;
     }    
 
-    public List<SceneDataFabulab> GetCacheFilmData(string id) {
+    public List<SceneData> GetCacheFilmData(string id) {
         filmData = filmsCache[id];
         return CloneFilmData(filmsCache[id]);
     }

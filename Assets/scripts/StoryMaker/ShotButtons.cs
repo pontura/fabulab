@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 namespace Yaguar.StoryMaker.Editor
 {
@@ -12,7 +13,7 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] GameObject marker;
         [SerializeField] DurationBtn durationBtn;
         [SerializeField] ShotSubButtons shotSubButtons;
-        [SerializeField] FilmMakerManagerFabulab filmMakerManagerFabulab;
+        [SerializeField, FormerlySerializedAs("filmMakerManagerFabulab")] FilmMakerManager filmMakerManager;
 
 
         Animation anim;
@@ -26,7 +27,7 @@ namespace Yaguar.StoryMaker.Editor
         {
             if(isOn)
             {
-                int frame = ScenesManagerFabulab.Instance.currentSceneId;
+                int frame = ScenesManager.Instance.currentSceneId;
                 SetFirstFrame(frame <2);
             }
             panel.SetActive(isOn);
@@ -34,7 +35,7 @@ namespace Yaguar.StoryMaker.Editor
         public void OnMarkerUpdated(float timer_pos)
         {
             if(opened) return;
-            int frame = ScenesManagerFabulab.Instance.currentSceneId;
+            int frame = ScenesManager.Instance.currentSceneId;
                 SetFirstFrame(frame <2);
             if(anim == null)
                 anim = GetComponent<Animation>();
@@ -43,12 +44,12 @@ namespace Yaguar.StoryMaker.Editor
         }
          public void AddShot()
         {
-            filmMakerManagerFabulab.New();
+            filmMakerManager.New();
             shotSubButtons.Reset();
         }
          public void DeleteShot()
         {
-            filmMakerManagerFabulab.Delete();
+            filmMakerManager.Delete();
             shotSubButtons.Reset();
         }
         public void DurationBtnClicked()

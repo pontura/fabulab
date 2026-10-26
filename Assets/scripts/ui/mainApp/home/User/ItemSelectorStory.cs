@@ -16,7 +16,7 @@ namespace UI.MainApp.Home.User
         [SerializeField] GameObject editionGO;
         [SerializeField] GameObject viewGO;
         UserStoriesScreen userStoriesScreen;
-        FilmDataFabulab content;
+        FilmData content;
 
         override public void Init(string id, Sprite sprite) {
             base.Init(id, sprite);
@@ -24,7 +24,7 @@ namespace UI.MainApp.Home.User
             metadataType = MetadataTypes.stories;
         }
 
-        public void SetContent(FilmDataFabulab content, UserStoriesScreen userStoriesScreen, bool isEdition)
+        public void SetContent(FilmData content, UserStoriesScreen userStoriesScreen, bool isEdition)
         {
             this.content = content;
             this.userStoriesScreen = userStoriesScreen;

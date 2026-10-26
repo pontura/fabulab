@@ -60,7 +60,7 @@ namespace UI.MainApp.Home.User
 
         protected override void LoadNext()
         {
-            foreach(FilmDataFabulab cd in Data.Instance.scenesData.filmsData)
+            foreach(FilmData cd in Data.Instance.scenesData.filmsData)
             {
                 if(!isGame && cd.tags != null && cd.tags.Contains("games"))
                 {
@@ -77,14 +77,14 @@ namespace UI.MainApp.Home.User
             AudioManager.Instance.musicManager.Play("intro");
         }
 
-        protected override void AddFilmMetadata(FilmDataFabulab fd) {
+        protected override void AddFilmMetadata(FilmData fd) {
             if (!fd.isPublic)
                 return;
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
             go.Init(fd.id, null);
             go.GetComponent<ItemSelectorStory>().SetContent(fd, this, false);
         }
-        protected override void OnFilmMetadataAdded(FilmDataFabulab fd) {
+        protected override void OnFilmMetadataAdded(FilmData fd) {
             Debug.Log("% AllStoriesScreen OnFilmMetadataAdded");
             AddFilmMetadata(fd);
             if (fd.isPublic) {
@@ -102,7 +102,7 @@ namespace UI.MainApp.Home.User
                 ResetCache();
             }
         }
-        protected override void OnFilmMetadataUpdated(FilmDataFabulab fd) {
+        protected override void OnFilmMetadataUpdated(FilmData fd) {
             Debug.Log("% AllStoriesScreen OnFilmMetadataUpdated " + gameObject.name);
             ItemSelectorStory[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorStory>();
             ItemSelectorStory btn = Array.Find(itemBtns, x => x.Id == fd.id);

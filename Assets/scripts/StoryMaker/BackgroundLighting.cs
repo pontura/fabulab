@@ -20,7 +20,7 @@ namespace Yaguar.StoryMaker.Editor
 
 
         BgLigthtingPalette GetCurrentPalette() {
-            string id = ScenesManagerFabulab.Instance.GetActiveScene().lightingId;
+            string id = ScenesManager.Instance.GetActiveScene().lightingId;
             BgLigthtingPalette bglp = LightingPalettes.Find(x => x.Id == id);
             if (bglp == null) {
                 Debug.Log("Cant find BgLigthtingPallete with id " + id);

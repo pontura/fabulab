@@ -48,7 +48,7 @@ namespace UI.MainApp.Home.User
         }
 
         void OpenTextInput() {
-            StoryMakerEvents.OnInputField((ObjectSignal)Scenario.Instance.sceneObejctsManager.selected);
+            StoryMakerEvents.OnInputField((WordBalloon)Scenario.Instance.sceneObjectsManager.selected);
         }
     }
 }

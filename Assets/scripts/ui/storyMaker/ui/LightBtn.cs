@@ -25,7 +25,7 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         void SetButtons() {
-            foreach (BgLigthtingPalette item in (Scenario.Instance.sceneObejctsManager as SceneObjectsManagerFabulab).BackgroundLighting.LightingPalettes) {
+            foreach (BgLigthtingPalette item in Scenario.Instance.sceneObjectsManager.BackgroundLighting.LightingPalettes) {
                 Debug.Log("%% " + item.Id);
                 SimpleButton btn = Instantiate(btn_prefab, btnContainer);
                 btn.Init(item.Icon);
@@ -34,8 +34,8 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         void BackgroundLightingPalette(string id, int defaultStep) {
-            ScenesManagerFabulab.Instance.GetActiveScene().lightingId = id;
-            ScenesManagerFabulab.Instance.GetActiveScene().lightingValue = defaultStep;
+            ScenesManager.Instance.GetActiveScene().lightingId = id;
+            ScenesManager.Instance.GetActiveScene().lightingValue = defaultStep;
             ResetSlider();
             OnSliderChanged();
         }
@@ -49,8 +49,8 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         void ResetSlider() {
-            slider.maxValue = (Scenario.Instance.sceneObejctsManager as SceneObjectsManagerFabulab).BackgroundLighting.GetMaxValue();
-            sliderValue = ScenesManagerFabulab.Instance.GetActiveScene().lightingValue;
+            slider.maxValue = Scenario.Instance.sceneObjectsManager.BackgroundLighting.GetMaxValue();
+            sliderValue = ScenesManager.Instance.GetActiveScene().lightingValue;
             slider.value = sliderValue;
         }
         public void SetValue(float sliderValue)
@@ -60,7 +60,7 @@ namespace Yaguar.StoryMaker.Editor
         public void OnSliderChanged()
         {
             if (!opened) return;
-            ScenesManagerFabulab.Instance.GetActiveScene().lightingValue = (int)slider.value;
+            ScenesManager.Instance.GetActiveScene().lightingValue = (int)slider.value;
             StoryMakerEvents.SetBackgroundLights();
             SetValue(slider.value);
         }

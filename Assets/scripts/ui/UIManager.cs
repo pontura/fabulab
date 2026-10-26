@@ -372,7 +372,7 @@ namespace UI
             yield return new WaitForSeconds(0.5f);
 
             if (newSOData.type == SObjectData.types.generic) {
-                SODataFabulab data = new SODataFabulab();
+                SOPropData data = new SOPropData();
                 data.id = newSOData.id;
                 data.itemName = Utils.GetUniqueDateTimeId();
                 StoryMakerEvents.AddSceneObject(data);
@@ -392,7 +392,7 @@ namespace UI
             Events.OnLoading(true);
             yield return new WaitForSeconds(0.5f);
 
-            SOAvatarFabulabData data = new SOAvatarFabulabData();
+            SOAvatarData data = new SOAvatarData();
             data.id = id;
             data.itemName = Utils.GetUniqueDateTimeId();
             StoryMakerEvents.AddSceneObject(data);

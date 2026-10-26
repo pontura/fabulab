@@ -39,7 +39,7 @@ namespace UI.MainApp.Home.User
         public override void OpenWork(string id)
         {
             print("OpenWork " + id);
-            SOAvatarFabulabData data = new SOAvatarFabulabData();
+            SOAvatarData data = new SOAvatarData();
             data.id = id;
             data.itemName = Utils.GetUniqueDateTimeId();
             StoryMakerEvents.AddSceneObject(data);

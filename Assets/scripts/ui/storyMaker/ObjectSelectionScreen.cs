@@ -48,7 +48,7 @@ namespace UI.MainApp.Home.User
 
         public override void OpenWork(string id)
         {
-            SODataFabulab data = new SODataFabulab();
+            SOPropData data = new SOPropData();
             data.id = id;
             data.itemName = Utils.GetUniqueDateTimeId();
             StoryMakerEvents.AddSceneObject(data);
@@ -91,12 +91,12 @@ namespace UI.MainApp.Home.User
                 if (force_z <= 0)
                 {
                     maxZ += offsetZ;
-                    Scenario.Instance.GetComponent<SceneObjectsManagerFabulab>().ForceZ(maxZ);
+                    Scenario.Instance.GetComponent<SceneObjectsManager>().ForceZ(maxZ);
                     force_z = maxZ;
                 }
                 else
                 {
-                    Scenario.Instance.GetComponent<SceneObjectsManagerFabulab>().ForceZ(0);
+                    Scenario.Instance.GetComponent<SceneObjectsManager>().ForceZ(0);
                     force_z = 0;
                 }
             }
@@ -105,12 +105,12 @@ namespace UI.MainApp.Home.User
                 if (force_z >= 0)
                 {
                     minZ -= offsetZ;
-                    Scenario.Instance.GetComponent<SceneObjectsManagerFabulab>().ForceZ(minZ);
+                    Scenario.Instance.GetComponent<SceneObjectsManager>().ForceZ(minZ);
                     force_z = minZ;
                 }
                 else
                 {
-                    Scenario.Instance.GetComponent<SceneObjectsManagerFabulab>().ForceZ(0);
+                    Scenario.Instance.GetComponent<SceneObjectsManager>().ForceZ(0);
                     force_z = 0;
                 }
             }
@@ -123,8 +123,8 @@ namespace UI.MainApp.Home.User
         }
         void SetFrontBack()
         {
-            if (Scenario.Instance.GetComponent<SceneObjectsManagerFabulab>().selected == null) return;
-            force_z = Scenario.Instance.GetComponent<SceneObjectsManagerFabulab>().selected.GetData().force_z;
+            if (Scenario.Instance.GetComponent<SceneObjectsManager>().selected == null) return;
+            force_z = Scenario.Instance.GetComponent<SceneObjectsManager>().selected.GetData().force_z;
             print("SetFrontBack force_z " + force_z);
             if(force_z == 0)
             {

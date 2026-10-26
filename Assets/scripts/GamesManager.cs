@@ -131,7 +131,7 @@ public class GamesManager : MonoBehaviour
             foreach(string s in g.storyIds)
             {
                // Debug.Log("_____________" + s);
-                foreach(FilmDataFabulab f in Data.Instance.scenesData.userFilmsData)
+                foreach(FilmData f in Data.Instance.scenesData.userFilmsData)
                 {
                     if(f.id == s)
                     {                    
@@ -158,7 +158,7 @@ public class GamesManager : MonoBehaviour
         currentID  = ScenesManager.Instance.currentFilmData.id;
         print("OnSetActiveGame playing " + _playing);
         GameData game = GetGame(activaGameData);
-        totalLockedGameFrames = (game != null && game.freeFirstFrame) ? 0 : ScenesManagerFabulab.Instance.Scenes.Count;
+        totalLockedGameFrames = (game != null && game.freeFirstFrame) ? 0 : ScenesManager.Instance.Scenes.Count;
         playing  = _playing;
     }
 

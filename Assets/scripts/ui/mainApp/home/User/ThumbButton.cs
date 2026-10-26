@@ -24,7 +24,7 @@ public class ThumbButton : MonoBehaviour
         OnClick(id);
     }
      protected void LoadImage(string id) {
-        FilmDataFabulab fd = Data.Instance.scenesData.filmsData.Find(x => x.id == id);
+        FilmData fd = Data.Instance.scenesData.filmsData.Find(x => x.id == id);
         if (fd != null) {
             Data.Instance.cacheData.LoadImage(BoardItems.BoardData.MetadataTypes.stories.ToString(), fd.id, SetTexure, fd.timestamp, fd.userID);
         } else {

@@ -1,0 +1,59 @@
+﻿using UnityEngine;
+using System.Collections.Generic;
+
+namespace Yaguar.StoryMaker.Editor
+{
+    public static class StoryMakerEvents
+    {
+        public static System.Action<Vector2, float, bool> SetCamData;
+        public static System.Action<Vector2, float> SetCamDataEdition;
+        public static System.Action<bool> ActivateCamDataEditionDrag;
+        public static bool isEditing;
+        public static void SetEditing(bool editing)
+        {
+            isEditing = editing;
+            Debug.Log("is_editing: " + isEditing);
+        }
+        public static System.Action UpdateDraw = delegate { };
+        public static System.Action<WordBalloon> OnInputField = delegate { };
+
+        public static System.Action OnStartNewStory = delegate { };
+
+        public static System.Action<string, string> ReplaceSceneObjectFromTo = delegate { };
+        public static System.Action<string> ReplaceSceneObject = delegate { };
+        public static System.Action<SOData> AddSceneObject = delegate { };
+        public static System.Action<SOData> SetSceneObject = delegate { };
+        public static System.Action<List<SOData>> AddAllSceneObjects = delegate { };
+        public static System.Action RemoveSceneObject = delegate { };
+        public static System.Action<int> ChangeFont = delegate { };
+        public static System.Action OnLoadFilm = delegate { };
+        public static System.Action<int> ChangeSpeed = delegate { };
+        public static System.Action RewindStory = delegate { };
+        public static System.Action OnSaveScene = delegate { };
+        public static System.Action<bool> ShowSaveBtn = delegate { };
+        public static System.Action ReorderSceneObjectsInZ = delegate { };
+        public static System.Action<SceneObject> OnStopDraw = delegate { };
+
+        public static System.Action<Vector3, SOData> ShowSoButtons = delegate { };
+        public static System.Action HideSoButtons = delegate { };
+
+        public static System.Action<bool> OnTimelinePlay = delegate { };
+        public static System.Action OnMovieOver = delegate { };
+        public static System.Action OnMoviePaused = delegate { };
+
+        public static System.Action Restart = delegate { };
+        public static System.Action ClearScene = delegate { };
+        public static System.Action HideScene = delegate { };
+        public static System.Action SetBackgroundLights= delegate { };
+
+        public static System.Action EditActions = delegate { };
+        public static System.Action EditExpressions = delegate { };
+
+        public static System.Action NoneItemSelected = delegate { };
+
+        public static System.Action<bool> EnableInputManager = delegate { };
+
+        public static System.Action<bool> EnableStoryEdition = delegate { };
+        public static System.Action<int> OnTimelineSetJump = delegate { };
+    }
+}

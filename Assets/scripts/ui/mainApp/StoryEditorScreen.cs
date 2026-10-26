@@ -8,6 +8,7 @@ using UI.MainApp.Home.User;
 using UnityEngine;
 using Yaguar.StoryMaker.DB;
 using Yaguar.StoryMaker.Editor;
+using Avatar = Yaguar.StoryMaker.Editor.Avatar;
 
 namespace UI.MainApp
 {
@@ -111,13 +112,13 @@ namespace UI.MainApp
 
         public void Init()
         {
-            print("Init EnableStoryEdition " + GetComponent<FilmMakerManager>().isEditing + " frames: " + ScenesManagerFabulab.Instance.Scenes.Count);
+            print("Init EnableStoryEdition " + GetComponent<FilmMakerManager>().isEditing + " frames: " + ScenesManager.Instance.Scenes.Count);
             
             StoryMakerEvents.ShowSaveBtn(GetComponent<FilmMakerManager>().isEditing);
             if (!StoryMakerEvents.isEditing)
                 SetChangesMade(false);
             else
-                StoryMakerEvents.SetEditing(GetComponent<FilmMakerManager>().GetComponent<FilmMakerManager>().isEditing);  
+                StoryMakerEvents.SetEditing(GetComponent<FilmMakerManager>().isEditing);  
                 
             tabs.Init(OnTabClicked, 4);
         }
@@ -131,9 +132,9 @@ namespace UI.MainApp
             if (data is SOAvatarData)
                 EditAvatar(pos, data.id);
             print ("ShowSoButtons " + data);
-            if (data is SODataFabulab)
+            if (data is SOPropData)
                 EditObject(pos, data.id);
-            else if (data is SOInputData)
+            else if (data is SOWordBalloonData)
             {
                 ShowToolsInStories(false);
                 arrowSelect.SetActive(true);
@@ -175,7 +176,7 @@ namespace UI.MainApp
         public void CancelSelection() {
             NoneItemSelected();
             CloseTools();
-            Scenario.Instance.sceneObejctsManager.selected = null;
+            Scenario.Instance.sceneObjectsManager.selected = null;
         }
 
         public void CloseTools()
@@ -184,11 +185,11 @@ namespace UI.MainApp
             arrowSelect.SetActive(false);
             editAvatar.SetActive(false);
             editObjects.SetActive(false);
-            if (Scenario.Instance.sceneObejctsManager.selected != null) {
-                if (Scenario.Instance.sceneObejctsManager.selected is AvatarFabulab avFab) {
+            if (Scenario.Instance.sceneObjectsManager.selected != null) {
+                if (Scenario.Instance.sceneObjectsManager.selected is Avatar avatar) {
                     if(!characterScreen.ReplaceEnabled)
-                        avFab?.Borders?.Show(false);
-                } else if (Scenario.Instance.sceneObejctsManager.selected is Prop prop) {
+                        avatar?.Borders?.Show(false);
+                } else if (Scenario.Instance.sceneObjectsManager.selected is Prop prop) {
                     if (!objectsScreen.ReplaceEnabled)
                         prop?.Borders?.Show(false);
                 }
@@ -210,14 +211,14 @@ namespace UI.MainApp
         }
 
         public void SelectedFlipX() {
-            if (Scenario.Instance.sceneObejctsManager.selected != null) {
-                Scenario.Instance.sceneObejctsManager.selected.FlipX();
+            if (Scenario.Instance.sceneObjectsManager.selected != null) {
+                Scenario.Instance.sceneObjectsManager.selected.FlipX();
             }
         }
 
         public void ReplaceCharacter() {            
              ShowToolsInStories(false);
-            if (Scenario.Instance.sceneObejctsManager.selected != null) {
+            if (Scenario.Instance.sceneObjectsManager.selected != null) {
                 characterScreen.ReplaceEnabled = true;
                 objectSelectionScreen.Cancel();
                 avatarSelectionScreen.Cancel();
@@ -230,14 +231,14 @@ namespace UI.MainApp
                 characterScreen.Show(true);
                 backgroundScreen.Show(false);
                 objectsScreen.Show(false);            
-                if (Scenario.Instance.sceneObejctsManager.selected is AvatarFabulab avFab) {
-                    avFab?.Borders?.Show(true);
+                if (Scenario.Instance.sceneObjectsManager.selected is Avatar avatar) {
+                    avatar?.Borders?.Show(true);
                 }
                 tabs.SetActive(1);
             }
         }
         public void ReplaceProp() {
-            if (Scenario.Instance.sceneObejctsManager.selected != null) {
+            if (Scenario.Instance.sceneObjectsManager.selected != null) {
                 objectsScreen.ReplaceEnabled = true;
                 objectSelectionScreen.Cancel();
                 avatarSelectionScreen.Cancel();
@@ -250,7 +251,7 @@ namespace UI.MainApp
                 characterScreen.Show(false);
                 backgroundScreen.Show(false);
                 objectsScreen.Show(true);
-                if (Scenario.Instance.sceneObejctsManager.selected is Prop prop) {
+                if (Scenario.Instance.sceneObjectsManager.selected is Prop prop) {
                     prop?.Borders?.Show(true);
                 }
                 tabs.SetActive(2);
@@ -315,30 +316,30 @@ namespace UI.MainApp
         public void OnSaveScene() {
             
             //CreateThumb();
-            SceneDataFabulab sdf = ScenesManagerFabulab.Instance.GetActiveScene();
+            SceneData sdf = ScenesManager.Instance.GetActiveScene();
             if(sdf == null) return;
             sdf.Reset();
-            SOData bgData = Scenario.Instance.sceneObejctsManager.bgData;
+            SOData bgData = Scenario.Instance.sceneObjectsManager.bgData;
             if (sdf.bgID != bgData.id || string.IsNullOrEmpty(sdf.bgID)) {
-                ScenesManagerFabulab.Instance.ReplaceBG(sdf.bgID, bgData.id);
+                ScenesManager.Instance.ReplaceBG(sdf.bgID, bgData.id);
                 sdf.bgID = bgData.id;
             }
-            foreach (SceneObject so in Scenario.Instance.sceneObejctsManager.sceneObjects) {
+            foreach (SceneObject so in Scenario.Instance.sceneObjectsManager.sceneObjects) {
                 if (so == null || !so.gameObject.activeSelf)
                     continue;
 
                 SOData soData = null;
 
-                if (so is AvatarFabulab) {
+                if (so is Avatar) {
 
-                    soData = new SOAvatarFabulabData();
+                    soData = new SOAvatarData();
                     soData.Clone(so.GetData());
 
-                    (soData as SOAvatarFabulabData).anim = (so.GetData() as SOAvatarFabulabData).anim;
-                    (soData as SOAvatarFabulabData).emoji = (so.GetData() as SOAvatarFabulabData).emoji;
-                    (soData as SOAvatarFabulabData).goLeft = (so.GetData() as SOAvatarFabulabData).goLeft;
+                    (soData as SOAvatarData).anim = (so.GetData() as SOAvatarData).anim;
+                    (soData as SOAvatarData).emoji = (so.GetData() as SOAvatarData).emoji;
+                    (soData as SOAvatarData).goLeft = (so.GetData() as SOAvatarData).goLeft;
                 } else if (so is Prop) {
-                    soData = new SODataFabulab();
+                    soData = new SOPropData();
                     soData.Clone(so.GetData());
                 } else if (so is WordBalloon) {
                     soData = new SOWordBalloonData();
@@ -356,9 +357,9 @@ namespace UI.MainApp
                 Debug.Log("# Adding to SceneData: " + soData.id + "_"+ soData.itemName + " " + soData);
 
                 sdf.AddSO(soData);
-                if ((so is Prop || so is AvatarFabulab) && (Scenario.Instance.sceneObejctsManager as SceneObjectsManagerFabulab).recentAdded.Contains(so)) {
-                    ScenesManagerFabulab.Instance.AddItemToNextScenesSameBG(soData);
-                    (Scenario.Instance.sceneObejctsManager as SceneObjectsManagerFabulab).recentAdded.Remove(so);
+                if ((so is Prop || so is Avatar) && Scenario.Instance.sceneObjectsManager.recentAdded.Contains(so)) {
+                    ScenesManager.Instance.AddItemToNextScenesSameBG(soData);
+                    Scenario.Instance.sceneObjectsManager.recentAdded.Remove(so);
                 }
 
                 /*if (customizerData != "" && Data.Instance.scenesData.currentFilmData.IsMyStory())
@@ -388,7 +389,7 @@ namespace UI.MainApp
                 saveMenu.SetGame();
             else
             {
-                FilmDataFabulab fdata = Data.Instance.scenesData.GetMeta(ScenesManagerFabulab.Instance.currentFDataID);
+                FilmData fdata = Data.Instance.scenesData.GetMeta(ScenesManager.Instance.currentFDataID);
                 if(fdata != null && fdata.isPublic)
                     saveMenu.SetPublic(true);
                 else
@@ -410,7 +411,7 @@ namespace UI.MainApp
         {
             CloseSaveMenu();
             Events.OnLoading(true);
-            if (ScenesManagerFabulab.Instance.currentFDataID == "")
+            if (ScenesManager.Instance.currentFDataID == "")
                 Save();
             else
             {
@@ -423,11 +424,11 @@ namespace UI.MainApp
             savePanel.SetActive(false);
         }
         void Save() {
-            Data.Instance.scenesData.currentFilmData = new FilmDataFabulab();
+            Data.Instance.scenesData.currentFilmData = new FilmData();
             Data.Instance.scenesData.currentFilmData.name = storyName.text;
-            ScenesManagerFabulab.Instance.currentFilmData = Data.Instance.scenesData.currentFilmData;
+            ScenesManager.Instance.currentFilmData = Data.Instance.scenesData.currentFilmData;
             Data.Instance.scenesData.currentFilmData.userID = Data.Instance.userData.userDataInDatabase.uid;
-            ScenesManagerFabulab.Instance.currentFDataID = "";
+            ScenesManager.Instance.currentFDataID = "";
             savePanel.SetActive(false);
             Invoke(nameof(SaveWork), Time.deltaTime * 2);
         }
@@ -517,18 +518,18 @@ namespace UI.MainApp
 
         [SerializeField] float scaleFactor = 30;
         public void Scale(bool up) {
-            if (Scenario.Instance.sceneObejctsManager.selected != null) {
-                float r = Scenario.Instance.sceneObejctsManager.selected.transform.localScale.x;
+            if (Scenario.Instance.sceneObjectsManager.selected != null) {
+                float r = Scenario.Instance.sceneObjectsManager.selected.transform.localScale.x;
                 if (up) r += scaleFactor; else r -= scaleFactor;
-                Scenario.Instance.sceneObejctsManager.selected.Resize(r);
+                Scenario.Instance.sceneObjectsManager.selected.Resize(r);
             }
         }
         public void Rotate(bool left) {
-            if (Scenario.Instance.sceneObejctsManager.selected != null) {
+            if (Scenario.Instance.sceneObjectsManager.selected != null) {
                 float value = 7.5f;
-                float r = Scenario.Instance.sceneObejctsManager.selected.GetData().rot;
+                float r = Scenario.Instance.sceneObjectsManager.selected.GetData().rot;
                 if (left) r += value; else r -= value;
-                Scenario.Instance.sceneObejctsManager.selected.Rotate(r);
+                Scenario.Instance.sceneObjectsManager.selected.Rotate(r);
             }
         }
     }

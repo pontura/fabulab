@@ -73,7 +73,7 @@ namespace UI.MainApp.Home.User
         }
         
         public override void OpenWork(string id) {
-            SOAvatarFabulabData data = new SOAvatarFabulabData();
+            SOAvatarData data = new SOAvatarData();
             data.id = id;
             data.itemName = Utils.GetUniqueDateTimeId();
             StoryMakerEvents.SetSceneObject(data);
@@ -81,7 +81,7 @@ namespace UI.MainApp.Home.User
         }   
 
         protected override void LoadImage(int index, ItemSelectorBtn isb) {
-            /*FilmDataFabulab fd = Data.Instance.scenesData.filmsData.Find(x => x.id == isb.Id);
+            /*FilmData fd = Data.Instance.scenesData.filmsData.Find(x => x.id == isb.Id);
             if (fd != null) {
                 downloading.Add(index);
                 Debug.Log($"$ DownloadTexture index: {index} Id: {fd.id}");

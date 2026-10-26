@@ -54,7 +54,7 @@ namespace UI.MainApp.Home.User
                     foreach(string storyIds in gameIdEntry.storyIds)
                     {
                         Debug.Log("% Game Story id: " + storyIds);
-                        FilmDataFabulab cd = Data.Instance.scenesData.GetMeta(storyIds);
+                        FilmData cd = Data.Instance.scenesData.GetMeta(storyIds);
                         AddFilmMetadata(cd);
                     }
                     gameId++;
@@ -68,7 +68,7 @@ namespace UI.MainApp.Home.User
         }
 
         //hacemos una nueva versi�n que no herede para que no se agreguen en tiempo real historias porque habr�a que filtrar y mostrarlas debajo del t�tulo correcto
-        new void AddFilmMetadata(FilmDataFabulab fd) {
+        new void AddFilmMetadata(FilmData fd) {
             if(fd == null) 
             {
                 Debug.LogError("AddFilmMetadata fd is null");
@@ -81,7 +81,7 @@ namespace UI.MainApp.Home.User
             }
         }
 
-        protected override void OnFilmMetadataAdded(FilmDataFabulab fd) {
+        protected override void OnFilmMetadataAdded(FilmData fd) {
             Debug.Log("% GamesStories OnFilmMetadataAdded");
             AddFilmMetadata(fd);
             if (fd!=null && fd.tags != null && fd.tags.Contains("games")) {
@@ -101,7 +101,7 @@ namespace UI.MainApp.Home.User
             }
         }
 
-        protected override void OnFilmMetadataUpdated(FilmDataFabulab fd) {
+        protected override void OnFilmMetadataUpdated(FilmData fd) {
             Debug.Log("% GamesStories OnFilmMetadataUpdated " + gameObject.name);
             ItemSelectorStory[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorStory>();
             ItemSelectorStory btn = Array.Find(itemBtns, x => x.Id == fd.id);

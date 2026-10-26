@@ -12,8 +12,17 @@ using Yaguar.StoryMaker.Editor;
 namespace BoardItems
 {
     [Serializable]
-    public class FilmDataFabulab : Yaguar.StoryMaker.Editor.FilmData
+    public class FilmData
     {
+        public int speed;
+        public string id;
+        public int localId;
+        public int framecount;
+        public Texture2D thumb;
+        public string name;
+        public string userID;
+        public string username;
+        public string timestamp;
         public int likes;
         public bool isPublic;
         public List<string> tags;
@@ -29,6 +38,17 @@ namespace BoardItems
             if (userID == null || (Data.Instance.userData.userDataInDatabase != null && userID == Data.Instance.userData.userDataInDatabase.uid))
                 return true;
             return false;
+        }
+        public Sprite GetSprite() {
+            if (thumb == null) {
+                Debug.LogError("No thumb for film id: " + id);
+                return null;
+            }
+            return Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), Vector2.zero);
+        }
+        public string GetTimestamp() {
+            DateTime dateTime = DateTime.Parse(timestamp, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            return dateTime.ToLocalTime().ToString("dd-MM-yyyy");
         }
     }
 
@@ -50,9 +70,9 @@ namespace BoardItems
 
         string sdSeparator = "|";
         string fieldSeparator = "#";
-        public List<FilmDataFabulab> userFilmsData;
-        public List<FilmDataFabulab> filmsData;
-        public FilmDataFabulab currentFilmData;
+        public List<FilmData> userFilmsData;
+        public List<FilmData> filmsData;
+        public FilmData currentFilmData;
         // public string currentName;
 
         public bool loadedDone;
@@ -77,24 +97,24 @@ namespace BoardItems
         void ChangeSpeed(int speed) {
             if (currentFilmData != null) {
                 currentFilmData.speed = speed;
-                ScenesManagerFabulab.Instance.currentFilmData = currentFilmData;
+                ScenesManager.Instance.currentFilmData = currentFilmData;
             }
         }
 
         public void StartNewStory(string storyName) {
             Debug.Log("#StartNewStory");
-            ScenesManagerFabulab.Instance.Restart();
+            ScenesManager.Instance.Restart();
             //hace un nuevo id unico:
-            ScenesManagerFabulab.Instance.currentFDataID = UnityEngine.Random.Range(0, 1000).ToString();
+            ScenesManager.Instance.currentFDataID = UnityEngine.Random.Range(0, 1000).ToString();
             bool idExists = false;
-            foreach (FilmDataFabulab filmData in userFilmsData) {
-                if (ScenesManagerFabulab.Instance.currentFDataID == filmData.id)
+            foreach (FilmData filmData in userFilmsData) {
+                if (ScenesManager.Instance.currentFDataID == filmData.id)
                     idExists = true;
             }
-            currentFilmData = new FilmDataFabulab();
+            currentFilmData = new FilmData();
             currentFilmData.name = storyName;
-            ScenesManagerFabulab.Instance.currentFilmData = currentFilmData;
-            ScenesManagerFabulab.Instance.currentFDataID = "";
+            ScenesManager.Instance.currentFilmData = currentFilmData;
+            ScenesManager.Instance.currentFDataID = "";
             if (idExists) {
                 Debug.Log("#StartNewStory idExists");
                 StartNewStory(storyName);
@@ -126,17 +146,17 @@ namespace BoardItems
         public void LoadAllFilmMetadataFromServer() {
             if (Data.Instance.userData.IsLogged()) {
                 Events.OnLoading(true);
-                ScenesManagerFabulab.Instance.currentFDataID = "";
-                userFilmsData = new List<FilmDataFabulab>();
-                filmsData = new List<FilmDataFabulab>();
+                ScenesManager.Instance.currentFDataID = "";
+                userFilmsData = new List<FilmData>();
+                filmsData = new List<FilmData>();
                 FirebaseStoryMakerDBManager.Instance.LoadAllFilmDataFromServer(filmsData, OnAddAllFilmsData);
             }
         }
 
         public void LoadUserFilmMetadataFromServer() {
             if (Data.Instance.userData.IsLogged()) {
-                ScenesManagerFabulab.Instance.currentFDataID = "";
-                userFilmsData = new List<FilmDataFabulab>();
+                ScenesManager.Instance.currentFDataID = "";
+                userFilmsData = new List<FilmData>();
                 FirebaseStoryMakerDBManager.Instance.LoadUserFilmDataFromServer(userFilmsData, OnAddFilmDataFromServer);
             }
             //SortUserFilmsDataByLikes();
@@ -147,7 +167,7 @@ namespace BoardItems
 
         public void UpdateCurrentName(string name) {
             currentFilmData.name = name;
-            ScenesManagerFabulab.Instance.currentFilmData = currentFilmData;
+            ScenesManager.Instance.currentFilmData = currentFilmData;
         }
 
         public void RemoveFD(string id) {
@@ -155,7 +175,7 @@ namespace BoardItems
             filmsData.RemoveAll(x => x.id == id);
         }
 
-        public void OnAddAllFilmsData(List<FilmDataFabulab> filmsData, Dictionary<string, ServerFilmData> sfds) {
+        public void OnAddAllFilmsData(List<FilmData> filmsData, Dictionary<string, ServerFilmData> sfds) {
             OnAddFilmDataFromServer(filmsData, sfds);
 
             foreach (var film in filmsData) {
@@ -173,13 +193,13 @@ namespace BoardItems
             filmMetadata.ChildRemoved += OnFilmRemoved;
         }
 
-        public void OnAddFilmDataFromServer(List<FilmDataFabulab> filmsData, Dictionary<string, ServerFilmData> sfds) {
+        public void OnAddFilmDataFromServer(List<FilmData> filmsData, Dictionary<string, ServerFilmData> sfds) {
             if (sfds == null) return;
 
             //int count = 0;
             foreach (KeyValuePair<string, ServerFilmData> e in sfds.OrderByDescending(x => x.Value.likes).ToList()) {
                 if (filmsData.Find(x => x.id == e.Key) == null) {
-                    FilmDataFabulab fd = new FilmDataFabulab();
+                    FilmData fd = new FilmData();
                     fd.id = e.Key;
                     fd.framecount = -1;
                     fd.likes = e.Value.likes;
@@ -227,10 +247,10 @@ namespace BoardItems
         public void OnAddFilmDataFromServer(Dictionary<string, ServerFilmData> usfds, int pageId) {
             if (usfds != null) {
                 if (pageId == 0)
-                    filmsData = new List<FilmDataFabulab>();
+                    filmsData = new List<FilmData>();
                 Debug.Log("Load Theme Film Data from Server");
                 foreach (KeyValuePair<string, ServerFilmData> e in usfds) {
-                    FilmDataFabulab fd = new FilmDataFabulab();
+                    FilmData fd = new FilmData();
                     fd.id = e.Key;
                     fd.framecount = -1;
                     fd.likes = e.Value.likes;
@@ -263,11 +283,11 @@ namespace BoardItems
                     return;
 
                 Debug.Log("% OnFilmdAdded: "+sfd.timestamp + " > " + initTimeStamp);
-                FilmDataFabulab fd = filmsData.Find(x => x.id == snapshot.Key);
+                FilmData fd = filmsData.Find(x => x.id == snapshot.Key);
                 if (fd != null) {
                     SetFilmChanged(fd, sfd);
                 } else {
-                    fd = new FilmDataFabulab();
+                    fd = new FilmData();
                     fd.id = snapshot.Key;
 
                     fd.framecount = -1;
@@ -307,7 +327,7 @@ namespace BoardItems
             DataSnapshot snapshot = args.Snapshot;
             if (snapshot.Exists) {
                 ServerFilmData sfd = JsonUtility.FromJson<ServerFilmData>(snapshot.GetRawJsonValue());                
-                FilmDataFabulab fd = filmsData.Find(x => x.id == snapshot.Key);
+                FilmData fd = filmsData.Find(x => x.id == snapshot.Key);
                 if (fd == null) {
                     return;
                 }
@@ -318,7 +338,7 @@ namespace BoardItems
             }
         }
 
-        void SetFilmChanged(FilmDataFabulab fd, ServerFilmData sfd) {
+        void SetFilmChanged(FilmData fd, ServerFilmData sfd) {
             fd.name = sfd.name;
             fd.speed = sfd.speed;
             fd.isPublic = sfd.isPublic;
@@ -350,7 +370,7 @@ namespace BoardItems
 
             DataSnapshot snapshot = args.Snapshot;
             if (snapshot.Exists) {
-                FilmDataFabulab fd = filmsData.Find(x => x.id == snapshot.Key);
+                FilmData fd = filmsData.Find(x => x.id == snapshot.Key);
                 if (fd != null) {
                     filmsData.Remove(fd);
                     userFilmsData.Remove(fd);
@@ -373,15 +393,15 @@ namespace BoardItems
         }
 
         public void OnFilmDataFromServerCompleted() {
-            ScenesManagerFabulab.Instance.currentFDataID = "";
+            ScenesManager.Instance.currentFDataID = "";
         }
 
 
 
         bool FilmExists() {
             bool exists = false;
-            foreach (FilmDataFabulab filmData in userFilmsData) {
-                if (ScenesManagerFabulab.Instance.currentFDataID == filmData.id)
+            foreach (FilmData filmData in userFilmsData) {
+                if (ScenesManager.Instance.currentFDataID == filmData.id)
                     exists = true;
             }
             return exists;
@@ -391,19 +411,19 @@ namespace BoardItems
             this.OnSaveDone = OnSaveDone;
             Debug.Log("# SaveFilm");
             StoryMakerEvents.OnSaveScene();
-            //Data.Instance.firebaseAuthManager.SaveFilmToServer(ScenesManagerFabulab.Instance.currentFDataID, scenes);
+            //Data.Instance.firebaseAuthManager.SaveFilmToServer(ScenesManager.Instance.currentFDataID, scenes);
             if (Data.Instance.userData.IsLogged()) {
                 if (!FilmExists()) {
-                    //Debug.Log(ScenesManagerFabulab.Instance.GetSerialized());
-                    FirebaseStoryMakerDBManager.Instance.SaveFilmToServer(ScenesManagerFabulab.Instance.GetSerialized(), OnFilmSavedToServer);
+                    //Debug.Log(ScenesManager.Instance.GetSerialized());
+                    FirebaseStoryMakerDBManager.Instance.SaveFilmToServer(ScenesManager.Instance.GetSerialized(), OnFilmSavedToServer);
                 } else
-                    FirebaseStoryMakerDBManager.Instance.UpdateFilmToServer(ScenesManagerFabulab.Instance.currentFDataID, ScenesManagerFabulab.Instance.GetSerialized(), OnFilmSavedToServer);
+                    FirebaseStoryMakerDBManager.Instance.UpdateFilmToServer(ScenesManager.Instance.currentFDataID, ScenesManager.Instance.GetSerialized(), OnFilmSavedToServer);
             }
         }
 
         void OnFilmSavedToServer(bool succes, string id) {
             Debug.Log("& OnFilmSavedToServer");
-            ScenesManagerFabulab.Instance.currentFDataID = id;
+            ScenesManager.Instance.currentFDataID = id;
 
             if(Data.Instance.gamesManager.IsEditing())
             {
@@ -411,7 +431,7 @@ namespace BoardItems
                 Data.Instance.gamesManager.AddStoryToGameEntry(id);
             }
 
-            Data.Instance.cacheData.AddToFilmCache(ScenesManagerFabulab.Instance.currentFDataID, ScenesManagerFabulab.Instance.Scenes);
+            Data.Instance.cacheData.AddToFilmCache(ScenesManager.Instance.currentFDataID, ScenesManager.Instance.Scenes);
             SaveTexture();
             
             if(OnSaveDone != null)
@@ -420,11 +440,11 @@ namespace BoardItems
 
         void SaveTexture() {
             Debug.Log("& SaveTexture");
-            FilmDataFabulab fd = userFilmsData.Find(x => x.id == ScenesManagerFabulab.Instance.currentFDataID);
+            FilmData fd = userFilmsData.Find(x => x.id == ScenesManager.Instance.currentFDataID);
             if (fd == null) {
-                fd = new FilmDataFabulab();
-                fd.id = ScenesManagerFabulab.Instance.currentFDataID;
-                fd.framecount = ScenesManagerFabulab.Instance.Scenes.Count;
+                fd = new FilmData();
+                fd.id = ScenesManager.Instance.currentFDataID;
+                fd.framecount = ScenesManager.Instance.Scenes.Count;
                 fd.thumb = currentFilmData.thumb;
                 fd.name = currentFilmData.name;
                 fd.speed = currentFilmData.speed;
@@ -433,7 +453,7 @@ namespace BoardItems
                 userFilmsData.Add(fd);
                 Events.OnFilmMetadataAdded(fd);
             } else {
-                fd.framecount = ScenesManagerFabulab.Instance.Scenes.Count;
+                fd.framecount = ScenesManager.Instance.Scenes.Count;
                 fd.thumb = currentFilmData.thumb;
                 fd.name = currentFilmData.name;
                 fd.speed = currentFilmData.speed;
@@ -444,10 +464,10 @@ namespace BoardItems
 
             currentFilmData = fd;
 
-            ScenesManagerFabulab.Instance.currentFilmData = currentFilmData;
+            ScenesManager.Instance.currentFilmData = currentFilmData;
 
             if (Data.Instance.userData.IsLogged()) {
-                FilmDataFabulab tfd = filmsData.Find(x => x.id == fd.id);
+                FilmData tfd = filmsData.Find(x => x.id == fd.id);
                 if (tfd == null)
                     filmsData.Add(fd);
                 else
@@ -469,7 +489,7 @@ namespace BoardItems
             Events.OnPopupTopSignalText("Historia salvada");
         }
 
-        void SaveMetadata(FilmDataFabulab fd, System.Action<bool, string> OnDone = null) {
+        void SaveMetadata(FilmData fd, System.Action<bool, string> OnDone = null) {
             ServerFilmData sfd = new ServerFilmData();
             sfd.name = fd.name;
             sfd.speed = fd.speed;
@@ -482,7 +502,7 @@ namespace BoardItems
         }
     
         public void SaveInfo(string id, bool isPublic, List<string> selectedTagsID, System.Action<bool, string> OnDone) {
-            FilmDataFabulab md = filmsData.Find(x => x.id == id);
+            FilmData md = filmsData.Find(x => x.id == id);
             md.isPublic = isPublic;
             if (selectedTagsID.Count > 0) {
                 md.tags = new List<string>();
@@ -498,14 +518,14 @@ namespace BoardItems
                 print("LoadFilm _id:" + _id + " loadedDone: " + loadedDone);
             loadedDone = false;
             currentFilmData = filmsData.Find(x => x.id == _id);
-            ScenesManagerFabulab.Instance.currentFilmData = currentFilmData;
+            ScenesManager.Instance.currentFilmData = currentFilmData;
             if (currentFilmData != null) {
-                ScenesManagerFabulab.Instance.currentFDataID = currentFilmData.id;
-                ScenesManagerFabulab.Instance.Scenes = new List<SceneDataFabulab>();
+                ScenesManager.Instance.currentFDataID = currentFilmData.id;
+                ScenesManager.Instance.Scenes = new List<SceneData>();
                 //Data.Instance.firebaseAuthManager.LoadFilmFromServer(ScenesManager.Instance.currentFDataID, 0);
-                if (Data.Instance.cacheData.filmsCache.ContainsKey(ScenesManagerFabulab.Instance.currentFDataID)) {
+                if (Data.Instance.cacheData.filmsCache.ContainsKey(ScenesManager.Instance.currentFDataID)) {
                     Debug.Log("Load From Cache");
-                    ScenesManagerFabulab.Instance.Scenes = Data.Instance.cacheData.GetCacheFilmData(ScenesManagerFabulab.Instance.currentFDataID);
+                    ScenesManager.Instance.Scenes = Data.Instance.cacheData.GetCacheFilmData(ScenesManager.Instance.currentFDataID);
                     LoadSucces();
                 } else
                     FirebaseStoryMakerDBManager.Instance.LoadFilmFromServer(currentFilmData, OnFilmLoadedFromServer);
@@ -517,16 +537,16 @@ namespace BoardItems
             print("____________LoadUserFilm" + loadedDone);
             loadedDone = false;
             currentFilmData = userFilmsData.Find(x => x.id == _id);
-            ScenesManagerFabulab.Instance.currentFilmData = currentFilmData;
+            ScenesManager.Instance.currentFilmData = currentFilmData;
             if (currentFilmData != null) {
-                ScenesManagerFabulab.Instance.currentFDataID = currentFilmData.id;
-                ScenesManagerFabulab.Instance.Scenes = new List<SceneDataFabulab>();
+                ScenesManager.Instance.currentFDataID = currentFilmData.id;
+                ScenesManager.Instance.Scenes = new List<SceneData>();
 
                 if (Data.Instance.userData.IsLogged()) {
-                    //Data.Instance.firebaseAuthManager.LoadFilmFromServer(ScenesManagerFabulab.Instance.currentFDataID, 0);
-                    if (Data.Instance.cacheData.filmsCache.ContainsKey(ScenesManagerFabulab.Instance.currentFDataID)) {
+                    //Data.Instance.firebaseAuthManager.LoadFilmFromServer(ScenesManager.Instance.currentFDataID, 0);
+                    if (Data.Instance.cacheData.filmsCache.ContainsKey(ScenesManager.Instance.currentFDataID)) {
                         Debug.Log("Load From Cache");
-                        ScenesManagerFabulab.Instance.Scenes = Data.Instance.cacheData.GetCacheFilmData(ScenesManagerFabulab.Instance.currentFDataID);
+                        ScenesManager.Instance.Scenes = Data.Instance.cacheData.GetCacheFilmData(ScenesManager.Instance.currentFDataID);
                         LoadSucces();
                     } else
                         FirebaseStoryMakerDBManager.Instance.LoadFilmFromServer(currentFilmData, OnFilmLoadedFromServer);
@@ -538,7 +558,7 @@ namespace BoardItems
 
         void LoadSucces() {
             //Debug.Log("____________LoadSucces");
-            if(ScenesManagerFabulab.Instance.currentFilmData.userID != Data.Instance.userData.userDataInDatabase.uid) {
+            if(ScenesManager.Instance.currentFilmData.userID != Data.Instance.userData.userDataInDatabase.uid) {
                 GetAllFilmElements();
                 return;
             }
@@ -546,21 +566,21 @@ namespace BoardItems
             loadedDone = true;
         }
 
-        void OnFilmLoadedFromServer(bool succes, List<SceneDataFabulab> sds) {
+        void OnFilmLoadedFromServer(bool succes, List<SceneData> sds) {
             if (succes) {
                 Debug.Log("& OnFilmLoadedFromServer "+ sds.Count);
-                //ScenesManagerFabulab.Instance.Scenes = sds.OfType<SceneDataFabulab>().ToList();
-                ScenesManagerFabulab.Instance.Scenes = sds;
-                Data.Instance.cacheData.AddToFilmCache(ScenesManagerFabulab.Instance.currentFDataID, ScenesManagerFabulab.Instance.Scenes);
+                //ScenesManager.Instance.Scenes = sds.OfType<SceneData>().ToList();
+                ScenesManager.Instance.Scenes = sds;
+                Data.Instance.cacheData.AddToFilmCache(ScenesManager.Instance.currentFDataID, ScenesManager.Instance.Scenes);
                 LoadSucces();
             }
         }
 
 
         public void InitLoadedFilm() {
-            if (ScenesManagerFabulab.Instance.Scenes.Count > 0 && ScenesManagerFabulab.Instance.Scenes.Count >= currentFilmData.framecount) {
-                ScenesManagerFabulab.Instance.currentSceneId = 1;
-                ScenesManagerFabulab.Instance.AddAllObjectsToScene();
+            if (ScenesManager.Instance.Scenes.Count > 0 && ScenesManager.Instance.Scenes.Count >= currentFilmData.framecount) {
+                ScenesManager.Instance.currentSceneId = 1;
+                ScenesManager.Instance.AddAllObjectsToScene();
                 //Invoke(nameof(StoryMakerEvents.OnLoadFilm),Time.deltaTime);
                 StoryMakerEvents.OnLoadFilm();
             } else {
@@ -571,7 +591,7 @@ namespace BoardItems
         List<(string id, SceneElementType type)> elementsIds;
         void GetAllFilmElements() {
             elementsIds = new List<(string, SceneElementType)>();
-            foreach (SceneDataFabulab sdf in ScenesManagerFabulab.Instance.Scenes) {
+            foreach (SceneData sdf in ScenesManager.Instance.Scenes) {
                 elementsIds.AddRange(sdf.GetScenesElements().Where(p => p.type == SceneElementType.AVATAR || p.type == SceneElementType.PROP)
                     .Select(p => (p.data.id, p.type)).Distinct().ToList().Except(elementsIds));
                 if (sdf.bgID!="" && !elementsIds.Contains((sdf.bgID, SceneElementType.PROP)))
@@ -650,13 +670,13 @@ namespace BoardItems
             }
         }
 
-        public FilmDataFabulab GetMeta(string id) {
+        public FilmData GetMeta(string id) {
             return filmsData.Find(x => x.id == id);
         }
 
         public void ResetCurrentFilmData() {
-            currentFilmData = new FilmDataFabulab();
-            ScenesManagerFabulab.Instance.currentFilmData = currentFilmData;
+            currentFilmData = new FilmData();
+            ScenesManager.Instance.currentFilmData = currentFilmData;
             currentFilmData.tags = new List<string>();
             currentFilmData.tags.Add("games");
         }

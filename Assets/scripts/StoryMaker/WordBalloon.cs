@@ -4,8 +4,10 @@ using UnityEngine.UI;
 
 namespace Yaguar.StoryMaker.Editor
 {
-    public class WordBalloon : ObjectSignal
+    public class WordBalloon : SceneObject
     {
+        public TMPro.TMP_Text field;
+
         int standardSize = 22;
         int genericSize = 60;
 
@@ -29,22 +31,20 @@ namespace Yaguar.StoryMaker.Editor
         [field:SerializeField] public Sprite[] balloonSprites { get; private set; }
         [field: SerializeField] public Sprite[] balloonIcons { get; private set; }
 
-        public override void SetField(string text)
+        public void SetField(string text)
         {
-            print("SetField Direction text: " + text);
             field.text = text;
             (GetData() as SOWordBalloonData).inputValue = text;
         }
-        public override void SetDirection(int direction)
+        public void SetDirection(int direction)
         {
-            print("SetDirection " + direction);
             (GetData() as SOWordBalloonData).direction = direction;
             SetDirectionArrow(direction);
         }
-        public override void SetFont(int id)
+        public void SetFont(int id)
         {
             (GetData() as SOWordBalloonData).fontId = id;
-            Fonts font =  (Scenario.Instance.sceneObejctsManager as SceneObjectsManagerFabulab).FontAssets.GetFont(id);
+            Fonts font = Scenario.Instance.sceneObjectsManager.FontAssets.GetFont(id);
             field.font = font.fontAsset;
         }
 

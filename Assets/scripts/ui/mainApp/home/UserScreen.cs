@@ -141,7 +141,7 @@ namespace UI.MainApp.Home
             Debug.Log("# OnPropMetadataRemoved");
             publicObjField.text = "" + Data.Instance.sObjectsData.userMetaData.Count(x => x.isPublic);
         }
-        void OnFilmMetadataUpdated(FilmDataFabulab fd) {
+        void OnFilmMetadataUpdated(FilmData fd) {
             Debug.Log("# OnFilmMetadataUpdated");
             publicStoriesField.text = "" + Data.Instance.scenesData.userFilmsData.Count(x => x.isPublic);
         }

@@ -1,0 +1,95 @@
+using BoardItems;
+using BoardItems.BoardData;
+using Firebase.Analytics;
+using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
+using Yaguar.StoryMaker.DB;
+
+namespace Yaguar.StoryMaker.Editor
+{
+    public class VideoPlayer : MonoBehaviour
+    {
+        [SerializeField] TMPro.TMP_Text titleField;
+        [SerializeField] TMPro.TMP_Text creatorField;
+        [SerializeField] TMPro.TMP_Text dateField;
+        [SerializeField] Image image;
+
+        [SerializeField, FormerlySerializedAs("filmMakerManagerFabulab")] FilmMakerManager filmMakerManager;
+        [SerializeField] Timeline timeline;
+        [SerializeField] GameObject playButton;
+        [SerializeField] protected Button reportBtn;
+
+        private void Start()
+        {
+            StoryMakerEvents.OnMovieOver += OnMovieOver;
+        }
+        private void OnDestroy()
+        {
+            StoryMakerEvents.OnMovieOver -= OnMovieOver;
+        }
+        void OnMovieOver()
+        {
+            playButton.SetActive(true);
+        }
+        public void Show(bool isOn)
+        {
+            gameObject.SetActive(isOn);
+            if (isOn)
+            {
+                playButton.SetActive(true);
+                FilmData f = Data.Instance.scenesData.currentFilmData;
+                SetContent(f);
+            }
+        }
+        public void PlayClicked()
+        {
+            playButton.SetActive(false);
+            ScenesManager.Instance.currentSceneId = 1;
+            timeline.JumpTo(ScenesManager.Instance.currentSceneId);
+            StoryMakerEvents.OnTimelinePlay(true);
+
+            FabulabAnalytics.LogEvent(
+                "others_story_played",
+                new System.Collections.Generic.Dictionary<string, object> {
+                    { "story_id", ScenesManager.Instance.currentFilmData.id },
+                    { "story_user_id", ScenesManager.Instance.currentFilmData.userID }
+                });
+        }
+        public void FastForward()
+        {
+            filmMakerManager.Next();
+            StoryMakerEvents.OnTimelinePlay(true);
+        }
+        public void Rewind()
+        {
+            filmMakerManager.Prev();
+            StoryMakerEvents.OnTimelinePlay(true);
+        }
+
+        void SetContent(FilmData content)
+        {
+            titleField.text = content.name;
+
+            Data.Instance.cacheData.GetUser(content.userID, (userData, tex) => {
+                creatorField.text = userData.username;
+                image.sprite = tex != null ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f)) : image.sprite;
+
+            });
+
+            dateField.text = content.GetTimestamp();
+
+        }
+
+        public void OnReportClicked() {
+            AudioManager.Instance.uiSfxManager.PlayTransp("click", 2);
+            Events.OnConfirm("¿Querés reportar este contenido como inadecuado?", "Sí", "No", OnReportConfirmed);
+        }
+        private void OnReportConfirmed(bool doIt) {
+            if (doIt) {
+                FirebaseStoryMakerDBManager.Instance.ReportContent(MetadataTypes.stories.ToString(), ScenesManager.Instance.currentFilmData.id);
+                Events.OnPopupTopSignalText("¡GRACIAS!");
+            }
+        }
+    }
+}

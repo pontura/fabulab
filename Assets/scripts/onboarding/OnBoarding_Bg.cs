@@ -80,7 +80,7 @@ namespace OnBoarding
 
             // print("AddCharacterToScene lastID:" + newCharacterID);
 
-            // SOAvatarFabulabData data = new SOAvatarFabulabData();
+            // SOAvatarData data = new SOAvatarData();
             // data.id = newCharacterID;
             // data.itemName = Utils.GetUniqueDateTimeId();
             

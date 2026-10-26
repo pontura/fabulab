@@ -7,7 +7,7 @@ public class EditFieldUI : MonoBehaviour
     [SerializeField] GameObject[] fontsBtn;
     [SerializeField] GameObject panel;
     [SerializeField] TMPro.TMP_InputField field;
-    ObjectSignal objectSignal;
+    WordBalloon objectSignal;
 
     void Start() {
         Close();
@@ -28,14 +28,14 @@ public class EditFieldUI : MonoBehaviour
     void ShowSoButtons(Vector3 pos, SOData data)
     {
         print("ShowSoButtons " + data);
-        if (data is SOInputData)
-            OnInputField((ObjectSignal)Scenario.Instance.sceneObejctsManager.selected);
+        if (data is SOWordBalloonData)
+            OnInputField((WordBalloon)Scenario.Instance.sceneObjectsManager.selected);
     }
     void SetFocus() {
         field.Select();
     }
 
-    void OnInputField(ObjectSignal objectSignal) {
+    void OnInputField(WordBalloon objectSignal) {
         this.objectSignal = objectSignal;
         if (objectSignal.field.text != "")
             field.text = objectSignal.field.text;
@@ -86,7 +86,7 @@ public class EditFieldUI : MonoBehaviour
     {
         GetComponent<UI.MainApp.StoryEditorScreen>().CloseTools();
         print("id: " + id);
-        Fonts font = (Scenario.Instance.sceneObejctsManager as SceneObjectsManagerFabulab).FontAssets.GetFont(id);
+        Fonts font = Scenario.Instance.sceneObjectsManager.FontAssets.GetFont(id);
         field.fontAsset = font.fontAsset;
         StoryMakerEvents.ChangeFont(id);
 

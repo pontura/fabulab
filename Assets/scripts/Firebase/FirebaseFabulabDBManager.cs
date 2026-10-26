@@ -617,7 +617,7 @@ namespace Yaguar.StoryMaker.DB
             Debug.Log("Server: UpdateFilmDataToServer: " + s);
         }
 
-        public void LoadUserFilmDataFromServer(List<FilmDataFabulab> filmsData, System.Action<List<FilmDataFabulab>, Dictionary<string, ServerFilmData>> callback) {
+        public void LoadUserFilmDataFromServer(List<FilmData> filmsData, System.Action<List<FilmData>, Dictionary<string, ServerFilmData>> callback) {
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/");
             reference.OrderByChild("userID").EqualTo(_uid).GetValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
@@ -647,7 +647,7 @@ namespace Yaguar.StoryMaker.DB
             //Debug.Log(url);
         }
 
-        public void LoadAllFilmDataFromServer(List<FilmDataFabulab> filmsData, System.Action<List<FilmDataFabulab>, Dictionary<string, ServerFilmData>> callback) {
+        public void LoadAllFilmDataFromServer(List<FilmData> filmsData, System.Action<List<FilmData>, Dictionary<string, ServerFilmData>> callback) {
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("metadata/stories/");
             reference.GetValueAsync().ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {
@@ -731,7 +731,7 @@ namespace Yaguar.StoryMaker.DB
             //print("SaveFilmToServer url : " + url);
         }
 
-        public void DeleteFilm(FilmDataFabulab fd, System.Action<string> callback) {
+        public void DeleteFilm(FilmData fd, System.Action<string> callback) {
             if (fd.userID != _uid && !Data.Instance.userData.isAdmin)
                 return;
 
@@ -754,7 +754,7 @@ namespace Yaguar.StoryMaker.DB
             //Debug.Log(url);
         }
 
-        public void LoadFilmFromServer(FilmDataFabulab fd, System.Action<bool, List<SceneDataFabulab>> callback) {
+        public void LoadFilmFromServer(FilmData fd, System.Action<bool, List<SceneData>> callback) {
 
             string uid = _uid;
             if (fd.userID != null) {
@@ -776,12 +776,12 @@ namespace Yaguar.StoryMaker.DB
                         }
 
                         var children = task.Result.Children.OrderBy(c => int.Parse(c.Key)); //Ordena los key evitando el orden lexigráfico (10 antes que 2)
-                        List<SceneDataFabulab> scene = new List<SceneDataFabulab>();
+                        List<SceneData> scene = new List<SceneData>();
 
                         foreach (var child in children) {
                             //Debug.Log(child.Key + " => " + child.Child("name").Value);
-                            //SceneDataFabulab sdf = JsonUtility.FromJson<SceneDataFabulab>(child.GetRawJsonValue());
-                            SceneDataFabulab sdf = new SceneDataFabulab();
+                            //SceneData sdf = JsonUtility.FromJson<SceneData>(child.GetRawJsonValue());
+                            SceneData sdf = new SceneData();
                             sdf.bgID = child.Child("bgID").Value as string;
                             sdf.camData = new CamData();
                             if (child.HasChild("transition"))
@@ -789,7 +789,7 @@ namespace Yaguar.StoryMaker.DB
                             if (child.HasChild("duration"))
                                 sdf.duration = float.Parse(child.Child("duration").Value as string, System.Globalization.CultureInfo.InvariantCulture);
                             else
-                                sdf.duration = ScenesManagerFabulab.Instance.Keyframe_default_duration;
+                                sdf.duration = ScenesManager.Instance.Keyframe_default_duration;
                             if (child.HasChild("lightingId"))
                                 sdf.lightingId = child.Child("lightingId").Value as string;
                             if (child.HasChild("lightingValue"))
@@ -819,7 +819,7 @@ namespace Yaguar.StoryMaker.DB
                             sdf.CopyScenesElements(elements);
                             scene.Add(sdf);
                         }
-                        //SceneDataFabulab[] sdf = JsonConvert.DeserializeObject<SceneDataFabulab[]>(task.Result.GetRawJsonValue());
+                        //SceneData[] sdf = JsonConvert.DeserializeObject<SceneData[]>(task.Result.GetRawJsonValue());
                         Debug.Log("# " + scene.Count);
                         callback(true, scene);
                     } catch (Exception ex) {
