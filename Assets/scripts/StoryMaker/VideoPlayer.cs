@@ -16,7 +16,6 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] Image image;
 
         [SerializeField, FormerlySerializedAs("filmMakerManagerFabulab")] FilmMakerManager filmMakerManager;
-        [SerializeField] Timeline timeline;
         [SerializeField] GameObject playButton;
         [SerializeField] protected Button reportBtn;
 
@@ -45,9 +44,7 @@ namespace Yaguar.StoryMaker.Editor
         public void PlayClicked()
         {
             playButton.SetActive(false);
-            ScenesManager.Instance.currentSceneId = 1;
-            timeline.JumpTo(ScenesManager.Instance.currentSceneId);
-            StoryMakerEvents.OnTimelinePlay(true);
+            filmMakerManager.PlayFromStart();
 
             FabulabAnalytics.LogEvent(
                 "others_story_played",

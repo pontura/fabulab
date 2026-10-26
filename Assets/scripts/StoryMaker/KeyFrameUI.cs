@@ -63,7 +63,7 @@ public class KeyFrameUI : MonoBehaviour
     }
     public void OnClick()
     {
-        timeline.SetJump(id);
+        timeline.OnKeyframeClicked(id);
     }
     public void UpdateScreenshot()
     {

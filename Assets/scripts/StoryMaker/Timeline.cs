@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
 {
+    // View of the keyframes. The current keyframe is owned by FilmMakerManager: this class only reads it
+    // and asks FilmMakerManager to navigate.
     public class Timeline : MonoBehaviour
     {
         [SerializeField] DurationBtn durationBtn;
@@ -24,10 +26,10 @@ namespace Yaguar.StoryMaker.Editor
         public float timer;
         public float keyframe_duration = 2;
 
-        int activeAnimatedKeyframeID = 1;
         int playingGameFrames;
 
         ScenesManager scenesManager => ScenesManager.Instance;
+        int activeKeyframe => filmMakerUI.CurrentKeyframe;
 
         public float totalTimer
         {
@@ -45,7 +47,6 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.OnLoadFilm += Reset;
             StoryMakerEvents.OnStartNewStory += Reset;
             StoryMakerEvents.ChangeSpeed += ChangeSpeed;
-            StoryMakerEvents.RewindStory += Rewind;
         }
 
         void Start() {
@@ -58,13 +59,11 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.OnLoadFilm -= Reset;
             StoryMakerEvents.OnStartNewStory -= Reset;
             StoryMakerEvents.ChangeSpeed -= ChangeSpeed;
-            StoryMakerEvents.RewindStory -= Rewind;
         }
 
         void OnEnable() {
             StoryMakerEvents.OnStopDraw += OnStopDraw;
             StoryMakerEvents.UpdateDraw += UpdateDraw;
-            StoryMakerEvents.OnMovieOver += OnMovieOver;
             if(all.Count>1)
                 ghostImage.Show(true);
 
@@ -87,7 +86,6 @@ namespace Yaguar.StoryMaker.Editor
         {
             StoryMakerEvents.OnStopDraw -= OnStopDraw;
             StoryMakerEvents.UpdateDraw -= UpdateDraw;
-            StoryMakerEvents.OnMovieOver -= OnMovieOver;
             StopAllCoroutines();
             ghostImage.Show(false);
         }
@@ -107,15 +105,15 @@ namespace Yaguar.StoryMaker.Editor
             if(!filmMakerUI.isEditing) return;
             if(!gameObject.activeSelf) return;
 
-            if(activeAnimatedKeyframeID <= all.Count)
-                all[activeAnimatedKeyframeID - 1].UpdateScreenshot();
+            if(activeKeyframe <= all.Count)
+                all[activeKeyframe - 1].UpdateScreenshot();
         }
 
         // Snaps the dropped object to its position in the previous keyframe when it was released close to it
         void OnStopDraw(SceneObject so)
         {
             SOData soData = so.GetData();
-            SceneElement sceneElement = scenesManager.GetSOInScene(scenesManager.currentSceneId-2, soData.id);
+            SceneElement sceneElement = scenesManager.GetSOInScene(activeKeyframe-2, soData.id);
             if(sceneElement == null)
                 return;
             V3 v3 = sceneElement.data.pos;
@@ -126,16 +124,6 @@ namespace Yaguar.StoryMaker.Editor
                 soData.pos = v3;
                 so.gameObject.transform.localPosition = v3.ToVector3();
             }
-        }
-
-        void Rewind() {
-            SetJumpWithoutSaving(1);
-        }
-
-        void OnMovieOver()
-        {
-            if(filmMakerUI.isEditing)
-                SetJumpWithoutSaving(scenesManager.Scenes.Count);
         }
 
         void ChangeSpeed(int speed)
@@ -151,7 +139,6 @@ namespace Yaguar.StoryMaker.Editor
         public void Reset()
         {
             ghostImage.Reset();
-            activeAnimatedKeyframeID = 1;
             if (scenesManager.currentFilmData != null)
                 StoryMakerEvents.ChangeSpeed(scenesManager.currentFilmData.speed);
 
@@ -175,7 +162,7 @@ namespace Yaguar.StoryMaker.Editor
 
         void OnLoadDone()
         {
-            filmMakerUI.JumpTo(1);
+            filmMakerUI.ShowKeyframe(1);
             UpdateKeyframes();
             if(Data.Instance.gamesManager.playing)
             {
@@ -191,7 +178,7 @@ namespace Yaguar.StoryMaker.Editor
             int id = 1;
             foreach (KeyFrameUI kf in all)
             {
-                filmMakerUI.JumpTo(id);
+                filmMakerUI.ShowKeyframe(id);
                 kf.UpdateScreenshot();
                 id++;
                 yield return new WaitForSeconds(0.1f);
@@ -221,7 +208,7 @@ namespace Yaguar.StoryMaker.Editor
                 kf.SetID(id+1);
                 kf.SetSize(totalDuration);
                 kf.SetColor(id %2 == 0);
-                if(id+1 == activeAnimatedKeyframeID)
+                if(id+1 == activeKeyframe)
                     kf.SetSelected(true);
                 else if(kf.selected)
                     kf.SetSelected(false);
@@ -229,20 +216,21 @@ namespace Yaguar.StoryMaker.Editor
             }
         }
 
-        public void RemoveKeyframe()
+        public void RemoveKeyframe(int keyframeId)
         {
-            KeyFrameUI kf = all[activeAnimatedKeyframeID - 1];
+            KeyFrameUI kf = all[keyframeId - 1];
             Destroy(kf.gameObject);
             all.Remove(kf);
             UpdateKeyframes();
         }
 
-        public void InitPlaying()
+        public void OnKeyframeClicked(int keyframeId)
         {
+            filmMakerUI.GoTo(keyframeId);
+        }
+
+        public void OnPlay() {
             shotButtons.Show(false);
-            Scenario.Instance.ResetScenario();
-            JumpTo(scenesManager.currentSceneId);
-            filmMakerUI.JumpTo(scenesManager.currentSceneId);
         }
 
         public void OnStop() {
@@ -265,49 +253,50 @@ namespace Yaguar.StoryMaker.Editor
                 StoryMakerEvents.OnTimelinePlay(false);
                 pos.x = total_x_marker;
                 StoryMakerEvents.OnMovieOver();
-                filmMakerUI.JumpTo(activeAnimatedKeyframeID);
+                filmMakerUI.ShowKeyframe(activeKeyframe);
             }
             else
-                CheckToNextAnimatedKeyframe();
+                CheckToNextKeyframe();
             keyFrameMarker.transform.localPosition = pos;
         }
 
-        // Saves the current keyframe and jumps to another one
-        public void SetJump(int id) {
-            StoryMakerEvents.OnSaveScene();
-            SetJumpWithoutSaving(id);
-        }
-
-        void SetJumpWithoutSaving(int id) {
-            scenesManager.currentSceneId = id;
-            StoryMakerEvents.OnTimelineSetJump(activeAnimatedKeyframeID);
-            JumpTo(id);
-        }
-
-        // Moves the marker and the selection to a keyframe, without changing the scene
-        public void JumpTo(int keyframeId)
+        // While playing, shows the next keyframe when the timer reaches it
+        void CheckToNextKeyframe()
         {
-            activeAnimatedKeyframeID = keyframeId;
+            float nextTimer = 0;
+            for (int a = 0; a < activeKeyframe; a++)
+            {
+                if (a < all.Count)
+                    nextTimer += all[a].duration;
+            }
+            if (timer >= nextTimer)
+                filmMakerUI.ShowKeyframe(activeKeyframe + 1);
+        }
+
+        // Updates the marker, the selection and the keyframe panels to the current keyframe
+        public void Refresh()
+        {
             timer = CalculateTimer();
             SetPosition();
             UpdateKeyframes();
             ForceMarkerPosition();
 
-            float activeDuration = all[activeAnimatedKeyframeID - 1].duration;
+            float activeDuration = all[activeKeyframe - 1].duration;
             float sliderValue = (activeDuration - Min_speed) / (Max_speed - Min_speed);
 
             durationBtn?.SetDuration(activeDuration);
             durationBtn?.SetValue(sliderValue);
 
-            OnJumpDone();
+            SetCams();
+            UpdateGhostImage();
+            CheckForKeyframeInteraction();
         }
 
-        void OnJumpDone()
+        void UpdateGhostImage()
         {
-            SetCams();
-            if(scenesManager.currentSceneId<2) { ghostImage.Show(false); return; }
-            int prevSceneID = scenesManager.currentSceneId-2;
-            if(scenesManager.Scenes[scenesManager.currentSceneId-1].bgID == scenesManager.Scenes[prevSceneID].bgID)
+            if(activeKeyframe<2) { ghostImage.Show(false); return; }
+            int prevSceneID = activeKeyframe-2;
+            if(scenesManager.Scenes[activeKeyframe-1].bgID == scenesManager.Scenes[prevSceneID].bgID)
             {
                 ghostImage.Show(true);
                 ghostImage.Init(all[prevSceneID].sprite);
@@ -315,12 +304,11 @@ namespace Yaguar.StoryMaker.Editor
             {
                 ghostImage.Show(false);
             }
-            CheckForKeyframeInteraction();
         }
 
         void SetCams()
         {
-            CamData cd = scenesManager.Scenes[scenesManager.currentSceneId-1].camData;
+            CamData cd = scenesManager.Scenes[activeKeyframe-1].camData;
             StoryMakerEvents.SetCamDataEdition(cd.pos,cd.zoom);
         }
 
@@ -331,13 +319,13 @@ namespace Yaguar.StoryMaker.Editor
             pos.x = timer_pos * (total_x_marker / totalTimer);
             keyFrameMarker.transform.localPosition = pos;
             if(filmMakerUI.isEditing)
-                shotButtons.OnMarkerUpdated(pos.x + all[activeAnimatedKeyframeID - 1].mid);
+                shotButtons.OnMarkerUpdated(pos.x + all[activeKeyframe - 1].mid);
         }
 
         float CalculateTimer()
         {
             float timer_pos = 0;
-            for (int a = 0; a < activeAnimatedKeyframeID - 1; a++)
+            for (int a = 0; a < activeKeyframe - 1; a++)
             {
                 if (a < all.Count)
                     timer_pos += all[a].duration;
@@ -345,24 +333,9 @@ namespace Yaguar.StoryMaker.Editor
             return timer_pos;
         }
 
-        void CheckToNextAnimatedKeyframe()
-        {
-            float nextTimer = 0;
-            for (int a = 0; a < activeAnimatedKeyframeID; a++)
-            {
-                if (a < all.Count)
-                    nextTimer += all[a].duration;
-            }
-            if (timer >= nextTimer)
-            {
-                activeAnimatedKeyframeID++;
-                filmMakerUI.JumpTo(activeAnimatedKeyframeID);
-            }
-        }
-
         public float OnChangeDuration(float value) {
             float duration = Mathf.Lerp(Min_speed, Max_speed, value);
-            all[activeAnimatedKeyframeID - 1].SetDuration(duration);
+            all[activeKeyframe - 1].SetDuration(duration);
             if (scenesManager.GetActiveScene() != null)
                 scenesManager.GetActiveScene().duration = duration;
             UpdateKeyframes();
@@ -372,7 +345,7 @@ namespace Yaguar.StoryMaker.Editor
 
         void CheckForKeyframeInteraction()
         {
-            bool avoidInteraction = filmMakerUI.isPlayingGame && scenesManager.currentSceneId <= playingGameFrames;
+            bool avoidInteraction = filmMakerUI.isPlayingGame && activeKeyframe <= playingGameFrames;
             gamesLockScreen.SetActive(avoidInteraction);
         }
 
@@ -389,14 +362,14 @@ namespace Yaguar.StoryMaker.Editor
             yield return new WaitForSeconds(0.5f);
             if(playingGameFrames > 0)
             {
-                SetJump(playingGameFrames);
+                filmMakerUI.GoTo(playingGameFrames);
                 yield return new WaitForSeconds(0.1f);
                 filmMakerUI.New();
             }
             else
             {
                 // nada bloqueado: el primer frame de la plantilla queda editable, sin crear un frame nuevo automaticamente
-                SetJump(1);
+                filmMakerUI.GoTo(1);
             }
             yield return new WaitForSeconds(0.1f);
             CheckForKeyframeInteraction();

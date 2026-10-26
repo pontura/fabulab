@@ -40,16 +40,21 @@ namespace Yaguar.StoryMaker.Editor
 
         ScenesManager scenesManager => ScenesManager.Instance;
 
+        // The keyframe being shown (1 based). This class is the only one that changes it.
+        public int CurrentKeyframe => scenesManager.currentSceneId;
+
         void Awake() {
             StoryMakerEvents.OnTimelinePlay += OnTimelinePlay;
             StoryMakerEvents.EnableStoryEdition += EnableStoryEdition;
-            StoryMakerEvents.OnTimelineSetJump += OnTimelineSetJump;
+            StoryMakerEvents.RewindStory += Rewind;
+            StoryMakerEvents.OnMovieOver += OnMovieOver;
         }
 
         void OnDestroy() {
             StoryMakerEvents.OnTimelinePlay -= OnTimelinePlay;
             StoryMakerEvents.EnableStoryEdition -= EnableStoryEdition;
-            StoryMakerEvents.OnTimelineSetJump -= OnTimelineSetJump;
+            StoryMakerEvents.RewindStory -= Rewind;
+            StoryMakerEvents.OnMovieOver -= OnMovieOver;
         }
 
         void Update()
@@ -108,8 +113,17 @@ namespace Yaguar.StoryMaker.Editor
             if (isEditing)
                 StoryMakerEvents.OnSaveScene();
             State = states.PLAYING;
-            timeline.InitPlaying();
+            timeline.OnPlay();
+            Scenario.Instance.ResetScenario();
+            timeline.Refresh();
+            ShowKeyframe(CurrentKeyframe);
             StoryMakerEvents.ReorderSceneObjectsInZ();
+        }
+
+        public void PlayFromStart()
+        {
+            scenesManager.currentSceneId = 1;
+            StoryMakerEvents.OnTimelinePlay(true);
         }
 
         void Stop() {
@@ -151,12 +165,11 @@ namespace Yaguar.StoryMaker.Editor
 
             StoryMakerEvents.OnSaveScene();
 
-            scenesManager.currentSceneId++;
-            scenesManager.AddNewScene(scenesManager.currentSceneId);
+            scenesManager.AddNewScene(CurrentKeyframe + 1);
             Scenario.Instance.sceneObjectsManager.TurnOfAllTexts();
             SetButtons();
             timeline.AddNewKeyframe();
-            timeline.JumpTo(scenesManager.currentSceneId);
+            timeline.Refresh();
         }
 
         // Deletes the current keyframe
@@ -168,81 +181,70 @@ namespace Yaguar.StoryMaker.Editor
             if (Scenario.Instance != null)
                 Scenario.Instance.sceneObjectsManager.ResetScene();
 
+            int deletedKeyframe = CurrentKeyframe;
             scenesManager.RemoveActiveScene();
-            if (scenesManager.currentSceneId > 1)
-                scenesManager.currentSceneId--;
+            timeline.RemoveKeyframe(deletedKeyframe);
 
-            SetButtons();
-            scenesManager.SetSceneObjectsIntoScenario();
-
-            timeline.RemoveKeyframe();
-
-            timeline.JumpTo(scenesManager.currentSceneId);
+            ShowKeyframe(Mathf.Max(deletedKeyframe - 1, 1), refreshAllObjects: true);
+            timeline.Refresh();
         }
 
         public void Next()
         {
-            Stop();
-
-            if(isEditing)
-            {
-                StoryMakerEvents.OnTimelinePlay(false);
-                StoryMakerEvents.OnSaveScene();
-            }
-
-            if (scenesManager.currentSceneId < scenesManager.Scenes.Count)
-                GoToScene(scenesManager.currentSceneId + 1);
+            if (CurrentKeyframe < scenesManager.Scenes.Count)
+                GoTo(CurrentKeyframe + 1);
         }
 
         public void Prev()
         {
-            Stop();
-            StoryMakerEvents.OnSaveScene();
-            GoToScene(Mathf.Max(scenesManager.currentSceneId - 1, 1));
+            GoTo(Mathf.Max(CurrentKeyframe - 1, 1));
         }
 
         public void PrevAll()
         {
-            Stop();
-            StoryMakerEvents.OnSaveScene();
-            GoToScene(1);
+            GoTo(1);
         }
 
         public void NextAll()
         {
-            Stop();
-            StoryMakerEvents.OnSaveScene();
-            GoToScene(scenesManager.Scenes.Count);
+            GoTo(scenesManager.Scenes.Count);
         }
 
-        void GoToScene(int sceneId)
+        void Rewind()
         {
-            JumpTo(sceneId);
-            timeline.JumpTo(scenesManager.currentSceneId);
+            GoTo(1, save: false);
         }
 
-        void OnTimelineSetJump(int lastSceneId) {
-            Stop();
-            SetButtons();
-
-            if (scenesManager.GetActiveScene() != null) {
-                toggleTransition.isOn = scenesManager.GetActiveScene().transition;
-                StoryMakerEvents.SetBackgroundLights();
-            }
-
-            scenesManager.SetSceneObjectsIntoScenario(lastSceneId);
-            StoryMakerEvents.ReorderSceneObjectsInZ();
-
-            Invoke(nameof(SetPaused), Time.deltaTime);
-        }
-
-        // Shows the scene of a keyframe. While playing, it also starts the transition to the next one
-        public void JumpTo(int keyframeID)
+        void OnMovieOver()
         {
-            int lastSceneId = scenesManager.currentSceneId;
-            scenesManager.currentSceneId = keyframeID;
+            if (isEditing)
+                GoTo(scenesManager.Scenes.Count, save: false);
+        }
 
+        // Navigates to a keyframe: stops the playback, saves the current keyframe when editing,
+        // shows the new one and updates the timeline
+        public void GoTo(int keyframe, bool save = true)
+        {
+            if (State == states.PLAYING)
+                StoryMakerEvents.OnTimelinePlay(false);
+            else
+                Stop();
+
+            if (save && isEditing)
+                StoryMakerEvents.OnSaveScene();
+
+            ShowKeyframe(keyframe);
+            timeline.Refresh();
+        }
+
+        // Shows the scene of a keyframe without touching the timeline. While playing, it also starts
+        // the transition to the next one
+        public void ShowKeyframe(int keyframe, bool refreshAllObjects = false)
+        {
             int total = scenesManager.Scenes.Count;
+            int lastSceneId = refreshAllObjects ? -1 : scenesManager.currentSceneId;
+            scenesManager.currentSceneId = Mathf.Clamp(keyframe, 1, Mathf.Max(total, 1));
+
             int nextSceneid = scenesManager.currentSceneId + 1;
             SceneData activeScene = scenesManager.GetActiveScene();
             if (activeScene != null)
@@ -272,11 +274,6 @@ namespace Yaguar.StoryMaker.Editor
             {
                 MoveCamSingleFrame();
             }
-
-            if (scenesManager.currentSceneId > total)
-                scenesManager.currentSceneId = total;
-            else if (scenesManager.currentSceneId <= 1)
-                scenesManager.currentSceneId = 1;
 
             SetButtons();
 
