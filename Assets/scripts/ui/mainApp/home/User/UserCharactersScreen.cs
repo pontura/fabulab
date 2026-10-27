@@ -21,18 +21,21 @@ namespace UI.MainApp.Home.User
         }
         
         void OnCharacterMetadataAdded(CharacterMetaData fd) {
-            AddCharacterMetadata(fd);
-            worksContainer.GetChild(worksContainer.childCount - 1).SetAsFirstSibling();
+            ItemSelectorBtn btn = AddCharacterMetadata(fd);
+            if (btn == null)
+                return;
+            btn.transform.SetAsFirstSibling();
             if (firstImageCache) {
                 ResetCache();
             }
         }
 
-        protected  virtual void AddCharacterMetadata(CharacterMetaData fd) {
-            Debug.Log("% AddCharacterMetadata");
+        // Adds the button of a character. Returns null when this list does not show it
+        protected  virtual ItemSelectorBtn AddCharacterMetadata(CharacterMetaData fd) {
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
 
             go.Init(fd, MetadataTypes.characters, OpenWork, true);
+            return go;
 
             //pelu     go.Init(fd, MetadataTypes.characters);
             //pelu     go.GetComponent<Button>().onClick.AddListener(() => OpenWork(fd.id));

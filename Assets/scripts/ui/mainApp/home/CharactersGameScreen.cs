@@ -7,18 +7,25 @@ namespace UI.MainApp.Home.User
 {
     public class CharactersGameScreen : UserCharactersScreen
     {
-        protected override void AddCharacterMetadata(CharacterMetaData cd) 
+        // Only the characters of the game (with its tag) are listed
+        bool IsGameCharacter(CharacterMetaData cd) {
+            return cd.tags != null && cd.tags.Contains(Data.Instance.charactersData.gameTag);
+        }
+
+        protected override ItemSelectorBtn AddCharacterMetadata(CharacterMetaData cd)
         {
+            if (!IsGameCharacter(cd))
+                return null;
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-            print("go " + go);
             go.Init(cd, MetadataTypes.characters, OpenWork);
+            return go;
         }
 
         protected override void OnCharacterMetadataUpdated(CharacterMetaData fd) {
             ItemSelectorBtn[] itemBtns = worksContainer.GetComponentsInChildren<ItemSelectorBtn>();
             ItemSelectorBtn btn = Array.Find(itemBtns, x => x.Id == fd.id);
             if (btn != null) {
-                if (!fd.isPublic) {
+                if (!fd.isPublic || !IsGameCharacter(fd)) {
                     Destroy(btn.gameObject);
                     Invoke(nameof(ResetAndSetScroll), Time.deltaTime * 3);
                 } else {
@@ -30,25 +37,15 @@ namespace UI.MainApp.Home.User
                     ResetAndSetScroll();
                 }
             } else {
-                if (fd.isPublic) {
-                    AddCharacterMetadata(fd);
+                if (fd.isPublic && AddCharacterMetadata(fd) != null)
                     ResetAndSetScroll();
-                }
             }
-        }       
+        }
 
         protected override void LoadNext()
         {
-            print("CharactersGameScreen LoadNext");
             foreach(CharacterMetaData cd in Data.Instance.charactersData.charactersMetaData)
-            {
-                print("cd.tags.Count " + cd.tags.Count);
-                if(cd.tags.Count > 0 && cd.tags.Contains(Data.Instance.charactersData.gameTag))
-                {
-                    AddCharacterMetadata(cd);                    
-                    print("CharactersGameScreen game_superheroe");
-                }
-            }
+                AddCharacterMetadata(cd);
 
             Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
         }

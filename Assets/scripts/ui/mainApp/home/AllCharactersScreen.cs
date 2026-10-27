@@ -25,16 +25,16 @@ namespace UI.MainApp.Home.User
             UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, hardcodedCharacterID);  
         }
 
-        protected override void AddCharacterMetadata(CharacterMetaData cd) {
+        protected override ItemSelectorBtn AddCharacterMetadata(CharacterMetaData cd) {
             if (!cd.isPublic)
-                return;
+                return null;
 
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
-            print("go " + go);
             if (StoryMakerEvents.isEditing)
                 go.Init(cd, MetadataTypes.characters, Duplicate);
             else
                 go.Init(cd, MetadataTypes.characters, OpenWork);
+            return go;
         }
 
         protected override void OnCharacterMetadataUpdated(CharacterMetaData fd) {
