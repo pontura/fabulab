@@ -52,7 +52,7 @@ namespace UI.MainApp
             CloseTools();
             StoryMakerEvents.ShowSaveBtn += ShowSaveBtn;
             StoryMakerEvents.ShowSoButtons += ShowSoButtons;
-            StoryMakerEvents.OnSaveScene += OnSaveScene;
+            StoryMakerEvents.OnStoryChanged += OnStoryChanged;
             StoryMakerEvents.EditActions += EditorActions;
             StoryMakerEvents.EditExpressions += EditExpressions;
             StoryMakerEvents.OnLoadFilm += OnLoadFilm;
@@ -74,7 +74,7 @@ namespace UI.MainApp
         {
             StoryMakerEvents.ShowSaveBtn -= ShowSaveBtn;
             StoryMakerEvents.ShowSoButtons -= ShowSoButtons;
-            StoryMakerEvents.OnSaveScene -= OnSaveScene;
+            StoryMakerEvents.OnStoryChanged -= OnStoryChanged;
             StoryMakerEvents.EditActions -= EditorActions;
             StoryMakerEvents.EditExpressions -= EditExpressions;
             StoryMakerEvents.OnLoadFilm -= OnLoadFilm;
@@ -213,6 +213,7 @@ namespace UI.MainApp
         public void SelectedFlipX() {
             if (Scenario.Instance.sceneObjectsManager.selected != null) {
                 Scenario.Instance.sceneObjectsManager.selected.FlipX();
+                Scenario.Instance.sceneObjectsManager.Commit(Scenario.Instance.sceneObjectsManager.selected);
             }
         }
 
@@ -313,9 +314,7 @@ namespace UI.MainApp
             }   
         }
 
-        public void OnSaveScene() {
-            if (!ScenesManager.Instance.SaveActiveScene())
-                return;
+        void OnStoryChanged() {
             if (!changesMade && GetComponent<FilmMakerManager>().isEditing)
                 SetChangesMade(true);
         }
@@ -472,6 +471,7 @@ namespace UI.MainApp
                 float r = Scenario.Instance.sceneObjectsManager.selected.transform.localScale.x;
                 if (up) r += scaleFactor; else r -= scaleFactor;
                 Scenario.Instance.sceneObjectsManager.selected.Resize(r);
+                Scenario.Instance.sceneObjectsManager.Commit(Scenario.Instance.sceneObjectsManager.selected);
             }
         }
         public void Rotate(bool left) {
@@ -480,6 +480,7 @@ namespace UI.MainApp
                 float r = Scenario.Instance.sceneObjectsManager.selected.GetData().rot;
                 if (left) r += value; else r -= value;
                 Scenario.Instance.sceneObjectsManager.selected.Rotate(r);
+                Scenario.Instance.sceneObjectsManager.Commit(Scenario.Instance.sceneObjectsManager.selected);
             }
         }
     }

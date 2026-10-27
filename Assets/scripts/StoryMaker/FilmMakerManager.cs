@@ -112,8 +112,6 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         void Play() {
-            if (isEditing)
-                StoryMakerEvents.OnSaveScene();
             State = states.PLAYING;
             timeline.OnPlay();
             Scenario.Instance.ResetScenario();
@@ -183,8 +181,6 @@ namespace Yaguar.StoryMaker.Editor
             if (timeline.all.Count >= scenesManager.MaxKeyframes)
                 return;
 
-            StoryMakerEvents.OnSaveScene();
-
             scenesManager.AddNewScene(CurrentKeyframe + 1);
             Scenario.Instance.sceneObjectsManager.TurnOfAllTexts();
             SetButtons();
@@ -232,26 +228,22 @@ namespace Yaguar.StoryMaker.Editor
 
         void Rewind()
         {
-            GoTo(1, save: false);
+            GoTo(1);
         }
 
         void OnMovieOver()
         {
             if (isEditing)
-                GoTo(scenesManager.Scenes.Count, save: false);
+                GoTo(scenesManager.Scenes.Count);
         }
 
-        // Navigates to a keyframe: stops the playback, saves the current keyframe when editing,
-        // shows the new one and updates the timeline
-        public void GoTo(int keyframe, bool save = true)
+        // Navigates to a keyframe: stops the playback, shows the keyframe and updates the timeline
+        public void GoTo(int keyframe)
         {
             if (State == states.PLAYING)
                 StoryMakerEvents.OnTimelinePlay(false);
             else
                 Stop();
-
-            if (save && isEditing)
-                StoryMakerEvents.OnSaveScene();
 
             ShowKeyframe(keyframe);
             timeline.Refresh();
@@ -370,8 +362,11 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public void OnTransitionChange() {
-            if(scenesManager!=null && scenesManager.GetActiveScene()!=null)
-                scenesManager.GetActiveScene().transition = toggleTransition.isOn;
+            SceneData activeScene = scenesManager != null ? scenesManager.GetActiveScene() : null;
+            if (activeScene == null || activeScene.transition == toggleTransition.isOn)
+                return;
+            activeScene.transition = toggleTransition.isOn;
+            scenesManager.MarkChanged();
         }
     }
 }

@@ -362,8 +362,11 @@ namespace Yaguar.StoryMaker.Editor
         public float OnChangeDuration(float value) {
             float duration = Mathf.Lerp(Min_speed, Max_speed, value);
             all[activeKeyframe - 1].SetDuration(duration);
-            if (scenesManager.GetActiveScene() != null)
-                scenesManager.GetActiveScene().duration = duration;
+            SceneData activeScene = scenesManager.GetActiveScene();
+            if (activeScene != null && activeScene.duration != duration) {
+                activeScene.duration = duration;
+                scenesManager.MarkChanged();
+            }
             UpdateKeyframes();
             ForceMarkerPosition();
             return duration;

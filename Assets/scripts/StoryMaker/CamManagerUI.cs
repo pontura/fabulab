@@ -85,6 +85,7 @@ namespace Yaguar.StoryMaker.Editor
                 print("_________" + camData.pos);
                 camerasEditorUI.Reset();
             }
+            ScenesManager.Instance.MarkChanged();
         }
     }
 }

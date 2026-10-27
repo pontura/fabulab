@@ -23,14 +23,18 @@ namespace Yaguar.StoryMaker.Editor
         [field: SerializeField] public SOBGData bgData { private set; get; }
 
         public SceneObject selected;
-        List<SceneObject> recentAdded = new();
+
+        // True while the scenario is updated from the scenes, so that it is not taken as a user edit
+        bool applyingScenes;
+
+        ScenesManager scenesManager => ScenesManager.Instance;
 
         void Start()
         {
             StoryMakerEvents.ChangeFont += ChangeFont;
             StoryMakerEvents.SetBackgroundLights += SetBackgroundLights;
             StoryMakerEvents.AddAllSceneObjects += AddAllSceneObjects;
-            StoryMakerEvents.AddSceneObject += AddSceneObject;
+            StoryMakerEvents.AddSceneObject += AddNewSceneObject;
             StoryMakerEvents.SetSceneObject += SetSceneObject;
             StoryMakerEvents.RemoveSceneObject += RemoveSceneObject;
             StoryMakerEvents.ReplaceSceneObjectFromTo += ReplaceSceneObjectFromTo;
@@ -39,13 +43,15 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.OnMoviePaused += OnMovieOver;
             StoryMakerEvents.Restart += ShowBgMask;
             StoryMakerEvents.ClearScene += HideBgMask;
+            Events.OnCharacterAnim += OnCharacterAnim;
+            Events.OnCharacterExpression += OnCharacterExpression;
         }
         void OnDestroy()
         {
             StoryMakerEvents.ChangeFont -= ChangeFont;
             StoryMakerEvents.SetBackgroundLights -= SetBackgroundLights;
             StoryMakerEvents.AddAllSceneObjects -= AddAllSceneObjects;
-            StoryMakerEvents.AddSceneObject -= AddSceneObject;
+            StoryMakerEvents.AddSceneObject -= AddNewSceneObject;
             StoryMakerEvents.SetSceneObject -= SetSceneObject;
             StoryMakerEvents.RemoveSceneObject -= RemoveSceneObject;
             StoryMakerEvents.ReplaceSceneObject -= ReplaceSceneObject;
@@ -54,6 +60,8 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.OnMoviePaused -= OnMovieOver;
             StoryMakerEvents.Restart -= ShowBgMask;
             StoryMakerEvents.ClearScene -= HideBgMask;
+            Events.OnCharacterAnim -= OnCharacterAnim;
+            Events.OnCharacterExpression -= OnCharacterExpression;
         }
         private void SetBackgroundLights()
         {
@@ -68,12 +76,27 @@ namespace Yaguar.StoryMaker.Editor
 
             foreach(SceneObject so in sceneObjects)
                 so.gameObject.SetActive(false);
-
-            recentAdded.Clear();
         }
 
+        // An object added by the user: it is shown and added to the active scene
+        void AddNewSceneObject(SOData data) {
+            AddSceneObject(data);
+            if (data is SOBGData)
+                scenesManager.SetActiveBackground(data.id);
+            else
+                scenesManager.AddToActiveScene(data);
+        }
+
+        // Saves into the active scene the edits made to a scene object
+        public void Commit(SceneObject so) {
+            if (so != null)
+                scenesManager.UpdateInActiveScene(so.GetData());
+        }
+
+        // Shows a scene object, without changing the scenes
         public void AddSceneObject(SOData data)
         {
+            applyingScenes = true;
             selected = null;
 
             if (data is SOAvatarData avatarData) {
@@ -123,25 +146,47 @@ namespace Yaguar.StoryMaker.Editor
                 selected = wordBalloon;
             }
 
-            if (selected != null) {
+            if (selected != null)
                 sceneObjects.Add(selected);
-                recentAdded.Add(selected);
-            }
+            applyingScenes = false;
         }
 
+        // Shows a scene object as it is in the active scene
         public void SetSceneObject(SOData data) {
 
             SceneObject so = GetSceneObjectInScene(data);
             so.gameObject.SetActive(true);
             ApplyData(so, data);
             if (data is SOAvatarData avatarData) {
+                applyingScenes = true;
                 Events.OnCharacterAnim(so.GetData().id, avatarData.anim);
                 Events.OnCharacterExpression(so.GetData().id, avatarData.emoji);
+                applyingScenes = false;
             } else if (data is SOWordBalloonData soWBD) {
                 WordBalloon wordBalloon = so as WordBalloon;
                 wordBalloon.SetField(soWBD.inputValue);
                 wordBalloon.SetDirection(soWBD.direction);
                 wordBalloon.SetFont(soWBD.fontId);
+            }
+        }
+
+        void OnCharacterAnim(string characterID, string anim) {
+            CommitAvatars(characterID, data => data.anim = anim);
+        }
+
+        void OnCharacterExpression(string characterID, string emoji) {
+            CommitAvatars(characterID, data => data.emoji = emoji);
+        }
+
+        // An action or expression chosen for a character is saved for its avatars in the scenario
+        void CommitAvatars(string characterID, System.Action<SOAvatarData> apply) {
+            if (applyingScenes)
+                return;
+            foreach (SceneObject so in sceneObjects) {
+                if (so is Avatar && so.gameObject.activeInHierarchy && so.GetData().id == characterID) {
+                    apply((SOAvatarData)so.GetData());
+                    Commit(so);
+                }
             }
         }
 
@@ -173,17 +218,21 @@ namespace Yaguar.StoryMaker.Editor
         void ChangeFont(int id)
         {
             WordBalloon wordBaloon = selected.GetComponent<WordBalloon>();
-            if(wordBaloon != null)
+            if(wordBaloon != null) {
                 wordBaloon.SetFont(id);
+                Commit(wordBaloon);
+            }
         }
         public void ForceZ(float value)
         {
             selected.ForceZ(value);
+            Commit(selected);
         }
 
         void RemoveSceneObject()
         {
-            if (ScenesManager.Instance.StillExistInOtherScenes(selected.GetData()))
+            scenesManager.RemoveFromActiveScene(selected.GetData());
+            if (scenesManager.StillExistInOtherScenes(selected.GetData()))
                 selected.gameObject.SetActive(false);
             else
                 DestroySelected();
@@ -203,7 +252,6 @@ namespace Yaguar.StoryMaker.Editor
         }
         void ReplaceSceneObject(string id) {
             if (selected is Avatar || selected is Prop) {
-                StoryMakerEvents.OnSaveScene();
                 SOData data = null;
                 if (selected is Avatar)
                     data = new SOAvatarData();
@@ -278,13 +326,6 @@ namespace Yaguar.StoryMaker.Editor
 
         void HideBgMask() {
             bgMask.SetActive(false);
-        }
-
-        // True (only once) for an avatar or prop added since the last save
-        public bool TakeRecentlyAdded(SceneObject so) {
-            if (!(so is Avatar || so is Prop))
-                return false;
-            return recentAdded.Remove(so);
         }
 
         public void TurnOfAllTexts() {

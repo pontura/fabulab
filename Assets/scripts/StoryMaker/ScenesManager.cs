@@ -55,6 +55,8 @@ namespace Yaguar.StoryMaker.Editor
             scenes.Add(sd);
         }
 
+        // Inserts a keyframe at _id and makes it the active one. It starts as a copy of the previous
+        // keyframe without its texts
         public void AddNewScene(int _id) {
             Debug.Log("# AddNewScene");
             SceneData activeScene = new SceneData();
@@ -62,13 +64,20 @@ namespace Yaguar.StoryMaker.Editor
             currentSceneId = _id;
             scenes.Insert(currentSceneId - 1, activeScene);
             if (currentSceneId - 1 > 0) {
-                activeScene.lightingId = scenes[currentSceneId - 2].lightingId;
-                activeScene.lightingValue = scenes[currentSceneId - 2].lightingValue;
+                SceneData prevScene = scenes[currentSceneId - 2];
+                activeScene.bgID = prevScene.bgID;
+                activeScene.lightingId = prevScene.lightingId;
+                activeScene.lightingValue = prevScene.lightingValue;
                 activeScene.camData = new CamData();
-                activeScene.camData.zoom = scenes[currentSceneId - 2].camData.zoom;
-                activeScene.camData.pos = scenes[currentSceneId - 2].camData.pos;
-                activeScene.camData.tween = scenes[currentSceneId - 2].camData.tween;
+                activeScene.camData.zoom = prevScene.camData.zoom;
+                activeScene.camData.pos = prevScene.camData.pos;
+                activeScene.camData.tween = prevScene.camData.tween;
+                foreach (SceneElement element in prevScene.GetScenesElements()) {
+                    if (element.type == SceneElementType.AVATAR || element.type == SceneElementType.PROP)
+                        activeScene.AddSO(element.GetSOData());
+                }
             }
+            MarkChanged();
         }
 
         public SceneData GetActiveScene() {
@@ -93,6 +102,12 @@ namespace Yaguar.StoryMaker.Editor
 
         public void RemoveActiveScene() {
             scenes.RemoveAt(currentSceneId - 1);
+            MarkChanged();
+        }
+
+        // Tells that the story was edited and has unsaved changes
+        public void MarkChanged() {
+            StoryMakerEvents.OnStoryChanged();
         }
 
         public void AddAllObjectsToScene() {
@@ -144,39 +159,52 @@ namespace Yaguar.StoryMaker.Editor
             return json;
         }
 
-        // Saves into the active scene what is shown in the scenario: its background and its visible objects.
-        // Avatars and props just added are also added to the next scenes that share the background.
-        // Returns false when there is no scene to save.
-        public bool SaveActiveScene() {
+        // Edits of the active scene. The scenes are the source of truth: every edit made in the
+        // scenario is written here at once.
+
+        // Adds an object to the active scene. Avatars and props are also added to the next scenes
+        // that share the background
+        public void AddToActiveScene(SOData soData) {
             SceneData scene = GetActiveScene();
-            if (scene == null || Scenario.Instance == null)
-                return false;
+            if (scene == null)
+                return;
+            scene.AddSO(soData);
+            if (soData is SOAvatarData || soData is SOPropData)
+                AddItemToNextScenesSameBG(soData);
+            MarkChanged();
+        }
 
-            SceneObjectsManager sceneObjectsManager = Scenario.Instance.sceneObjectsManager;
-            scene.Reset();
+        public void UpdateInActiveScene(SOData soData) {
+            SceneData scene = GetActiveScene();
+            if (scene == null || !scene.UpdateSO(soData))
+                return;
+            MarkChanged();
+        }
 
-            string bgID = sceneObjectsManager.bgData.id;
+        public void RemoveFromActiveScene(SOData soData) {
+            SceneData scene = GetActiveScene();
+            if (scene == null || !scene.RemoveSO(soData.itemName))
+                return;
+            MarkChanged();
+        }
+
+        // Sets the background of the active scene, and of the next ones that had the same one
+        public void SetActiveBackground(string bgID) {
+            SceneData scene = GetActiveScene();
+            if (scene == null)
+                return;
             if (scene.bgID != bgID || string.IsNullOrEmpty(scene.bgID)) {
                 ReplaceBG(scene.bgID, bgID);
                 scene.bgID = bgID;
             }
-
-            foreach (SceneObject so in sceneObjectsManager.sceneObjects) {
-                if (so == null || !so.gameObject.activeSelf)
-                    continue;
-
-                scene.AddSO(so.GetData());
-                if (sceneObjectsManager.TakeRecentlyAdded(so))
-                    AddItemToNextScenesSameBG(so.GetData());
-            }
-            return true;
+            MarkChanged();
         }
 
         public bool StillExistInOtherScenes(SOData soData) {
             return Scenes.Any(s => s.GetScenesElements().Any(e => e.GetSOData().itemName == soData.itemName));
         }
 
-        public void AddItemToNextScenesSameBG(SOData soData) {
+        void AddItemToNextScenesSameBG(SOData soData) {
             string currentBG = GetActiveScene().bgID;
             for(int i = currentSceneId; i <  Scenes.Count; i++) {
                 if (Scenes[i].bgID == currentBG) {
@@ -185,7 +213,7 @@ namespace Yaguar.StoryMaker.Editor
                     break;
             }
         }
-        public void ReplaceBG(string oldBG, string newBG) {
+        void ReplaceBG(string oldBG, string newBG) {
             for (int i = currentSceneId; i < Scenes.Count; i++) {
                 if (Scenes[i].bgID == oldBG || string.IsNullOrEmpty(Scenes[i].bgID)) {
                     Scenes[i].bgID = newBG;
@@ -197,11 +225,12 @@ namespace Yaguar.StoryMaker.Editor
         public void ReplaceItem(string oldId, string oldItemName, string newId, string newItemName) {
             foreach (SceneData scene in Scenes) {
                 Debug.Log($"% ReplaceItem SceneElement id: {oldId} itemName: {oldItemName}");
-                foreach (SceneElement se in scene.GetScenesElements().Where(b => b.data.id == oldId && b.data.itemName == oldItemName)) {                    
+                foreach (SceneElement se in scene.GetScenesElements().Where(b => b.data.id == oldId && b.data.itemName == oldItemName)) {
                     se.data.id = newId;
                     se.data.itemName = newItemName;
                 }
             }
+            MarkChanged();
         }
         public SceneElement GetSOInScene(int sceneID, string soID)
         {

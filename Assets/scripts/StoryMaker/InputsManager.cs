@@ -70,6 +70,7 @@ namespace Yaguar.StoryMaker.Editor
                     if (Input.GetMouseButtonUp(0))
                     {
                         sceneObjectsManager.selected.StopDrag();
+                        sceneObjectsManager.Commit(sceneObjectsManager.selected);
                         AudioManager.Instance.sfxManager.PlayTransp("drop", -2);
                         ResetAll();
                         StoryMakerEvents.UpdateDraw();

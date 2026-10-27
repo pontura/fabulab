@@ -410,7 +410,6 @@ namespace BoardItems
         public void SaveFilm(System.Action<bool, string> OnSaveDone) {
             this.OnSaveDone = OnSaveDone;
             Debug.Log("# SaveFilm");
-            StoryMakerEvents.OnSaveScene();
             //Data.Instance.firebaseAuthManager.SaveFilmToServer(ScenesManager.Instance.currentFDataID, scenes);
             if (Data.Instance.userData.IsLogged()) {
                 if (!FilmExists()) {

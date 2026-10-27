@@ -29,7 +29,7 @@ namespace Yaguar.StoryMaker.Editor
         public static System.Action OnLoadFilm = delegate { };
         public static System.Action<int> ChangeSpeed = delegate { };
         public static System.Action RewindStory = delegate { };
-        public static System.Action OnSaveScene = delegate { };
+        public static System.Action OnStoryChanged = delegate { };
         public static System.Action<bool> ShowSaveBtn = delegate { };
         public static System.Action ReorderSceneObjectsInZ = delegate { };
         public static System.Action<SceneObject> OnStopDraw = delegate { };

@@ -214,9 +214,6 @@ namespace Yaguar.StoryMaker.Editor
         public void CopyScenesElements(List<SceneElement> se) {
             scenesElements = se;
         }
-        public void Reset() {
-            scenesElements = new List<SceneElement>();
-        }
         public List<SceneElement> GetScenesElements() {
             return scenesElements;
         }
@@ -230,6 +227,23 @@ namespace Yaguar.StoryMaker.Editor
                 return;
 
             scenesElements.Add(SceneElement.FromSOData(soData));
+        }
+
+        // Replaces the saved element of the scene object. Returns false when it is not in this scene
+        // or it did not change
+        public bool UpdateSO(SOData soData) {
+            int index = scenesElements == null ? -1 : scenesElements.FindIndex(e => e.data.itemName == soData.itemName);
+            if (index < 0)
+                return false;
+            SceneElement element = SceneElement.FromSOData(soData);
+            if (element.ToJson() == scenesElements[index].ToJson())
+                return false;
+            scenesElements[index] = element;
+            return true;
+        }
+
+        public bool RemoveSO(string itemName) {
+            return scenesElements != null && scenesElements.RemoveAll(e => e.data.itemName == itemName) > 0;
         }
 
         // Turns off the scene objects of the previous keyframe that are not present in this one
@@ -268,7 +282,7 @@ namespace Yaguar.StoryMaker.Editor
                 return;
             SOBGData bgData = new SOBGData();
             bgData.id = bgID;
-            StoryMakerEvents.AddSceneObject(bgData);
+            Scenario.Instance.sceneObjectsManager.AddSceneObject(bgData);
         }
 
         // Tweens avatars and props towards their position, size and rotation in the next keyframe

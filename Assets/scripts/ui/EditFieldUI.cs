@@ -45,7 +45,11 @@ public class EditFieldUI : MonoBehaviour
     }
     public void OnFieldChanged()
     {
-        objectSignal.SetField(field.text);
+        SetField(field.text);
+    }
+    void SetField(string text) {
+        objectSignal.SetField(text);
+        Scenario.Instance.sceneObjectsManager.Commit(objectSignal);
     }
     public void Done() {
         string text = field.text;
@@ -61,7 +65,7 @@ public class EditFieldUI : MonoBehaviour
         } else*/
 
         Debug.Log("&& : "+text);
-        objectSignal.SetField(text);
+        SetField(text);
         Close();
     }
     public void ClosePanel()
