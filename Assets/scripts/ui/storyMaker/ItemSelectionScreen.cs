@@ -85,6 +85,7 @@ namespace UI.MainApp.Home.User
         protected ItemSelectorBtn AddElement(string id) {
             ItemSelectorBtn go = Instantiate(workBtn_prefab, worksContainer);
             go.InitForStoryEdition(id, SelectWork);
+            go.SetCreator(GetMeta(id));
             return go;
         }
 

@@ -47,7 +47,18 @@ namespace UI.MainApp.Home.User
             deleteBtn.gameObject.SetActive(Data.Instance.userData.isAdmin);
             AddOnClick(OnClicked);
             likeBtn.gameObject.SetActive(false);
-        }        
+            SetCreator(null);
+        }
+
+        // Shows the first creator of the item, only when it is not the user's own
+        public void SetCreator(CharacterMetaData meta) {
+            bool isOwn = meta == null || meta.userID == Data.Instance.userData.userDataInDatabase?.uid;
+            creatorList.gameObject.SetActive(!isOwn);
+            if (isOwn)
+                return;
+            string creator = meta.creators != null && meta.creators.Count > 0 ? meta.creators[0] : meta.userID;
+            creatorList.Init(creator);
+        }
         protected void OnInfoClicked(bool isPublic)
         {
             AudioManager.Instance.uiSfxManager.PlayTransp("click", 2);
@@ -74,7 +85,7 @@ namespace UI.MainApp.Home.User
 
         public void Init(CharacterMetaData cd, MetadataTypes type) {
             //thumb.sprite = cd.GetSprite();
-            creatorList.Init(cd.creators);
+            SetCreator(cd);
             Id = cd.id;
             metadataType = type;
             itemUserId = cd.userID;

@@ -1,25 +1,20 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace UI.MainApp
 {
+    // Shows the creator of an item
     public class CreatorsList : MonoBehaviour
     {
         [SerializeField] Transform container;
         [SerializeField] ProfilePicture profilePicture;
 
-        public void Init(List<string> uids)
+        public void Init(string uid)
         {
             Utils.RemoveAllChildsIn(container);
 
-            if (uids == null) return;
-          //  print("uids count: " + uids.Count);
-            foreach(string uid in uids)
-            {
-                //print("uid: " + uid);
-                ProfilePicture p = Instantiate(profilePicture, container);
-                p.Init(uid);
-            }
+            if (string.IsNullOrEmpty(uid)) return;
+            ProfilePicture p = Instantiate(profilePicture, container);
+            p.Init(uid);
         }
     }
 
