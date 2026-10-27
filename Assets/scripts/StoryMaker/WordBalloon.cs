@@ -56,15 +56,11 @@ namespace Yaguar.StoryMaker.Editor
             /*if (soData.customization != null && soData.customization.Length > 0)
                 SetField(GetData().customization);*/
 
-            string text = (soData as SOWordBalloonData).inputValue;
-            Debug.Log("&& WordBalloon " + text);
-
             SetField((soData as SOWordBalloonData).inputValue);
            
 
             //BoxCollider2D collider = GetComponent<BoxCollider2D>();
             //collider.size = new Vector2(10, 10);
-            print("soData " + soData.id);
             if (Enum.IsDefined(typeof(balloonTypes), soData.id))
                 balloonType = (balloonTypes)Enum.Parse(typeof(balloonTypes), soData.id);
             else

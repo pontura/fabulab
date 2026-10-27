@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(dotnet build Assembly-CSharp.csproj -nologo -v q -p:BuildProjectReferences=false -p:OutputPath=\"$env:TEMP\\\\claude\\\\build\\\\\" --no-incremental 2>&1 | Select-String -Pattern \"error|Build succeeded\" | Select-Object -First 10)"
+    ]
+  }
+}

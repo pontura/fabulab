@@ -64,7 +64,6 @@ namespace Yaguar.StoryMaker.Editor
         public void Screenshot(GameObject target, System.Action<Texture2D> OnDone)
         { 
             this.target = target;
-            print("Screenshot");
             targetRenderer.GetComponent<Animator>().SetInteger("zoom", 9);
             if(gameObject.activeSelf)
                 StartCoroutine(CaptureRoutine(target, OnDone));

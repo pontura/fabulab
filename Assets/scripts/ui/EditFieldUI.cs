@@ -83,7 +83,7 @@ public class EditFieldUI : MonoBehaviour
     public void Delete()
     {
         GetComponent<UI.MainApp.StoryEditorScreen>().CloseTools();
-        StoryMakerEvents.RemoveSceneObject();
+        Scenario.Instance.sceneObjectsManager.RemoveSelected();
         Close();
     }
     public void FontClicked(int id)
@@ -92,7 +92,7 @@ public class EditFieldUI : MonoBehaviour
         print("id: " + id);
         Fonts font = Scenario.Instance.sceneObjectsManager.FontAssets.GetFont(id);
         field.fontAsset = font.fontAsset;
-        StoryMakerEvents.ChangeFont(id);
+        Scenario.Instance.sceneObjectsManager.ChangeFont(id);
 
     }
 }

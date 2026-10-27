@@ -36,22 +36,41 @@ namespace UI.MainApp.Home.User
         protected override void LoadNext()
         {
             AddBtn();
+            // The user's own objects first, then the public ones of the community
             foreach (SObjectData cd in Data.Instance.sObjectsData.data)
             {
                 if (cd.type != SObjectData.types.background) {
                     AddElement(cd);
                 }
             }
+            foreach (PropMetaData meta in Data.Instance.sObjectsData.metaData)
+            {
+                if (meta.isPublic && meta.type != SObjectData.types.background && !IsOwn(meta.id)
+                    && meta.userID != Data.Instance.userData.userDataInDatabase.uid)
+                    AddFilteredElement(meta.id);
+            }
             SetFrontBack();
             Invoke(nameof(OnLoadedDone), Time.deltaTime * 3);
         }        
+
+        protected override bool IsOwn(string id) {
+            return Data.Instance.sObjectsData.data.Exists(x => x.id == id);
+        }
+
+        protected override void DuplicateAndSelect(string id) {
+            DuplicateSO(id);
+        }
+
+        protected override CharacterMetaData GetMeta(string id) {
+            return Data.Instance.sObjectsData.GetMeta(id);
+        }
 
         public override void OpenWork(string id)
         {
             SOPropData data = new SOPropData();
             data.id = id;
             data.itemName = Utils.GetUniqueDateTimeId();
-            StoryMakerEvents.AddSceneObject(data);
+            Scenario.Instance.sceneObjectsManager.AddNewSceneObject(data);
         }
         public override void New()
         {
@@ -177,9 +196,7 @@ namespace UI.MainApp.Home.User
             SOPartData part = Data.Instance.sObjectsData.data.Find(x => x.id == duplicateID);
             if (part != null)
             {
-                AddElement(part);
-                SetCurrentScrollIndex(scrollRect.normalizedPosition);
-                print("Duplicate open: " + duplicateID);
+                AddOwnElement(part.id);
                 Events.OnLoading(false);
                 SelectWork(duplicateID);
             }

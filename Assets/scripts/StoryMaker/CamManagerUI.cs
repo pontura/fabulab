@@ -47,7 +47,6 @@ namespace Yaguar.StoryMaker.Editor
             foreach(ToggleButton tb in cams)
                 tb.Force(false);
                 
-            print("open id:" +id  + " zoom: " +  camData.zoom);    
 
             cams[id].Force(true);
         }
@@ -82,7 +81,6 @@ namespace Yaguar.StoryMaker.Editor
             if(camData.pos != camerasEditorUI.normalizedPos)
             {
                 camData.pos = camerasEditorUI.normalizedPos;
-                print("_________" + camData.pos);
                 camerasEditorUI.Reset();
             }
             ScenesManager.Instance.MarkChanged();

@@ -144,7 +144,6 @@ namespace Yaguar.StoryMaker.Editor
         public virtual void OnInit() { }
         public void ForceZ(float value)
         {
-            print("force Z: " + value);
             data.force_z = value;
             data.pos = new V3(data.pos.x, data.pos.y, value);
             transform.position = new Vector3(data.pos.x, data.pos.y, data.pos.z);

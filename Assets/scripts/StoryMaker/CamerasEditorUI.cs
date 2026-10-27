@@ -40,7 +40,6 @@ namespace Yaguar.StoryMaker.Editor
         public void Show(bool isOn)
         {
             if(!isEditing) isOn = false;
-            print("CamerasEditorUI " + isOn);
             gameObject.SetActive(isOn);
         }
         public void Reset()
@@ -57,7 +56,6 @@ namespace Yaguar.StoryMaker.Editor
         private void OnTimelinePlay(bool isPlay)
         {
             if(!isEditing) {Show(false);return;}
-            print("OnTimelinePlay " +isPlay);
             Show(!isPlay);
             if(!isPlay)
             {

@@ -71,10 +71,8 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public void MoveElement(SOData soData, Vector3 to, float timeToNextFrame) {
-            Debug.Log("&& MoveElement: "+soData.pos.ToString()+" : "+to);
             SceneObject so = Scenario.Instance.sceneObjectsManager.GetSceneObjectInScene(soData);
             if (so == null) {
-                Debug.Log("& SO null");
                 return;
             }
 
@@ -87,11 +85,9 @@ namespace Yaguar.StoryMaker.Editor
                     "oncompletetarget", this.gameObject
                     ));
 
-            print("& Esta en: " + so.transform.position + "va a : " + to + "    id : " + so.GetData().id + " time " + timeToNextFrame);
         }
 
         public void ScaleElement(SOData soData, float to, float timeToNextFrame) {
-            Debug.Log("&& ScaleElement");
             SceneObject so = Scenario.Instance.sceneObjectsManager.GetSceneObjectInScene(soData);
             if (so == null)
                 return;
@@ -110,7 +106,6 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public void RotateElement(SOData soData, float to, float timeToNextFrame) {
-            Debug.Log("&& RotateElement");
             SceneObject so = Scenario.Instance.sceneObjectsManager.GetSceneObjectInScene(soData);
             if (so == null)
                 return;

@@ -106,7 +106,6 @@ namespace Yaguar.StoryMaker.Editor
                 }
                 Borders.Show(true);
             } /*else {
-                Debug.Log("% mouse pos change: " + transform.localPosition + " = " + initDragPos);                
             }*/
             //StoryMakerEvents.ShowSoButtons(Scenario.Instance.Cam.WorldToScreenPoint(transform.position), data);
             if (Vector2.Distance(initDragPos, transform.position) < MIN_DISTANCE) {

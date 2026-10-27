@@ -12,20 +12,12 @@ namespace Yaguar.StoryMaker.Editor
         public static void SetEditing(bool editing)
         {
             isEditing = editing;
-            Debug.Log("is_editing: " + isEditing);
         }
         public static System.Action UpdateDraw = delegate { };
         public static System.Action<WordBalloon> OnInputField = delegate { };
 
         public static System.Action OnStartNewStory = delegate { };
 
-        public static System.Action<string, string> ReplaceSceneObjectFromTo = delegate { };
-        public static System.Action<string> ReplaceSceneObject = delegate { };
-        public static System.Action<SOData> AddSceneObject = delegate { };
-        public static System.Action<SOData> SetSceneObject = delegate { };
-        public static System.Action<List<SOData>> AddAllSceneObjects = delegate { };
-        public static System.Action RemoveSceneObject = delegate { };
-        public static System.Action<int> ChangeFont = delegate { };
         public static System.Action OnLoadFilm = delegate { };
         public static System.Action<int> ChangeSpeed = delegate { };
         public static System.Action RewindStory = delegate { };
@@ -44,7 +36,6 @@ namespace Yaguar.StoryMaker.Editor
         public static System.Action Restart = delegate { };
         public static System.Action ClearScene = delegate { };
         public static System.Action HideScene = delegate { };
-        public static System.Action SetBackgroundLights= delegate { };
 
         public static System.Action EditActions = delegate { };
         public static System.Action EditExpressions = delegate { };

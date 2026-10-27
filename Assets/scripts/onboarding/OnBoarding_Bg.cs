@@ -76,7 +76,7 @@ namespace OnBoarding
             string originalCharacterID = "-On3wQ6Vy9jnpMtTTgWb"; //Character por defecto en story del onboarding:
             string newCharacterID =  Data.Instance.charactersData.userCharacters[Data.Instance.charactersData.userCharacters.Count - 1].id;
 
-            StoryMakerEvents.ReplaceSceneObjectFromTo(originalCharacterID, newCharacterID);
+            Scenario.Instance.sceneObjectsManager.Replace(originalCharacterID, newCharacterID);
 
             // print("AddCharacterToScene lastID:" + newCharacterID);
 

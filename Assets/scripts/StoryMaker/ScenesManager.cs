@@ -47,7 +47,6 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public void Init() {
-            Debug.Log("& Init");
             currentSceneId = 1;
             scenes = new();
             scenes.Add(CreateScene());
@@ -68,7 +67,6 @@ namespace Yaguar.StoryMaker.Editor
         // Inserts a keyframe at _id and makes it the active one. It starts as a copy of the previous
         // keyframe without its texts
         public void AddNewScene(int _id) {
-            Debug.Log("# AddNewScene");
             SceneData activeScene = CreateScene();
             currentSceneId = _id;
             scenes.Insert(currentSceneId - 1, activeScene);
@@ -128,7 +126,7 @@ namespace Yaguar.StoryMaker.Editor
             foreach (SceneData sdf in Scenes) {
                 elementsToInstantiate.AddRange(sdf.GetScenesElements().Select(p => p.GetSOData()).Where(newItem => !elementsToInstantiate.Any(eItem => eItem.itemName == newItem.itemName)).ToList());
             }
-            StoryMakerEvents.AddAllSceneObjects(elementsToInstantiate);
+            Scenario.Instance.sceneObjectsManager.AddAllSceneObjects(elementsToInstantiate);
         }
 
         public string GetSerialized() {
@@ -205,6 +203,26 @@ namespace Yaguar.StoryMaker.Editor
             MarkChanged();
         }
 
+        // The element of a character or object in the scene closest to the active one (the previous ones first),
+        // or null when the story does not have it
+        public SceneElement FindClosestElement(string id, SceneElementType type) {
+            int active = currentSceneId - 1;
+            for (int distance = 0; distance < scenes.Count; distance++) {
+                foreach (int index in new[] { active - distance, active + distance }) {
+                    if (index < 0 || index >= scenes.Count)
+                        continue;
+                    SceneElement element = scenes[index].GetScenesElements().Find(e => e.type == type && e.data.id == id);
+                    if (element != null)
+                        return element;
+                }
+            }
+            return null;
+        }
+
+        public bool HasElement(string id, SceneElementType type) {
+            return scenes.Any(s => s.GetScenesElements().Any(e => e.type == type && e.data.id == id));
+        }
+
         public bool StillExistInOtherScenes(SOData soData) {
             return Scenes.Any(s => s.GetScenesElements().Any(e => e.GetSOData().itemName == soData.itemName));
         }
@@ -229,7 +247,6 @@ namespace Yaguar.StoryMaker.Editor
 
         public void ReplaceItem(string oldId, string oldItemName, string newId, string newItemName) {
             foreach (SceneData scene in Scenes) {
-                Debug.Log($"% ReplaceItem SceneElement id: {oldId} itemName: {oldItemName}");
                 foreach (SceneElement se in scene.GetScenesElements().Where(b => b.data.id == oldId && b.data.itemName == oldItemName)) {
                     se.data.id = newId;
                     se.data.itemName = newItemName;
@@ -239,7 +256,6 @@ namespace Yaguar.StoryMaker.Editor
         }
         public SceneElement GetSOInScene(int sceneID, string soID)
         {
-            print("OnStopDraw GetSOInScene " + sceneID + " scenes.Count: " + scenes.Count);   
             if(sceneID>=0 && sceneID < scenes.Count)
             {
                 SceneData scene = scenes[sceneID];

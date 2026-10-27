@@ -291,7 +291,8 @@ namespace Yaguar.StoryMaker.Editor
 
             if (scenesManager.GetActiveScene() != null) {
                 toggleTransition.isOn = activeScene.transition;
-                StoryMakerEvents.SetBackgroundLights();
+                if (Scenario.Instance != null)
+                    Scenario.Instance.sceneObjectsManager.SetBackgroundLights();
             }
 
             if (activeScene != null && Scenario.Instance != null) {

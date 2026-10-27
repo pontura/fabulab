@@ -117,6 +117,11 @@ namespace UI.MainApp.Home.User
         }
 
 
+        // Greys out the thumb of an item already used (it can still be clicked)
+        public void SetUsed(bool used) {
+            thumb.color = used ? new Color(0.5f, 0.5f, 0.5f, 0.6f) : Color.white;
+        }
+
         public void SetSprite(Texture2D tex) {
             thumb.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
             loading.SetActive(false);

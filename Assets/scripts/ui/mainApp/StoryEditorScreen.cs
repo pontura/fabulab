@@ -164,7 +164,7 @@ namespace UI.MainApp
         }
         public void RemoveSO()
         {
-            StoryMakerEvents.RemoveSceneObject();
+            Scenario.Instance.sceneObjectsManager.RemoveSelected();
             CloseTools();
         }
 

@@ -31,14 +31,6 @@ namespace Yaguar.StoryMaker.Editor
 
         void Start()
         {
-            StoryMakerEvents.ChangeFont += ChangeFont;
-            StoryMakerEvents.SetBackgroundLights += SetBackgroundLights;
-            StoryMakerEvents.AddAllSceneObjects += AddAllSceneObjects;
-            StoryMakerEvents.AddSceneObject += AddNewSceneObject;
-            StoryMakerEvents.SetSceneObject += SetSceneObject;
-            StoryMakerEvents.RemoveSceneObject += RemoveSceneObject;
-            StoryMakerEvents.ReplaceSceneObjectFromTo += ReplaceSceneObjectFromTo;
-            StoryMakerEvents.ReplaceSceneObject += ReplaceSceneObject;
             StoryMakerEvents.OnMovieOver += OnMovieOver;
             StoryMakerEvents.OnMoviePaused += OnMovieOver;
             StoryMakerEvents.Restart += ShowBgMask;
@@ -48,14 +40,6 @@ namespace Yaguar.StoryMaker.Editor
         }
         void OnDestroy()
         {
-            StoryMakerEvents.ChangeFont -= ChangeFont;
-            StoryMakerEvents.SetBackgroundLights -= SetBackgroundLights;
-            StoryMakerEvents.AddAllSceneObjects -= AddAllSceneObjects;
-            StoryMakerEvents.AddSceneObject -= AddNewSceneObject;
-            StoryMakerEvents.SetSceneObject -= SetSceneObject;
-            StoryMakerEvents.RemoveSceneObject -= RemoveSceneObject;
-            StoryMakerEvents.ReplaceSceneObject -= ReplaceSceneObject;
-            StoryMakerEvents.ReplaceSceneObjectFromTo -= ReplaceSceneObjectFromTo;
             StoryMakerEvents.OnMovieOver -= OnMovieOver;
             StoryMakerEvents.OnMoviePaused -= OnMovieOver;
             StoryMakerEvents.Restart -= ShowBgMask;
@@ -63,14 +47,16 @@ namespace Yaguar.StoryMaker.Editor
             Events.OnCharacterAnim -= OnCharacterAnim;
             Events.OnCharacterExpression -= OnCharacterExpression;
         }
-        private void SetBackgroundLights()
+        // Applies the lighting of the active scene
+        public void SetBackgroundLights()
         {
             int value = ScenesManager.Instance.GetActiveScene().lightingValue;
             SpriteRenderer sr = bgMask.GetComponent<SpriteRenderer>();
             Color c = BackgroundLighting.GetStepColor(value);
             sr.color = c;
         }
-        void AddAllSceneObjects(List<SOData> elementsToAdd) {
+        // Creates the scene objects of a whole story, hidden until a keyframe shows them
+        public void AddAllSceneObjects(List<SOData> elementsToAdd) {
             foreach (SOData data in elementsToAdd)
                 AddSceneObject(data);
 
@@ -79,12 +65,37 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         // An object added by the user: it is shown and added to the active scene
-        void AddNewSceneObject(SOData data) {
+        public void AddNewSceneObject(SOData data) {
+            if (data is SOAvatarData && AddExistingAvatar(data.id))
+                return;
+
             AddSceneObject(data);
             if (data is SOBGData)
                 scenesManager.SetActiveBackground(data.id);
             else
                 scenesManager.AddToActiveScene(data);
+        }
+
+        // A film has each character only once: adding one that is already in it brings that same one
+        // to the active scene, as it is in the closest keyframe. Returns false when the film does not have it
+        bool AddExistingAvatar(string characterID) {
+            SceneElement element = scenesManager.FindClosestElement(characterID, SceneElementType.AVATAR);
+            SceneData activeScene = scenesManager.GetActiveScene();
+            if (element == null || activeScene == null)
+                return false;
+
+            SOData soData = element.GetSOData();
+            if (activeScene.Contains(soData.itemName)) {
+                Events.OnPopupTopSignalText("Ese personaje ya está en la escena");
+                return true;
+            }
+
+            if (GetSceneObjectInScene(soData) == null)
+                AddSceneObject(soData);
+            scenesManager.AddToActiveScene(soData);
+            SetSceneObject(soData);
+            selected = GetSceneObjectInScene(soData);
+            return true;
         }
 
         // Saves into the active scene the edits made to a scene object
@@ -222,6 +233,7 @@ namespace Yaguar.StoryMaker.Editor
                 sod.rot = data.rot;
                 sod.size = data.size;
                 sod.goLeft = data.goLeft;
+                sod.force_z = data.force_z;
             }
 
             so.transform.localPosition = data.pos.ToVector3();
@@ -232,9 +244,9 @@ namespace Yaguar.StoryMaker.Editor
             so.FlipX(data.goLeft);
         }
 
-        void ChangeFont(int id)
+        public void ChangeFont(int id)
         {
-            WordBalloon wordBaloon = selected.GetComponent<WordBalloon>();
+            WordBalloon wordBaloon = selected as WordBalloon;
             if(wordBaloon != null) {
                 wordBaloon.SetFont(id);
                 Commit(wordBaloon);
@@ -246,7 +258,8 @@ namespace Yaguar.StoryMaker.Editor
             Commit(selected);
         }
 
-        void RemoveSceneObject()
+        // Removes the selected object from the active scene
+        public void RemoveSelected()
         {
             scenesManager.RemoveFromActiveScene(selected.GetData());
             if (scenesManager.StillExistInOtherScenes(selected.GetData()))
@@ -262,19 +275,27 @@ namespace Yaguar.StoryMaker.Editor
             selected = null;
         }
 
-        void ReplaceSceneObjectFromTo(string original, string duplicated)
+        // Replaces the character or object "original" with "replacement"
+        public void Replace(string original, string replacement)
         {
             selected = sceneObjects.Find(so => so.GetData().id == original);
-            ReplaceSceneObject(duplicated);
+            ReplaceSelected(replacement);
         }
         // Replaces the selected character or object with another one. Every instance of it is replaced,
         // in all the keyframes, also the ones added again in other keyframes
-        void ReplaceSceneObject(string id) {
+        public void ReplaceSelected(string id) {
             if (!(selected is Avatar || selected is Prop))
                 return;
 
             bool isAvatar = selected is Avatar;
             string oldId = selected.GetData().id;
+            if (oldId == id)
+                return;
+            // A film has each character only once
+            if (isAvatar && scenesManager.FindClosestElement(id, SceneElementType.AVATAR) != null) {
+                Events.OnPopupTopSignalText("Ese personaje ya está en la película");
+                return;
+            }
             List<SceneObject> instances = sceneObjects.FindAll(so => so != null && (isAvatar ? so is Avatar : so is Prop) && so.GetData().id == oldId);
             string itemNamePrefix = Utils.GetUniqueDateTimeId();
 

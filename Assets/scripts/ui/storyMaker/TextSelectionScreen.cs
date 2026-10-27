@@ -43,7 +43,7 @@ namespace UI.MainApp.Home.User
             SOWordBalloonData data = new SOWordBalloonData();
             data.id = id;
             data.itemName = Utils.GetUniqueDateTimeId();
-            StoryMakerEvents.AddSceneObject(data);
+            Scenario.Instance.sceneObjectsManager.AddNewSceneObject(data);
             Invoke(nameof(OpenTextInput), 2 * Time.deltaTime);
         }
 

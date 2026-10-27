@@ -379,12 +379,12 @@ namespace UI
                 SOPropData data = new SOPropData();
                 data.id = newSOData.id;
                 data.itemName = Utils.GetUniqueDateTimeId();
-                StoryMakerEvents.AddSceneObject(data);
+                Scenario.Instance.sceneObjectsManager.AddNewSceneObject(data);
             } else if (newSOData.type == SObjectData.types.background) {
                 SOBGData data = new SOBGData();
                 data.id = newSOData.id;
                 data.itemName = Utils.GetUniqueDateTimeId();
-                StoryMakerEvents.AddSceneObject(data);
+                Scenario.Instance.sceneObjectsManager.AddNewSceneObject(data);
             }
             Events.OnLoading(false);
         }
@@ -399,7 +399,7 @@ namespace UI
             SOAvatarData data = new SOAvatarData();
             data.id = id;
             data.itemName = Utils.GetUniqueDateTimeId();
-            StoryMakerEvents.AddSceneObject(data);
+            Scenario.Instance.sceneObjectsManager.AddNewSceneObject(data);
 
             Events.OnLoading(false);
         }

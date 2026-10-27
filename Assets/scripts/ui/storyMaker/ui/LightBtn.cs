@@ -62,7 +62,7 @@ namespace Yaguar.StoryMaker.Editor
             if (!opened) return;
             ScenesManager.Instance.GetActiveScene().lightingValue = (int)slider.value;
             ScenesManager.Instance.MarkChanged();
-            StoryMakerEvents.SetBackgroundLights();
+            Scenario.Instance.sceneObjectsManager.SetBackgroundLights();
             SetValue(slider.value);
         }
         public void Close()
