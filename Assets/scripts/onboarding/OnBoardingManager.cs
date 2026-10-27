@@ -27,7 +27,8 @@ namespace OnBoarding
             video_character,
             video_object,
             video_bg,
-            ready
+            ready,
+            storiesOrCharacters
         }
         [SerializeField] int id;
         [SerializeField] int onboardingSequenceID; 

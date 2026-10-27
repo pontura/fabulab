@@ -149,7 +149,11 @@ namespace UI
         private void OnUserDone(CacheData.UserData uData, Texture2D tex) {
             print("OnUserDone UID " + uData);
         }
-
+        public void HomeCharacters() {
+            Debug.Log("#Home Characters");
+            homePage.OnSelected(HomePage.screens.characters);
+            Events.ShowScreen(UIManager.screenType.Home);
+        }
         public void Home() {
             Debug.Log("#Home");
             Events.ShowScreen(UIManager.screenType.Home);
