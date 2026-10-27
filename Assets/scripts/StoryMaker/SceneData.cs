@@ -12,49 +12,69 @@ namespace Yaguar.StoryMaker.Editor
         WORD_BOX
     }
 
+    // An object of a keyframe as it is saved. All the conversions of a saved element live here:
+    // from/to the SOData used by the scene objects, and from/to the JSON stored in the server.
     [Serializable]
     public class SceneElement
     {
         public SOData data;
         public SceneElementType type;
 
-        public override bool Equals(object obj) {
-            if (obj is SceneElement other) {
-                
-                if (this.type != other.type)
-                    return false;
-
-                /*if (!string.Equals(this.customizationData, other.customizationData))
-                    return false;*/
-
-                if (this.data == null && other.data == null)
-                    return true;
-                if (this.data == null || other.data == null)
-                    return false;
-
-                return this.data.Equals(other.data);
+        // Builds the saved element of a scene object, copying its data
+        public static SceneElement FromSOData(SOData soData) {
+            SceneElement sceneElement;
+            if (soData is SOAvatarData avatarData) {
+                sceneElement = new SceneElementAvatar {
+                    type = SceneElementType.AVATAR,
+                    anim = avatarData.anim,
+                    emoji = avatarData.emoji
+                };
+            } else if (soData is SOWordBalloonData wordBalloonData) {
+                sceneElement = new SceneElementTextInput {
+                    type = SceneElementType.WORD_BALLOON,
+                    input = wordBalloonData.inputValue,
+                    direction = wordBalloonData.direction,
+                    fontId = wordBalloonData.fontId
+                };
+            } else {
+                sceneElement = new SceneElement { type = SceneElementType.PROP };
             }
-            return false;
+
+            sceneElement.data = new SOData();
+            sceneElement.data.id = soData.id;
+            sceneElement.data.itemName = soData.itemName;
+            sceneElement.data.pos = soData.pos;
+            sceneElement.data.rot = soData.rot;
+            sceneElement.data.size = soData.size;
+            sceneElement.data.goLeft = soData.goLeft;
+            sceneElement.data.force_z = soData.force_z;
+            return sceneElement;
         }
 
-        public override int GetHashCode() {
-            int hash = 17;
-            hash = hash * 31 + type.GetHashCode();
-            //hash = hash * 31 + (customizationData?.GetHashCode() ?? 0);
-            hash = hash * 31 + (data?.GetHashCode() ?? 0);
-            return hash;
+        public static SceneElement FromJson(string json, SceneElementType type) {
+            switch (type) {
+                case SceneElementType.AVATAR:
+                    return JsonUtility.FromJson<SceneElementAvatar>(json);
+                case SceneElementType.WORD_BALLOON:
+                case SceneElementType.WORD_BOX:
+                    return JsonUtility.FromJson<SceneElementTextInput>(json);
+                default:
+                    return JsonUtility.FromJson<SceneElement>(json);
+            }
         }
 
+        public virtual string ToJson() {
+            return JsonUtility.ToJson(this);
+        }
+
+        // Builds the data used to show the element in the scenario
         public virtual SOData GetSOData() {
             SOData soData = new SOPropData();
-            //soData.customization = data.customizationData;
-            soData.goLeft = data.goLeft;
-            soData.force_z = data.force_z;
-            SetSOData(soData);            
+            CopyTo(soData);
             return soData;
         }
 
-        public virtual void SetSOData(SOData soData) {
+        protected void CopyTo(SOData soData) {
             soData.id = data.id;
             soData.pos = data.pos;
             soData.rot = data.rot;
@@ -64,6 +84,25 @@ namespace Yaguar.StoryMaker.Editor
             soData.goLeft = data.goLeft;
         }
 
+        public override bool Equals(object obj) {
+            if (obj is SceneElement other) {
+                if (this.type != other.type)
+                    return false;
+                if (this.data == null && other.data == null)
+                    return true;
+                if (this.data == null || other.data == null)
+                    return false;
+                return this.data.Equals(other.data);
+            }
+            return false;
+        }
+
+        public override int GetHashCode() {
+            int hash = 17;
+            hash = hash * 31 + type.GetHashCode();
+            hash = hash * 31 + (data?.GetHashCode() ?? 0);
+            return hash;
+        }
     }
 
     [Serializable]
@@ -72,45 +111,30 @@ namespace Yaguar.StoryMaker.Editor
         public string anim;
         public string emoji;
 
-        public override bool Equals(object obj) {
-            if (obj is SceneElementAvatar other) {
-
-                if (this.type != other.type)
-                    return false;
-
-                /*if (!string.Equals(this.customizationData, other.customizationData))
-                    return false;*/
-
-                if (this.data == null && other.data == null)
-                    return true;
-                if (this.data == null || other.data == null)
-                    return false;
-
-                return this.data.Equals(other.data)
-                    && string.Equals(this.anim, other.anim)
-                    && string.Equals(this.emoji, other.emoji);
-            }
-            return false;
-        }
-
-        public override int GetHashCode() {
-            int hash = 17;
-            hash = hash * 31 + type.GetHashCode();
-            //hash = hash * 31 + (customizationData?.GetHashCode() ?? 0);
-            hash = hash * 31 + (data?.GetHashCode() ?? 0);
-            hash = hash * 31 + (anim?.GetHashCode() ?? 0);
-            hash = hash * 31 + (emoji?.GetHashCode() ?? 0);
-            return hash;
+        public override string ToJson() {
+            return JsonUtility.ToJson(this);
         }
 
         public override SOData GetSOData() {
-            SOData soData = new SOAvatarData();
-            //soData.customization = data.customizationData;
-            soData.goLeft = data.goLeft;
-            (soData as SOAvatarData).anim = anim;
-            (soData as SOAvatarData).emoji = emoji;
-            SetSOData(soData);
+            SOAvatarData soData = new SOAvatarData();
+            soData.anim = anim;
+            soData.emoji = emoji;
+            CopyTo(soData);
             return soData;
+        }
+
+        public override bool Equals(object obj) {
+            return obj is SceneElementAvatar other
+                && base.Equals(other)
+                && string.Equals(this.anim, other.anim)
+                && string.Equals(this.emoji, other.emoji);
+        }
+
+        public override int GetHashCode() {
+            int hash = base.GetHashCode();
+            hash = hash * 31 + (anim?.GetHashCode() ?? 0);
+            hash = hash * 31 + (emoji?.GetHashCode() ?? 0);
+            return hash;
         }
     }
 
@@ -121,33 +145,8 @@ namespace Yaguar.StoryMaker.Editor
         public int direction;
         public int fontId;
 
-        public override bool Equals(object obj) {
-            if (obj is SceneElementTextInput other) {
-
-                if (this.type != other.type)
-                    return false;
-
-                /*if (!string.Equals(this.customizationData, other.customizationData))
-                    return false;*/
-
-                if (this.data == null && other.data == null)
-                    return true;
-                if (this.data == null || other.data == null)
-                    return false;
-
-                return this.data.Equals(other.data)
-                    && string.Equals(this.input, other.input);
-            }
-            return false;
-        }
-
-        public override int GetHashCode() {
-            int hash = 17;
-            hash = hash * 31 + type.GetHashCode();
-            //hash = hash * 31 + (customizationData?.GetHashCode() ?? 0);
-            hash = hash * 31 + (data?.GetHashCode() ?? 0);
-            hash = hash * 31 + (input?.GetHashCode() ?? 0);
-            return hash;
+        public override string ToJson() {
+            return JsonUtility.ToJson(this);
         }
 
         public override SOData GetSOData() {
@@ -155,8 +154,20 @@ namespace Yaguar.StoryMaker.Editor
             soData.inputValue = input;
             soData.direction = direction;
             soData.fontId = fontId;
-            SetSOData(soData);
+            CopyTo(soData);
             return soData;
+        }
+
+        public override bool Equals(object obj) {
+            return obj is SceneElementTextInput other
+                && base.Equals(other)
+                && string.Equals(this.input, other.input);
+        }
+
+        public override int GetHashCode() {
+            int hash = base.GetHashCode();
+            hash = hash * 31 + (input?.GetHashCode() ?? 0);
+            return hash;
         }
     }
 
@@ -218,34 +229,7 @@ namespace Yaguar.StoryMaker.Editor
             if (scenesElements.Any(e => e.data.itemName == soData.itemName))
                 return;
 
-            SceneElement sceneElement;
-            if (soData is SOAvatarData sOAvatar) {
-                sceneElement = new SceneElementAvatar {
-                    type = SceneElementType.AVATAR,
-                    anim = sOAvatar.anim,
-                    emoji = sOAvatar.emoji
-                };
-            } else if (soData is SOWordBalloonData soWBD) {
-                sceneElement = new SceneElementTextInput {
-                    type = SceneElementType.WORD_BALLOON,
-                    input = soWBD.inputValue,
-                    direction = soWBD.direction,
-                    fontId = soWBD.fontId
-                };
-            } else {
-                sceneElement = new SceneElement { type = SceneElementType.PROP };
-            }
-
-            sceneElement.data = new SOData();
-            sceneElement.data.id = soData.id;
-            sceneElement.data.itemName = soData.itemName;
-            sceneElement.data.pos = soData.pos;
-            sceneElement.data.rot = soData.rot;
-            sceneElement.data.size = soData.size;
-            sceneElement.data.goLeft = soData.goLeft;
-            sceneElement.data.force_z = soData.force_z;
-
-            scenesElements.Add(sceneElement);
+            scenesElements.Add(SceneElement.FromSOData(soData));
         }
 
         // Turns off the scene objects of the previous keyframe that are not present in this one

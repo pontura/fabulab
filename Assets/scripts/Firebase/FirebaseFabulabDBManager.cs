@@ -808,15 +808,8 @@ namespace Yaguar.StoryMaker.DB
 
                             List<SceneElement> elements = new List<SceneElement>();
                             foreach (var se in child.Child("scenesElements").Children) {
-                                SceneElement sceneElement = null;
-                                if ((long)se.Child("type").Value == (long)SceneElementType.AVATAR) {
-                                    sceneElement = JsonUtility.FromJson<SceneElementAvatar>(se.GetRawJsonValue());
-                                } else if ((long)se.Child("type").Value == (long)SceneElementType.WORD_BALLOON || (long)se.Child("type").Value == (long)SceneElementType.WORD_BOX) {
-                                    sceneElement = JsonUtility.FromJson<SceneElementTextInput>(se.GetRawJsonValue());
-                                } else {
-                                    sceneElement = JsonUtility.FromJson<SceneElement>(se.GetRawJsonValue());
-                                }
-                                elements.Add(sceneElement);
+                                SceneElementType type = (SceneElementType)(long)se.Child("type").Value;
+                                elements.Add(SceneElement.FromJson(se.GetRawJsonValue(), type));
                             }
                             sdf.CopyScenesElements(elements);
                             scene.Add(sdf);

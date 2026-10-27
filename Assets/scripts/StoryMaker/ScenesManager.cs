@@ -132,15 +132,7 @@ namespace Yaguar.StoryMaker.Editor
                 if (elements.Count > 0)
                     json += "\"scenesElements\":[";
                 for(int j = 0; j < elements.Count; j++) {
-                    if (elements[j].type == SceneElementType.AVATAR) {
-                        SceneElementAvatar sea = (SceneElementAvatar)elements[j];
-                        json += JsonUtility.ToJson(sea);
-                    } else if (elements[j].type == SceneElementType.WORD_BALLOON || elements[j].type == SceneElementType.WORD_BOX) {
-                        SceneElementTextInput sea = (SceneElementTextInput)elements[j];
-                        json += JsonUtility.ToJson(sea);
-                    } else { 
-                        json += JsonUtility.ToJson(elements[j]);
-                    }
+                    json += elements[j].ToJson();
                     if (j < elements.Count - 1) json += ",";
                 }
                 if (elements.Count > 0)
@@ -150,6 +142,34 @@ namespace Yaguar.StoryMaker.Editor
             }
             json += "]";
             return json;
+        }
+
+        // Saves into the active scene what is shown in the scenario: its background and its visible objects.
+        // Avatars and props just added are also added to the next scenes that share the background.
+        // Returns false when there is no scene to save.
+        public bool SaveActiveScene() {
+            SceneData scene = GetActiveScene();
+            if (scene == null || Scenario.Instance == null)
+                return false;
+
+            SceneObjectsManager sceneObjectsManager = Scenario.Instance.sceneObjectsManager;
+            scene.Reset();
+
+            string bgID = sceneObjectsManager.bgData.id;
+            if (scene.bgID != bgID || string.IsNullOrEmpty(scene.bgID)) {
+                ReplaceBG(scene.bgID, bgID);
+                scene.bgID = bgID;
+            }
+
+            foreach (SceneObject so in sceneObjectsManager.sceneObjects) {
+                if (so == null || !so.gameObject.activeSelf)
+                    continue;
+
+                scene.AddSO(so.GetData());
+                if (sceneObjectsManager.TakeRecentlyAdded(so))
+                    AddItemToNextScenesSameBG(so.GetData());
+            }
+            return true;
         }
 
         public bool StillExistInOtherScenes(SOData soData) {

@@ -314,58 +314,8 @@ namespace UI.MainApp
         }
 
         public void OnSaveScene() {
-            
-            //CreateThumb();
-            SceneData sdf = ScenesManager.Instance.GetActiveScene();
-            if(sdf == null) return;
-            sdf.Reset();
-            SOData bgData = Scenario.Instance.sceneObjectsManager.bgData;
-            if (sdf.bgID != bgData.id || string.IsNullOrEmpty(sdf.bgID)) {
-                ScenesManager.Instance.ReplaceBG(sdf.bgID, bgData.id);
-                sdf.bgID = bgData.id;
-            }
-            foreach (SceneObject so in Scenario.Instance.sceneObjectsManager.sceneObjects) {
-                if (so == null || !so.gameObject.activeSelf)
-                    continue;
-
-                SOData soData = null;
-
-                if (so is Avatar) {
-
-                    soData = new SOAvatarData();
-                    soData.Clone(so.GetData());
-
-                    (soData as SOAvatarData).anim = (so.GetData() as SOAvatarData).anim;
-                    (soData as SOAvatarData).emoji = (so.GetData() as SOAvatarData).emoji;
-                    (soData as SOAvatarData).goLeft = (so.GetData() as SOAvatarData).goLeft;
-                } else if (so is Prop) {
-                    soData = new SOPropData();
-                    soData.Clone(so.GetData());
-                } else if (so is WordBalloon) {
-                    soData = new SOWordBalloonData();
-                    soData.Clone(so.GetData());
-                    (soData as SOWordBalloonData).inputValue = (so.GetData() as SOWordBalloonData).inputValue;
-                    (soData as SOWordBalloonData).direction = (so.GetData() as SOWordBalloonData).direction;
-                    (soData as SOWordBalloonData).fontId = (so.GetData() as SOWordBalloonData).fontId;
-                } 
-                //else if (so is WordBox) {
-                //    soData = new SOWordBoxData();
-                //    soData.Clone(so.GetData());
-                //    (soData as SOWordBoxData).inputValue = (so.GetData() as SOWordBoxData).inputValue;
-                //}
-
-                Debug.Log("# Adding to SceneData: " + soData.id + "_"+ soData.itemName + " " + soData);
-
-                sdf.AddSO(soData);
-                if ((so is Prop || so is Avatar) && Scenario.Instance.sceneObjectsManager.recentAdded.Contains(so)) {
-                    ScenesManager.Instance.AddItemToNextScenesSameBG(soData);
-                    Scenario.Instance.sceneObjectsManager.recentAdded.Remove(so);
-                }
-
-                /*if (customizerData != "" && Data.Instance.scenesData.currentFilmData.IsMyStory())
-                    StoryMakerEvents.SetNewAvatarCustomization(customizerData);*/
-
-            }
+            if (!ScenesManager.Instance.SaveActiveScene())
+                return;
             if (!changesMade && GetComponent<FilmMakerManager>().isEditing)
                 SetChangesMade(true);
         }

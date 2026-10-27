@@ -23,7 +23,7 @@ namespace Yaguar.StoryMaker.Editor
         [field: SerializeField] public SOBGData bgData { private set; get; }
 
         public SceneObject selected;
-        public List<SceneObject> recentAdded;
+        List<SceneObject> recentAdded = new();
 
         void Start()
         {
@@ -125,8 +125,6 @@ namespace Yaguar.StoryMaker.Editor
 
             if (selected != null) {
                 sceneObjects.Add(selected);
-                if(recentAdded==null)
-                    recentAdded = new();
                 recentAdded.Add(selected);
             }
         }
@@ -280,6 +278,13 @@ namespace Yaguar.StoryMaker.Editor
 
         void HideBgMask() {
             bgMask.SetActive(false);
+        }
+
+        // True (only once) for an avatar or prop added since the last save
+        public bool TakeRecentlyAdded(SceneObject so) {
+            if (!(so is Avatar || so is Prop))
+                return false;
+            return recentAdded.Remove(so);
         }
 
         public void TurnOfAllTexts() {
