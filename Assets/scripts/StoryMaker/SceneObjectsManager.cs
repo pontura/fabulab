@@ -151,6 +151,23 @@ namespace Yaguar.StoryMaker.Editor
             applyingScenes = false;
         }
 
+        // Shows the objects of a scene. previousScene is the one shown until now (null to refresh all):
+        // its objects missing in this scene are turned off, and the background is set only if it changes
+        public void ShowScene(SceneData scene, SceneData previousScene) {
+            if (previousScene != null && sceneObjects.Count > 0) {
+                foreach (SceneElement element in previousScene.GetScenesElements()) {
+                    if (!scene.Contains(element.data.itemName))
+                        TurnOff(element.GetSOData());
+                }
+            }
+
+            foreach (SceneElement element in scene.GetScenesElements())
+                SetSceneObject(element.GetSOData());
+
+            if (!string.IsNullOrEmpty(scene.bgID) && (previousScene == null || previousScene.bgID != scene.bgID))
+                AddSceneObject(new SOBGData { id = scene.bgID });
+        }
+
         // Shows a scene object as it is in the active scene
         public void SetSceneObject(SOData data) {
 
@@ -250,20 +267,37 @@ namespace Yaguar.StoryMaker.Editor
             selected = sceneObjects.Find(so => so.GetData().id == original);
             ReplaceSceneObject(duplicated);
         }
+        // Replaces the selected character or object with another one. Every instance of it is replaced,
+        // in all the keyframes, also the ones added again in other keyframes
         void ReplaceSceneObject(string id) {
-            if (selected is Avatar || selected is Prop) {
-                SOData data = null;
-                if (selected is Avatar)
-                    data = new SOAvatarData();
-                else
-                    data = new SOPropData();
+            if (!(selected is Avatar || selected is Prop))
+                return;
+
+            bool isAvatar = selected is Avatar;
+            string oldId = selected.GetData().id;
+            List<SceneObject> instances = sceneObjects.FindAll(so => so != null && (isAvatar ? so is Avatar : so is Prop) && so.GetData().id == oldId);
+            string itemNamePrefix = Utils.GetUniqueDateTimeId();
+
+            StoryMakerEvents.HideSoButtons();
+            SceneObject selectedInstance = selected;
+            SceneObject newSelected = null;
+            for (int i = 0; i < instances.Count; i++) {
+                SceneObject instance = instances[i];
+                SOData data = isAvatar ? new SOAvatarData() : new SOPropData();
                 data.id = id;
-                data.itemName = Utils.GetUniqueDateTimeId();
-                ScenesManager.Instance.ReplaceItem(selected.GetData().id, selected.GetData().itemName,id, data.itemName);
-                DestroySelected();
+                data.itemName = instances.Count == 1 ? itemNamePrefix : itemNamePrefix + "_" + i;
+                scenesManager.ReplaceItem(oldId, instance.GetData().itemName, id, data.itemName);
+
+                sceneObjects.Remove(instance);
+                Destroy(instance.gameObject);
                 AddSceneObject(data);
-                StoryMakerEvents.RewindStory();
+                // Hidden until a keyframe that has it is shown
+                selected.gameObject.SetActive(false);
+                if (instance == selectedInstance)
+                    newSelected = selected;
             }
+            selected = newSelected;
+            StoryMakerEvents.RewindStory();
         }
 
         public void TurnOff(SOData data)

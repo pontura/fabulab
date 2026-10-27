@@ -294,7 +294,10 @@ namespace Yaguar.StoryMaker.Editor
                 StoryMakerEvents.SetBackgroundLights();
             }
 
-            scenesManager.SetSceneObjectsIntoScenario(lastSceneId);
+            if (activeScene != null && Scenario.Instance != null) {
+                SceneData previousScene = lastSceneId != scenesManager.currentSceneId ? scenesManager.GetScene(lastSceneId) : null;
+                Scenario.Instance.sceneObjectsManager.ShowScene(activeScene, previousScene);
+            }
             StoryMakerEvents.ReorderSceneObjectsInZ();
         }
 
@@ -358,7 +361,7 @@ namespace Yaguar.StoryMaker.Editor
         {
             yield return new WaitForSeconds(delay);
             if (State == states.PLAYING)
-                scenesManager.GetActiveScene().MoveElements(timeline.keyframe_duration - delay);
+                Scenario.Instance.movementManager.MoveElements(scenesManager.GetActiveScene(), scenesManager.GetNextActiveScene(), timeline.keyframe_duration - delay);
         }
 
         public void OnTransitionChange() {

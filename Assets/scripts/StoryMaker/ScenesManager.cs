@@ -49,18 +49,27 @@ namespace Yaguar.StoryMaker.Editor
         public void Init() {
             Debug.Log("& Init");
             currentSceneId = 1;
-            SceneData sd = new SceneData();
-            sd.Init();
             scenes = new();
-            scenes.Add(sd);
+            scenes.Add(CreateScene());
+        }
+
+        // A new empty scene with the default settings
+        SceneData CreateScene() {
+            SceneData scene = new SceneData();
+            scene.duration = Keyframe_default_duration;
+            BgLigthtingPalette bglp = Scenario.Instance.sceneObjectsManager.BackgroundLighting.GetDefaultPalette();
+            scene.lightingId = bglp.Id;
+            scene.lightingValue = bglp.DefaultStep;
+            scene.transition = true;
+            scene.camData = new CamData();
+            return scene;
         }
 
         // Inserts a keyframe at _id and makes it the active one. It starts as a copy of the previous
         // keyframe without its texts
         public void AddNewScene(int _id) {
             Debug.Log("# AddNewScene");
-            SceneData activeScene = new SceneData();
-            activeScene.Init();
+            SceneData activeScene = CreateScene();
             currentSceneId = _id;
             scenes.Insert(currentSceneId - 1, activeScene);
             if (currentSceneId - 1 > 0) {
@@ -82,6 +91,10 @@ namespace Yaguar.StoryMaker.Editor
 
         public SceneData GetActiveScene() {
             return scenes.Count > 0 ? scenes[currentSceneId - 1] : null;
+        }
+        // The scene of a keyframe (1 based), or null when there is none
+        public SceneData GetScene(int id) {
+            return id >= 1 && id <= scenes.Count ? scenes[id - 1] : null;
         }
         public SceneData GetNextActiveScene() {
             if (scenes.Count <= currentSceneId)
@@ -118,14 +131,6 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.AddAllSceneObjects(elementsToInstantiate);
         }
 
-        // Shows the objects of the active scene, turning off the ones of lastSceneID that are no longer in it
-        public void SetSceneObjectsIntoScenario(int lastSceneID = -1) {
-            if (lastSceneID == currentSceneId)
-                lastSceneID = -1;
-            GetActiveScene()?.DeleteChangedSO(lastSceneID);
-            GetActiveScene()?.AddSceneObjects(lastSceneID);
-        }
-        
         public string GetSerialized() {
             string json = "[";
             for(int i = 0; i < scenes.Count; i++) {

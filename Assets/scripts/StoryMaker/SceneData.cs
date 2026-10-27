@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Yaguar.StoryMaker.Editor
@@ -180,25 +179,13 @@ namespace Yaguar.StoryMaker.Editor
         public float duration;
         public string lightingId;
         public int lightingValue;
-        [SerializeField] List<SceneElement> scenesElements;
+        [SerializeField] List<SceneElement> scenesElements = new List<SceneElement>();
 
-        public void Init() {
-            scenesElements = new List<SceneElement>();
-            if (ScenesManager.Instance != null) {
-                duration = ScenesManager.Instance.Keyframe_default_duration;
-                BgLigthtingPalette bglp = Scenario.Instance.sceneObjectsManager.BackgroundLighting.GetDefaultPalette();
-                lightingId = bglp.Id;
-                lightingValue = bglp.DefaultStep;
-                transition = true;
-                camData = new CamData();
-            }
-        }
-
+        // A deep copy: editing the copy never changes this scene
         public SceneData Clone() {
             SceneData nuevo = new SceneData();
-            nuevo.Init();
             foreach (SceneElement item in scenesElements)
-                nuevo.scenesElements.Add(item);
+                nuevo.scenesElements.Add(SceneElement.FromJson(item.ToJson(), item.type));
             nuevo.bgID = bgID;
             nuevo.transition = transition;
             nuevo.duration = duration;
@@ -218,12 +205,17 @@ namespace Yaguar.StoryMaker.Editor
             return scenesElements;
         }
 
+        public SceneElement GetElement(string itemName) {
+            return scenesElements.Find(e => e.data.itemName == itemName);
+        }
+
+        public bool Contains(string itemName) {
+            return GetElement(itemName) != null;
+        }
+
         public void AddSO(SOData soData)
         {
-            if (scenesElements == null)
-                scenesElements = new List<SceneElement>();
-
-            if (scenesElements.Any(e => e.data.itemName == soData.itemName))
+            if (Contains(soData.itemName))
                 return;
 
             scenesElements.Add(SceneElement.FromSOData(soData));
@@ -232,7 +224,7 @@ namespace Yaguar.StoryMaker.Editor
         // Replaces the saved element of the scene object. Returns false when it is not in this scene
         // or it did not change
         public bool UpdateSO(SOData soData) {
-            int index = scenesElements == null ? -1 : scenesElements.FindIndex(e => e.data.itemName == soData.itemName);
+            int index = scenesElements.FindIndex(e => e.data.itemName == soData.itemName);
             if (index < 0)
                 return false;
             SceneElement element = SceneElement.FromSOData(soData);
@@ -243,95 +235,7 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public bool RemoveSO(string itemName) {
-            return scenesElements != null && scenesElements.RemoveAll(e => e.data.itemName == itemName) > 0;
-        }
-
-        // Turns off the scene objects of the previous keyframe that are not present in this one
-        public void DeleteChangedSO(int lastSceneId)
-        {
-            if (Scenario.Instance && Scenario.Instance.sceneObjectsManager.sceneObjects.Count == 0)
-                return;
-            List<SceneElement> oldData = GetScenesElementsOf(lastSceneId);
-            if (oldData == null || scenesElements == null)
-                return;
-            foreach (SceneElement data in oldData)
-            {
-                if (!scenesElements.Any(s => s.data.itemName == data.data.itemName))
-                    Scenario.Instance.sceneObjectsManager.TurnOff(data.GetSOData());
-            }
-        }
-
-        public void AddSceneObjects(int lastSceneId)
-        {
-            if (scenesElements == null)
-                return;
-
-            foreach (SceneElement data in scenesElements)
-                StoryMakerEvents.SetSceneObject(data.GetSOData());
-
-            if (lastSceneId > 0) {
-                if (bgID != ScenesManager.Instance.Scenes[lastSceneId - 1].bgID)
-                    SetBG();
-            } else
-                SetBG();
-        }
-
-        void SetBG()
-        {
-            if (string.IsNullOrEmpty(bgID))
-                return;
-            SOBGData bgData = new SOBGData();
-            bgData.id = bgID;
-            Scenario.Instance.sceneObjectsManager.AddSceneObject(bgData);
-        }
-
-        // Tweens avatars and props towards their position, size and rotation in the next keyframe
-        public void MoveElements(float timeToNextFrame)
-        {
-            if (!transition)
-                return;
-
-            MovementManager movementManager = Scenario.Instance.movementManager;
-            foreach (SceneElement data in scenesElements)
-            {
-                if (data.type != SceneElementType.AVATAR && data.type != SceneElementType.PROP)
-                    continue;
-
-                SOData soData = data.GetSOData();
-                SOData nextData = GetInNextScene(data.type, soData.itemName);
-                if (nextData == null)
-                    continue;
-
-                if (!soData.pos.Equals(nextData.pos)) {
-                    if (data.type == SceneElementType.AVATAR)
-                        movementManager.MoveCharacter(soData.itemName, nextData.pos.ToVector3(), timeToNextFrame);
-                    else
-                        movementManager.MoveElement(soData, nextData.pos.ToVector3(), timeToNextFrame);
-                }
-                if (!soData.size.Equals(nextData.size))
-                    movementManager.ScaleElement(soData, nextData.size, timeToNextFrame);
-
-                if (!soData.rot.Equals(nextData.rot))
-                    movementManager.RotateElement(soData, nextData.rot, timeToNextFrame);
-            }
-        }
-
-        SOData GetInNextScene(SceneElementType type, string itemName) {
-            SceneData nextSD = ScenesManager.Instance.GetNextActiveScene();
-            if (nextSD == null || nextSD.scenesElements == null)
-                return null;
-            foreach (SceneElement s in nextSD.scenesElements) {
-                if (s.type == type && s.data.itemName == itemName)
-                    return s.GetSOData();
-            }
-            return null;
-        }
-
-        static List<SceneElement> GetScenesElementsOf(int sceneID)
-        {
-            if (sceneID < 1 || sceneID > ScenesManager.Instance.Scenes.Count)
-                return null;
-            return ScenesManager.Instance.Scenes[sceneID - 1].GetScenesElements();
+            return scenesElements.RemoveAll(e => e.data.itemName == itemName) > 0;
         }
     }
 }
