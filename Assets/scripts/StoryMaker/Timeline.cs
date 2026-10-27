@@ -21,15 +21,30 @@ namespace Yaguar.StoryMaker.Editor
         public Transform container;
         public List<KeyFrameUI> all;
         public KeyframeMarker keyFrameMarker;
-        public float total_x_marker = 282;
         public float offset = 10;
         public float timer;
         public float keyframe_duration = 2;
 
+        // True once the keyframes of the current story are built (and their thumbnails, when editing)
+        public bool IsLoaded { get; private set; }
+
         int playingGameFrames;
+        Coroutine thumbsRoutine;
+        RectTransform canvasRect;
 
         ScenesManager scenesManager => ScenesManager.Instance;
         int activeKeyframe => filmMakerUI.CurrentKeyframe;
+
+        // Width in pixels of the whole timeline
+        public float total_x_marker
+        {
+            get
+            {
+                if (canvasRect == null)
+                    canvasRect = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+                return canvasRect.rect.width - offset;
+            }
+        }
 
         public float totalTimer
         {
@@ -51,7 +66,6 @@ namespace Yaguar.StoryMaker.Editor
 
         void Start() {
             StoryMakerEvents.ChangeSpeed(scenesManager.currentFilmData.speed);
-            Invoke(nameof(SetTotalMarkers), Time.deltaTime * 3);
         }
 
         void OnDestroy()
@@ -67,7 +81,7 @@ namespace Yaguar.StoryMaker.Editor
             if(all.Count>1)
                 ghostImage.Show(true);
 
-            Invoke(nameof(OnEnabledDelayed), 0.1f);
+            shotButtons.Show(filmMakerUI.isEditing);
 
             if (all.Count == 0)
             {
@@ -90,14 +104,13 @@ namespace Yaguar.StoryMaker.Editor
             ghostImage.Show(false);
         }
 
-        void OnEnabledDelayed()
+        // Keeps the keyframes and the marker fitted to the screen when it is resized
+        void OnRectTransformDimensionsChange()
         {
-            shotButtons.Show(filmMakerUI.isEditing);
-        }
-
-        void SetTotalMarkers() {
-            RectTransform canvasRect = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
-            total_x_marker = canvasRect.rect.width - offset;
+            if (!isActiveAndEnabled || all.Count == 0 || scenesManager == null)
+                return;
+            UpdateKeyframes();
+            PlaceMarker();
         }
 
         void UpdateDraw()
@@ -138,6 +151,11 @@ namespace Yaguar.StoryMaker.Editor
         // Rebuilds the keyframes from the scenes of the loaded story
         public void Reset()
         {
+            IsLoaded = false;
+            if (thumbsRoutine != null)
+                Scenario.Instance.StopCoroutine(thumbsRoutine);
+            thumbsRoutine = null;
+
             ghostImage.Reset();
             if (scenesManager.currentFilmData != null)
                 StoryMakerEvents.ChangeSpeed(scenesManager.currentFilmData.speed);
@@ -155,13 +173,14 @@ namespace Yaguar.StoryMaker.Editor
                 AddNewKeyframe(s.duration);
 
             if(filmMakerUI.isEditing)
-                Scenario.Instance.StartCoroutine(CreateAllInitialThumbs());
+                thumbsRoutine = Scenario.Instance.StartCoroutine(CreateAllInitialThumbs());
             else
                 OnLoadDone();
         }
 
         void OnLoadDone()
         {
+            thumbsRoutine = null;
             filmMakerUI.ShowKeyframe(1);
             UpdateKeyframes();
             if(Data.Instance.gamesManager.playing)
@@ -171,6 +190,7 @@ namespace Yaguar.StoryMaker.Editor
             Events.OnLoading(false);
             shotButtons.Show(false);
             OnStop();
+            IsLoaded = true;
         }
 
         IEnumerator CreateAllInitialThumbs()
@@ -314,12 +334,18 @@ namespace Yaguar.StoryMaker.Editor
 
         void ForceMarkerPosition()
         {
-            float timer_pos = CalculateTimer();
-            Vector2 pos = keyFrameMarker.transform.localPosition;
-            pos.x = timer_pos * (total_x_marker / totalTimer);
-            keyFrameMarker.transform.localPosition = pos;
+            float pos_x = PlaceMarker();
             if(filmMakerUI.isEditing)
-                shotButtons.OnMarkerUpdated(pos.x + all[activeKeyframe - 1].mid);
+                shotButtons.OnMarkerUpdated(pos_x + all[activeKeyframe - 1].mid);
+        }
+
+        // Moves the marker to the start of the current keyframe and returns its x position
+        float PlaceMarker()
+        {
+            Vector2 pos = keyFrameMarker.transform.localPosition;
+            pos.x = CalculateTimer() * (total_x_marker / totalTimer);
+            keyFrameMarker.transform.localPosition = pos;
+            return pos.x;
         }
 
         float CalculateTimer()
@@ -351,6 +377,7 @@ namespace Yaguar.StoryMaker.Editor
 
         public void EnableStoryEdition(bool isEdition)
         {
+            shotButtons.Show(isEdition);
             gamesLockScreen.SetActive(filmMakerUI.isPlayingGame);
             if(filmMakerUI.isPlayingGame)
                 StartCoroutine(InitGame());
@@ -359,11 +386,11 @@ namespace Yaguar.StoryMaker.Editor
         IEnumerator InitGame()
         {
             playingGameFrames = Data.Instance.gamesManager.totalLockedGameFrames;
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitUntil(() => Data.Instance.scenesData.loadedDone && IsLoaded);
             if(playingGameFrames > 0)
             {
                 filmMakerUI.GoTo(playingGameFrames);
-                yield return new WaitForSeconds(0.1f);
+                yield return null;
                 filmMakerUI.New();
             }
             else
@@ -371,8 +398,6 @@ namespace Yaguar.StoryMaker.Editor
                 // nada bloqueado: el primer frame de la plantilla queda editable, sin crear un frame nuevo automaticamente
                 filmMakerUI.GoTo(1);
             }
-            yield return new WaitForSeconds(0.1f);
-            CheckForKeyframeInteraction();
         }
     }
 }

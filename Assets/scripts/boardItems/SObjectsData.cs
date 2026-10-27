@@ -93,9 +93,22 @@ namespace BoardItems
             else
                 Invoke("OnTokenUpdated", 1);
         }
+        // Others' objects can only be loaded once the metadata is here (it says who owns each object)
+        public bool MetadataLoaded { get; private set; }
+        System.Action onMetadataLoaded;
+
+        void WhenMetadataLoaded(System.Action action)
+        {
+            if (MetadataLoaded)
+                action();
+            else
+                onMetadataLoaded += action;
+        }
+
         void LoadSOMetadataFromServer()
         {
             Debug.Log("#Load SO MetadataFromServer");
+            MetadataLoaded = false;
             metaData = new List<PropMetaData>();
             FirebaseStoryMakerDBManager.Instance.LoadMetadataFromServer(MetadataTypes.so.ToString(), OnLoadSODataFromServer);
         }
@@ -334,6 +347,11 @@ namespace BoardItems
             partMetadata.ChildAdded += OnPropAdded;
             partMetadata.ChildChanged += OnPropChanged;
             partMetadata.ChildRemoved += OnPropRemoved;
+
+            MetadataLoaded = true;
+            System.Action pending = onMetadataLoaded;
+            onMetadataLoaded = null;
+            pending?.Invoke();
         }
 
         void OnPropAdded(object sender, ChildChangedEventArgs args) {
@@ -508,6 +526,10 @@ namespace BoardItems
                     "open_others_object_" + chd.type,
                     new System.Collections.Generic.Dictionary<string, object> { { "item_id", id } }
                 );
+            }
+            else if (!MetadataLoaded)
+            {
+                WhenMetadataLoaded(() => LoadOthersObject(id, OnDone));
             }
             else
             {

@@ -563,7 +563,6 @@ namespace BoardItems
                 return;
             }
             InitLoadedFilm();
-            loadedDone = true;
         }
 
         void OnFilmLoadedFromServer(bool succes, List<SceneData> sds) {
@@ -583,6 +582,7 @@ namespace BoardItems
                 ScenesManager.Instance.AddAllObjectsToScene();
                 //Invoke(nameof(StoryMakerEvents.OnLoadFilm),Time.deltaTime);
                 StoryMakerEvents.OnLoadFilm();
+                loadedDone = true;
             } else {
                 Invoke("InitLoadedFilm", 1);
             }
@@ -664,10 +664,8 @@ namespace BoardItems
         }
 
         void CheckAllElementsDone() {
-            if (elementsIds.Count <= 0) {
+            if (elementsIds.Count <= 0)
                 InitLoadedFilm();
-                loadedDone = true;
-            }
         }
 
         public FilmData GetMeta(string id) {

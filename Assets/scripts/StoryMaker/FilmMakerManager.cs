@@ -37,6 +37,7 @@ namespace Yaguar.StoryMaker.Editor
         public bool isPlayingGame;
 
         float defaultZoom = 60;
+        Coroutine pauseRoutine;
 
         ScenesManager scenesManager => ScenesManager.Instance;
 
@@ -98,6 +99,7 @@ namespace Yaguar.StoryMaker.Editor
         public void OnTimelinePlay(bool isOn)
         {
             StopAllCoroutines();
+            pauseRoutine = null;
             if (isOn)
             {
                 Play();
@@ -105,7 +107,7 @@ namespace Yaguar.StoryMaker.Editor
             else
             {
                 Stop();
-                Invoke(nameof(SetPaused), Time.deltaTime);
+                PauseNextFrame();
             }
         }
 
@@ -131,6 +133,24 @@ namespace Yaguar.StoryMaker.Editor
             playButton.GetComponent<PlayButton>().SetButtons(false);
             State = states.STOPPED;
             iTween.Stop();
+        }
+
+        // Freezes tweens and animations one frame later, once the shown keyframe has applied its poses.
+        // Starting the playback cancels it (OnTimelinePlay stops all coroutines).
+        void PauseNextFrame() {
+            if (!isActiveAndEnabled) {
+                SetPaused();
+                return;
+            }
+            if (pauseRoutine != null)
+                StopCoroutine(pauseRoutine);
+            pauseRoutine = StartCoroutine(PauseRoutine());
+        }
+
+        IEnumerator PauseRoutine() {
+            yield return null;
+            pauseRoutine = null;
+            SetPaused();
         }
 
         void SetPaused() {
@@ -269,7 +289,7 @@ namespace Yaguar.StoryMaker.Editor
                     SetCameraNewScene();
                 }
             } else if(State == states.STOPPED) {
-                Invoke(nameof(SetPaused), Time.deltaTime);
+                PauseNextFrame();
             } else
             {
                 MoveCamSingleFrame();

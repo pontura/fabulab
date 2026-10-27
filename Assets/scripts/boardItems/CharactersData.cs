@@ -81,10 +81,22 @@ namespace BoardItems
             } else
                 Invoke("OnTokenUpdated", 1);
         }
+        // Others' characters can only be loaded once the metadata is here (it says who owns each character)
+        public bool MetadataLoaded { get; private set; }
+        System.Action onMetadataLoaded;
+
+        void WhenMetadataLoaded(System.Action action) {
+            if (MetadataLoaded)
+                action();
+            else
+                onMetadataLoaded += action;
+        }
+
         void LoadCharacterMetadataFromServer() {
             Debug.Log("#LoadUserCharacterMetadataFromServer");
             //if (Data.Instance.userData.IsLogged()) {
                 Debug.Log("#is Logged");
+                MetadataLoaded = false;
                 charactersMetaData = new List<CharacterMetaData>();
                 FirebaseStoryMakerDBManager.Instance.LoadMetadataFromServer(MetadataTypes.characters.ToString(), OnLoadCharacterDataFromServer);
             //}
@@ -396,6 +408,11 @@ namespace BoardItems
             charactersMetadata.ChildAdded += OnCharacterAdded;
             charactersMetadata.ChildChanged += OnCharacterChanged;
             charactersMetadata.ChildRemoved += OnCharacterRemoved;
+
+            MetadataLoaded = true;
+            System.Action pending = onMetadataLoaded;
+            onMetadataLoaded = null;
+            pending?.Invoke();
         }
 
         void OnCharacterAdded(object sender, ChildChangedEventArgs args) {
@@ -587,6 +604,8 @@ namespace BoardItems
             CharacterData chd = othersCharacters.Find(x => x.id == id);
             if (chd != null)
                 OnDone(chd);
+            else if (!MetadataLoaded)
+                WhenMetadataLoaded(() => LoadOthersCharacter(id, OnDone));
             else {
                 CharacterMetaData chmd = charactersMetaData.Find(x => x.id == id);
                 if (chmd == null) {

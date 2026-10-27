@@ -634,8 +634,10 @@ namespace BoardItems
         List<SavedIData> soIDs;
         public void OpenWork(BoardItemManager boardItemManager, SOPartData wd, bool cascade = false)
         {
-            if (wd == null) // para el caso de elementos borrados en historias de otros
-                    return;
+            if (wd == null) { // para el caso de elementos borrados en historias de otros
+                soIDs = null;
+                return;
+            }
 
             soIDs = new List<SavedIData>();
             if (Data.Instance.charactersData.PresetID == "" && cascade)
@@ -689,6 +691,9 @@ namespace BoardItems
         }
 
         void LoadBgSo(SavedIData soID, SOPartData soPartData, BoardItemManager boardItemManager, Transform bgContainer, Transform container) {
+            if (soPartData == null) // objeto borrado (o sin metadata) usado dentro de un fondo
+                return;
+
             GameObject go = new GameObject();
             BoardItemManager boardItemManager_to_add = go.AddComponent<BoardItemManager>();
 

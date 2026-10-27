@@ -323,8 +323,9 @@ namespace Yaguar.StoryMaker.DB
             reference.GetValueAsync().ContinueWithOnMainThread(task => {
 
                 if (task.IsFaulted || task.IsCanceled) {
-                    //Debug.Log("#Load " + type + " MetadataFromServer FAIL");
-                    Debug.Log(task.Exception);
+                    Debug.LogError("Load " + type + " metadata failed: " + task.Exception);
+                    // notifies anyway so whoever waits for the metadata doesn't hang
+                    callback(new List<CharacterMetaData>());
                 } else if (task.IsCompleted) {
                     //Debug.Log("#Load " + type + " MetadataFromServer IsCompleted");
                     try {
@@ -392,6 +393,7 @@ namespace Yaguar.StoryMaker.DB
                             callback(metas);
                         } else {
                             Debug.LogWarning("snapshot not exist");
+                            callback(new List<CharacterMetaData>());
                         }
                     } catch (Exception ex) {
                         Debug.LogError(type + " " + $"Error en callback: {ex}");
