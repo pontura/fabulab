@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(dotnet build Assembly-CSharp.csproj -nologo -v q -p:BuildProjectReferences=false -p:OutputPath=\"$env:TEMP\\\\claude\\\\build\\\\\" --no-incremental 2>&1 | Select-String -Pattern \"error|Build succeeded\" | Select-Object -First 10)"
+      "PowerShell(dotnet build Assembly-CSharp.csproj -nologo -v q -p:BuildProjectReferences=false -p:OutputPath=\"$env:TEMP\\\\claude\\\\build\\\\\" --no-incremental 2>&1 | Select-String -Pattern \"error|Build succeeded\" | Select-Object -First 10)",
+      "PowerShell($log = \"$env:LOCALAPPDATA\\\\Unity\\\\Editor\\\\Editor.log\"; \\(Get-Item $log\\).LastWriteTime; Select-String -Path $log -Pattern \"BackgroundSelectionScreen|RefreshIntro|ItemSelectionScreen|SearchBar\" -Context 3,6 | Select-Object -Last 6 | ForEach-Object { $_.Context.PreContext; $_.Line; $_.Context.PostContext; \"-----\" })",
+      "PowerShell($log = \"$env:LOCALAPPDATA\\\\Unity\\\\Editor\\\\Editor.log\"; Select-String -Path $log -Pattern \"Exception\" -Context 0,4 | Select-Object -Last 5 | ForEach-Object { $_.Line; $_.Context.PostContext; \"-----\" }; \"== compile ==\"; Select-String -Path $log -Pattern \"error CS|Reloading assemblies|Domain Reload\" | Select-Object -Last 4 | % { $_.Line })",
+      "PowerShell(Select-String -Path \"Assets\\\\Scenes\\\\Game.unity\" -Pattern \"introField|propertyPath: m_IsActive\" -Context 2,2 | Select-Object -First 10 | % { $_.Context.PreContext; $_.Line; $_.Context.PostContext; \"---\" }; git diff HEAD -- Assets/prefabs/ui/StoryEditorScreen.prefab | Select-String -Pattern \"introField|m_Name|m_IsActive\" | Select-Object -First 30)",
+      "PowerShell($log = \"$env:LOCALAPPDATA\\\\Unity\\\\Editor\\\\Editor.log\"; Select-String -Path $log -Pattern \"BackgroundSelectionScreen.cs:\\(\\\\d+\\)\" -AllMatches | % { $_.Matches } | % { $_.Groups[1].Value } | Group-Object | % { \"$\\($_.Name\\): $\\($_.Count\\)\" }; \\(Select-String -Path \"Assets\\\\scripts\\\\ui\\\\storyMaker\\\\BackgroundSelectionScreen.cs\" -Pattern \"LogError\"\\).LineNumber; \\(Get-Item \"Assets\\\\scripts\\\\ui\\\\storyMaker\\\\BackgroundSelectionScreen.cs\"\\).LastWriteTime)"
     ]
   }
 }

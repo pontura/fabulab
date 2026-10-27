@@ -1,7 +1,5 @@
 ﻿using BoardItems.BoardData;
-using Firebase.Analytics;
 using UnityEngine;
-using UnityEngine.UI;
 using Yaguar.StoryMaker.Editor;
 
 namespace UI.MainApp.Home.User
@@ -9,18 +7,37 @@ namespace UI.MainApp.Home.User
     public class BackgroundSelectionScreen : ItemSelectionScreen
     {
         public AllObjectsFullScreenScreen allObjectsScreen;
+        [SerializeField] TMPro.TMP_Text introField;
 
         protected override void Start()
         {
+            introField.text = "Empecemos eligiendo un fondo";
             base.Start();
             minIndex = 1;
             Cancel();
             Events.DuplicateSOBG += DuplicateSOBG;
+            StoryMakerEvents.OnStoryChanged += RefreshIntro;
+            RefreshIntro();
         }
         protected override void OnDestroy()
         {
             base.OnDestroy();
             Events.DuplicateSOBG -= DuplicateSOBG;
+            StoryMakerEvents.OnStoryChanged -= RefreshIntro;
+        }
+
+        public override void Show(bool isOn)
+        {
+            base.Show(isOn);
+            RefreshIntro();
+        }
+
+        // The intro is shown only in this tab, while the scene has no background
+        void RefreshIntro()
+        {
+            SceneData scene = ScenesManager.Instance != null ? ScenesManager.Instance.GetActiveScene() : null;
+            bool withoutBackground = scene == null || string.IsNullOrEmpty(scene.bgID);
+            introField.gameObject.SetActive(isActive && withoutBackground);
         }
 
         protected override void LoadNext()

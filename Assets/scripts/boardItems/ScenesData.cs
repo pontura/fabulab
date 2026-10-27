@@ -76,6 +76,8 @@ namespace BoardItems
         // public string currentName;
 
         public bool loadedDone;
+        // True when the story being edited was started with StartNewStory, false when it was loaded
+        public bool IsNewStory { get; private set; }
 
         public bool ScenesDataLoadedDone { get; private set; }
 
@@ -120,6 +122,7 @@ namespace BoardItems
                 StartNewStory(storyName);
             }
 
+            IsNewStory = true;
             StoryMakerEvents.OnStartNewStory();
             loadedDone = true;
         }
@@ -576,6 +579,7 @@ namespace BoardItems
 
 
         public void InitLoadedFilm() {
+            IsNewStory = false;
             if (ScenesManager.Instance.Scenes.Count > 0 && ScenesManager.Instance.Scenes.Count >= currentFilmData.framecount) {
                 ScenesManager.Instance.currentSceneId = 1;
                 ScenesManager.Instance.AddAllObjectsToScene();

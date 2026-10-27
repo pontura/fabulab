@@ -120,7 +120,14 @@ namespace UI.MainApp
             else
                 StoryMakerEvents.SetEditing(GetComponent<FilmMakerManager>().isEditing);  
                 
-            tabs.Init(OnTabClicked, 4);
+            tabs.Init(OnTabClicked, GetInitialTab());
+        }
+
+        // A new story starts in the backgrounds tab until it has a background; otherwise, in the film tab
+        int GetInitialTab() {
+            SceneData scene = ScenesManager.Instance.GetActiveScene();
+            bool withoutBackground = scene == null || string.IsNullOrEmpty(scene.bgID);
+            return Data.Instance.scenesData.IsNewStory && withoutBackground ? 0 : 4;
         }
 
         public void CloseActionsAndEmojis() {
