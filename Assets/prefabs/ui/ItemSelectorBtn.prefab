@@ -42,7 +42,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 120, y: 120}
+  m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3832561336355145770
 CanvasRenderer:
@@ -774,7 +774,7 @@ RectTransform:
   m_GameObject: {fileID: 2951458662531275214}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4349488362380649246}
@@ -782,8 +782,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -15.496693, y: -15.475098}
-  m_SizeDelta: {x: 53.0878, y: 53.0132}
+  m_AnchoredPosition: {x: -11.17, y: -11.49}
+  m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4430503515137722001
 MonoBehaviour:
@@ -798,7 +798,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.MainApp.CreatorsList
   container: {fileID: 6511575896256199796}
-  profilePicture: {fileID: 1534864544502304331, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
+  profilePicture: {fileID: 1152541668993734208}
 --- !u!1 &3051934821999628508
 GameObject:
   m_ObjectHideFlags: 0
@@ -1781,11 +1781,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2805238164916484885, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2805238164916484885, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2805238164916484885, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
       propertyPath: m_AnchorMin.x
@@ -1863,11 +1863,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2907311549210263752, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
+--- !u!114 &1152541668993734208 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1534864544502304331, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}
+  m_PrefabInstance: {fileID: 1923680948563728395}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 574ef9e785e5af5408c331d32137842b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.MainApp.ProfilePicture
 --- !u!224 &4349488362380649246 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2805238164916484885, guid: 3e27788a7583c264eb5331a8fbc3e434, type: 3}

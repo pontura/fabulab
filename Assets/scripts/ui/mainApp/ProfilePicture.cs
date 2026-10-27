@@ -13,6 +13,7 @@ namespace UI.MainApp
         private void Start() {
             FirebaseAuthManager.Instance.OnFirebaseAuthenticated += OnFirebaseAuthenticated;
             Events.OnProfilePictureUpdated += OnProfilePictureUpdated;
+            transform.localScale = Vector3.one;
         }
 
         private void OnDestroy() {

@@ -10,11 +10,7 @@ namespace UI.MainApp
 
         public void Init(string uid)
         {
-            Utils.RemoveAllChildsIn(container);
-
-            if (string.IsNullOrEmpty(uid)) return;
-            ProfilePicture p = Instantiate(profilePicture, container);
-            p.Init(uid);
+            profilePicture.Init(uid);
         }
     }
 
