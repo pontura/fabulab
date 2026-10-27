@@ -6,10 +6,12 @@ namespace OnBoarding
         public void Characters()
         {
             UIManager.Instance.HomeCharacters();
+            Done();
         }
         public void Stories()
         {            
             UIManager.Instance.Home();
+            Done();
         }
     }
 }

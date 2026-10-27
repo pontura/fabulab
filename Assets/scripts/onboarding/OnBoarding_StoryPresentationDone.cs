@@ -10,13 +10,13 @@ namespace OnBoarding
 {
     public class OnBoarding_StoryPresentationDone : OnBoarding_GenericText
     {
-        [SerializeField] GameObject part;
+       // [SerializeField] GameObject part;
         
         [SerializeField] PlayButton playButton;
 
         public override void OnShow()
         {            
-            part.SetActive(false);
+           // part.SetActive(false);
             field.text = "¡Ahora mirá las historias que se pueden hacer en Fabulab!";   
             playButton.OnClick();   
 
@@ -30,13 +30,14 @@ namespace OnBoarding
         private void OnBoardingStepDone(OnBoardingManager.steps steps)
         {
             if(active && steps != step) return;            
-            part.SetActive(true);
+           // part.SetActive(true);
             StoryMakerEvents.OnMovieOver -= OnMovieOver;
         }
 
         private void OnMovieOver() {
             StoryMakerEvents.OnMovieOver -= OnMovieOver;
-            part.SetActive(true);
+            Done();
+            //part.SetActive(true);
             Invoke(nameof(ClearScene), Time.deltaTime * 2);
         }
 
@@ -49,11 +50,11 @@ namespace OnBoarding
         {            
             StoryMakerEvents.OnMovieOver -= OnMovieOver;
         }
-        public void OnDone()
-        {
-            Done();
-            UIManager.Instance.Home();
-        }
+        // public void OnDone()
+        // {
+        //     Done();
+        //    // UIManager.Instance.Home();
+        // }
         public override void ShowPanelsBack() {}
     }
 }
