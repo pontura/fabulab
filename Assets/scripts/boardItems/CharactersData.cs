@@ -579,7 +579,7 @@ namespace BoardItems
         {
             foreach(CharacterMetaData c in userCharactersMetaData)
             {
-                if(c.tags.Count>0 && c.tags.Contains(tag))
+                if(c.tags != null && c.tags.Contains(tag))
                     return c;
             }
             return null;

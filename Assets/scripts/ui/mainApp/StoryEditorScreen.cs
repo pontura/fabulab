@@ -130,6 +130,10 @@ namespace UI.MainApp
             return Data.Instance.scenesData.IsNewStory && withoutBackground ? 0 : 4;
         }
 
+        public void SelectTab(int id) {
+            tabs.Init(OnTabClicked, id);
+        }
+
         public void CloseActionsAndEmojis() {
             actionUI.SetOn(false);
             emojisUI.SetOn(false);

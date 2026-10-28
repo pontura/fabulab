@@ -296,8 +296,10 @@ namespace Yaguar.StoryMaker.Editor
         // Updates the marker, the selection and the keyframe panels to the current keyframe
         public void Refresh()
         {
+            // Not SetPosition(): that is the playback logic and its "movie over" would navigate again
             timer = CalculateTimer();
-            SetPosition();
+            if (activeKeyframe < 1 || activeKeyframe > all.Count)
+                return;
             UpdateKeyframes();
             ForceMarkerPosition();
 

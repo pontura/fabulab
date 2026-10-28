@@ -12,13 +12,14 @@ namespace OnBoarding
         public TMPro.TMP_Text field2;
         [SerializeField] GameObject part1;
         [SerializeField] GameObject part2;
+        [SerializeField] GameObject maskAll;
 
         [SerializeField] StoryEditorScreen storyEditorScreen;
         [SerializeField] BackgroundSelectionScreen backgroundSelectionScreen;
 
         public override void OnShow()
         {     
-
+            maskAll.SetActive(true); 
             field.text = "Empecemos eligiendo un escenario.";
             field2.text = "Lindo, ¿no? Ahora pongamos algún objeto.";
 
@@ -90,8 +91,11 @@ namespace OnBoarding
             StoryMakerEvents.SetEditing(true);  
 
             yield return new WaitForSeconds(0.25f);
-            
+            print("BG#");
+            storyEditorScreen.SelectTab(0);
             backgroundSelectionScreen.Clicked(1);
+            
+            maskAll.SetActive(false); 
         }
         void Step2()
         {            
