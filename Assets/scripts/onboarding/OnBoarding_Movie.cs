@@ -62,6 +62,11 @@ namespace OnBoarding
         {
             OnVideoFinished();
         }
+        void OnDisable()
+        {
+            videoPlayer.prepareCompleted -= OnVideoReady;
+            videoPlayer.loopPointReached -= OnVideoFinished;            
+        }
         public void OnVideoFinished()
         {             
             videoPlayer.loopPointReached -= OnVideoFinished;
