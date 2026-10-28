@@ -34,6 +34,7 @@ namespace UI.MainApp.Home.User
                 go.Init(balloonType.ToString(), s);
                 go.AddOnClick(OpenWordBalloon);
                 go.SetLikeButton(true);
+                go.SetCreator(null);
             }
             Events.OnLoading(false);
         }        
