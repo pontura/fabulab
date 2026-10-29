@@ -17,8 +17,9 @@ namespace OnBoarding
         public override void OnShow()
         {            
            // part.SetActive(false);
-            field.text = "¡Ahora mirá las historias que se pueden hacer en Fabulab!";   
-            playButton.OnClick();   
+            field.text = "¡Ahora mirá las historias que se pueden hacer en Fabulab!";
+            AudioManager.Instance.musicManager.Play("welcomeStory");
+            playButton.OnClick();
 
             StoryMakerEvents.OnMovieOver += OnMovieOver;
         }
