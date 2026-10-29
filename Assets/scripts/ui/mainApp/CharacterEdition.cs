@@ -79,7 +79,7 @@ namespace UI.MainApp
             else
             {            
                 DoneBtn.SetActive(false);     
-                bgColorsBtn.SetActive(false);
+               // bgColorsBtn.SetActive(false);
             }
 
             if (StoryMakerEvents.isEditing)

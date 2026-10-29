@@ -120,7 +120,19 @@ namespace UI.MainApp
             else
                 StoryMakerEvents.SetEditing(GetComponent<FilmMakerManager>().isEditing);  
                 
-            tabs.Init(OnTabClicked, GetInitialTab());
+            if (GetComponent<FilmMakerManager>().isEditing)
+                tabs.Init(OnTabClicked, GetInitialTab());
+            else
+                ShowPlayerView();
+        }
+
+        // Watching a story: only the timeline, without the edition lists
+        void ShowPlayerView() {
+            timeline.SetActive(true);
+            itemList.SetActive(false);
+            characterScreen.Show(false);
+            backgroundScreen.Show(false);
+            objectsScreen.Show(false);
         }
 
         // A new story starts in the backgrounds tab until it has a background; otherwise, in the film tab
@@ -468,6 +480,8 @@ namespace UI.MainApp
             storyName.gameObject.SetActive(enable);
             actionUI.SetOn(enable);
             emojisUI.SetOn(enable);
+            if (!enable)
+                ShowPlayerView();
         }
         
         [SerializeField] OnBoarding_Movie onboarding_Movie;

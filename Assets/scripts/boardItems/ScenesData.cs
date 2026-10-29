@@ -519,6 +519,7 @@ namespace BoardItems
         public void LoadFilm(string _id) {
                 print("LoadFilm _id:" + _id + " loadedDone: " + loadedDone);
             loadedDone = false;
+            IsNewStory = false;
             currentFilmData = filmsData.Find(x => x.id == _id);
             ScenesManager.Instance.currentFilmData = currentFilmData;
             if (currentFilmData != null) {
@@ -538,6 +539,7 @@ namespace BoardItems
         public void LoadUserFilm(string _id) {
             print("____________LoadUserFilm" + loadedDone);
             loadedDone = false;
+            IsNewStory = false;
             currentFilmData = userFilmsData.Find(x => x.id == _id);
             ScenesManager.Instance.currentFilmData = currentFilmData;
             if (currentFilmData != null) {

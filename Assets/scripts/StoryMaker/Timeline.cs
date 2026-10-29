@@ -78,6 +78,7 @@ namespace Yaguar.StoryMaker.Editor
         void OnEnable() {
             StoryMakerEvents.OnStopDraw += OnStopDraw;
             StoryMakerEvents.UpdateDraw += UpdateDraw;
+            PlayAnimState();
             if(all.Count>1)
                 ghostImage.Show(true);
 
@@ -380,8 +381,20 @@ namespace Yaguar.StoryMaker.Editor
             gamesLockScreen.SetActive(avoidInteraction);
         }
 
+        // "edit" or "player". Kept to replay it on enable: the animator restarts in its default state ("edit")
+        string animState = "edit";
+
+        void PlayAnimState()
+        {
+            Animator anim = GetComponent<Animator>();
+            if (anim.isActiveAndEnabled)
+                anim.Play(animState);
+        }
+
         public void EnableStoryEdition(bool isEdition)
         {
+            animState = isEdition || filmMakerUI.isPlayingGame ? "edit" : "player";
+            PlayAnimState();
             shotButtons.Show(isEdition);
             gamesLockScreen.SetActive(filmMakerUI.isPlayingGame);
             if(filmMakerUI.isPlayingGame)

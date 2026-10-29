@@ -85,13 +85,8 @@ namespace Yaguar.StoryMaker.Editor
             else
                 gameSelector.Show(Data.Instance.gamesManager.activaGameData != "");
 
-            if(enable || Data.Instance.gamesManager.IsEditing())
-            {
+            if(enable || isPlayingGame)
                 GetComponent<StoryEditorScreen>().Init();
-                timeline.GetComponent<Animator>().Play("edit");
-            }
-            else
-                timeline.GetComponent<Animator>().Play("player");
 
             timeline.EnableStoryEdition(enable);
         }
