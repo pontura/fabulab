@@ -45,7 +45,8 @@ namespace UI
             Creation_Objects,
             StoryMaker,
             GamesStories,
-            GameStoriesCreator
+            GameStoriesCreator,
+            MiniGame
         }
 
         public static UIManager Instance {
@@ -160,6 +161,9 @@ namespace UI
         }
         public void Create() {
             Events.ShowScreen(UIManager.screenType.Create);
+        }
+        public void MiniGames() {
+            Events.ShowScreen(UIManager.screenType.MiniGame);
         }
         public void CreateSelected(int id, bool skipOnBoarding = false) {
             if (id == 1) {

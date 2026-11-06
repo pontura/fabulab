@@ -16,6 +16,7 @@ namespace Yaguar.StoryMaker.Editor
         [SerializeField] Background background_to_instantiate;
 
         [SerializeField] Transform bgContainer;
+        public Transform BgContainer => bgContainer;
         [SerializeField] GameObject bgMask;
         [field:SerializeField] public BackgroundLighting BackgroundLighting {  get; private set; }
         [field: SerializeField] public FontAssets FontAssets{ get; private set; }
