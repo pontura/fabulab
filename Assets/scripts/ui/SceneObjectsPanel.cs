@@ -1,8 +1,5 @@
 using BoardItems.BoardData;
 using Common.UI;
-using Google.MiniJSON;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace UI

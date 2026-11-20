@@ -1,9 +1,10 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
-using Newtonsoft.Json;
 
 namespace Yaguar.Auth
 {
@@ -18,6 +19,28 @@ namespace Yaguar.Auth
             public string description { get; set; }
             public string fieldPath { get; set; }
         }
+
+        [DllImport("__Internal")]
+        private static extern void SendAnalyticsEvent(string eventName, string jsonParams);
+
+        /// <summary>
+        /// Envía un evento a GA4. En WebGL llama a la función JS SendAnalyticsEvent.
+        /// En otras plataformas usa Measurement Protocol vía REST.
+        /// </summary>
+        public static void LogEvent(string eventName, Dictionary<string, object> parameters = null) {
+            parameters ??= new Dictionary<string, object>();
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        // En WebGL: llamar a la función JS definida en index.html
+        string jsonParams = JsonConvert.SerializeObject(parameters);
+        SendAnalyticsEvent(eventName, jsonParams);
+        Debug.Log($"[GA4Analytics] Evento WebGL enviado: {eventName} con params={jsonParams}");
+#else
+            // En mobile/desktop: usar Measurement Protocol vía REST
+            //SendEventViaRest(eventName, userId, parameters, DefaultMeasurementId, DefaultApiSecret, debugMode);
+#endif
+        }
+
 
         /// <summary>
         /// Imitación de FabulabAnalytics.LogEvent

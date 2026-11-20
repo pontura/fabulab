@@ -1,9 +1,5 @@
 using BoardItems.Characters;
-using BoardItems.SceneObjects;
-using Google.MiniJSON;
-using System;
 using UI;
-using UI.MainApp;
 using UnityEngine;
 
 namespace BoardItems
