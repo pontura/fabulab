@@ -21,9 +21,22 @@ interface ServerStoryMeta {
   tags?: string[] | Record<string, string>
 }
 
+// Loaded once per visit: the home and the stories tab share them
+let featured: Promise<StoryMeta[]> | null = null
+
 // The stories of the home of the app (AllStoriesScreen): the public ones, without the ones made in a game,
 // the most liked first
-export async function loadFeaturedStories(): Promise<StoryMeta[]> {
+export function loadFeaturedStories(): Promise<StoryMeta[]> {
+  if (!featured) {
+    featured = fetchFeaturedStories().catch((error) => {
+      featured = null // a failed load can be retried
+      throw error
+    })
+  }
+  return featured
+}
+
+async function fetchFeaturedStories(): Promise<StoryMeta[]> {
   const snapshot = await get(ref(db, 'metadata/stories'))
   if (!snapshot.exists()) return []
 

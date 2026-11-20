@@ -3,17 +3,30 @@ import type { User } from 'firebase/auth'
 import { signOut, type UserProfile } from '../auth/authService'
 import { RemoteImage } from '../common/RemoteImage'
 import { imageUrl } from '../data/images'
+import { loadFeaturedStories, type StoryMeta } from '../data/stories'
+import { loadPublicWorks, ObjectType, type WorkMeta } from '../data/works'
 import { StoryPlayerOverlay } from '../player/StoryPlayerOverlay'
-import { FeaturedStories } from './FeaturedStories'
+import { CardSection } from './CardSection'
+import { StoryCard } from './StoryCard'
+import { WorkCard } from './WorkCard'
 
-type Tab = 'home' | 'stories' | 'characters' | 'drawings'
+type Tab = 'home' | 'stories' | 'characters' | 'objects'
 
 const tabs: { id: Tab; label: string }[] = [
   { id: 'home', label: 'Home' },
   { id: 'stories', label: 'Historias' },
   { id: 'characters', label: 'Personajes' },
-  { id: 'drawings', label: 'Dibujos' },
+  { id: 'objects', label: 'Objetos' },
 ]
+
+// Stable loaders: CardSection loads again when its loader changes
+const loadCharacters = () => loadPublicWorks('characters')
+const loadObjects = () =>
+  loadPublicWorks('so').then((all) => all.filter((o) => o.type === ObjectType.generic))
+const loadBackgrounds = () =>
+  loadPublicWorks('so').then((all) => all.filter((o) => o.type === ObjectType.background))
+const storyKey = (story: StoryMeta) => story.id
+const workKey = (work: WorkMeta) => work.id
 
 interface Props {
   user: User
@@ -24,6 +37,10 @@ export function HomeScreen({ user, profile }: Props) {
   const [tab, setTab] = useState<Tab>('home')
   const [openStoryId, setOpenStoryId] = useState<string | null>(null)
   const closePlayer = useCallback(() => setOpenStoryId(null), [])
+  const renderStory = useCallback(
+    (story: StoryMeta) => <StoryCard story={story} onOpen={(s) => setOpenStoryId(s.id)} />,
+    [],
+  )
   const name = profile?.username || user.email || ''
 
   return (
@@ -49,24 +66,49 @@ export function HomeScreen({ user, profile }: Props) {
       </header>
 
       <main className="app-content">
-        {tab === 'home' ? (
-          <FeaturedStories onOpenStory={(story) => setOpenStoryId(story.id)} />
-        ) : (
-          <ComingSoon label={tabs.find((t) => t.id === tab)!.label} />
+        {(tab === 'home' || tab === 'stories') && (
+          <CardSection
+            key={tab}
+            title={tab === 'home' ? 'Historias destacadas' : 'Historias'}
+            load={loadFeaturedStories}
+            getKey={storyKey}
+            renderCard={renderStory}
+            emptyMessage="Todavía no hay historias publicadas."
+          />
+        )}
+
+        {tab === 'characters' && (
+          <CardSection
+            title="Personajes"
+            load={loadCharacters}
+            getKey={workKey}
+            renderCard={(c) => <WorkCard {...c} folder="characters" />}
+            emptyMessage="Todavía no hay personajes publicados."
+          />
+        )}
+
+        {tab === 'objects' && (
+          <>
+            <CardSection
+              title="Objetos"
+              load={loadObjects}
+              getKey={workKey}
+              renderCard={(o) => <WorkCard {...o} folder="so" />}
+              emptyMessage="Todavía no hay objetos publicados."
+            />
+            <CardSection
+              title="Fondos"
+              load={loadBackgrounds}
+              getKey={workKey}
+              renderCard={(o) => <WorkCard {...o} folder="so" />}
+              emptyMessage="Todavía no hay fondos publicados."
+            />
+          </>
         )}
       </main>
 
       <StoryPlayerOverlay storyId={openStoryId} onClose={closePlayer} />
     </div>
-  )
-}
-
-function ComingSoon({ label }: { label: string }) {
-  return (
-    <section className="section">
-      <h2 className="section-title">{label}</h2>
-      <p className="section-message">Muy pronto.</p>
-    </section>
   )
 }
 
