@@ -88,7 +88,7 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         public SceneData GetActiveScene() {
-            return scenes.Count > 0 ? scenes[currentSceneId - 1] : null;
+            return GetScene(currentSceneId);
         }
         // The scene of a keyframe (1 based), or null when there is none
         public SceneData GetScene(int id) {
@@ -113,6 +113,8 @@ namespace Yaguar.StoryMaker.Editor
 
         public void RemoveActiveScene() {
             scenes.RemoveAt(currentSceneId - 1);
+            // The previous keyframe becomes the active one, before the listeners of MarkChanged read it
+            currentSceneId = Mathf.Clamp(currentSceneId - 1, 1, Mathf.Max(scenes.Count, 1));
             MarkChanged();
         }
 

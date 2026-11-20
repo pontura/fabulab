@@ -76,7 +76,9 @@ namespace UI.MainApp
             iInScene.data = itemData;
             iInScene.data.SetTransformByData();
             gameObject.tag = "DragItem";
-            itemData.BoardItemManager = UIManager.Instance.boardUI.activeBoardItem;
+            // No UIManager in the standalone story player
+            if (UIManager.Instance != null)
+                itemData.BoardItemManager = UIManager.Instance.boardUI.activeBoardItem;
         }
         void SetCollidersOn()
         { 
@@ -152,7 +154,7 @@ namespace UI.MainApp
         }
         public BodyPart GetBodyPart(CharacterPartsHelper.parts part)
         {
-            if(UIManager.Instance.boardUI.activeBoardItem==null)
+            if(UIManager.Instance == null || UIManager.Instance.boardUI.activeBoardItem==null)
                 return null;
 
             BoardItems.BodyPart[] all = UIManager.Instance.boardUI.activeBoardItem.GetComponentsInChildren<BoardItems.BodyPart>();

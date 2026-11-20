@@ -22,7 +22,8 @@ namespace BoardItems
             col2D = GetComponentInChildren<Collider2D>();
             Events.OnNewBodyPartSelected += OnNewBodyPartSelected;
             Events.OnBodyPartActive += OnBodyPartActive;
-            if (UIManager.Instance.boardUI.items.storyMode)
+            // Without the app UI (standalone story player) it is always story mode
+            if (UIManager.Instance == null || UIManager.Instance.boardUI.items.storyMode)
                 selectedBodySignal.gameObject.SetActive(false);
         }
         void OnDestroy()

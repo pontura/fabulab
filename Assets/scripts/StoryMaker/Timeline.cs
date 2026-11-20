@@ -259,39 +259,31 @@ namespace Yaguar.StoryMaker.Editor
                 shotButtons.Show(true);
         }
 
-        public void OnUpdate()
+        // While playing: moves the marker to the time of the story being played. The clock is StoryPlayback's
+        public void OnUpdate(float playbackTimer)
         {
-            timer += Time.deltaTime;
-            SetPosition();
-        }
-
-        void SetPosition()
-        {
+            timer = playbackTimer;
+            float total = totalTimer;
+            if (total <= 0)
+                return;
             Vector2 pos = keyFrameMarker.transform.localPosition;
-            pos.x = timer * total_x_marker / totalTimer;
-            if (timer >= totalTimer)
-            {
-                StoryMakerEvents.OnTimelinePlay(false);
-                pos.x = total_x_marker;
-                StoryMakerEvents.OnMovieOver();
-                filmMakerUI.ShowKeyframe(activeKeyframe);
-            }
-            else
-                CheckToNextKeyframe();
+            pos.x = Mathf.Min(timer, total) * total_x_marker / total;
             keyFrameMarker.transform.localPosition = pos;
         }
 
-        // While playing, shows the next keyframe when the timer reaches it
-        void CheckToNextKeyframe()
+        // The playback reached the end of the story
+        public void PlaceMarkerAtEnd()
         {
-            float nextTimer = 0;
-            for (int a = 0; a < activeKeyframe; a++)
-            {
-                if (a < all.Count)
-                    nextTimer += all[a].duration;
-            }
-            if (timer >= nextTimer)
-                filmMakerUI.ShowKeyframe(activeKeyframe + 1);
+            timer = totalTimer;
+            Vector2 pos = keyFrameMarker.transform.localPosition;
+            pos.x = total_x_marker;
+            keyFrameMarker.transform.localPosition = pos;
+        }
+
+        // Duration of a keyframe (1 based) as set in the timeline. It is the clock of StoryPlayback in the editor
+        public float GetKeyframeDuration(int keyframe)
+        {
+            return keyframe >= 1 && keyframe <= all.Count ? all[keyframe - 1].duration : 0;
         }
 
         // Updates the marker, the selection and the keyframe panels to the current keyframe

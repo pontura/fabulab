@@ -7,14 +7,11 @@ using UnityEngine.UI;
 
 namespace Yaguar.StoryMaker.Editor
 {
+    // Editor UI of a story: navigation buttons, timeline and edition tools. The playback itself
+    // (clock, keyframes, camera and avatar movements) is done by StoryPlayback
     public class FilmMakerManager : MonoBehaviour
     {
-        public enum states
-        {
-            STOPPED,
-            PLAYING
-        }
-        [field:SerializeField] public states State { private set; get;}
+        public StoryPlayback.states State => playback.State;
 
         [SerializeField] Button nextAllButton;
         [SerializeField] Button prevAllButton;
@@ -36,15 +33,29 @@ namespace Yaguar.StoryMaker.Editor
         public bool isEditing;
         public bool isPlayingGame;
 
-        float defaultZoom = 60;
-        Coroutine pauseRoutine;
+        StoryPlayback playbackComponent;
+        // Created on first use: it can be needed before Awake, by an event that reaches this object
+        // while it is still inactive
+        StoryPlayback playback {
+            get {
+                if (playbackComponent == null) {
+                    playbackComponent = gameObject.AddComponent<StoryPlayback>();
+                    playbackComponent.Configure(scenarioCameraManager, delayFactor, limitsCamZoom1, timeline.Min_speed);
+                    playbackComponent.KeyframeDurationProvider = timeline.GetKeyframeDuration;
+                    playbackComponent.KeyframeShown += OnKeyframeShown;
+                    playbackComponent.Finished += OnPlaybackFinished;
+                }
+                return playbackComponent;
+            }
+        }
 
         ScenesManager scenesManager => ScenesManager.Instance;
 
-        // The keyframe being shown (1 based). This class is the only one that changes it.
+        // The keyframe being shown (1 based). Only this class and StoryPlayback change it.
         public int CurrentKeyframe => scenesManager.currentSceneId;
 
         void Awake() {
+            _ = playback;
             StoryMakerEvents.OnTimelinePlay += OnTimelinePlay;
             StoryMakerEvents.EnableStoryEdition += EnableStoryEdition;
             StoryMakerEvents.RewindStory += Rewind;
@@ -52,6 +63,11 @@ namespace Yaguar.StoryMaker.Editor
         }
 
         void OnDestroy() {
+            if (playbackComponent != null) {
+                playbackComponent.KeyframeShown -= OnKeyframeShown;
+                playbackComponent.Finished -= OnPlaybackFinished;
+            }
+
             StoryMakerEvents.OnTimelinePlay -= OnTimelinePlay;
             StoryMakerEvents.EnableStoryEdition -= EnableStoryEdition;
             StoryMakerEvents.RewindStory -= Rewind;
@@ -60,10 +76,20 @@ namespace Yaguar.StoryMaker.Editor
 
         void Update()
         {
-            if (State == states.STOPPED)
+            if (!playback.IsPlaying)
                 return;
 
-            timeline.OnUpdate();
+            playback.Tick(Time.deltaTime);
+            if (playback.IsPlaying)
+                timeline.OnUpdate(playback.Timer);
+        }
+
+        // The story reached its end while playing
+        void OnPlaybackFinished() {
+            StoryMakerEvents.OnTimelinePlay(false);
+            StoryMakerEvents.OnMovieOver();
+            ShowKeyframe(CurrentKeyframe);
+            timeline.PlaceMarkerAtEnd();
         }
 
         void EnableStoryEdition(bool enable) {
@@ -93,8 +119,6 @@ namespace Yaguar.StoryMaker.Editor
 
         public void OnTimelinePlay(bool isOn)
         {
-            StopAllCoroutines();
-            pauseRoutine = null;
             if (isOn)
             {
                 Play();
@@ -102,17 +126,14 @@ namespace Yaguar.StoryMaker.Editor
             else
             {
                 Stop();
-                PauseNextFrame();
+                playback.PauseNextFrame();
             }
         }
 
         void Play() {
-            State = states.PLAYING;
             timeline.OnPlay();
-            Scenario.Instance.ResetScenario();
             timeline.Refresh();
-            ShowKeyframe(CurrentKeyframe);
-            StoryMakerEvents.ReorderSceneObjectsInZ();
+            playback.Play();
         }
 
         public void PlayFromStart()
@@ -124,31 +145,7 @@ namespace Yaguar.StoryMaker.Editor
         void Stop() {
             timeline.OnStop();
             playButton.GetComponent<PlayButton>().SetButtons(false);
-            State = states.STOPPED;
-            iTween.Stop();
-        }
-
-        // Freezes tweens and animations one frame later, once the shown keyframe has applied its poses.
-        // Starting the playback cancels it (OnTimelinePlay stops all coroutines).
-        void PauseNextFrame() {
-            if (!isActiveAndEnabled) {
-                SetPaused();
-                return;
-            }
-            if (pauseRoutine != null)
-                StopCoroutine(pauseRoutine);
-            pauseRoutine = StartCoroutine(PauseRoutine());
-        }
-
-        IEnumerator PauseRoutine() {
-            yield return null;
-            pauseRoutine = null;
-            SetPaused();
-        }
-
-        void SetPaused() {
-            iTween.Stop();
-            StoryMakerEvents.OnMoviePaused();
+            playback.Stop();
         }
 
         void SetButtons()
@@ -170,7 +167,7 @@ namespace Yaguar.StoryMaker.Editor
         // Adds a new keyframe after the current one
         public void New()
         {
-            if (State == states.PLAYING)
+            if (playback.IsPlaying)
                 return;
 
             if (timeline.all.Count >= scenesManager.MaxKeyframes)
@@ -186,7 +183,7 @@ namespace Yaguar.StoryMaker.Editor
         // Deletes the current keyframe
         public void Delete()
         {
-            if (State == states.PLAYING)
+            if (playback.IsPlaying)
                 return;
 
             if (Scenario.Instance != null)
@@ -235,7 +232,7 @@ namespace Yaguar.StoryMaker.Editor
         // Navigates to a keyframe: stops the playback, shows the keyframe and updates the timeline
         public void GoTo(int keyframe)
         {
-            if (State == states.PLAYING)
+            if (playback.IsPlaying)
                 StoryMakerEvents.OnTimelinePlay(false);
             else
                 Stop();
@@ -248,116 +245,18 @@ namespace Yaguar.StoryMaker.Editor
         // the transition to the next one
         public void ShowKeyframe(int keyframe, bool refreshAllObjects = false)
         {
-            int total = scenesManager.Scenes.Count;
-            int lastSceneId = refreshAllObjects ? -1 : scenesManager.currentSceneId;
-            scenesManager.currentSceneId = Mathf.Clamp(keyframe, 1, Mathf.Max(total, 1));
+            playback.ShowKeyframe(keyframe, refreshAllObjects);
+        }
 
-            int nextSceneid = scenesManager.currentSceneId + 1;
+        // Updates the editor UI to the keyframe just shown by the playback
+        void OnKeyframeShown(int keyframe)
+        {
             SceneData activeScene = scenesManager.GetActiveScene();
-            if (activeScene != null)
+            if (activeScene != null) {
                 timeline.keyframe_duration = Mathf.Max(activeScene.duration, timeline.Min_speed);
-
-            if (State == states.PLAYING && nextSceneid <= total)
-            {
-                string backgroundID = scenesManager.GetBackground(scenesManager.currentSceneId);
-                string nextBackgroundID = scenesManager.GetBackground(nextSceneid);
-                string prevBackgroundID = "";
-
-                if(scenesManager.currentSceneId>1)
-                    prevBackgroundID = scenesManager.GetBackground(scenesManager.currentSceneId - 1);
-
-                if (backgroundID == nextBackgroundID)
-                {
-                    float delay = timeline.keyframe_duration * delayFactor;
-                    StartCoroutine(MoveAvatarsAfter(delay));
-                    StartCoroutine(MoveCamera(timeline.keyframe_duration));
-                } else if (backgroundID != prevBackgroundID)
-                {
-                    SetCameraNewScene();
-                }
-            } else if(State == states.STOPPED) {
-                PauseNextFrame();
-            } else
-            {
-                MoveCamSingleFrame();
-            }
-
-            SetButtons();
-
-            if (scenesManager.GetActiveScene() != null) {
                 toggleTransition.isOn = activeScene.transition;
-                if (Scenario.Instance != null)
-                    Scenario.Instance.sceneObjectsManager.SetBackgroundLights();
             }
-
-            if (activeScene != null && Scenario.Instance != null) {
-                SceneData previousScene = lastSceneId != scenesManager.currentSceneId ? scenesManager.GetScene(lastSceneId) : null;
-                Scenario.Instance.sceneObjectsManager.ShowScene(activeScene, previousScene);
-            }
-            StoryMakerEvents.ReorderSceneObjectsInZ();
-        }
-
-        void MoveCamSingleFrame()
-        {
-            CamData currentScene = scenesManager.Scenes[scenesManager.currentSceneId-1].camData;
-            Vector2 pos_from = GetPos(currentScene.pos, currentScene.zoom);
-            scenarioCameraManager.OnUpdate(pos_from, currentScene.zoom);
-        }
-
-        void SetCameraNewScene()
-        {
-            CamData currentScene = scenesManager.Scenes[scenesManager.currentSceneId-1].camData;
-            if(currentScene.zoom < 1) currentScene.zoom = defaultZoom;
-            scenarioCameraManager.OnUpdate(currentScene.pos, currentScene.zoom);
-        }
-
-        IEnumerator MoveCamera(float duration)
-        {
-            if(scenesManager.currentSceneId>=scenesManager.Scenes.Count)
-                yield break;
-
-            CamData currentScene = scenesManager.Scenes[scenesManager.currentSceneId-1].camData;
-            CamData nextScene = scenesManager.Scenes[scenesManager.currentSceneId].camData;
-
-            if(currentScene.zoom < 1) currentScene.zoom = defaultZoom;
-            if(nextScene.zoom < 1) nextScene.zoom = defaultZoom;
-
-            Vector2 pos_from = GetPos(currentScene.pos, currentScene.zoom);
-            if(!currentScene.tween)
-            {
-                scenarioCameraManager.OnUpdate(pos_from, currentScene.zoom);
-                yield break;
-            }
-
-            Vector2 pos_to = GetPos(nextScene.pos, nextScene.zoom);
-            float a = 0;
-            while(a<duration)
-            {
-                float d = a/duration;
-                Vector2 pos = Vector2.Lerp(pos_from, pos_to, d);
-                float zoom = Mathf.Lerp(currentScene.zoom, nextScene.zoom, d);
-
-                scenarioCameraManager.OnUpdate(pos, zoom);
-                yield return new WaitForEndOfFrame();
-                a += Time.deltaTime;
-            }
-        }
-
-        Vector2 GetPos(Vector2 pos, float zoom)
-        {
-            if(zoom == defaultZoom || zoom == 0)
-                return Data.Instance.settings.camDatas[0].pos;
-
-            pos.x = limitsCamZoom1.x * pos.x;
-            pos.y = (limitsCamZoom1.y * pos.y) + 10;
-            return pos;
-        }
-
-        IEnumerator MoveAvatarsAfter(float delay)
-        {
-            yield return new WaitForSeconds(delay);
-            if (State == states.PLAYING)
-                Scenario.Instance.movementManager.MoveElements(scenesManager.GetActiveScene(), scenesManager.GetNextActiveScene(), timeline.keyframe_duration - delay);
+            SetButtons();
         }
 
         public void OnTransitionChange() {

@@ -1,0 +1,238 @@
+using BoardItems;
+using BoardItems.BoardData;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.Networking;
+using Yaguar.StoryMaker.Editor;
+
+namespace StoryPlayer
+{
+    // A story ready to be shown: its metadata, its keyframes and the characters and objects it uses
+    public class LoadedStory
+    {
+        public FilmData film;
+        public List<SceneData> scenes;
+        public List<CharacterData> characters = new List<CharacterData>();
+        public List<SObjectData> objects = new List<SObjectData>();
+    }
+
+    // Reads a story, and only what it shows, from the Realtime Database REST API.
+    // Those paths are public (see database.rules.json), so no session is needed, and it works on every
+    // platform, WebGL included (where the Firebase Unity SDK is not available)
+    public class StoryRestLoader
+    {
+        readonly MonoBehaviour host;
+        readonly string databaseUrl;
+
+        public StoryRestLoader(MonoBehaviour host, string databaseUrl) {
+            this.host = host;
+            this.databaseUrl = databaseUrl.TrimEnd('/');
+        }
+
+        public IEnumerator LoadStory(string storyId, Action<LoadedStory> onDone, Action<string> onError) {
+            LoadedStory story = new LoadedStory();
+
+            // 1. Metadata: says who the author is, needed to find the story
+            JToken meta = null;
+            yield return Get("metadata/stories/" + storyId, result => meta = result);
+            if (meta == null || meta.Type != JTokenType.Object) {
+                onError("Story not found: " + storyId);
+                yield break;
+            }
+            story.film = ParseFilmData(storyId, (JObject)meta);
+            if (string.IsNullOrEmpty(story.film.userID)) {
+                onError("Story without author: " + storyId);
+                yield break;
+            }
+
+            // 2. Keyframes
+            JToken scenesJson = null;
+            yield return Get("stories/" + story.film.userID + "/" + storyId, result => scenesJson = result);
+            story.scenes = ParseScenes(scenesJson);
+            if (story.scenes.Count == 0) {
+                onError("Story without keyframes: " + storyId);
+                yield break;
+            }
+
+            // 3. Characters, objects and backgrounds shown in the keyframes
+            HashSet<string> characterIds = new HashSet<string>();
+            HashSet<string> objectIds = new HashSet<string>();
+            foreach (SceneData scene in story.scenes) {
+                foreach (SceneElement element in scene.GetScenesElements()) {
+                    if (element.data == null || string.IsNullOrEmpty(element.data.id))
+                        continue;
+                    if (element.type == SceneElementType.AVATAR)
+                        characterIds.Add(element.data.id);
+                    else if (element.type == SceneElementType.PROP)
+                        objectIds.Add(element.data.id);
+                }
+                if (!string.IsNullOrEmpty(scene.bgID))
+                    objectIds.Add(scene.bgID);
+            }
+
+            yield return WaitAll(characterIds.Select(id => LoadCharacter(id, story)));
+            yield return WaitAll(objectIds.Select(id => LoadObject(id, story)));
+
+            // 4. Objects placed inside the backgrounds
+            HashSet<string> innerIds = new HashSet<string>();
+            foreach (SObjectData bg in story.objects.Where(o => o.type == SObjectData.types.background)) {
+                foreach (SavedIData item in bg.items) {
+                    if (!string.IsNullOrEmpty(item.soID) && !objectIds.Contains(item.soID))
+                        innerIds.Add(item.soID);
+                }
+            }
+            yield return WaitAll(innerIds.Select(id => LoadObject(id, story)));
+
+            onDone(story);
+        }
+
+        IEnumerator LoadCharacter(string id, LoadedStory story) {
+            string userId = null;
+            yield return Get("metadata/characters/" + id + "/userID", result => userId = result?.Type == JTokenType.String ? (string)result : null);
+            if (userId == null) {
+                Debug.LogWarning("[StoryPlayer] Character without metadata (deleted?): " + id);
+                yield break;
+            }
+            JToken json = null;
+            yield return Get("characters/" + userId + "/" + id, result => json = result);
+            if (json == null || json.Type != JTokenType.Object) {
+                Debug.LogWarning("[StoryPlayer] Character not found: " + id);
+                yield break;
+            }
+            CharacterData character = new CharacterData { id = id };
+            character.LoadServerData(json.ToObject<CharacterServerData>(JsonSerializer.CreateDefault()));
+            story.characters.Add(character);
+        }
+
+        IEnumerator LoadObject(string id, LoadedStory story) {
+            string userId = null;
+            yield return Get("metadata/so/" + id + "/userID", result => userId = result?.Type == JTokenType.String ? (string)result : null);
+            if (userId == null) {
+                Debug.LogWarning("[StoryPlayer] Object without metadata (deleted?): " + id);
+                yield break;
+            }
+            JToken json = null;
+            yield return Get("so/" + userId + "/" + id, result => json = result);
+            if (json == null || json.Type != JTokenType.Object) {
+                Debug.LogWarning("[StoryPlayer] Object not found: " + id);
+                yield break;
+            }
+            SObjectData obj = new SObjectData { id = id };
+            obj.LoadServerData(json.ToObject<SObjectServerData>(JsonSerializer.CreateDefault()));
+            story.objects.Add(obj);
+        }
+
+        // Runs the routines at the same time and waits for all of them
+        IEnumerator WaitAll(IEnumerable<IEnumerator> routines) {
+            List<Coroutine> running = routines.Select(r => host.StartCoroutine(r)).ToList();
+            foreach (Coroutine c in running)
+                yield return c;
+        }
+
+        // GET of a database path. Calls onDone with null when it fails or the path does not exist
+        IEnumerator Get(string path, Action<JToken> onDone) {
+            string url = databaseUrl + "/" + path + ".json";
+            using (UnityWebRequest request = UnityWebRequest.Get(url)) {
+                yield return request.SendWebRequest();
+                if (request.result != UnityWebRequest.Result.Success) {
+                    Debug.LogError("[StoryPlayer] GET " + url + " failed: " + request.error);
+                    onDone(null);
+                    yield break;
+                }
+                JToken token = null;
+                try {
+                    token = JToken.Parse(request.downloadHandler.text);
+                } catch (Exception e) {
+                    Debug.LogError("[StoryPlayer] Invalid JSON from " + url + ": " + e.Message);
+                }
+                onDone(token == null || token.Type == JTokenType.Null ? null : token);
+            }
+        }
+
+        static FilmData ParseFilmData(string id, JObject meta) {
+            FilmData fd = new FilmData();
+            fd.id = id;
+            fd.framecount = -1;
+            fd.name = Str(meta, "name");
+            fd.userID = Str(meta, "userID");
+            fd.speed = (int)Num(meta, "speed", 0);
+            fd.likes = (int)Num(meta, "likes", 0);
+            fd.isPublic = Bool(meta, "isPublic", false);
+            string timestamp = Str(meta, "timestamp");
+            fd.timestamp = string.IsNullOrEmpty(timestamp) ? DateTime.MinValue.ToUniversalTime().ToString("o") : timestamp;
+            fd.tags = Items(meta["tags"]).Select(t => Str(t)).Where(t => t != null).ToList();
+            return fd;
+        }
+
+        // Same parsing as FirebaseStoryMakerDBManager.LoadFilmFromServer. The values are saved as strings
+        static List<SceneData> ParseScenes(JToken json) {
+            List<SceneData> scenes = new List<SceneData>();
+            foreach (JToken child in Items(json)) {
+                if (child.Type != JTokenType.Object)
+                    continue;
+                SceneData sdf = new SceneData();
+                sdf.bgID = Str(child["bgID"]);
+                sdf.camData = new CamData();
+                sdf.transition = Bool(child, "transition", false);
+                sdf.duration = Num(child, "duration", ScenesManager.Instance.Keyframe_default_duration);
+                sdf.lightingId = Str(child["lightingId"]);
+                sdf.lightingValue = (int)Num(child, "lightingValue", 0);
+                sdf.camData.pos.x = Num(child, "camData_pos_x", 0);
+                sdf.camData.pos.y = Num(child, "camData_pos_y", 0);
+                sdf.camData.zoom = (int)Num(child, "camData_zoom", 0);
+                sdf.camData.tween = Bool(child, "camData_tween", false);
+
+                List<SceneElement> elements = new List<SceneElement>();
+                foreach (JToken se in Items(child["scenesElements"])) {
+                    if (se.Type != JTokenType.Object || se["type"] == null)
+                        continue;
+                    SceneElementType type = (SceneElementType)(int)Num(se, "type", 0);
+                    elements.Add(SceneElement.FromJson(se.ToString(Formatting.None), type));
+                }
+                sdf.CopyScenesElements(elements);
+                scenes.Add(sdf);
+            }
+            return scenes;
+        }
+
+        // The database returns lists with keys 0,1,2... as JSON arrays (with nulls in the gaps), and as
+        // objects when the keys are sparse. Returns the items in key order either way
+        static IEnumerable<JToken> Items(JToken token) {
+            if (token is JArray array)
+                return array.Where(t => t != null && t.Type != JTokenType.Null);
+            if (token is JObject obj)
+                return obj.Properties()
+                    .OrderBy(p => int.TryParse(p.Name, out int n) ? n : int.MaxValue)
+                    .Select(p => p.Value);
+            return Enumerable.Empty<JToken>();
+        }
+
+        static string Str(JToken token) {
+            if (token == null || token.Type == JTokenType.Null)
+                return null;
+            if (token is JValue value)
+                return Convert.ToString(value.Value, CultureInfo.InvariantCulture);
+            return token.ToString(Formatting.None);
+        }
+
+        static string Str(JToken parent, string key) {
+            return Str(parent[key]);
+        }
+
+        static float Num(JToken parent, string key, float defaultValue) {
+            string s = Str(parent[key]);
+            return float.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out float f) ? f : defaultValue;
+        }
+
+        static bool Bool(JToken parent, string key, bool defaultValue) {
+            string s = Str(parent[key]);
+            return bool.TryParse(s, out bool b) ? b : defaultValue;
+        }
+    }
+}
