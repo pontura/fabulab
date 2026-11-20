@@ -205,11 +205,11 @@ namespace BoardItems
             streamListener = gameObject.AddComponent<StreamListener>();
             streamListener.OnDataReceived += (id, data, isPatch) => {
                 //Debug.Log($"OnDataReceived  id: {id}, data: {data} isPatch:{isPatch}");
-                FilmDataFabulab cmd = filmsData.Find(x => x.id == id);
+                FilmData cmd = filmsData.Find(x => x.id == id);
                 if (cmd != null) {
                     if (isPatch) {
                         JObject patch = JObject.Parse(data);
-                        var type = typeof(FilmDataFabulab);
+                        var type = typeof(FilmData);
                         foreach (var prop in patch.Properties()) {
                             var field = type.GetField(prop.Name, BindingFlags.Public | BindingFlags.Instance);
                             if (field != null) {
@@ -224,7 +224,7 @@ namespace BoardItems
                             }
                         }
                     } else {
-                        cmd = Newtonsoft.Json.JsonConvert.DeserializeObject<FilmDataFabulab>(data);
+                        cmd = Newtonsoft.Json.JsonConvert.DeserializeObject<FilmData>(data);
                         cmd.id = id;
                     }
 
@@ -239,7 +239,7 @@ namespace BoardItems
                     Data.Instance.cacheData.RemoveFilmCache(cmd.id);
                     
                 } else {
-                    cmd = Newtonsoft.Json.JsonConvert.DeserializeObject<FilmDataFabulab>(data);
+                    cmd = Newtonsoft.Json.JsonConvert.DeserializeObject<FilmData>(data);
                     cmd.id = id;
 
                     FirebaseStoryMakerDBManager.Instance.DownloadTexture(MetadataTypes.stories.ToString(), cmd.id, (tex) => {
@@ -253,7 +253,7 @@ namespace BoardItems
                 }
             };
             streamListener.OnRemoved += (id) => {
-                FilmDataFabulab cmd = filmsData.Find(x => x.id == id);
+                FilmData cmd = filmsData.Find(x => x.id == id);
                 if (cmd != null) {
                     filmsData.Remove(cmd);
                     userFilmsData.Remove(cmd);
