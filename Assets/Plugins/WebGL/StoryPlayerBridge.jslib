@@ -12,8 +12,9 @@ mergeInto(LibraryManager.library, {
 
     window.dispatchEvent(new CustomEvent('fabulab-story-player', { detail: { event: eventName, payload: payload } }));
 
+    // Only to a parent page served from the same origin (web/client serves the player in /player)
     if (window.parent && window.parent !== window) {
-      window.parent.postMessage({ source: 'fabulab-story-player', event: eventName, payload: payload }, '*');
+      window.parent.postMessage({ source: 'fabulab-story-player', event: eventName, payload: payload }, window.location.origin);
     }
   }
 });

@@ -84,8 +84,9 @@ public static class StoryPlayerSceneBuilder
         scenario.gameObject.SetActive(true);
 
         // The camera of the scenario renders a region of the story into a texture
+        CameraRegionRenderer regionRenderer = null;
         if (scenario.Cam != null) {
-            CameraRegionRenderer regionRenderer = scenario.Cam.gameObject.AddComponent<CameraRegionRenderer>();
+            regionRenderer = scenario.Cam.gameObject.AddComponent<CameraRegionRenderer>();
             RenderTexture texture = AssetDatabase.LoadAssetAtPath<RenderTexture>(RenderTexturePath);
             if (texture != null) {
                 SerializedObject regionSO = new SerializedObject(regionRenderer);
@@ -102,6 +103,13 @@ public static class StoryPlayerSceneBuilder
         GameObject player = new GameObject("StoryPlayer");
         player.AddComponent<StoryPlayback>();
         StoryPlayerController controller = player.AddComponent<StoryPlayerController>();
+        // Shows that texture on screen
+        StoryPlayerScreen screen = player.AddComponent<StoryPlayerScreen>();
+        if (regionRenderer != null) {
+            SerializedObject screenSO = new SerializedObject(screen);
+            screenSO.FindProperty("regionRenderer").objectReferenceValue = regionRenderer;
+            screenSO.ApplyModifiedPropertiesWithoutUndo();
+        }
         player.AddComponent<StoryPlayerProgressBar>();
         player.AddComponent<StoryPlayerTouchInput>();
         SerializedObject controllerSO = new SerializedObject(controller);

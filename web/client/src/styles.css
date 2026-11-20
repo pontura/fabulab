@@ -1,0 +1,658 @@
+/* Look of the login of the app (Assets/prefabs/ui/LoginScreen.prefab) */
+
+@font-face {
+  font-family: 'Futura PT';
+  src: url('/fonts/Futura_PT_Book.otf') format('opentype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Futura PT';
+  src: url('/fonts/Futura_PT_Medium.otf') format('opentype');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Futura PT';
+  src: url('/fonts/Futura_PT_Demi.otf') format('opentype');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Futura PT';
+  src: url('/fonts/Futura_PT_Bold.otf') format('opentype');
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --bg: #076096;
+  --primary: #24aeff;
+  --primary-text: #333333;
+  --nav-bg: rgba(2, 40, 62, 0.5);
+  --nav-text: #dcdcdc;
+  --title: #d3e0e8;
+  --field-text: #323232;
+  --radius: 18px;
+
+  font-family: 'Futura PT', system-ui, sans-serif;
+  color: var(--title);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+  height: 100%;
+}
+
+body {
+  background: var(--bg) url('/images/bg-dark.png') top center / 100% auto no-repeat;
+}
+
+.screen {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: max(32px, env(safe-area-inset-top)) 24px max(32px, env(safe-area-inset-bottom));
+}
+
+.logo {
+  width: min(320px, 80vw);
+  height: auto;
+}
+
+.auth-form {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-title {
+  margin: 0 0 6px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.25;
+  color: var(--title);
+}
+
+.field {
+  width: 100%;
+  height: 56px;
+  padding: 0 20px;
+  border: none;
+  border-radius: var(--radius);
+  background: #ffffff;
+  color: var(--field-text);
+  font: 600 19px 'Futura PT', system-ui, sans-serif;
+  outline: none;
+}
+
+.field::placeholder {
+  color: rgba(50, 50, 50, 0.5);
+}
+
+.field:focus-visible {
+  box-shadow: 0 0 0 3px var(--primary);
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-field .field {
+  padding-right: 60px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  width: 42px;
+  height: 42px;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.35;
+  display: grid;
+  place-items: center;
+}
+
+.password-toggle.is-on {
+  opacity: 0.9;
+}
+
+.password-toggle img {
+  width: 26px;
+  height: auto;
+  filter: brightness(0.2);
+}
+
+.button {
+  height: 56px;
+  padding: 0 24px;
+  border: none;
+  border-radius: var(--radius);
+  font: 500 20px 'Futura PT', system-ui, sans-serif;
+  cursor: pointer;
+  transition: transform 0.08s ease, filter 0.15s ease;
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.button:disabled {
+  cursor: default;
+  filter: saturate(0.4) brightness(0.9);
+}
+
+.button-primary {
+  margin-top: 6px;
+  background: var(--primary);
+  color: var(--primary-text);
+}
+
+.button-nav {
+  background: var(--nav-bg);
+  color: var(--nav-text);
+}
+
+.button:focus-visible {
+  outline: 3px solid var(--title);
+  outline-offset: 2px;
+}
+
+.feedback {
+  min-height: 1.3em;
+  margin: 0;
+  text-align: center;
+  font-size: 17px;
+  color: var(--title);
+}
+
+.auth-nav {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.auth-nav .button {
+  flex: 1 1 140px;
+  font-size: 18px;
+}
+
+.spinner {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 4px solid rgba(211, 224, 232, 0.25);
+  border-top-color: var(--title);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2.4s;
+  }
+  .button {
+    transition: none;
+  }
+}
+
+/* ---------- Home ---------- */
+
+.app {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 12px max(24px, env(safe-area-inset-right)) 12px max(24px, env(safe-area-inset-left));
+  background: rgba(2, 40, 62, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.header-logo {
+  height: 34px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  flex-shrink: 0;
+  height: 44px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 14px;
+  background: rgba(211, 224, 232, 0.12);
+  color: var(--nav-text);
+  font: 500 17px 'Futura PT', system-ui, sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.tab:hover {
+  background: rgba(211, 224, 232, 0.22);
+}
+
+.tab.is-active {
+  background: var(--primary);
+  color: var(--primary-text);
+}
+
+.tab:focus-visible,
+.user-button:focus-visible {
+  outline: 3px solid var(--title);
+  outline-offset: 2px;
+}
+
+.user-menu {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.user-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 4px 4px 14px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--title);
+  font: 600 17px 'Futura PT', system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.user-button:hover {
+  background: rgba(211, 224, 232, 0.12);
+}
+
+.user-name {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.avatar {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--primary);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.avatar-initial {
+  color: var(--primary-text);
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.avatar .remote-image {
+  position: absolute;
+  inset: 0;
+}
+
+.user-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 180px;
+  padding: 6px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.user-dropdown button {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--field-text);
+  font: 500 17px 'Futura PT', system-ui, sans-serif;
+  text-align: left;
+  cursor: pointer;
+}
+
+.user-dropdown button:hover,
+.user-dropdown button:focus-visible {
+  background: #e8f1f7;
+  outline: none;
+}
+
+.app-content {
+  flex: 1;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 28px 24px max(48px, env(safe-area-inset-bottom));
+}
+
+.section-title {
+  margin: 0 0 18px;
+  font-weight: 600;
+  font-size: 24px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--title);
+}
+
+.section-message {
+  margin: 0;
+  font-size: 18px;
+  color: var(--title);
+  opacity: 0.85;
+}
+
+.section-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px 16px;
+}
+
+.story-card {
+  min-width: 0;
+}
+
+.story-thumb {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--nav-bg);
+  box-shadow: 0 4px 14px rgba(2, 40, 62, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.story-card:not(.is-placeholder):hover .story-thumb {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(2, 40, 62, 0.35);
+}
+
+.story-likes {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--field-text);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.story-likes svg {
+  color: #e8456b;
+}
+
+.story-title {
+  margin: 10px 2px 0;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.2;
+  color: #ffffff;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.story-card.is-placeholder .story-thumb,
+.story-title-placeholder {
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.story-title-placeholder {
+  height: 16px;
+  width: 70%;
+  margin: 12px 2px 0;
+  border-radius: 8px;
+  background: var(--nav-bg);
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.remote-image {
+  width: 100%;
+  height: 100%;
+}
+
+.remote-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.remote-image.is-loaded img {
+  opacity: 1;
+}
+
+@media (max-width: 760px) {
+  .app-header {
+    flex-wrap: wrap;
+    gap: 10px 16px;
+  }
+  .tabs {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: flex-start;
+  }
+  .header-logo {
+    height: 28px;
+  }
+  .user-menu {
+    margin-left: auto;
+  }
+  .user-name {
+    max-width: 120px;
+  }
+  .tab {
+    height: 38px;
+    padding: 0 16px;
+    font-size: 15px;
+  }
+  .app-content {
+    padding: 20px 16px 40px;
+  }
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 18px 12px;
+  }
+  .story-title {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story-card.is-placeholder .story-thumb,
+  .story-title-placeholder {
+    animation: none;
+  }
+  .story-thumb,
+  .remote-image img {
+    transition: none;
+  }
+}
+
+/* ---------- Story player ---------- */
+
+button.story-thumb {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+button.story-thumb:focus-visible {
+  outline: 3px solid var(--title);
+  outline-offset: 3px;
+}
+
+.story-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 58px;
+  height: 58px;
+  margin: -29px 0 0 -29px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  padding-left: 3px;
+  background: var(--primary);
+  color: var(--primary-text);
+  box-shadow: 0 6px 18px rgba(2, 40, 62, 0.35);
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.story-thumb:hover .story-play,
+.story-thumb:focus-visible .story-play {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.player-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--bg);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Hidden, not removed: Unity stays loaded for the next story */
+.player-overlay.is-open {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.player-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.player-status {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--bg);
+  text-align: center;
+  font-size: 20px;
+  color: var(--title);
+}
+
+.player-close {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+  width: 52px;
+  height: 52px;
+  border: none;
+  border-radius: 50%;
+  background: var(--nav-bg);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.player-close:hover {
+  background: rgba(2, 40, 62, 0.75);
+}
+
+.player-close:focus-visible {
+  outline: 3px solid var(--title);
+  outline-offset: 2px;
+}
+
+@media (hover: none) {
+  .story-play {
+    opacity: 0.9;
+    transform: scale(0.85);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story-play {
+    transition: none;
+  }
+}

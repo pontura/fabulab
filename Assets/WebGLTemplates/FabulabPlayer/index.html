@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no">
+    <title>{{{ PRODUCT_NAME }}}</title>
+    <style>
+      html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #076096; }
+      #unity-canvas { display: block; width: 100%; height: 100%; background: #076096; outline: none; }
+      #loading { position: absolute; left: 50%; top: 50%; width: 160px; height: 8px; margin: -4px 0 0 -80px;
+                 border-radius: 4px; background: rgba(211, 224, 232, 0.25); overflow: hidden; }
+      #loading-fill { width: 0; height: 100%; background: #d3e0e8; transition: width 0.2s ease; }
+      #error { display: none; position: absolute; left: 0; right: 0; top: 50%; padding: 0 24px; transform: translateY(-50%);
+               color: #d3e0e8; font: 18px system-ui, sans-serif; text-align: center; }
+    </style>
+  </head>
+  <body>
+    <canvas id="unity-canvas" tabindex="-1"></canvas>
+    <div id="loading"><div id="loading-fill"></div></div>
+    <div id="error"></div>
+
+    <script>
+      // Standalone story player (scene StoryPlayer). The story comes from the "id" parameter of this URL,
+      // read by StoryPlayerController, or from the page that embeds this one in an iframe:
+      //   iframe.contentWindow.postMessage({ source: 'fabulab-web', action: 'load', id: '<storyId>' }, origin)
+      //   actions: load (with id), play, pause, restart
+      // The player answers with postMessage({ source: 'fabulab-story-player', event, payload }) to the parent
+      // (Plugins/WebGL/StoryPlayerBridge.jslib)
+      var unityInstance = null;
+      var pendingCommands = [];
+      var actions = { load: 'Load', play: 'Play', pause: 'Pause', restart: 'Restart' };
+
+      function runCommand(command) {
+        var method = actions[command.action];
+        if (!method) return;
+        if (method === 'Load') unityInstance.SendMessage('StoryPlayer', method, String(command.id || ''));
+        else unityInstance.SendMessage('StoryPlayer', method);
+      }
+
+      window.addEventListener('message', function (e) {
+        // Only the page that embeds the player, served from the same origin
+        if (e.source !== window.parent || e.origin !== window.location.origin) return;
+        var command = e.data;
+        if (!command || command.source !== 'fabulab-web') return;
+        if (unityInstance) runCommand(command);
+        else pendingCommands.push(command);
+      });
+
+      function notifyParent(eventName, payload) {
+        if (window.parent && window.parent !== window)
+          window.parent.postMessage({ source: 'fabulab-story-player', event: eventName, payload: payload || {} }, window.location.origin);
+      }
+
+      var buildUrl = "Build";
+      var config = {
+        arguments: [],
+        dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}",
+        frameworkUrl: buildUrl + "/{{{ FRAMEWORK_FILENAME }}}",
+#if USE_THREADS
+        workerUrl: buildUrl + "/{{{ WORKER_FILENAME }}}",
+#endif
+#if USE_WASM
+        codeUrl: buildUrl + "/{{{ CODE_FILENAME }}}",
+#endif
+#if MEMORY_FILENAME
+        memoryUrl: buildUrl + "/{{{ MEMORY_FILENAME }}}",
+#endif
+#if SYMBOLS_FILENAME
+        symbolsUrl: buildUrl + "/{{{ SYMBOLS_FILENAME }}}",
+#endif
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+        productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+        productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+        showBanner: function (message, type) {
+          if (type === 'error') showError(message);
+          else console.warn(message);
+        },
+      };
+
+      // Sharp image on high density screens, without huge canvases on phones
+      config.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+
+      function showError(message) {
+        document.getElementById('loading').style.display = 'none';
+        var error = document.getElementById('error');
+        error.textContent = 'No se pudo abrir el reproductor.';
+        error.style.display = 'block';
+        console.error(message);
+        notifyParent('error', { message: String(message) });
+      }
+
+      var canvas = document.getElementById('unity-canvas');
+      var script = document.createElement('script');
+      script.src = buildUrl + "/{{{ LOADER_FILENAME }}}";
+      script.onload = function () {
+        createUnityInstance(canvas, config, function (progress) {
+          document.getElementById('loading-fill').style.width = (100 * progress) + '%';
+        }).then(function (instance) {
+          unityInstance = instance;
+          document.getElementById('loading').style.display = 'none';
+          notifyParent('ready');
+          var queued = pendingCommands;
+          pendingCommands = [];
+          queued.forEach(runCommand);
+        }).catch(showError);
+      };
+      script.onerror = function () { showError('Could not load ' + script.src); };
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>
