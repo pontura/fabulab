@@ -70,6 +70,7 @@ namespace UI
         }
         private void Start() {
             FirebaseAuthManager.Instance.OnTokenUpdated += OnTokenUpdated;
+            FirebaseAuthManager.Instance.OnSignedOut += OnSignedOut;
             Events.OnBodyPartActive += OnBodyPartActive;
             Events.ShowScreen += OnShowScreen;
             Events.OnAllFilmMetadataLoadDone += Init;
@@ -81,6 +82,7 @@ namespace UI
         }
         private void OnDestroy() {
             FirebaseAuthManager.Instance.OnTokenUpdated -= OnTokenUpdated;
+            FirebaseAuthManager.Instance.OnSignedOut -= OnSignedOut;
             Events.OnBodyPartActive -= OnBodyPartActive;
             Events.ShowScreen -= OnShowScreen;
             Events.OnAllFilmMetadataLoadDone -= Init;
@@ -123,13 +125,26 @@ namespace UI
             // InitGallery(gd, true, null);
             Events.InitGallery(gd, true, null);
         }
+        // The home is shown once the data of the signed in user is loaded. Init is called by several events
+        // (and retries itself): without this, each call showed the home again, taking the user out of an editor
+        bool homeShownAfterLoad;
+
+        void OnSignedOut() {
+            homeShownAfterLoad = false;
+        }
+
         public void Init() {
             print("uimanager init");
+            // One pending retry at most, whoever called
+            CancelInvoke(nameof(Init));
 
             if (
                 Data.Instance.userData.UserDataLoadedDone &&
                 Data.Instance.gamesManager.done &&
                 Data.Instance.scenesData.ScenesDataLoadedDone) {
+                if (homeShownAfterLoad)
+                    return;
+                homeShownAfterLoad = true;
                 string uid = Data.Instance.userData.userDataInDatabase.uid;
                 if (uid != "" && uid != null)
                     Data.Instance.cacheData.GetUser(uid, OnUserDone);

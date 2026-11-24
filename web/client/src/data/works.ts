@@ -1,5 +1,6 @@
 import { get, ref } from 'firebase/database'
 import { db } from '../firebase'
+import { byNewest } from './timestamps'
 
 // metadata/characters/{id} and metadata/so/{id} (CharacterMetaData / PropMetaData in the app)
 export interface WorkMeta {
@@ -31,14 +32,13 @@ interface ServerWorkMeta {
   type?: number | string
 }
 
-// Loaded once per visit
+// All the characters / objects, loaded once per visit (until invalidateWorks)
 const cache = new Map<WorkKind, Promise<WorkMeta[]>>()
 
-// The public characters or objects, the most liked first (AllCharactersScreen / AllObjectsScreen)
-export function loadPublicWorks(kind: WorkKind): Promise<WorkMeta[]> {
+function loadAllWorks(kind: WorkKind): Promise<WorkMeta[]> {
   let works = cache.get(kind)
   if (!works) {
-    works = fetchPublicWorks(kind).catch((error) => {
+    works = fetchAllWorks(kind).catch((error) => {
       cache.delete(kind) // a failed load can be retried
       throw error
     })
@@ -47,16 +47,29 @@ export function loadPublicWorks(kind: WorkKind): Promise<WorkMeta[]> {
   return works
 }
 
-async function fetchPublicWorks(kind: WorkKind): Promise<WorkMeta[]> {
+// After the editor changed something
+export function invalidateWorks() {
+  cache.clear()
+}
+
+// The public characters or objects, the most liked first (AllCharactersScreen / AllObjectsScreen)
+export function loadPublicWorks(kind: WorkKind): Promise<WorkMeta[]> {
+  return loadAllWorks(kind).then((works) => works.filter((w) => w.isPublic).sort((a, b) => b.likes - a.likes))
+}
+
+// The characters or objects of a user, also the private ones, the newest first
+export function loadUserWorks(kind: WorkKind, uid: string): Promise<WorkMeta[]> {
+  return loadAllWorks(kind).then((works) => works.filter((w) => w.userID === uid).sort(byNewest))
+}
+
+async function fetchAllWorks(kind: WorkKind): Promise<WorkMeta[]> {
   const snapshot = await get(ref(db, `metadata/${kind}`))
   if (!snapshot.exists()) return []
 
-  const all = snapshot.val() as Record<string, ServerWorkMeta | null>
-  return Object.entries(all)
+  const values = snapshot.val() as Record<string, ServerWorkMeta | null>
+  return Object.entries(values)
     .filter((entry): entry is [string, ServerWorkMeta] => entry[1] !== null && typeof entry[1] === 'object')
     .map(([id, value]) => toWorkMeta(id, value))
-    .filter((work) => work.isPublic)
-    .sort((a, b) => b.likes - a.likes)
 }
 
 function toWorkMeta(id: string, value: ServerWorkMeta): WorkMeta {

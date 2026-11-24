@@ -134,7 +134,9 @@ namespace UI.MainApp.Home.User
         }
 
         public void SetSprite(Texture2D tex) {
-            thumb.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
+            // A failed download gives no texture: keep the empty thumb
+            if (tex != null)
+                thumb.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
             loading.SetActive(false);
         }
 

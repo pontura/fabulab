@@ -1,8 +1,9 @@
+import { asset } from '../common/asset'
 import { useEffect, useRef, useState } from 'react'
 
 // The Unity WebGL build of the scene StoryPlayer (template Assets/WebGLTemplates/FabulabPlayer).
 // By default it is served by this site from public/player
-const PLAYER_URL = import.meta.env.VITE_STORY_PLAYER_URL || '/player/index.html'
+const PLAYER_URL = import.meta.env.VITE_STORY_PLAYER_URL || asset('player/index.html')
 const playerOrigin = new URL(PLAYER_URL, window.location.href).origin
 
 type Status = 'checking' | 'starting' | 'loading' | 'ready' | 'error' | 'missing'

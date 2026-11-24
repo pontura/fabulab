@@ -69,7 +69,17 @@ namespace Yaguar.Auth
         {
             yield return null;
             yield return null;
-            if (FirebaseRestSession.Restore())
+            // A web page that embeds the player (web/client) gives its own signed in user: it wins over the stored one
+            if (FirebaseRestHostSession.TryAdopt())
+            {
+                // The stored user data may belong to someone else: authenticate the given user before loading
+                string uid = FirebaseRestSession.Uid;
+                DB().LoadUserData(uid, (username, email, loadedUid) => {
+                    OnFirebaseAuthenticated?.Invoke(username ?? "", string.IsNullOrEmpty(email) ? FirebaseRestSession.Email : email, uid);
+                    OnTokenUpdated?.Invoke();
+                });
+            }
+            else if (FirebaseRestSession.Restore())
             {
                 Debug.Log("#Firebase REST session restored: " + FirebaseRestSession.Uid);
                 OnTokenUpdated?.Invoke();

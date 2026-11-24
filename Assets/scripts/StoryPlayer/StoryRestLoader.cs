@@ -45,7 +45,12 @@ namespace StoryPlayer
                 onError("Story not found: " + storyId);
                 yield break;
             }
-            story.film = ParseFilmData(storyId, (JObject)meta);
+            try {
+                story.film = ParseFilmData(storyId, (JObject)meta);
+            } catch (Exception e) {
+                onError("Invalid story metadata " + storyId + ": " + e.Message);
+                yield break;
+            }
             if (string.IsNullOrEmpty(story.film.userID)) {
                 onError("Story without author: " + storyId);
                 yield break;
@@ -54,7 +59,13 @@ namespace StoryPlayer
             // 2. Keyframes
             JToken scenesJson = null;
             yield return Get("stories/" + story.film.userID + "/" + storyId, result => scenesJson = result);
-            story.scenes = ParseScenes(scenesJson);
+            try {
+                story.scenes = ParseScenes(scenesJson);
+            } catch (Exception e) {
+                Debug.LogException(e);
+                onError("Invalid keyframes in story " + storyId + ": " + e.Message);
+                yield break;
+            }
             if (story.scenes.Count == 0) {
                 onError("Story without keyframes: " + storyId);
                 yield break;
@@ -105,9 +116,14 @@ namespace StoryPlayer
                 Debug.LogWarning("[StoryPlayer] Character not found: " + id);
                 yield break;
             }
-            CharacterData character = new CharacterData { id = id };
-            character.LoadServerData(json.ToObject<CharacterServerData>(JsonSerializer.CreateDefault()));
-            story.characters.Add(character);
+            // A broken character is left out: an exception would stop the whole story without telling the page
+            try {
+                CharacterData character = new CharacterData { id = id };
+                character.LoadServerData(json.ToObject<CharacterServerData>(JsonSerializer.CreateDefault()));
+                story.characters.Add(character);
+            } catch (Exception e) {
+                Debug.LogError("[StoryPlayer] Invalid character " + id + ": " + e);
+            }
         }
 
         IEnumerator LoadObject(string id, LoadedStory story) {
@@ -123,9 +139,13 @@ namespace StoryPlayer
                 Debug.LogWarning("[StoryPlayer] Object not found: " + id);
                 yield break;
             }
-            SObjectData obj = new SObjectData { id = id };
-            obj.LoadServerData(json.ToObject<SObjectServerData>(JsonSerializer.CreateDefault()));
-            story.objects.Add(obj);
+            try {
+                SObjectData obj = new SObjectData { id = id };
+                obj.LoadServerData(json.ToObject<SObjectServerData>(JsonSerializer.CreateDefault()));
+                story.objects.Add(obj);
+            } catch (Exception e) {
+                Debug.LogError("[StoryPlayer] Invalid object " + id + ": " + e);
+            }
         }
 
         // Runs the routines at the same time and waits for all of them
@@ -139,6 +159,8 @@ namespace StoryPlayer
         IEnumerator Get(string path, Action<JToken> onDone) {
             string url = databaseUrl + "/" + path + ".json";
             using (UnityWebRequest request = UnityWebRequest.Get(url)) {
+                // Without a timeout a stalled request waits forever
+                request.timeout = 20;
                 yield return request.SendWebRequest();
                 if (request.result != UnityWebRequest.Result.Success) {
                     Debug.LogError("[StoryPlayer] GET " + url + " failed: " + request.error);

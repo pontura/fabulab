@@ -10,10 +10,12 @@ interface Props<T> {
   getKey: (item: T) => string
   renderCard: (item: T) => ReactNode
   emptyMessage: string
+  // A first card before the items (ex: "Crear"). With it the empty message is not shown
+  firstCard?: ReactNode
 }
 
 // A titled grid of cards loaded from the database, with placeholders while loading and "Ver más"
-export function CardSection<T>({ title, load, getKey, renderCard, emptyMessage }: Props<T>) {
+export function CardSection<T>({ title, load, getKey, renderCard, emptyMessage, firstCard }: Props<T>) {
   const [items, setItems] = useState<T[] | null>(null)
   const [error, setError] = useState(false)
   const [visible, setVisible] = useState(PAGE_SIZE)
@@ -48,11 +50,12 @@ export function CardSection<T>({ title, load, getKey, renderCard, emptyMessage }
         </div>
       )}
 
-      {items && items.length === 0 && <p className="section-message">{emptyMessage}</p>}
+      {items && items.length === 0 && !firstCard && <p className="section-message">{emptyMessage}</p>}
 
-      {items && items.length > 0 && (
+      {items && (items.length > 0 || firstCard) && (
         <>
           <div className="card-grid">
+            {firstCard && <div className="card-grid-cell">{firstCard}</div>}
             {items.slice(0, visible).map((item) => (
               <div key={getKey(item)} className="card-grid-cell">
                 {renderCard(item)}

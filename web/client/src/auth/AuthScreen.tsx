@@ -1,3 +1,4 @@
+import { asset } from '../common/asset'
 import { useState, type FormEvent } from 'react'
 import { errorCode, resetPassword, signIn, signUp, type UserProfile } from './authService'
 import { isEmailValid, messages, MIN_PASSWORD_LENGTH } from './messages'
@@ -12,11 +13,17 @@ const titles: Record<Mode, string> = {
 
 interface Props {
   onSignedUp: (profile: UserProfile) => void
+  // Closes the panel without signing in
+  onClose: () => void
+  // Why signing in is needed (ex: to create a character). Shown above the form
+  reason?: string
+  initialMode?: 'login' | 'register'
 }
 
-// Login, sign up and password reset by email, like the email panel of the app (LoginManager)
-export function AuthScreen({ onSignedUp }: Props) {
-  const [mode, setMode] = useState<Mode>('login')
+// Login, sign up and password reset by email, like the email panel of the app (LoginManager).
+// A panel over the home: it closes by itself once the user is signed in
+export function AuthScreen({ onSignedUp, onClose, reason, initialMode = 'login' }: Props) {
+  const [mode, setMode] = useState<Mode>(initialMode)
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -64,10 +71,17 @@ export function AuthScreen({ onSignedUp }: Props) {
   }
 
   return (
-    <div className="screen auth-screen">
-      <img className="logo" src="/images/logo.png" alt="Fabulab" />
+    <div className="screen auth-screen auth-overlay" role="dialog" aria-modal="true" aria-label="Ingresar">
+      <button type="button" className="player-close" onClick={onClose} aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" />
+        </svg>
+      </button>
+
+      <img className="logo" src={asset('images/logo.png')} alt="Fabulab" />
 
       <form className="auth-form" onSubmit={handleSubmit} noValidate>
+        {reason && <p className="auth-reason">{reason}</p>}
         <p className="auth-title">{titles[mode]}</p>
 
         {mode === 'register' && (
@@ -108,7 +122,7 @@ export function AuthScreen({ onSignedUp }: Props) {
               aria-pressed={showPassword}
               onClick={() => setShowPassword((v) => !v)}
             >
-              <img src="/images/eye-open.png" alt="" />
+              <img src={asset('images/eye-open.png')} alt="" />
             </button>
           </div>
         )}

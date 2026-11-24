@@ -4,6 +4,9 @@ mergeInto(LibraryManager.library, {
     var eventName = UTF8ToString(eventNamePtr);
     var paramsJson = UTF8ToString(paramsPtr);
 
+    // Pages without Google Analytics (web/client player and editor) have no gtag
+    if (typeof gtag !== 'function') return;
+
     try {
       var params = JSON.parse(paramsJson);
       // Usar gtag.js para enviar el evento

@@ -1,0 +1,39 @@
+# Apache / LiteSpeed: types the Unity WebGL builds (player/, editor/) need.
+# Without application/wasm the browser cannot compile the .wasm while downloading it: Unity falls back to a
+# much slower and heavier load, that may run out of memory with big builds.
+AddType application/wasm .wasm
+AddType application/octet-stream .data
+AddType application/javascript .js
+
+# The Unity builds keep the same file names in every build (editor.wasm, editor.framework.js...): the browser must
+# ask the server whether they changed before using its copy, or it mixes files of different builds and Unity aborts
+# ("WebAssembly.instantiate(): Import #0 ... module is not an object or function"). Unchanged files answer 304
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|data|wasm|js|json|br|gz)$">
+    Header set Cache-Control "no-cache"
+    Header unset Expires
+  </FilesMatch>
+</IfModule>
+
+# If the Unity builds are made with compression (Publishing Settings > Compression Format), the compressed files
+# must say how they are encoded
+<IfModule mod_headers.c>
+  <FilesMatch "\.(data|wasm|js|symbols\.json)\.br$">
+    Header set Content-Encoding br
+  </FilesMatch>
+  <FilesMatch "\.(data|wasm|js|symbols\.json)\.gz$">
+    Header set Content-Encoding gzip
+  </FilesMatch>
+  <FilesMatch "\.wasm\.(br|gz)$">
+    Header set Content-Type application/wasm
+  </FilesMatch>
+  <FilesMatch "\.(data|symbols\.json)\.(br|gz)$">
+    Header set Content-Type application/octet-stream
+  </FilesMatch>
+  <FilesMatch "\.js\.(br|gz)$">
+    Header set Content-Type application/javascript
+  </FilesMatch>
+</IfModule>
+<IfModule mod_mime.c>
+  RemoveType .br .gz
+</IfModule>

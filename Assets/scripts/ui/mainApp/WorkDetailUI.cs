@@ -34,6 +34,9 @@ namespace UI.MainApp
         }
 
         public void SetTexture(Texture2D tex) {
+            // A failed download gives no texture
+            if (tex == null)
+                return;
             workImage.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
         }
 

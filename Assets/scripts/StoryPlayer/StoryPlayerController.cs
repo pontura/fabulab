@@ -24,6 +24,8 @@ namespace StoryPlayer
         [Tooltip("Story loaded when the URL has no id (to test in the editor)")]
         [SerializeField] string defaultStoryId;
         [SerializeField] bool autoPlay = true;
+        [Tooltip("Seconds without the story loaded before telling the page it failed")]
+        [SerializeField] float loadTimeout = 40;
 
         [Header("Playback (copied from the story editor by the scene builder)")]
         [SerializeField] ScenarioCameraManager scenarioCameraManager;
@@ -34,6 +36,7 @@ namespace StoryPlayer
         StoryPlayback playback;
         StoryRestLoader loader;
         Coroutine loading;
+        Coroutine watchdog;
         string loadedStoryId;
         // Second of the story shown while it is not playing (the playback clock only runs while playing)
         float stoppedTime;
@@ -118,6 +121,19 @@ namespace StoryPlayer
             IsScrubbing = false;
             StoryPlayerWebBridge.Notify("loading", Payload(new { id = storyId }));
             loading = StartCoroutine(loader.LoadStory(storyId, OnStoryLoaded, Fail));
+            if (watchdog != null)
+                StopCoroutine(watchdog);
+            watchdog = StartCoroutine(FailIfStillLoading(storyId));
+        }
+
+        // An exception inside the loading coroutine kills it without calling back: the page would wait forever
+        IEnumerator FailIfStillLoading(string storyId) {
+            yield return new WaitForSecondsRealtime(loadTimeout);
+            watchdog = null;
+            if (loading != null && loadedStoryId == null) {
+                StopCoroutine(loading);
+                Fail("Timed out loading story " + storyId + " (see the errors above in the console)");
+            }
         }
 
         public void Play() {
@@ -191,9 +207,18 @@ namespace StoryPlayer
 
         // --- Loading ---
 
+        // An exception here would leave the page waiting forever (it only ends with loaded or error)
         void OnStoryLoaded(LoadedStory story) {
             loading = null;
+            try {
+                ShowLoadedStory(story);
+            } catch (Exception e) {
+                Debug.LogException(e);
+                Fail("Could not show story " + story.film?.id + ": " + e.Message);
+            }
+        }
 
+        void ShowLoadedStory(LoadedStory story) {
             // The managers find these first, so they never go to the server for them (Items.LoadBoardItemForStory)
             CacheOthers(Data.Instance.charactersData.othersCharacters, story.characters, list => Data.Instance.charactersData.othersCharacters = list);
             CacheOthers(Data.Instance.sObjectsData.othersData, story.objects, list => Data.Instance.sObjectsData.othersData = list);

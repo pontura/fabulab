@@ -108,6 +108,21 @@ namespace Yaguar.FirebaseRest
         {
             Clear();
         }
+
+        /// <summary>Takes a session signed in elsewhere (the web page that embeds this player, with the Firebase
+        /// JS SDK) and keeps it instead of the stored one. The id token is fetched on the first request.</summary>
+        public static void Adopt(string adoptedRefreshToken, string uid, string email)
+        {
+            if (string.IsNullOrEmpty(adoptedRefreshToken) || string.IsNullOrEmpty(uid))
+                return;
+            refreshToken = adoptedRefreshToken;
+            Uid = uid;
+            Email = email;
+            IsAnonymous = false;
+            idToken = null;
+            expiresAtUtc = DateTime.MinValue;
+            Persist();
+        }
         #endregion
 
         #region Token
