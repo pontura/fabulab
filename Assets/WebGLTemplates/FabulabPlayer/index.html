@@ -10,6 +10,8 @@
       #loading { position: absolute; left: 50%; top: 50%; width: 160px; height: 8px; margin: -4px 0 0 -80px;
                  border-radius: 4px; background: rgba(211, 224, 232, 0.25); overflow: hidden; }
       #loading-fill { width: 0; height: 100%; background: #d3e0e8; transition: width 0.2s ease; }
+      #loading-text { position: absolute; left: 0; right: 0; top: 50%; margin-top: 18px; padding: 0 24px;
+                      color: #d3e0e8; font: 15px system-ui, sans-serif; text-align: center; }
       #error { display: none; position: absolute; left: 0; right: 0; top: 50%; padding: 0 24px; transform: translateY(-50%);
                color: #d3e0e8; font: 18px system-ui, sans-serif; text-align: center; }
     </style>
@@ -17,6 +19,7 @@
   <body>
     <canvas id="unity-canvas" tabindex="-1"></canvas>
     <div id="loading"><div id="loading-fill"></div></div>
+    <div id="loading-text"></div>
     <div id="error"></div>
 
     <script>
@@ -81,8 +84,51 @@
       // Sharp image on high density screens, without huge canvases on phones
       config.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
 
+      // How the loading goes, shown here and sent to the page that embeds this one (which covers this page with its
+      // own loading until the build is open): postMessage({ source: 'fabulab-story-player', event: 'progress',
+      // payload: { stage: 'download' | 'starting', progress, loaded, total } }). loaded and total in bytes, total 0 when
+      // unknown. The loader of Unity reports the downloads from 0 to 0.9, then it compiles and starts the build
+      var downloadBytes = 0;
+      var lastProgress = { stage: '', percent: -1 };
+
+      // The size of what is downloaded (compressed, as it travels), asked to the server once
+      function measureDownload() {
+        var urls = [config.dataUrl, config.codeUrl, config.frameworkUrl].filter(Boolean);
+        Promise.all(urls.map(function (url) {
+          return fetch(url, { method: 'HEAD', cache: 'no-cache' })
+            .then(function (r) { return r.ok ? Number(r.headers.get('Content-Length')) || 0 : 0; })
+            .catch(function () { return 0; });
+        })).then(function (sizes) {
+          // Only if every size is known: a partial total would show wrong numbers
+          downloadBytes = sizes.every(function (s) { return s > 0; })
+            ? sizes.reduce(function (a, b) { return a + b; }, 0) : 0;
+        });
+      }
+
+      function megabytes(bytes) {
+        return (bytes / (1024 * 1024)).toFixed(bytes < 10 * 1024 * 1024 ? 1 : 0);
+      }
+
+      function showProgress(progress) {
+        document.getElementById('loading-fill').style.width = (100 * progress) + '%';
+        var downloading = progress < 0.9;
+        var stage = downloading ? 'download' : 'starting';
+        var share = downloading ? progress / 0.9 : 1;
+        var loaded = Math.round(share * downloadBytes);
+        var percent = Math.floor(share * 100);
+        var text = downloading
+          ? (downloadBytes ? 'Descargando… ' + megabytes(loaded) + ' de ' + megabytes(downloadBytes) + ' MB' : 'Descargando… ' + percent + '%')
+          : 'Preparando…';
+        document.getElementById('loading-text').textContent = text;
+        // One message per percent: the loader reports many times per second
+        if (stage === lastProgress.stage && percent === lastProgress.percent) return;
+        lastProgress = { stage: stage, percent: percent };
+        notifyParent('progress', { stage: stage, progress: progress, loaded: loaded, total: downloadBytes });
+      }
+
       function showError(message) {
         document.getElementById('loading').style.display = 'none';
+        document.getElementById('loading-text').style.display = 'none';
         var error = document.getElementById('error');
         error.textContent = 'No se pudo abrir el reproductor.';
         error.style.display = 'block';
@@ -93,12 +139,12 @@
       var canvas = document.getElementById('unity-canvas');
       var script = document.createElement('script');
       script.src = buildUrl + "/{{{ LOADER_FILENAME }}}";
+      measureDownload();
       script.onload = function () {
-        createUnityInstance(canvas, config, function (progress) {
-          document.getElementById('loading-fill').style.width = (100 * progress) + '%';
-        }).then(function (instance) {
+        createUnityInstance(canvas, config, showProgress).then(function (instance) {
           unityInstance = instance;
           document.getElementById('loading').style.display = 'none';
+          document.getElementById('loading-text').style.display = 'none';
           notifyParent('ready');
           var queued = pendingCommands;
           pendingCommands = [];

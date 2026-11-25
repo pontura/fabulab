@@ -56,9 +56,15 @@ namespace StoryPlayer
                 yield break;
             }
 
-            // 2. Keyframes
+            // 2. Keyframes, and the copies of the works the story shows (StoryAssetsData): saved with the story,
+            // they are what it shows even if the originals changed or were deleted. Stories saved before the
+            // copies existed have none: their works come from the originals
             JToken scenesJson = null;
-            yield return Get("stories/" + story.film.userID + "/" + storyId, result => scenesJson = result);
+            JToken assetsJson = null;
+            yield return WaitAll(new[] {
+                Get("stories/" + story.film.userID + "/" + storyId, result => scenesJson = result),
+                Get("storyAssets/" + story.film.userID + "/" + storyId, result => assetsJson = result)
+            });
             try {
                 story.scenes = ParseScenes(scenesJson);
             } catch (Exception e) {
@@ -70,6 +76,9 @@ namespace StoryPlayer
                 onError("Story without keyframes: " + storyId);
                 yield break;
             }
+
+            JToken copiedCharacters = assetsJson?["characters"];
+            JToken copiedObjects = assetsJson?["so"];
 
             // 3. Characters, objects and backgrounds shown in the keyframes
             HashSet<string> characterIds = new HashSet<string>();
@@ -87,20 +96,81 @@ namespace StoryPlayer
                     objectIds.Add(scene.bgID);
             }
 
-            yield return WaitAll(characterIds.Select(id => LoadCharacter(id, story)));
-            yield return WaitAll(objectIds.Select(id => LoadObject(id, story)));
+            int copies = 0;
+            List<string> fromOriginals = new List<string>();
+            foreach (string id in characterIds) {
+                if (AddCopiedCharacter(id, copiedCharacters, story))
+                    copies++;
+                else
+                    fromOriginals.Add(id);
+            }
+            yield return WaitAll(fromOriginals.Select(id => LoadCharacter(id, story)));
 
-            // 4. Objects placed inside the backgrounds
-            HashSet<string> innerIds = new HashSet<string>();
-            foreach (SObjectData bg in story.objects.Where(o => o.type == SObjectData.types.background)) {
-                foreach (SavedIData item in bg.items) {
-                    if (!string.IsNullOrEmpty(item.soID) && !objectIds.Contains(item.soID))
-                        innerIds.Add(item.soID);
+            // 4. Objects, then the objects inside them, at any depth (backgrounds, objects on the body parts of
+            // characters, objects inside objects)
+            HashSet<string> seenObjects = new HashSet<string>(objectIds);
+            foreach (string id in InnerObjectIds(story.characters, seenObjects))
+                objectIds.Add(id);
+            List<string> pending = objectIds.ToList();
+            while (pending.Count > 0) {
+                fromOriginals.Clear();
+                foreach (string id in pending) {
+                    if (AddCopiedObject(id, copiedObjects, story))
+                        copies++;
+                    else
+                        fromOriginals.Add(id);
+                }
+                yield return WaitAll(fromOriginals.Select(id => LoadObject(id, story)));
+                pending = InnerObjectIds(story.objects, seenObjects).ToList();
+            }
+
+            Debug.Log("[StoryPlayer] Story " + storyId + ": " + copies + " works from its copies, "
+                + (story.characters.Count + story.objects.Count - copies) + " from the originals");
+            onDone(story);
+        }
+
+        // soID of the items not seen yet (it adds them to seen)
+        static IEnumerable<string> InnerObjectIds<T>(IEnumerable<T> works, HashSet<string> seen) where T : SOPartData {
+            List<string> ids = new List<string>();
+            foreach (T work in works) {
+                if (work.items == null)
+                    continue;
+                foreach (SavedIData item in work.items) {
+                    if (!string.IsNullOrEmpty(item.soID) && seen.Add(item.soID))
+                        ids.Add(item.soID);
                 }
             }
-            yield return WaitAll(innerIds.Select(id => LoadObject(id, story)));
+            return ids;
+        }
 
-            onDone(story);
+        static bool AddCopiedCharacter(string id, JToken copies, LoadedStory story) {
+            JToken data = copies?[id]?["data"];
+            if (data == null || data.Type != JTokenType.Object)
+                return false;
+            try {
+                CharacterData character = new CharacterData { id = id, version = Str(copies[id]["version"]) };
+                character.LoadServerData(data.ToObject<CharacterServerData>(JsonSerializer.CreateDefault()));
+                story.characters.Add(character);
+                return true;
+            } catch (Exception e) {
+                Debug.LogError("[StoryPlayer] Invalid copy of character " + id + ", using the original: " + e);
+                return false;
+            }
+        }
+
+        static bool AddCopiedObject(string id, JToken copies, LoadedStory story) {
+            JToken data = copies?[id]?["data"];
+            if (data == null || data.Type != JTokenType.Object)
+                return false;
+            try {
+                SObjectData obj = new SObjectData { id = id, version = Str(copies[id]["version"]) };
+                obj.LoadServerData(data.ToObject<SObjectServerData>(JsonSerializer.CreateDefault()));
+                story.objects.Add(obj);
+                return true;
+            } catch (Exception e) {
+                Debug.LogError("[StoryPlayer] Invalid copy of object " + id + ", using the original: " + e);
+                return false;
+            }
         }
 
         IEnumerator LoadCharacter(string id, LoadedStory story) {

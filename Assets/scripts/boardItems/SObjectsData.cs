@@ -251,7 +251,15 @@ namespace BoardItems
 
             currentSO.id = id;
 
-            print("OnSavedToServer " + md + "   new id: " + id + " lastID:" + lastID);            
+            // A background made from the minigame editor: only the ones with this tag are offered there
+            bool forMiniGame = OnDuplicated == null && md.type == SObjectData.types.background
+                && MiniGames.Editing.MiniGameCreation.IsCreating(MiniGames.Editing.MiniGameOptionKind.Background);
+            if (forMiniGame) {
+                md.AddTag(MiniGames.Editing.MiniGameCreation.TagId);
+                MiniGames.Editing.MiniGameCreation.OnCreated(id);
+            }
+
+            print("OnSavedToServer " + md + "   new id: " + id + " lastID:" + lastID);
 
             FirebaseStoryMakerDBManager.Instance.UploadTexture(currentSO.thumb, MetadataTypes.so.ToString(), currentSO.id, Data.Instance.userData.userDataInDatabase.uid, onDone: () => {
                 SaveMetadata(md);
@@ -263,7 +271,11 @@ namespace BoardItems
                     print("OnSavedToServer StoryMakerEvents.isEditing:" + StoryMakerEvents.isEditing);
                     if(StoryMakerEvents.isEditing)
                     {
-                                                     
+
+                    } else if (forMiniGame)
+                    {
+                        // Back to the minigame editor (MiniGameEditorScreen), that assigns it
+                        UIManager.Instance.Home();
                     } else
                     {
                         UIManager.Instance.ShowWorkDetail(currentSO);
@@ -353,21 +365,7 @@ namespace BoardItems
                 PropMetaData cmd = metaData.Find(x => x.id == id);
                 if (cmd != null) {
                     if (isPatch) {
-                        JObject patch = JObject.Parse(data);
-                        var type = typeof(PropMetaData);
-                        foreach (var prop in patch.Properties()) {
-                            var field = type.GetField(prop.Name, BindingFlags.Public | BindingFlags.Instance);
-                            if (field != null) {
-                                object value = prop.Value.ToObject(field.FieldType);
-                                field.SetValue(cmd, value);
-                            }
-
-                            var property = type.GetProperty(prop.Name, BindingFlags.Public | BindingFlags.Instance);
-                            if (property != null && property.CanWrite) {
-                                object value = prop.Value.ToObject(property.PropertyType);
-                                property.SetValue(cmd, value);
-                            }
-                        }
+                        StreamPatch.ApplyTo(cmd, data);
                     } else {
                         cmd = Newtonsoft.Json.JsonConvert.DeserializeObject<PropMetaData>(data);
                         cmd.id = id;
@@ -621,6 +619,7 @@ namespace BoardItems
                         chD = new SObjectData();
                         chD.id = key;
                         chD.LoadServerData(data);
+                        chD.version = chmd.timestamp;
                         chD.thumb = chmd.thumb;
                         chD.type = chmd.type;
                         othersData.Add(chD);

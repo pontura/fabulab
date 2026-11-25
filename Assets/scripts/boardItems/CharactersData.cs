@@ -417,21 +417,7 @@ namespace BoardItems
                 //Debug.Log("% AKA cmd!=null");
                     if (isPatch) {
                     //Debug.Log("% AKA isPatch==true");
-                        JObject patch = JObject.Parse(data);
-                        var type = typeof(CharacterMetaData);
-                        foreach (var prop in patch.Properties()) {
-                            var field = type.GetField(prop.Name, BindingFlags.Public | BindingFlags.Instance);
-                            if (field != null) {
-                                object value = prop.Value.ToObject(field.FieldType);
-                                field.SetValue(cmd, value);
-                            }
-
-                            var property = type.GetProperty(prop.Name, BindingFlags.Public | BindingFlags.Instance);
-                            if (property != null && property.CanWrite) {
-                                object value = prop.Value.ToObject(property.PropertyType);
-                                property.SetValue(cmd, value);
-                            }
-                        }
+                        StreamPatch.ApplyTo(cmd, data);
                     } else {
                     //Debug.Log("% AKA isPatch==false");
                         cmd = Newtonsoft.Json.JsonConvert.DeserializeObject<CharacterMetaData>(data);
@@ -693,6 +679,7 @@ namespace BoardItems
                         chD = new CharacterData();
                         chD.id = key;
                         chD.LoadServerData(data);
+                        chD.version = chmd.timestamp;
                         chD.thumb = charactersMetaData.Find(x => x.id == chD.id)?.thumb;
                         othersCharacters.Add(chD);
                         OnDone(chD);

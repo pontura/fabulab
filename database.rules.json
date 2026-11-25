@@ -14,6 +14,18 @@
         		".write": "$uid === auth.uid || 'K4TkdHr6QCNOPMATDGSHQuXLIkO2' === auth.uid"
       		}
      },
+     "minigames": {
+        ".read": true,
+        "$uid": {
+        		".write": "$uid === auth.uid || 'K4TkdHr6QCNOPMATDGSHQuXLIkO2' === auth.uid"
+      		}
+     },
+     "storyAssets": {
+        ".read": true,
+        "$uid": {
+        		".write": "$uid === auth.uid || 'K4TkdHr6QCNOPMATDGSHQuXLIkO2' === auth.uid"
+      		}
+     },
      "so": {
         ".read": true,
         "$uid": {
@@ -87,6 +99,15 @@
         		".write": "'K4TkdHr6QCNOPMATDGSHQuXLIkO2' === auth.uid"
       		}
          },
+        "minigames": {
+            ".indexOn": ["userID"],
+            "$mWorkKeys": {
+              ".write": "(!data.exists() && newData.child('userID').val() == auth.uid) || (data.child('userID').val() == auth.uid && newData.child('userID').val() == auth.uid) || 'K4TkdHr6QCNOPMATDGSHQuXLIkO2' === auth.uid",
+              "isOfficial": {
+                ".validate": "newData.val() != true || 'K4TkdHr6QCNOPMATDGSHQuXLIkO2' === auth.uid"
+              }
+            }
+        },
 
            "stories": {
 

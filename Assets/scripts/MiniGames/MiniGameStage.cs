@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using BoardItems;
+using BoardItems.BoardData;
 using BoardItems.Characters;
 using BoardItems.SceneObjects;
 using UnityEngine;
@@ -21,6 +23,22 @@ namespace MiniGames
 
         Camera cam;
         RenderTexture renderTexture;
+        // Copies of the works of the minigame being played, by id (null: it shows the originals)
+        Dictionary<string, SOPartData> works;
+
+        // The copies of the works of the minigame: while the stage is open, they are loaded instead of the originals
+        // (Items.WorksOverride). Null: the originals
+        public void SetWorks(StoryAssetsData assets)
+        {
+            works = assets != null ? StoryAssets.ToWorks(assets) : null;
+            Items.WorksOverride = works != null ? FindWork : null;
+        }
+
+        // The copy of a work of the minigame. Null when it has none
+        public SOPartData FindWork(string id)
+        {
+            return works != null && id != null && works.TryGetValue(id, out SOPartData work) ? work : null;
+        }
 
         public Transform Content { get; private set; }
         public Camera Cam => cam;
@@ -84,6 +102,7 @@ namespace MiniGames
         public void Close()
         {
             Clear();
+            SetWorks(null);
             if (cam != null) {
                 cam.enabled = false;
                 cam.targetTexture = null;
@@ -251,6 +270,8 @@ namespace MiniGames
 
         void OnDestroy()
         {
+            if (works != null)
+                Items.WorksOverride = null;
             if (renderTexture != null) {
                 renderTexture.Release();
                 Destroy(renderTexture);

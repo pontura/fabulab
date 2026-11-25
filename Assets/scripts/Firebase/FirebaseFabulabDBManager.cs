@@ -733,6 +733,59 @@ namespace Yaguar.StoryMaker.DB
             //print("SaveFilmToServer url : " + url);
         }
 
+        // Copies of the works shown by a story of the user (see StoryAssetsData)
+        public void SaveStoryAssetsToServer(string filmId, StoryAssetsData assets, System.Action<bool> callback = null) {
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("storyAssets/" + _uid + "/" + filmId);
+            string json = JsonConvert.SerializeObject(assets);
+            reference.SetRawJsonValueAsync(json).ContinueWithOnMainThread(task => {
+                bool ok = !(task.IsFaulted || task.IsCanceled);
+                if (!ok) {
+                    Debug.Log("#SaveStoryAssetsToServer FAIL");
+                    Debug.Log(task.Exception);
+                }
+                try {
+                    callback?.Invoke(ok);
+                } catch (Exception ex) {
+                    Debug.LogError($"Error en callback: {ex}");
+                }
+            });
+            Debug.Log("Server: SaveStoryAssetsToServer " + filmId + " (" + json.Length + " chars)");
+        }
+
+        // Calls back with null when the story has no copies (stories saved before they existed) or it fails
+        public void LoadStoryAssetsFromServer(string userId, string filmId, System.Action<StoryAssetsData> callback) {
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("storyAssets/" + userId + "/" + filmId);
+            reference.GetValueAsync().ContinueWithOnMainThread(task => {
+                StoryAssetsData assets = null;
+                if (task.IsFaulted || task.IsCanceled) {
+                    Debug.Log("#LoadStoryAssetsFromServer FAIL");
+                    Debug.Log(task.Exception);
+                } else {
+                    try {
+                        string json = task.Result.GetRawJsonValue();
+                        if (!string.IsNullOrEmpty(json) && json != "null")
+                            assets = JsonConvert.DeserializeObject<StoryAssetsData>(json);
+                    } catch (Exception ex) {
+                        Debug.LogError("#LoadStoryAssetsFromServer invalid data: " + ex);
+                    }
+                }
+                try {
+                    callback(assets);
+                } catch (Exception ex) {
+                    Debug.LogError($"Error en callback: {ex}");
+                }
+            });
+        }
+
+        void DeleteStoryAssets(FilmData fd) {
+            FirebaseDatabase.DefaultInstance.GetReference("storyAssets/" + fd.userID + "/" + fd.id).RemoveValueAsync().ContinueWithOnMainThread(task => {
+                if (task.IsFaulted || task.IsCanceled) {
+                    Debug.Log("#DeleteStoryAssets FAIL");
+                    Debug.Log(task.Exception);
+                }
+            });
+        }
+
         public void DeleteFilm(FilmData fd, System.Action<string> callback) {
             if (fd.userID != _uid && !Data.Instance.userData.isAdmin)
                 return;
@@ -745,6 +798,7 @@ namespace Yaguar.StoryMaker.DB
                 } else {
                     try {
                         DeleteFilmData(fd.id);
+                        DeleteStoryAssets(fd);
                         DeleteImage("stories", fd.id, fd.userID);
                         callback(fd.id);
                     } catch (Exception ex) {

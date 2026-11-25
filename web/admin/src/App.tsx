@@ -8,6 +8,7 @@ import { TagsPage } from './features/tags/TagsPage'
 import { PresetsPage } from './features/presets/PresetsPage'
 import { GamesPage } from './features/games/GamesPage'
 import { GameEditPage } from './features/games/GameEditPage'
+import { MiniGamesPage } from './features/minigames/MiniGamesPage'
 import { UsersPage } from './features/users/UsersPage'
 import { UserDetailPage } from './features/users/UserDetailPage'
 
@@ -23,6 +24,7 @@ export function App() {
           <Route path="presets" element={<PresetsPage />} />
           <Route path="games" element={<GamesPage />} />
           <Route path="games/:id" element={<GameEditPage />} />
+          <Route path="minigames" element={<MiniGamesPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="users/:uid" element={<UserDetailPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -11,6 +11,7 @@ const links = [
   { to: '/tags', label: 'Tags' },
   { to: '/presets', label: 'Presets' },
   { to: '/games', label: 'Games' },
+  { to: '/minigames', label: 'Minijuegos' },
   { to: '/users', label: 'Usuarios' },
 ]
 

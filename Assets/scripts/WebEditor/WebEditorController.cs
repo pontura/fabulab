@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using BoardItems.BoardData;
+using MiniGames.Editing;
 using Newtonsoft.Json;
 using UI;
 using UnityEngine;
@@ -18,7 +19,7 @@ namespace WebEditor
     // Messages to the page (WebEditorBridge): loading, opened, closed, error
     public class WebEditorController : MonoBehaviour
     {
-        public enum WorkType { story, character, @object, background }
+        public enum WorkType { story, character, @object, background, minigame }
 
         [Tooltip("Used when the URL has no type (to test in the Unity editor)")]
         [SerializeField] WorkType defaultType = WorkType.character;
@@ -62,6 +63,9 @@ namespace WebEditor
         void OnShowScreen(UIManager.screenType screen) {
             if (screen != UIManager.screenType.Home || closed)
                 return;
+            // A story or background made from the minigame editor was left: it goes back to the minigame editor
+            if (MiniGameCreation.IsActive)
+                return;
             if (!opened) {
                 opened = true;
                 // The other listeners of this event are still showing the home
@@ -79,6 +83,13 @@ namespace WebEditor
 
         IEnumerator OpenNextFrame() {
             yield return null;
+            if (type == WorkType.minigame) {
+                OpenMiniGame();
+                yield break;
+            }
+            // The home does not wait for the objects of the users: an object or background to edit needs them
+            if (!string.IsNullOrEmpty(id) && (type == WorkType.@object || type == WorkType.background))
+                yield return new WaitUntil(() => Data.Instance.sObjectsData.MetadataLoaded);
             if (string.IsNullOrEmpty(id))
                 Create();
             else if (!Edit())
@@ -113,13 +124,35 @@ namespace WebEditor
                     return true;
 
                 default:
-                    SObjectData so = Data.Instance.sObjectsData.data.Find(x => x.id == id);
+                    // From the metadata, as UserObjectsScreen: the content of the objects of the user (sObjectsData.data)
+                    // is loaded later and may not be there yet. LoadWork loads it from the server when it is missing
+                    PropMetaData so = Data.Instance.sObjectsData.userMetaData.Find(x => x.id == id);
                     if (so == null)
                         return Fail("The user has no object " + id);
                     Data.Instance.sObjectsData.SetType(so.type);
                     UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
                     return true;
             }
+        }
+
+        // ?type=minigame&id=<id>: edits that minigame (if it is of another user, saving makes a copy). Always from an
+        // existing one: the originals of Fabulab are uploaded from the Unity editor (MiniGame: Subir como minijuego oficial)
+        void OpenMiniGame() {
+            MiniGameEditorScreen editor = FindFirstObjectByType<MiniGameEditorScreen>(FindObjectsInactive.Include);
+            if (editor == null) {
+                Fail("The scene has no MiniGameEditorScreen");
+                return;
+            }
+            if (string.IsNullOrEmpty(id)) {
+                Fail("A minigame is made from an existing one: the id is missing");
+                return;
+            }
+            editor.Open(id, found => {
+                if (found)
+                    WebEditorBridge.Notify("opened", Payload());
+                else
+                    Fail("Minigame not found: " + id);
+            });
         }
 
         IEnumerator EditStory() {

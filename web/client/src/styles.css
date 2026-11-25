@@ -459,6 +459,23 @@ body {
   overflow: hidden;
 }
 
+/* Second action of a card (ex: edit a minigame) */
+.card-secondary {
+  margin: 6px 2px 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #d3e0e8;
+  font: inherit;
+  font-size: 15px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.card-secondary:hover {
+  color: #ffffff;
+}
+
 .story-card.is-placeholder .story-thumb,
 .story-title-placeholder {
   animation: pulse 1.4s ease-in-out infinite;
@@ -630,6 +647,19 @@ button.story-thumb:focus-visible {
   color: var(--title);
 }
 
+/* Spinner with the step of the loading under it (Unity builds) */
+.loading-steps {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+}
+
+.loading-step {
+  margin: 0;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
 .player-close {
   position: absolute;
   top: max(16px, env(safe-area-inset-top));
@@ -783,4 +813,179 @@ button.story-thumb.create-thumb {
     padding: 0 16px;
     font-size: 15px;
   }
+}
+
+/* ---------- Popup of a work of the user ---------- */
+
+.work-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 105;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+  overflow-y: auto;
+  background: rgba(2, 30, 48, 0.7);
+}
+
+.work-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  padding: 24px;
+  border-radius: 24px;
+  background: var(--bg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  outline: none;
+}
+
+.work-dialog-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: var(--nav-bg);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.work-dialog-close:hover {
+  background: rgba(2, 40, 62, 0.75);
+}
+
+.work-dialog-close:focus-visible {
+  outline: 3px solid var(--title);
+  outline-offset: 2px;
+}
+
+.work-dialog-thumb {
+  width: 160px;
+  aspect-ratio: 1;
+  margin: 0 auto 18px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--nav-bg);
+}
+
+.work-dialog-form,
+.work-dialog-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.work-dialog-label {
+  margin-top: 6px;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--nav-text);
+}
+
+.work-dialog-form .field {
+  height: 50px;
+  font-size: 18px;
+}
+
+.work-dialog-privacy,
+.work-dialog-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  min-height: 38px;
+  padding: 0 16px;
+  border: 2px solid rgba(211, 224, 232, 0.35);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--title);
+  font: 500 16px 'Futura PT', system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.chip:hover:not(:disabled) {
+  border-color: var(--title);
+}
+
+.chip.is-on {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-text);
+}
+
+.chip:focus-visible {
+  outline: 3px solid var(--title);
+  outline-offset: 2px;
+}
+
+.work-dialog-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.work-dialog-actions .button {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 50px;
+  margin-top: 0;
+  padding: 0 12px;
+  font-size: 18px;
+}
+
+.work-dialog-save {
+  height: 44px;
+  font-size: 16px;
+}
+
+.button-danger {
+  background: #e8456b;
+  color: #ffffff;
+}
+
+.work-dialog-heading {
+  margin: 0;
+  text-align: center;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.25;
+  color: #ffffff;
+}
+
+.work-dialog-text {
+  margin: 0;
+  text-align: center;
+  font-size: 17px;
+  color: var(--title);
+}
+
+.work-dialog-error {
+  margin: 4px 0 0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(232, 69, 107, 0.2);
+  color: #ffffff;
+  font-size: 16px;
+  text-align: center;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }

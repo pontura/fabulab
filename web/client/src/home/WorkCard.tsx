@@ -6,7 +6,8 @@ interface Props {
   id: string
   userID: string
   name: string
-  likes: number
+  // Without it, no likes are shown (works that have none, like the minigames)
+  likes?: number
   isPublic?: boolean
   folder: ImageFolder
   // What the card does when pressed: play a story or open the editor. Without it, the card only shows
@@ -14,20 +15,37 @@ interface Props {
   onOpen?: () => void
   // Show "Privado" on works that only the user sees
   showPrivacy?: boolean
+  // A second action, as a button under the name (ex: edit a minigame)
+  secondaryLabel?: string
+  onSecondary?: () => void
 }
 
-// Card of a story, a character or an object: its picture, likes and name
-export function WorkCard({ id, userID, name, likes, isPublic, folder, action, onOpen, showPrivacy }: Props) {
+// Card of a story, a character, an object or a minigame: its picture, likes and name
+export function WorkCard({
+  id,
+  userID,
+  name,
+  likes,
+  isPublic,
+  folder,
+  action,
+  onOpen,
+  showPrivacy,
+  secondaryLabel,
+  onSecondary,
+}: Props) {
   const loadThumb = useCallback(() => imageUrl(userID, folder, id), [userID, folder, id])
   const title = name.trim() || (folder === 'stories' ? 'Sin título' : 'Sin nombre')
 
   const content = (
     <>
       <RemoteImage load={loadThumb} alt={title} />
-      <span className="story-likes" aria-label={`${likes} me gusta`}>
-        <HeartIcon />
-        {likes}
-      </span>
+      {likes !== undefined && (
+        <span className="story-likes" aria-label={`${likes} me gusta`}>
+          <HeartIcon />
+          {likes}
+        </span>
+      )}
       {showPrivacy && !isPublic && <span className="work-private">Privado</span>}
       {action && (
         <span className="story-play" aria-hidden="true">
@@ -52,6 +70,11 @@ export function WorkCard({ id, userID, name, likes, isPublic, folder, action, on
         <div className="story-thumb">{content}</div>
       )}
       <h3 className="story-title">{title}</h3>
+      {onSecondary && secondaryLabel && (
+        <button type="button" className="card-secondary" onClick={onSecondary}>
+          {secondaryLabel}
+        </button>
+      )}
     </article>
   )
 }

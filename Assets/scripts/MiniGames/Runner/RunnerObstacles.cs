@@ -68,6 +68,11 @@ namespace MiniGames.Runner
             public bool pivotReady;
         }
 
+        public List<ObstacleCharacter> Characters {
+            get => characters;
+            set => characters = value ?? new List<ObstacleCharacter>();
+        }
+
         readonly List<Obstacle> pool = new List<Obstacle>();
         readonly List<int> laneOrder = new List<int>();
         readonly List<Source> sources = new List<Source>();

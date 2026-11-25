@@ -13,6 +13,11 @@ AddType application/javascript .js
     Header set Cache-Control "no-cache"
     Header unset Expires
   </FilesMatch>
+  # Builds made with Publishing Settings > Name Files As Hashes: the name of each file is the hash of its content, so a
+  # changed file always has a new name (given by the index.html, never kept). These can be kept for good
+  <FilesMatch "^[0-9a-f]{32}\.">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
 </IfModule>
 
 # If the Unity builds are made with compression (Publishing Settings > Compression Format), the compressed files
@@ -36,4 +41,13 @@ AddType application/javascript .js
 </IfModule>
 <IfModule mod_mime.c>
   RemoveType .br .gz
+</IfModule>
+
+# The files are already compressed: the server must send them as they are. LiteSpeed (Hostinger) compresses on the
+# fly by default, and compressing them again makes the browser get them still compressed after decompressing once
+# (Unity: "Unable to parse Build/editor.framework.js.br", an etag ending in ";br", no Content-Length)
+SetEnvIfNoCase Request_URI "\.(br|gz)$" no-gzip=1 no-brotli=1 dont-vary=1
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule \.(br|gz)$ - [E=no-gzip:1,E=no-brotli:1]
 </IfModule>

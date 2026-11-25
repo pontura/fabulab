@@ -52,6 +52,28 @@ namespace MiniGames.Runner
         bool running;
         float playTime;
 
+        public override void Apply(MiniGameConfig config)
+        {
+            base.Apply(config);
+            background.BackgroundId = config.backgroundId;
+            parallax.ObjectIds = config.parallaxObjectIds;
+            List<ObstacleCharacter> list = new List<ObstacleCharacter>();
+            foreach (MiniGameObstacle o in config.obstacles)
+                list.Add(new ObstacleCharacter { characterId = o.characterId, action = o.action });
+            obstacles.Characters = list;
+        }
+
+        public override MiniGameConfig GetConfig()
+        {
+            MiniGameConfig config = base.GetConfig();
+            config.backgroundId = background.BackgroundId;
+            config.parallaxObjectIds = new List<string>(parallax.ObjectIds);
+            foreach (ObstacleCharacter o in obstacles.Characters)
+                config.obstacles.Add(new MiniGameObstacle { characterId = o.characterId, action = o.action });
+            config.Normalize();
+            return config;
+        }
+
         public override void Play()
         {
             stage.Clear();

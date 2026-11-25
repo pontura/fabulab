@@ -11,6 +11,9 @@ namespace BoardItems.BoardData
         public string id;
         public Texture2D thumb;
         public List<SavedIData> items;
+        // Timestamp of the metadata when these items were loaded from the server (null: unknown, own works).
+        // The copies saved with the stories keep it (StoryAssets): the metadata may be newer than a cached item
+        [NonSerialized] public string version;
 
         public Sprite GetSprite() {
             if (thumb == null) {

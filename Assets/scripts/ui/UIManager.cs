@@ -46,7 +46,8 @@ namespace UI
             StoryMaker,
             GamesStories,
             GameStoriesCreator,
-            MiniGame
+            MiniGame,
+            MiniGameEditor
         }
 
         public static UIManager Instance {
@@ -342,7 +343,8 @@ namespace UI
             return hasUnsavedChanges &&
                 (backToScreen[backToScreen.Count - 1] == screenType.Creation_Character ||
                 backToScreen[backToScreen.Count - 1] == screenType.Creation_Objects ||
-                backToScreen[backToScreen.Count - 1] == screenType.StoryMaker);
+                backToScreen[backToScreen.Count - 1] == screenType.StoryMaker ||
+                backToScreen[backToScreen.Count - 1] == screenType.MiniGameEditor);
         }
         void ReOpenGames() {
             hasUnsavedChanges = false;

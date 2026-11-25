@@ -122,6 +122,8 @@ namespace BoardItems
             }
             currentFilmData = new FilmData();
             currentFilmData.name = storyName;
+            loadedStoryAssets = null;
+            loadedStoryAssetsId = null;
             ScenesManager.Instance.currentFilmData = currentFilmData;
             ScenesManager.Instance.currentFDataID = "";
             if (idExists) {
@@ -208,21 +210,7 @@ namespace BoardItems
                 FilmData cmd = filmsData.Find(x => x.id == id);
                 if (cmd != null) {
                     if (isPatch) {
-                        JObject patch = JObject.Parse(data);
-                        var type = typeof(FilmData);
-                        foreach (var prop in patch.Properties()) {
-                            var field = type.GetField(prop.Name, BindingFlags.Public | BindingFlags.Instance);
-                            if (field != null) {
-                                object value = prop.Value.ToObject(field.FieldType);
-                                field.SetValue(cmd, value);
-                            }
-
-                            var property = type.GetProperty(prop.Name, BindingFlags.Public | BindingFlags.Instance);
-                            if (property != null && property.CanWrite) {
-                                object value = prop.Value.ToObject(property.PropertyType);
-                                property.SetValue(cmd, value);
-                            }
-                        }
+                        StreamPatch.ApplyTo(cmd, data);
                     } else {
                         cmd = Newtonsoft.Json.JsonConvert.DeserializeObject<FilmData>(data);
                         cmd.id = id;
@@ -502,6 +490,9 @@ namespace BoardItems
             Debug.Log("& OnFilmSavedToServer");
             ScenesManager.Instance.currentFDataID = id;
 
+            if (succes)
+                SaveStoryAssets(id);
+
             if(Data.Instance.gamesManager.IsEditing())
             {
                 Data.Instance.scenesData.currentFilmData.tags.Add("games");
@@ -542,6 +533,12 @@ namespace BoardItems
             currentFilmData = fd;
 
             ScenesManager.Instance.currentFilmData = currentFilmData;
+
+            // Made from the minigame editor: only the stories with this tag are offered there
+            if (MiniGames.Editing.MiniGameCreation.IsCreating(MiniGames.Editing.MiniGameOptionKind.Story)) {
+                fd.AddTag(MiniGames.Editing.MiniGameCreation.TagId);
+                MiniGames.Editing.MiniGameCreation.OnCreated(fd.id);
+            }
 
             if (Data.Instance.userData.IsLogged()) {
                 FilmData tfd = filmsData.Find(x => x.id == fd.id);
@@ -591,6 +588,33 @@ namespace BoardItems
             SaveMetadata(md, OnDone);
         }
 
+        // Copies of the works of the story being edited, as it was loaded (StoryAssetsData). When it is saved,
+        // the works that are no longer loaded (ex: deleted by their author) keep these copies
+        StoryAssetsData loadedStoryAssets;
+        string loadedStoryAssetsId;
+
+        void LoadStoryAssets(FilmData fd) {
+            loadedStoryAssets = null;
+            loadedStoryAssetsId = fd.id;
+            string userId = string.IsNullOrEmpty(fd.userID) ? Data.Instance.userData.userDataInDatabase.uid : fd.userID;
+            FirebaseStoryMakerDBManager.Instance.LoadStoryAssetsFromServer(userId, fd.id, assets => {
+                // Another story may have been opened meanwhile
+                if (loadedStoryAssetsId == fd.id)
+                    loadedStoryAssets = assets;
+            });
+        }
+
+        // After saving the story: its copies are saved with what it shows now
+        void SaveStoryAssets(string filmId) {
+            StoryAssetsData assets = StoryAssets.Build(ScenesManager.Instance.Scenes, loadedStoryAssets);
+            foreach (string id in StoryAssets.Missing(ScenesManager.Instance.Scenes, assets))
+                Debug.LogWarning("# Story " + filmId + " has no copy of " + id);
+            Debug.Log("# SaveStoryAssets " + filmId + ": " + StoryAssets.Describe(assets));
+            FirebaseStoryMakerDBManager.Instance.SaveStoryAssetsToServer(filmId, assets);
+            loadedStoryAssets = assets;
+            loadedStoryAssetsId = filmId;
+        }
+
         public void LoadFilm(string _id) {
                 print("LoadFilm _id:" + _id + " loadedDone: " + loadedDone);
             loadedDone = false;
@@ -598,6 +622,7 @@ namespace BoardItems
             currentFilmData = filmsData.Find(x => x.id == _id);
             ScenesManager.Instance.currentFilmData = currentFilmData;
             if (currentFilmData != null) {
+                LoadStoryAssets(currentFilmData);
                 ScenesManager.Instance.currentFDataID = currentFilmData.id;
                 ScenesManager.Instance.Scenes = new List<SceneData>();
                 //Data.Instance.firebaseAuthManager.LoadFilmFromServer(ScenesManager.Instance.currentFDataID, 0);
@@ -618,6 +643,7 @@ namespace BoardItems
             currentFilmData = userFilmsData.Find(x => x.id == _id);
             ScenesManager.Instance.currentFilmData = currentFilmData;
             if (currentFilmData != null) {
+                LoadStoryAssets(currentFilmData);
                 ScenesManager.Instance.currentFDataID = currentFilmData.id;
                 ScenesManager.Instance.Scenes = new List<SceneData>();
 

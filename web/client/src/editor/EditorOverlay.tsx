@@ -5,8 +5,9 @@ import { UnityAppOverlay } from '../common/UnityAppOverlay'
 // The Unity WebGL build of the scene Editor. By default it is served by this site from public/editor
 const EDITOR_URL = import.meta.env.VITE_EDITOR_URL || asset('editor/index.html')
 
-// What the editor opens (WebEditorController.WorkType). Without id it creates a new one
-export type EditorWorkType = 'story' | 'character' | 'object' | 'background'
+// What the editor opens (WebEditorController.WorkType). Without id it creates a new one.
+// minigame: always with id; editing one of another user saves a copy (the originals are made in the Unity editor)
+export type EditorWorkType = 'story' | 'character' | 'object' | 'background' | 'minigame'
 
 export interface EditorRequest {
   type: EditorWorkType

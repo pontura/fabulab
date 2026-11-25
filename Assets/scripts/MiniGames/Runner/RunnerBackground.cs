@@ -21,6 +21,11 @@ namespace MiniGames.Runner
         [Tooltip("Uses the color of the background as the color of the stage")]
         [SerializeField] bool useBackgroundColor = true;
 
+        public string BackgroundId {
+            get => backgroundId;
+            set => backgroundId = value;
+        }
+
         readonly List<Transform> tiles = new List<Transform>();
         float tileWidth;
         float leftOffset; // from the tile position to its left edge
@@ -32,9 +37,11 @@ namespace MiniGames.Runner
             if (string.IsNullOrEmpty(backgroundId))
                 return;
 
-            SObjectData bgData = Data.Instance.sObjectsData.GetSO(backgroundId);
+            // The copy of the minigame, or the original if it has none (the color only: the background loads anyway)
+            SObjectData bgData = stage.FindWork(backgroundId) as SObjectData
+                ?? Data.Instance.sObjectsData.GetSO(backgroundId) ?? Data.Instance.sObjectsData.GetOthersSO(backgroundId);
             if (bgData == null)
-                Debug.LogWarning("RunnerBackground: background not found in the user's objects: " + backgroundId);
+                Debug.LogWarning("RunnerBackground: background not loaded yet, without its color: " + backgroundId);
             else if (useBackgroundColor) {
                 List<Color> colors = Data.Instance.palettesManager.GetColorsByName(bgData.bg);
                 if (colors != null && colors.Count > 0)

@@ -538,8 +538,25 @@ namespace BoardItems
             LoadBgSos(itemManager, bgContainer, container);
         }
 
+        // Copies of works carried by what is being shown (a minigame, a story: StoryAssetsData), found by id before
+        // the works of the user and of other users. Null: none. Set by who shows them (ex: MiniGameStage) and cleared
+        // when it is closed. Static: every Items of the scene loads with the same works
+        public static System.Func<string, SOPartData> WorksOverride;
+
+        static SOPartData FindOverride(string id) {
+            return string.IsNullOrEmpty(id) ? null : WorksOverride?.Invoke(id);
+        }
+
         void LoadBoardItemForStory(BoardItemManager itemManager, string id)
         {
+            SOPartData copy = FindOverride(id);
+            if ((itemManager is CharacterManager && copy is CharacterData) || (itemManager is SceneObjectManager && copy is SObjectData)) {
+                if (copy is SObjectData copiedObject && copiedObject.type == SObjectData.types.background)
+                    Events.ColorizeBG(copiedObject.bg);
+                OpenWork(itemManager, copy);
+                return;
+            }
+
             SOPartData pd = null;
             if (itemManager is CharacterManager) {
                 pd = Data.Instance.charactersData.GetUserCharacter(id);
@@ -678,7 +695,7 @@ namespace BoardItems
 
             foreach (SavedIData soID in soIDs) {
              //   print("open SO in background soID: " + soID.soID);
-                SOPartData soPartData = Data.Instance.sObjectsData.GetSO(soID.soID);
+                SOPartData soPartData = FindOverride(soID.soID) as SObjectData ?? Data.Instance.sObjectsData.GetSO(soID.soID);
                 if(soPartData != null) {
                     LoadBgSo(soID, soPartData, boardItemManager, bgContainer, container);
                 } else {

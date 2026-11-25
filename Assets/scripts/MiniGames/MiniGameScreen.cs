@@ -22,6 +22,25 @@ namespace MiniGames
         [SerializeField] RawImage gameview;
         [SerializeField] MiniGame miniGame;
 
+        public MiniGame Game => miniGame;
+        public MiniGameStage Stage => stage;
+
+        // A picture of what the screen shows now (the poster or a cutscene, or the game). Null when it is closed
+        public Texture2D CaptureView()
+        {
+            if (step == Step.Closed) return null;
+            RawImage shown = view.gameObject.activeSelf ? view : gameview;
+            RenderTexture rt = shown.texture as RenderTexture;
+            if (rt == null) return null;
+            RenderTexture previous = RenderTexture.active;
+            RenderTexture.active = rt;
+            Texture2D tex = new Texture2D(rt.width, rt.height, TextureFormat.RGB24, false);
+            tex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+            tex.Apply();
+            RenderTexture.active = previous;
+            return tex;
+        }
+
         [Header("Generic action button")]
         [SerializeField] Button actionButton;
         [SerializeField] TMPro.TMP_Text actionLabel;
@@ -231,13 +250,13 @@ namespace MiniGames
 
         // The character set in the minigame. Otherwise, the first character of the logged user's list,
         // or the default one if there are none
-        string GetCharacterId()
+        public string GetCharacterId()
         {
             BoardItems.CharactersData charactersData = Data.Instance.charactersData;
 
             string playerId = miniGame.PlayerCharacterId;
             if (!string.IsNullOrEmpty(playerId)) {
-                if (charactersData.GetUserCharacter(playerId) != null || charactersData.GetMeta(playerId) != null)
+                if (miniGame.HasCopyOfCharacter(playerId) || charactersData.GetUserCharacter(playerId) != null || charactersData.GetMeta(playerId) != null)
                     return playerId;
                 Debug.LogWarning("MiniGameScreen: player character not found: " + playerId);
             }

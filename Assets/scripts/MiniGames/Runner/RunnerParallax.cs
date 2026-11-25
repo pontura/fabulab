@@ -29,6 +29,11 @@ namespace MiniGames.Runner
             public bool pivotReady;
         }
 
+        public List<string> ObjectIds {
+            get => objectIds;
+            set => objectIds = value != null ? new List<string>(value) : new List<string>();
+        }
+
         readonly List<Item> items = new List<Item>();
         float halfWidth;
 

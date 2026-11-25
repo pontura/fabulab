@@ -2,7 +2,7 @@ import { getDownloadURL, ref } from 'firebase/storage'
 import { storage } from '../firebase'
 
 // Images uploaded by the app to Storage: images/{uid}/{folder}/{id}.jpg (FirebaseFabulabDBManager.DownloadTexture)
-export type ImageFolder = 'stories' | 'characters' | 'so' | 'profile'
+export type ImageFolder = 'stories' | 'characters' | 'so' | 'profile' | 'minigames'
 
 // One request per image, also when several components ask for it. null: the image does not exist
 const urls = new Map<string, Promise<string | null>>()
