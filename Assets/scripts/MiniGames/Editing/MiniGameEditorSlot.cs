@@ -16,6 +16,8 @@ namespace MiniGames.Editing
         [SerializeField] Button pickButton;
         [Tooltip("Leaves it empty (ex: no main character). With UseCreate it is the button to create a new one")]
         [SerializeField] Button clearButton;
+        [Tooltip("Opens the work in its editor (shown when there is one)")]
+        [SerializeField] Button editButton;
         [SerializeField] string emptyText = "Elegir";
         [SerializeField] string createText = "CREAR";
 
@@ -25,9 +27,11 @@ namespace MiniGames.Editing
         public event Action OnPick;
         public event Action OnClear;
         public event Action OnCreate;
+        public event Action OnEdit;
 
         void Awake() {
             if (pickButton != null) pickButton.onClick.AddListener(() => OnPick?.Invoke());
+            if (editButton != null) editButton.onClick.AddListener(() => OnEdit?.Invoke());
             if (clearButton != null) clearButton.onClick.AddListener(() => {
                 if (createMode) OnCreate?.Invoke();
                 else OnClear?.Invoke();
@@ -53,6 +57,8 @@ namespace MiniGames.Editing
             view.Show(option, emptyText);
             if (clearButton != null)
                 clearButton.gameObject.SetActive(createMode || (!noClear && option != null));
+            if (editButton != null)
+                editButton.gameObject.SetActive(option != null);
         }
     }
 }

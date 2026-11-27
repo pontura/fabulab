@@ -123,11 +123,11 @@ namespace UI.MainApp.Home.User
                 {
                     case SObjectData.types.generic:
                         Events.OnBoardingStepDone(OnBoarding.OnBoardingManager.steps.objects);
-                        Events.DuplicateSO(id);
+                        Events.UseOthersSO(id);
                         break;
                     case SObjectData.types.background:
                         Events.OnBoardingStepDone(OnBoarding.OnBoardingManager.steps.background);
-                        Events.DuplicateSOBG(id);
+                        Events.UseOthersSOBG(id);
                         break;
                 }
             }

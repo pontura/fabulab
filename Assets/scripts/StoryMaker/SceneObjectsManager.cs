@@ -322,6 +322,40 @@ namespace Yaguar.StoryMaker.Editor
             StoryMakerEvents.RewindStory();
         }
 
+        // A character or object of the story was edited and saved as savedId: the same id (an own work, its new
+        // content is loaded again) or a new one (a copy of another user's work). Every instance of it, in all the
+        // keyframes, shows the saved one, keeping where it is
+        public void ReplaceWork(string oldId, string savedId, bool isAvatar) {
+            List<SceneObject> instances = sceneObjects.FindAll(so => so != null && (isAvatar ? so is Avatar : so is Prop) && so.GetData().id == oldId);
+            StoryMakerEvents.HideSoButtons();
+            foreach (SceneObject instance in instances) {
+                string itemName = instance.GetData().itemName;
+                if (oldId != savedId)
+                    scenesManager.ReplaceItem(oldId, itemName, savedId, itemName);
+                SOData data = isAvatar ? new SOAvatarData() : new SOPropData();
+                data.id = savedId;
+                data.itemName = itemName;
+
+                sceneObjects.Remove(instance);
+                Destroy(instance.gameObject);
+                AddSceneObject(data);
+                // Hidden until a keyframe that has it is shown
+                selected.gameObject.SetActive(false);
+            }
+            selected = null;
+            // Also with the same id: the story must be saved again to keep the new content in its copy (storyAssets)
+            scenesManager.MarkChanged();
+            StoryMakerEvents.RewindStory();
+        }
+
+        // The background oldId was edited and saved as savedId: the keyframes that had it show the saved one
+        public void ReplaceBackground(string oldId, string savedId) {
+            scenesManager.ReplaceBackground(oldId, savedId);
+            SceneData active = scenesManager.GetActiveScene();
+            if (active != null && active.bgID == savedId)
+                AddSceneObject(new SOBGData { id = savedId });
+        }
+
         public void TurnOff(SOData data)
         {
             SceneObject soToTurnOff = GetSceneObjectInScene(data);

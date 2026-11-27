@@ -602,6 +602,8 @@ namespace Yaguar.StoryMaker.DB
             var jObject = JObject.FromObject(fd);
             Dictionary<string, object> data = NormalizeDictionary(jObject);
             data.Remove("likes");
+            if (data.TryGetValue("creators", out object creators) && creators == null)
+                data.Remove("creators");
             reference.UpdateChildrenAsync(data).ContinueWithOnMainThread(task => {
                 //reference.SetRawJsonValueAsync(s).ContinueWithOnMainThread(task => {
                 if (task.IsFaulted || task.IsCanceled) {

@@ -1,4 +1,5 @@
 using BoardItems;
+using BoardItems.BoardData;
 using Common.UI;
 using Firebase.Analytics;
 using OnBoarding;
@@ -233,6 +234,40 @@ namespace UI.MainApp
             emojisUI.SetOn(true);
         }
 
+        // ---------- Editing the works of the story (buttons of the story editor) ----------
+        // An own work is edited as it is. One of another user is saved as a new work of the user, and the story
+        // uses the new one. Either way, back in the story, every keyframe shows the saved one
+
+        // The selected character
+        public void EditCharacter() {
+            if (Scenario.Instance.sceneObjectsManager.selected is Avatar avatar)
+                EditWork(BoardUI.editingTypes.CHARACTER, avatar.GetData().id, SObjectData.types.generic);
+        }
+
+        // The selected object
+        public void EditProp() {
+            if (Scenario.Instance.sceneObjectsManager.selected is Prop prop)
+                EditWork(BoardUI.editingTypes.OBJECT, prop.GetData().id, SObjectData.types.generic);
+        }
+
+        // The background of the active keyframe
+        public void EditBackground() {
+            SceneData scene = ScenesManager.Instance.GetActiveScene();
+            if (scene == null || string.IsNullOrEmpty(scene.bgID)) {
+                Events.OnPopupTopSignalText("Esta escena no tiene fondo");
+                return;
+            }
+            EditWork(BoardUI.editingTypes.OBJECT, scene.bgID, SObjectData.types.background);
+        }
+
+        void EditWork(BoardUI.editingTypes type, string id, SObjectData.types objectType) {
+            NoneItemSelected();
+            CloseTools();
+            actionUI.SetOn(false);
+            emojisUI.SetOn(false);
+            UIManager.Instance.EditWorkFromStory(type, id, objectType);
+        }
+
         public void SelectedFlipX() {
             if (Scenario.Instance.sceneObjectsManager.selected != null) {
                 Scenario.Instance.sceneObjectsManager.selected.FlipX();
@@ -383,7 +418,8 @@ namespace UI.MainApp
         {
             CloseSaveMenu();
             Events.OnLoading(true);
-            if (ScenesManager.Instance.currentFDataID == "")
+            // A story of another user (ex: edited from the minigame editor) is saved as a new story of the user
+            if (ScenesManager.Instance.currentFDataID == "" || IsOthersStory())
                 Save();
             else
             {
@@ -395,8 +431,15 @@ namespace UI.MainApp
         public void Cancel() {
             savePanel.SetActive(false);
         }
+        static bool IsOthersStory() {
+            FilmData film = Data.Instance.scenesData.currentFilmData;
+            return film != null && !string.IsNullOrEmpty(film.userID) && film.userID != Data.Instance.userData.userDataInDatabase.uid;
+        }
         void Save() {
+            FilmData source = Data.Instance.scenesData.currentFilmData;
             Data.Instance.scenesData.currentFilmData = new FilmData();
+            if (source != null && !string.IsNullOrEmpty(source.id))
+                Data.Instance.scenesData.currentFilmData.creators = WorkCreators.ModifiedBy(source.creators, null, source.userID);
             Data.Instance.scenesData.currentFilmData.name = storyName.text;
             ScenesManager.Instance.currentFilmData = Data.Instance.scenesData.currentFilmData;
             Data.Instance.scenesData.currentFilmData.userID = Data.Instance.userData.userDataInDatabase.uid;

@@ -110,6 +110,8 @@ namespace MiniGames
                 // A copy remembers where it comes from; an own minigame keeps its origin
                 sourceId = own ? meta.sourceId : meta?.id,
                 isOfficial = own ? meta.isOfficial : meta == null && official,
+                // A copy keeps the creators of the one it comes from; either way the user is the last one
+                creators = BoardItems.BoardData.WorkCreators.ModifiedBy(meta?.creators, uid, meta?.userID),
                 thumb = thumb != null ? thumb : meta?.thumb
             };
 
@@ -132,6 +134,7 @@ namespace MiniGames
                         { "timestamp", saved.timestamp },
                         { "sourceId", saved.sourceId ?? "" },
                         { "isOfficial", saved.isOfficial },
+                        { "creators", saved.creators },
                     };
                     Write("PATCH", "metadata/" + Folder + "/" + id, JsonConvert.SerializeObject(metaValues), metaOk => {
                         if (!metaOk) {

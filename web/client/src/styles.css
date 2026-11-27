@@ -381,8 +381,17 @@ body {
   padding: 28px 24px max(48px, env(safe-area-inset-bottom));
 }
 
+/* The title of a section and, at its right, its buttons (ex: "Ver más") */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
 .section-title {
-  margin: 0 0 18px;
+  margin: 0;
   font-weight: 600;
   font-size: 24px;
   letter-spacing: 0.06em;
@@ -430,7 +439,7 @@ body {
 
 .story-likes {
   position: absolute;
-  top: 10px;
+  bottom: 10px;
   right: 10px;
   display: flex;
   align-items: center;
@@ -441,10 +450,149 @@ body {
   color: var(--field-text);
   font-weight: 600;
   font-size: 15px;
+  /* A button over the picture (bottom right): likes the work */
+  z-index: 1;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.15s ease;
 }
 
 .story-likes svg {
   color: #e8456b;
+}
+
+.story-likes:hover {
+  background: #ffffff;
+}
+
+.story-likes:active {
+  transform: scale(0.92);
+}
+
+.story-likes:focus-visible {
+  outline: 3px solid var(--title);
+  outline-offset: 2px;
+}
+
+/* It moves with the picture when the card is hovered */
+.story-card:not(.is-placeholder):hover .story-likes {
+  transform: translateY(-3px);
+}
+
+/* The picture of a card and, over it, the button of its last creator */
+.story-thumb-frame {
+  position: relative;
+}
+
+/* The one that modified the work last, top right of its picture: shows everyone that took part */
+.work-creator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--primary);
+  box-shadow: 0 2px 8px rgba(2, 40, 62, 0.3);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+/* It moves with the picture when the card is hovered */
+.story-card:not(.is-placeholder):hover .work-creator {
+  transform: translateY(-3px);
+}
+
+.work-creator:hover {
+  box-shadow: 0 0 0 3px var(--primary), 0 2px 8px rgba(2, 40, 62, 0.3);
+}
+
+.work-creator:focus-visible {
+  outline: 3px solid var(--title);
+  outline-offset: 2px;
+}
+
+/* Profile picture of a user, with its initial under it */
+.user-avatar {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--primary);
+  display: grid;
+  place-items: center;
+}
+
+.user-avatar-initial {
+  color: var(--primary-text);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.user-avatar .remote-image {
+  position: absolute;
+  inset: 0;
+}
+
+/* ---------- Popup of the creators of a work ---------- */
+
+.creators-dialog-title {
+  margin: 4px 44px 18px 0;
+  text-align: left;
+  font-size: 20px;
+}
+
+.creators-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.creators-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.creators-avatar {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+}
+
+.creators-avatar .user-avatar-initial {
+  font-size: 22px;
+}
+
+.creators-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.creators-name {
+  font-weight: 600;
+  font-size: 18px;
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.creators-role {
+  font-size: 15px;
+  color: var(--nav-text);
 }
 
 .story-title {
@@ -989,3 +1137,255 @@ button.story-thumb.create-thumb {
   white-space: nowrap;
   border: 0;
 }
+
+.creators-modify {
+  width: 100%;
+  margin-top: 22px;
+}
+
+.creators-modify-note {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--nav-text);
+}
+
+/* ---------- Info of the story being played (StoryInfoPanel) ---------- */
+
+/* Over the story, bottom left, folded by default (windows without room next to the player) */
+.story-info {
+  position: absolute;
+  left: max(16px, env(safe-area-inset-left));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 2;
+  width: min(360px, calc(100vw - 32px));
+  max-height: 55vh;
+  overflow-y: auto;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(2, 30, 48, 0.86);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  color: var(--title);
+}
+
+.story-info-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.story-info-title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.2;
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The like button of the cards, in the flow of the panel */
+.story-info-likes {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--field-text);
+  font: 600 16px 'Futura PT', system-ui, sans-serif;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.story-info-likes svg {
+  color: #e8456b;
+}
+
+.story-info-likes:hover {
+  background: #ffffff;
+}
+
+.story-info-likes:active {
+  transform: scale(0.92);
+}
+
+.story-info-likes:focus-visible,
+.story-info-toggle:focus-visible {
+  outline: 3px solid var(--title);
+  outline-offset: 2px;
+}
+
+.story-info-toggle {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: var(--nav-bg);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.story-info-toggle svg {
+  transition: transform 0.15s ease;
+}
+
+.story-info.is-expanded .story-info-toggle svg {
+  transform: rotate(180deg);
+}
+
+.story-info-body {
+  margin-top: 14px;
+}
+
+.story-info:not(.is-expanded) .story-info-body {
+  display: none;
+}
+
+.story-info-subtitle {
+  margin: 0 0 12px;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--nav-text);
+}
+
+.story-info .creators-list {
+  max-height: none;
+}
+
+/* Wide windows: the column at the left of the player, always open */
+@media (min-aspect-ratio: 17/10) {
+  .story-info {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: calc((100vw - 100vh) / 2);
+    max-height: none;
+    padding: max(32px, env(safe-area-inset-top)) 28px 32px;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .story-info-head {
+    flex-wrap: wrap;
+  }
+
+  .story-info-title {
+    flex-basis: 100%;
+    white-space: normal;
+    font-size: 26px;
+  }
+
+  .story-info-toggle {
+    display: none;
+  }
+
+  .story-info:not(.is-expanded) .story-info-body {
+    display: block;
+  }
+}
+
+/* ---------- Credits: the works of other users used by a story or minigame ---------- */
+
+.credits-title {
+  margin-top: 22px;
+}
+
+.credits-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.credits-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.credits-thumb {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--nav-bg);
+}
+
+/* ---------- The works of the user ("Mis ...") ---------- */
+
+/* In a box of another color, with cards 1/4 smaller */
+.section-own {
+  padding: 18px 20px 20px;
+  border-radius: 22px;
+  background: rgba(2, 40, 62, 0.35);
+}
+
+/* Two boxes in a row (ex: "Mis objetos" and "Mis fondos") are kept apart */
+.section-own + .section-own {
+  margin-top: 12px;
+}
+
+.section-own .section-header {
+  margin-bottom: 14px;
+}
+
+.section-own .section-title {
+  font-size: 20px;
+}
+
+.section-own .card-grid {
+  grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+  gap: 18px 12px;
+}
+
+.section-own .story-title {
+  font-size: 15px;
+}
+
+/* While loading: only one row of placeholders, as the folded section */
+.section-own .card-grid[aria-busy='true'] {
+  grid-template-rows: auto;
+  grid-auto-rows: 0;
+  row-gap: 0;
+  overflow: hidden;
+}
+
+.section-own .section-more {
+  margin-top: 16px;
+}
+
+.section-all {
+  flex-shrink: 0;
+  height: 38px;
+  padding: 0 18px;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 760px) {
+  .section-own {
+    padding: 14px 12px 16px;
+  }
+
+  .section-own .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+    gap: 14px 10px;
+  }
+}
+

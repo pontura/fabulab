@@ -82,9 +82,21 @@ namespace UI.MainApp
                // bgColorsBtn.SetActive(false);
             }
 
-            if (StoryMakerEvents.isEditing)
+            bool openOthersInEdition = UIManager.Instance.OpenOthersInEdition;
+            UIManager.Instance.OpenOthersInEdition = false;
+            if ((StoryMakerEvents.isEditing && UIManager.Instance.IsEditingWorkFromStory)
+                || MiniGames.Editing.MiniGameCreation.IsCreating(MiniGames.Editing.MiniGameOptionKind.Character)
+                || openOthersInEdition)
             {
-                Events.ShowUndo(true);       
+                // Editing a character of the story or of a minigame (also of another user, saved as a new one): edition mode
+                Events.ShowUndo(true);
+                isPreview = false;
+                DoneBtn.SetActive(true);
+                SetTogglePreview();
+            }
+            else if (StoryMakerEvents.isEditing)
+            {
+                Events.ShowUndo(true);
                 Done();
             }
             else
@@ -194,6 +206,10 @@ namespace UI.MainApp
             savingPart = false;
             Events.SetCharacterIdle("");
           //  savePanel.SetActive(false);
+            // The work shown (of another user) is the one the new one comes from: it keeps its creators
+            string shown = Data.Instance.charactersData.GetCurrent();
+            if (!string.IsNullOrEmpty(shown))
+                Data.Instance.charactersData.CopySourceId = shown;
             Data.Instance.charactersData.SetCurrentID("");
             Invoke("SaveWork", 0.1f);
         }
@@ -274,6 +290,8 @@ namespace UI.MainApp
             Events.OnSaveCharacterDone();
             if(StoryMakerEvents.isEditing)
                 UIManager.Instance.BackToStoryFromAvatar(id);
+            else if (MiniGames.Editing.MiniGameCreation.IsCreating(MiniGames.Editing.MiniGameOptionKind.Character))
+                UIManager.Instance.Home(); // back to the minigame editor (MiniGameEditorScreen), that uses it
         }
 
         [SerializeField] OnBoarding_Movie onboarding_Movie;

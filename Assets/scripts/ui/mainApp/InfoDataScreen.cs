@@ -147,12 +147,16 @@ namespace UI.MainApp
             } else if (metadataType == MetadataTypes.characters) {
                 UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);
                 Data.Instance.charactersData.SetCurrentID("");
+                // The duplicate keeps the creators of this one
+                Data.Instance.charactersData.CopySourceId = id;
                 eventName = "character_duplicate";
                 parameterName = "item_id";
                 Close();
             } else if (metadataType == MetadataTypes.so) {
                 UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
                 Data.Instance.sObjectsData.SetCurrentID("");
+                // The duplicate keeps the creators of this one
+                Data.Instance.sObjectsData.CopySourceId = id;
                 eventName = "object_duplicate";
                 parameterName = "item_id";
                 Close();

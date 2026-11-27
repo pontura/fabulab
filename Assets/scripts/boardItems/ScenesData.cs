@@ -29,6 +29,8 @@ namespace BoardItems
         public int likes;
         public bool isPublic;
         public List<string> tags;
+        // The users that made it, the one that modified it last at the end (WorkCreators)
+        public List<string> creators;
         public void AddTag(string tagID) {
             if (tags == null) {
                 tags = new List<string>();
@@ -65,6 +67,7 @@ namespace BoardItems
         public string timestamp;
         public bool isPublic;
         public List<string> tags;
+        public List<string> creators;
     }
 
     public class ScenesData : MonoBehaviour {
@@ -274,6 +277,7 @@ namespace BoardItems
                     fd.speed = e.Value.speed;
                     fd.isPublic = e.Value.isPublic;
                     fd.tags = e.Value.tags;
+                    fd.creators = e.Value.creators;
                     if (e.Value.timestamp == null || e.Value.timestamp == "")
                         fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
                     else
@@ -323,6 +327,7 @@ namespace BoardItems
                     fd.name = e.Value.name;
                     fd.userID = e.Value.userID;
                     fd.speed = e.Value.speed;
+                    fd.creators = e.Value.creators;
                     fd.thumb = new Texture2D(1, 1);
                     //fd.thumb.LoadImage(System.Convert.FromBase64String(e.Value.thumb));
                     filmsData.Add(fd);
@@ -363,6 +368,7 @@ namespace BoardItems
                     fd.speed = sfd.speed;
                     fd.isPublic = sfd.isPublic;
                     fd.tags = sfd.tags;
+                    fd.creators = sfd.creators;
                     if (sfd.timestamp == null || sfd.timestamp == "")
                         fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
                     else
@@ -410,6 +416,7 @@ namespace BoardItems
             fd.isPublic = sfd.isPublic;
             fd.likes = sfd.likes;
             fd.tags = sfd.tags;
+            fd.creators = sfd.creators;
             if (sfd.timestamp == null || sfd.timestamp == "")
                 fd.timestamp = DateTime.MinValue.ToUniversalTime().ToString("o");
             else
@@ -518,6 +525,8 @@ namespace BoardItems
                 fd.speed = currentFilmData.speed;
                 fd.timestamp = currentFilmData.timestamp;
                 fd.userID = currentFilmData.userID;
+                // A new story: the creators of the one it comes from, if any (StoryEditorScreen.Save), plus the user
+                fd.creators = WorkCreators.ModifiedBy(currentFilmData.creators, Data.Instance.userData.userDataInDatabase.uid);
                 userFilmsData.Add(fd);
                 Events.OnFilmMetadataAdded(fd);
             } else {
@@ -526,6 +535,7 @@ namespace BoardItems
                 fd.name = currentFilmData.name;
                 fd.speed = currentFilmData.speed;
                 fd.timestamp = currentFilmData.timestamp;
+                fd.creators = WorkCreators.ModifiedBy(fd.creators, Data.Instance.userData.userDataInDatabase.uid, fd.userID);
             }
 
             userFilmsData = userFilmsData.OrderByDescending(x => x.timestamp).ToList();
@@ -572,6 +582,7 @@ namespace BoardItems
             sfd.timestamp = fd.timestamp;
             if(fd.tags!=null)
                 sfd.tags = fd.tags;
+            sfd.creators = fd.creators;
             FirebaseStoryMakerDBManager.Instance.UpdateFilmDataToServer(fd.id, sfd, OnDone);
         }
     
@@ -604,15 +615,29 @@ namespace BoardItems
             });
         }
 
-        // After saving the story: its copies are saved with what it shows now
+        // After saving the story: its copies are saved with what it shows now. Build copies only works that are loaded,
+        // so first the ones that are not (ex: the objects inside a background, loaded only when it is drawn) are
+        // loaded, like MiniGamesData.Save does
         void SaveStoryAssets(string filmId) {
-            StoryAssetsData assets = StoryAssets.Build(ScenesManager.Instance.Scenes, loadedStoryAssets);
-            foreach (string id in StoryAssets.Missing(ScenesManager.Instance.Scenes, assets))
+            List<SceneData> scenes = ScenesManager.Instance.Scenes;
+            StoryAssetsData previous = loadedStoryAssets;
+            HashSet<string> characterIds = new HashSet<string>();
+            HashSet<string> objectIds = new HashSet<string>();
+            StoryAssets.CollectIds(scenes, characterIds, objectIds);
+            StoryAssets.LoadMissing(characterIds, objectIds, previous, () => SaveStoryAssets(filmId, scenes, previous));
+        }
+
+        void SaveStoryAssets(string filmId, List<SceneData> scenes, StoryAssetsData previous) {
+            StoryAssetsData assets = StoryAssets.Build(scenes, previous);
+            foreach (string id in StoryAssets.Missing(scenes, assets))
                 Debug.LogWarning("# Story " + filmId + " has no copy of " + id);
             Debug.Log("# SaveStoryAssets " + filmId + ": " + StoryAssets.Describe(assets));
             FirebaseStoryMakerDBManager.Instance.SaveStoryAssetsToServer(filmId, assets);
-            loadedStoryAssets = assets;
-            loadedStoryAssetsId = filmId;
+            // Another story may have been opened while loading
+            if (ScenesManager.Instance.currentFDataID == filmId) {
+                loadedStoryAssets = assets;
+                loadedStoryAssetsId = filmId;
+            }
         }
 
         public void LoadFilm(string _id) {

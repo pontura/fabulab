@@ -1,5 +1,6 @@
 import { get, ref } from 'firebase/database'
 import { db } from '../firebase'
+import { parseCreators } from './creators'
 import { byNewest } from './timestamps'
 
 // metadata/stories/{id} (ServerFilmData in the app)
@@ -11,6 +12,8 @@ export interface StoryMeta {
   timestamp: string
   isPublic: boolean
   tags: string[]
+  // The users that made it, the one that modified it last at the end
+  creators: string[]
 }
 
 interface ServerStoryMeta {
@@ -20,6 +23,7 @@ interface ServerStoryMeta {
   timestamp?: string
   isPublic?: boolean | string
   tags?: string[] | Record<string, string>
+  creators?: unknown
 }
 
 // All the stories, loaded once per visit (until invalidateStories)
@@ -48,6 +52,11 @@ export function loadFeaturedStories(): Promise<StoryMeta[]> {
   )
 }
 
+// One story by its id (null: there is none)
+export function findStory(id: string): Promise<StoryMeta | null> {
+  return loadAllStories().then((stories) => stories.find((s) => s.id === id) ?? null)
+}
+
 // The stories of a user, also the private ones, the newest first
 export function loadUserStories(uid: string): Promise<StoryMeta[]> {
   return loadAllStories().then((stories) => stories.filter((s) => s.userID === uid).sort(byNewest))
@@ -72,5 +81,6 @@ function toStoryMeta(id: string, value: ServerStoryMeta): StoryMeta {
     timestamp: value.timestamp ?? '',
     isPublic: value.isPublic === true || value.isPublic === 'true',
     tags: Array.isArray(value.tags) ? value.tags : value.tags ? Object.values(value.tags) : [],
+    creators: parseCreators(value.creators),
   }
 }

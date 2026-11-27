@@ -46,14 +46,40 @@ namespace Yaguar.StoryMaker.Editor
         System.Action onColliderSetDone;
         void SetDefaultAnim() {
             onColliderSetDone = characterManager.SetTemporalDefaultAnim();
+            fitTries = 0;
+            CancelInvoke(nameof(SetAvatarCollider));
             Invoke(nameof(SetAvatarCollider), 4 * Time.deltaTime);
         }
 
+        int fitTries;
+
+        // The characters of a story are hidden until a keyframe shows them, and a hidden one has nothing to fit to:
+        // it is fitted each time it is shown
+        void OnEnable() {
+            if (asset == null)
+                return;
+            fitTries = 0;
+            CancelInvoke(nameof(SetAvatarCollider));
+            Invoke(nameof(SetAvatarCollider), 4 * Time.deltaTime);
+        }
+
+        // Fits the collider to the character, so it can be selected
         void SetAvatarCollider()
-        {   
+        {
+            // Hidden: fitted again when it is shown (OnEnable)
+            if (!gameObject.activeInHierarchy)
+                return;
+            SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
+            // Not loaded yet (ex: a character of another user, loaded from the server): try again
+            if (renderers.Length == 0) {
+                if (++fitTries < MaxFitTries)
+                    Invoke(nameof(SetAvatarCollider), FitRetrySeconds);
+                return;
+            }
+
             BoxCollider2D collider = GetComponent<BoxCollider2D>();
             Bounds worldBounds = new Bounds(transform.position, Vector3.zero);
-            foreach (SpriteRenderer sr in GetComponentsInChildren<SpriteRenderer>()) {
+            foreach (SpriteRenderer sr in renderers) {
                 //if (sr.gameObject.name == "torax_part" || sr.transform.parent.parent.gameObject.name == "head_part")
                 //if (sr.gameObject.name == "torax_part")
                     //Debug.Log($"%Name: {sr.gameObject.name}");

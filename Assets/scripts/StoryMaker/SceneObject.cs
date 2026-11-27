@@ -16,6 +16,13 @@ namespace Yaguar.StoryMaker.Editor
 
         protected Vector2 initDragPos;
 
+        // The collider is fitted to what the object draws. A work of another user is loaded from the server, so it
+        // may draw nothing yet: the fit is tried again until it does (every FitRetrySeconds, MaxFitTries times)
+        protected const float FitRetrySeconds = 0.25f;
+        protected const int MaxFitTries = 60;
+        // Once it draws something, it is fitted once more after this time (its inner objects may still be loading)
+        protected const float RefitSeconds = 1f;
+
         public void SetData(SOData data)
         {
 

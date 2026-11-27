@@ -18,7 +18,7 @@ namespace UI.MainApp.Home.User
             base.Start();
             minIndex = 1;
             Cancel();
-            Events.DuplicateSO += DuplicateSO;
+            Events.UseOthersSO += UseOthersObject;
             StoryMakerEvents.ShowSoButtons += ShowSoButtons;
         }
         public override void Show(bool isOn)
@@ -30,7 +30,7 @@ namespace UI.MainApp.Home.User
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            Events.DuplicateSO -= DuplicateSO;
+            Events.UseOthersSO -= UseOthersObject;
             StoryMakerEvents.ShowSoButtons -= ShowSoButtons;
         }
         protected override void LoadNext()
@@ -55,10 +55,6 @@ namespace UI.MainApp.Home.User
 
         protected override bool IsOwn(string id) {
             return Data.Instance.sObjectsData.data.Exists(x => x.id == id);
-        }
-
-        protected override void DuplicateAndSelect(string id) {
-            DuplicateSO(id);
         }
 
         protected override CharacterMetaData GetMeta(string id) {
@@ -163,50 +159,12 @@ namespace UI.MainApp.Home.User
 
 
 
-        string duplicateID;
-        void DuplicateSO(string duplicateID)
+        // Chosen in the list of all the objects of the community
+        void UseOthersObject(string id)
         {
-            print("DuplicateSO open: " + duplicateID);
-            this.duplicateID = duplicateID;
-            Events.OnLoadingParent(null, DuplicateAction);
-        }
-        void DuplicateAction()
-        {
-            Events.OnLoading(true);
-            Data.Instance.sObjectsData.Duplicate(duplicateID, OnDuplicated);
             GetComponent<AddNew>().Show(false, null);
-            //  UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);
             Cancel();
-        }
-        float loops;
-        private void OnDuplicated(bool success, string duplicateID)
-        {
-            this.duplicateID = duplicateID;
-            if (success) {
-                loops = 0;
-                LoopTillMetaReady();
-            } else {
-                Events.OnLoading(false);
-                StoryMakerEvents.SetEditing(false);
-            }
-		}
-        private void LoopTillMetaReady()
-        {
-            loops++;
-            SOPartData part = Data.Instance.sObjectsData.data.Find(x => x.id == duplicateID);
-            if (part != null)
-            {
-                AddOwnElement(part.id);
-                Events.OnLoading(false);
-                SelectWork(duplicateID);
-            }
-            else
-            {
-                if (loops > 100) //timeOut:
-                    Events.OnLoading(false);
-                else
-                    Invoke(nameof(LoopTillMetaReady), 0.25f);
-            }
+            UseOthersWork(id);
         }
 
         protected override void LoadImage(int index, ItemSelectorBtn isb) {

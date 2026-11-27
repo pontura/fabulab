@@ -61,9 +61,10 @@ public static class Events
     public static System.Action<string> OnPresetLoaded = delegate { };
 
     public static System.Action<UIManager.screenType> ShowScreen = delegate { };
-    public static System.Action<string> DuplicateCharacter = delegate { };
-    public static System.Action<string> DuplicateSO = delegate { };
-    public static System.Action<string> DuplicateSOBG = delegate { };
+    // A work of another user chosen in the story editor: the story uses it as it is (no copy in the user's works)
+    public static System.Action<string> UseOthersCharacter = delegate { };
+    public static System.Action<string> UseOthersSO = delegate { };
+    public static System.Action<string> UseOthersSOBG = delegate { };
 
     public static System.Action OnAllFilmMetadataLoadDone = delegate { };
     public static System.Action OnAllUserDataLoadDone = delegate { };

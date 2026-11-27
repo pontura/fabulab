@@ -174,6 +174,7 @@ namespace UI
             Events.ShowScreen(UIManager.screenType.MiniGame);
         }
         public void CreateSelected(int id, bool skipOnBoarding = false) {
+            editedFromStory = null;
             if (id == 1) {
                 if (!skipOnBoarding && !Data.Instance.userData.userDataInDatabase.onboardings.stories)
                     Events.OnBoardingXtraStep(OnBoardingManager.steps.video_story, NewStory);
@@ -245,6 +246,7 @@ namespace UI
         }
         void NewObject(SObjectData.types type) {
             boardUI.items.DeleteAll();
+            Data.Instance.sObjectsData.CopySourceId = ""; // made from scratch
             Data.Instance.sObjectsData.SetType(type);
             boardUI.SetEditingType(editingTypes.OBJECT);
             Events.OnCharacterReset();
@@ -261,6 +263,10 @@ namespace UI
             boardUI.SetEditingType(type);
             boardUI.LoadWork(id);
             if (StoryMakerEvents.isEditing) return;
+            ShowBoardEditor(type, id);
+        }
+
+        void ShowBoardEditor(editingTypes type, string id) {
             switch (type) {
                 case editingTypes.CHARACTER:
                     Data.Instance.charactersData.SetCurrentID(id);
@@ -302,6 +308,7 @@ namespace UI
             backToScreen[backToScreen.Count - 1] == screenType.Creation_Objects)
             ) {
 				if (backToScreen.Count > 1) backToScreen.RemoveAt(backToScreen.Count - 1);
+				editedFromStory = null;
 				Events.ShowScreen(UIManager.screenType.StoryMaker);
 			} else if (backToScreen.Count > 0 && backToScreen[backToScreen.Count - 1] == screenType.WorkDetail) {
                 Events.OnNewBodyPartSelected(null);
@@ -380,7 +387,89 @@ namespace UI
                 workDetailUI.ShowWorkDetail(wd.id, true);
             }
         }
+        // Opens a story in the story editor to edit it (like InfoDataScreen.OpenWork). One of another user is saved
+        // as a new story of the user (StoryEditorScreen.InitSaving). False when the story is not loaded
+        public bool OpenStoryForEdition(string id) {
+            ScenesData scenes = Data.Instance.scenesData;
+            bool own = scenes.userFilmsData.Exists(f => f.id == id);
+            if (!own && !scenes.filmsData.Exists(f => f.id == id))
+                return false;
+            Events.OnLoadingParent(null, () => {
+                Events.OnLoading(true);
+                if (own)
+                    scenes.LoadUserFilm(id);
+                else
+                    scenes.LoadFilm(id);
+                boardUI.SetEditingType(editingTypes.NONE);
+                Events.ShowScreen(UIManager.screenType.StoryMaker);
+                Invoke(nameof(SetNewStoryEditionState), Time.deltaTime * 2);
+            });
+            return true;
+        }
+
+        // ---------- Editing a work of the story ----------
+
+        // A character, object or background of the story, opened in the board editor from the story editor
+        class EditedWork {
+            public editingTypes type;
+            public SObjectData.types objectType;
+            public string id;
+        }
+        EditedWork editedFromStory;
+
+        // True while a work of the story is edited in the board (see EditWorkFromStory)
+        public bool IsEditingWorkFromStory => editedFromStory != null;
+
+        // A character of another user opened to modify it (WebEditorController): the character editor opens in
+        // edition mode instead of preview. Read (and cleared) by CharacterEdition when it is shown
+        public bool OpenOthersInEdition { get; set; }
+
+        // Opens a character, object or background of the story in the board editor. An own work is edited as it
+        // is; a work of another user is saved as a new work of the user (CharacterEdition.Save / ObjectsEdition.Done
+        // save as new what is not in the works of the user). Once saved, the story shows the saved one in place of
+        // the edited one, in all its keyframes (BackToStoryFromEdition)
+        public void EditWorkFromStory(editingTypes type, string id, SObjectData.types objectType = SObjectData.types.generic) {
+            if (string.IsNullOrEmpty(id))
+                return;
+            editedFromStory = new EditedWork { type = type, objectType = objectType, id = id };
+            // Like AddNew: while it is on, saving or leaving the board goes back to the story (CharacterEdition.OnSaved,
+            // ObjectsEdition.OnSoSaved, Back) instead of the home, that would close the web editor.
+            // StoryEditorScreen.Init sets it again from the story once back there
+            StoryMakerEvents.SetEditing(true);
+            if (type == editingTypes.OBJECT)
+                Data.Instance.sObjectsData.SetType(objectType);
+            boardUI.SetEditingType(type);
+            boardUI.LoadWork(id);
+            ShowBoardEditor(type, id);
+        }
+
+        // The edited work was saved with this id: the same one (own work) or a new one (copy of another user's)
+        void BackToStoryFromEdition(string savedId) {
+            EditedWork edited = editedFromStory;
+            editedFromStory = null;
+            Events.ShowScreen(UIManager.screenType.StoryMaker);
+            StartCoroutine(ShowEditedWorkC(edited, savedId));
+        }
+        IEnumerator ShowEditedWorkC(EditedWork edited, string savedId) {
+            Events.OnLoading(true);
+            yield return new WaitForSeconds(0.5f);
+
+            SceneObjectsManager sceneObjects = Scenario.Instance.sceneObjectsManager;
+            if (edited.type == editingTypes.CHARACTER)
+                sceneObjects.ReplaceWork(edited.id, savedId, true);
+            else if (edited.objectType == SObjectData.types.background)
+                sceneObjects.ReplaceBackground(edited.id, savedId);
+            else
+                sceneObjects.ReplaceWork(edited.id, savedId, false);
+
+            Events.OnLoading(false);
+        }
+
         public void BackToStory(SObjectData newSOData) {
+            if (editedFromStory != null) {
+                BackToStoryFromEdition(newSOData.id);
+                return;
+            }
             Events.ShowScreen(UIManager.screenType.StoryMaker);
             StartCoroutine(AddSoAsyncC(newSOData));
         }
@@ -402,6 +491,10 @@ namespace UI
             Events.OnLoading(false);
         }
         public void BackToStoryFromAvatar(string id) {
+            if (editedFromStory != null) {
+                BackToStoryFromEdition(id);
+                return;
+            }
             Events.ShowScreen(UIManager.screenType.StoryMaker);
             StartCoroutine(AddAvatarAsyncC(id));
         }

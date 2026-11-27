@@ -32,6 +32,10 @@ namespace BoardItems
         public List<CharacterData> userCharacters;
         public List<CharacterData> othersCharacters;
 
+        // The work the one being saved as new comes from (another user's, or a duplicate): its creators are kept
+        // (WorkCreators). Empty: made from scratch. Cleared when a work is opened in the board (BoardUI.LoadWork)
+        public string CopySourceId { get; set; } = "";
+
         public List<SOPartData> heads;
         public List<SOPartData> bellies;
         public List<SOPartData> hands;
@@ -281,7 +285,9 @@ namespace BoardItems
             if (currentID == "") // is new character
             {
                 md = new CharacterMetaData() { id = id, userID = Data.Instance.userData.userDataInDatabase.uid, thumb = currentCharacter.thumb, timestamp = tstamp };
-                md.AddCreator(md.userID);
+                // Made from another one: its creators, plus the user
+                CharacterMetaData source = string.IsNullOrEmpty(CopySourceId) ? null : GetMeta(CopySourceId);
+                md.creators = WorkCreators.ModifiedBy(source?.creators, md.userID, source?.userID);
                 if(Game)
                 {
                     md.tags = new List<string>();
@@ -296,10 +302,18 @@ namespace BoardItems
                 md = userCharactersMetaData.Find(x => x.id == currentID);
                 md.thumb = currentCharacter.thumb;
                 md.timestamp = tstamp;
+                md.creators = WorkCreators.ModifiedBy(md.creators, Data.Instance.userData.userDataInDatabase.uid, md.userID);
             }
+            CopySourceId = "";
 
             userCharactersMetaData = userCharactersMetaData.OrderByDescending(x => x.timestamp).ToList();
             charactersMetaData = charactersMetaData.OrderByDescending(x => x.likes).ToList();
+
+            // Edited from the minigame editor: it gets the tag "minigame", and the editor uses it once back there
+            if (MiniGames.Editing.MiniGameCreation.IsCreating(MiniGames.Editing.MiniGameOptionKind.Character)) {
+                md.AddTag(MiniGames.Editing.MiniGameCreation.TagId);
+                MiniGames.Editing.MiniGameCreation.OnCreated(id);
+            }
 
             currentCharacter.id = id;
             currentID = id;

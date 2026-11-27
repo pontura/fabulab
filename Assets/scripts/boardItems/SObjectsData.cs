@@ -24,6 +24,10 @@ namespace BoardItems
         public List<PropMetaData> metaData;
         public List<PropMetaData> userMetaData;
 
+        // The work the one being saved as new comes from (another user's, or a duplicate): its creators are kept
+        // (WorkCreators). Empty: made from scratch. Cleared when a work is opened in the board (BoardUI.LoadWork)
+        public string CopySourceId { get; set; } = "";
+
         string initTimeStamp;
 
         [SerializeField] SObjectData.types currentType;
@@ -238,22 +242,27 @@ namespace BoardItems
             if (currentID == "") // is new character
             {
                 md = new PropMetaData() { id = id, type = currentSO.type, userID = Data.Instance.userData.userDataInDatabase.uid, timestamp = tstamp };
-                md.AddCreator(md.userID);
+                // Made from another one: its creators, plus the user
+                PropMetaData source = string.IsNullOrEmpty(CopySourceId) ? null : GetMeta(CopySourceId);
+                md.creators = WorkCreators.ModifiedBy(source?.creators, md.userID, source?.userID);
                 userMetaData.Add(md);
                 metaData.Add(md);
             } else {
                 md = userMetaData.Find(x => x.id == currentID);
                 md.timestamp = tstamp;
+                md.creators = WorkCreators.ModifiedBy(md.creators, Data.Instance.userData.userDataInDatabase.uid, md.userID);
             }
+            CopySourceId = "";
 
             metaData = metaData.OrderByDescending(x => x.likes).ToList();
             userMetaData = userMetaData.OrderByDescending(x => x.timestamp).ToList();
 
             currentSO.id = id;
 
-            // A background made from the minigame editor: only the ones with this tag are offered there
-            bool forMiniGame = OnDuplicated == null && md.type == SObjectData.types.background
-                && MiniGames.Editing.MiniGameCreation.IsCreating(MiniGames.Editing.MiniGameOptionKind.Background);
+            // A background or object made or edited from the minigame editor: it gets the tag "minigame" (only the
+            // backgrounds with it are offered there), and the editor uses it once back there
+            bool forMiniGame = OnDuplicated == null && MiniGames.Editing.MiniGameCreation.IsCreating(
+                md.type == SObjectData.types.background ? MiniGames.Editing.MiniGameOptionKind.Background : MiniGames.Editing.MiniGameOptionKind.Object);
             if (forMiniGame) {
                 md.AddTag(MiniGames.Editing.MiniGameCreation.TagId);
                 MiniGames.Editing.MiniGameCreation.OnCreated(id);

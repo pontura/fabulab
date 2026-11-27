@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { auth } from '../firebase'
 
 // The full screen Unity WebGL builds that run the app as the signed in user (the editor, the minigames).
@@ -26,9 +26,11 @@ interface Props {
   // full: the whole window, left with the back button of the app once open (the editor).
   // player: like the story player, a square frame with a close button always shown (the minigames)
   layout?: 'full' | 'player'
+  // player only: shown next to the frame (ex: the name and creators of the minigame)
+  info?: ReactNode
 }
 
-export function UnityAppOverlay({ url, source, label, texts, onClose, layout = 'full' }: Props) {
+export function UnityAppOverlay({ url, source, label, texts, onClose, layout = 'full', info }: Props) {
   const isPlayer = layout === 'player'
   const iframe = useRef<HTMLIFrameElement>(null)
   const closeButton = useRef<HTMLButtonElement>(null)
@@ -164,6 +166,8 @@ export function UnityAppOverlay({ url, source, label, texts, onClose, layout = '
           )}
         </div>
       )}
+
+      {isPlayer && info}
 
       {/* full: once open, it is left with the back button of the app (it asks before losing changes) */}
       {(isPlayer || status !== 'ready') && (

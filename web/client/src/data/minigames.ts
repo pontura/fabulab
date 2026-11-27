@@ -1,5 +1,6 @@
 import { get, ref } from 'firebase/database'
 import { db } from '../firebase'
+import { parseCreators } from './creators'
 import { byNewest } from './timestamps'
 
 // metadata/minigames/{id} (MiniGameMetaData in the app). Their thumbnail: images/{userID}/minigames/{id}.jpg
@@ -15,6 +16,8 @@ export interface MiniGameMeta {
   sourceId: string
   // An original of Fabulab, the model the users copy
   isOfficial: boolean
+  // The users that made it, the one that modified it last at the end
+  creators: string[]
 }
 
 interface ServerMiniGameMeta {
@@ -25,6 +28,7 @@ interface ServerMiniGameMeta {
   isPublic?: boolean | string
   timestamp?: string
   sourceId?: string
+  creators?: unknown
 }
 
 let cache: Promise<MiniGameMeta[]> | null = null
@@ -53,6 +57,11 @@ export function loadCommunityMiniGames(): Promise<MiniGameMeta[]> {
   return loadAll().then((all) => all.filter((g) => !g.isOfficial && g.isPublic).sort(byNewest))
 }
 
+// One minigame by its id (null: there is none, ex: the id of a mechanic like runner)
+export function findMiniGame(id: string): Promise<MiniGameMeta | null> {
+  return loadAll().then((all) => all.find((g) => g.id === id) ?? null)
+}
+
 // The minigames of a user, also the private ones, the newest first
 export function loadUserMiniGames(uid: string): Promise<MiniGameMeta[]> {
   return loadAll().then((all) => all.filter((g) => g.userID === uid).sort(byNewest))
@@ -73,5 +82,6 @@ async function fetchAll(): Promise<MiniGameMeta[]> {
       timestamp: v.timestamp ?? '',
       sourceId: v.sourceId ?? '',
       isOfficial: v.isOfficial === true || v.isOfficial === 'true',
+      creators: parseCreators(v.creators),
     }))
 }

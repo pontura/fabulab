@@ -25,12 +25,46 @@ namespace Yaguar.StoryMaker.Editor
             objectManager = asset.GetComponent<SceneObjectManager>();
             objectManager.Init();
 
-            Invoke("Delayed", 0.1f);
+            StartFit();
         }
+
+        // The objects of a story are hidden until a keyframe shows them, and a hidden object has nothing to fit to:
+        // it is fitted each time it is shown
+        void OnEnable() {
+            if (asset != null)
+                StartFit();
+        }
+
+        int fitTries;
+        bool refitted;
+
+        void StartFit() {
+            fitTries = 0;
+            refitted = false;
+            CancelInvoke(nameof(Delayed));
+            Invoke(nameof(Delayed), 0.1f);
+        }
+
+        // Fits the collider to the object, so it can be selected
         void Delayed() {
+            // Hidden: fitted again when it is shown (OnEnable)
+            if (!gameObject.activeInHierarchy)
+                return;
+            SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
+            // Not loaded yet (ex: an object of another user, loaded from the server): try again
+            if (renderers.Length == 0) {
+                if (++fitTries < MaxFitTries)
+                    Invoke(nameof(Delayed), FitRetrySeconds);
+                return;
+            }
+            if (!refitted) {
+                refitted = true;
+                Invoke(nameof(Delayed), RefitSeconds);
+            }
+
             BoxCollider2D collider = GetComponent<BoxCollider2D>();
             Bounds worldBounds = new Bounds(transform.position, Vector3.zero);
-            foreach (SpriteRenderer sr in GetComponentsInChildren<SpriteRenderer>()) {
+            foreach (SpriteRenderer sr in renderers) {
                 worldBounds.Encapsulate(sr.bounds);
             }
                         

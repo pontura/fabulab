@@ -3,8 +3,10 @@ using System.Collections.Generic;
 
 namespace MiniGames.Editing
 {
-    // A work (story or background) being created from the minigame editor (the "Crear" buttons). While it lasts:
-    // - the work saved gets the tag "minigame" (ScenesData, SObjectsData), the only ones the minigame editor offers
+    // A work being created (story or background: the "Crear" buttons) or edited (also characters and objects: the
+    // "Editar" buttons) from the minigame editor. While it lasts:
+    // - the work saved gets the tag "minigame" (ScenesData, SObjectsData, CharactersData); the minigame editor offers
+    //   only the stories and backgrounds with it
     // - leaving its editor (to the home: after saving, or with the back button) goes back to the minigame editor,
     //   that assigns it if it was saved (MiniGameEditorScreen). WebEditorController does not close the web editor
     public static class MiniGameCreation

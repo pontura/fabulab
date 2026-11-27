@@ -105,31 +105,29 @@ namespace UI.MainApp.Home.User
                 GetComponent<AddNew>().SetActiveButton(0, true);
         }
 
-        // Whether the item belongs to the user. Items of the community are duplicated before using them
+        // Whether the item belongs to the user. Items of the community are loaded before using them
         protected virtual bool IsOwn(string id) {
             return true;
         }
 
-        // Duplicates an item of the community: once ready, the duplicate is added to the list and selected
-        protected virtual void DuplicateAndSelect(string id) { }
-
-        // Adds the button of a new own item after the other own ones, before the community ones
-        protected void AddOwnElement(string id) {
-            ItemSelectorBtn[] buttons = worksContainer.GetComponentsInChildren<ItemSelectorBtn>(true);
-            int index = buttons.Length > 0 ? buttons[0].transform.GetSiblingIndex() : worksContainer.childCount;
-            foreach (ItemSelectorBtn btn in buttons) {
-                if (IsOwn(btn.Id))
-                    index = btn.transform.GetSiblingIndex() + 1;
-            }
-            AddElement(id).transform.SetSiblingIndex(index);
-            ResetAndSetScroll();
+        // A work of another user is used as it is, by its id: it is not copied to the works of the user. The story
+        // keeps its own copy of it in storyAssets when it is saved (StoryAssets.Build).
+        // It is placed at once, without a loading screen: the scene object loads its content by itself
+        // (Items.LoadBoardItemForStory) and shows it when it arrives (Prop / Avatar fit their collider then)
+        protected void UseOthersWork(string id) {
+            PlaceWork(id);
         }
 
         protected virtual void SelectWork(string id){
             if (!IsOwn(id)) {
-                DuplicateAndSelect(id);
+                UseOthersWork(id);
                 return;
             }
+            PlaceWork(id);
+        }
+
+        // Adds the work to the scene, or replaces the selected one with it
+        void PlaceWork(string id) {
             if (ReplaceEnabled) {
                 Scenario.Instance.sceneObjectsManager.ReplaceSelected(id);
                 ReplaceEnabled = false;

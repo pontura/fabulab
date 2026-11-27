@@ -187,7 +187,11 @@ namespace UI
 
         public void LoadWork(string id)
         {
-            items.DeleteAll();            
+            items.DeleteAll();
+            // A work opened: what a new one comes from is decided when it is saved (CharacterEdition / ObjectsEdition
+            // SaveNew, InfoDataScreen.DuplicateWork)
+            Data.Instance.charactersData.CopySourceId = "";
+            Data.Instance.sObjectsData.CopySourceId = "";
             switch (editingType) {
                 case editingTypes.CHARACTER:
                     Data.Instance.charactersData.SetCurrentID(id);

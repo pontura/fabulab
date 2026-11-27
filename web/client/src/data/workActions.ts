@@ -69,6 +69,7 @@ export async function duplicateWork(kind: ManagedKind, uid: string, id: string, 
     [`${kind}/${uid}/${copyId}`]: data,
     [`metadata/${kind}/${copyId}`]: {
       ...rest,
+      creators: modifiedBy(rest.creators, uid, rest.userID),
       userID: uid,
       name: copyName(name),
       isPublic: false,
@@ -107,6 +108,19 @@ async function copyImage(from: string, to: string): Promise<void> {
   } catch (e) {
     console.warn('Could not copy the thumbnail', e)
   }
+}
+
+// The users that made a work, the one that modified it last at the end (WorkCreators in the app): the ones it had
+// (or its author, when it has none) with uid moved to the end
+function modifiedBy(creators: unknown, uid: string, author: unknown): string[] {
+  const list = Array.isArray(creators)
+    ? creators
+    : creators && typeof creators === 'object'
+      ? Object.values(creators)
+      : []
+  const result = list.filter((c): c is string => typeof c === 'string' && c !== '')
+  if (result.length === 0 && typeof author === 'string' && author) result.push(author)
+  return [...result.filter((c) => c !== uid), uid]
 }
 
 function copyName(name: string): string {

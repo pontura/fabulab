@@ -16,12 +16,16 @@ namespace MiniGames.Editing
         [SerializeField] MiniGameEditorListItem itemPrefab;
         [Tooltip("Required: opens the picker to add one")]
         [SerializeField] Button addButton;
+        [Tooltip("Obstacles only: opens the picker to add an object (addButton adds a character)")]
+        [SerializeField] Button addObjectButton;
 
         public event Action OnAdd;
+        public event Action OnAddObject;
         readonly List<MiniGameEditorListItem> items = new List<MiniGameEditorListItem>();
 
         void Awake() {
             if (addButton != null) addButton.onClick.AddListener(() => OnAdd?.Invoke());
+            if (addObjectButton != null) addObjectButton.onClick.AddListener(() => OnAddObject?.Invoke());
             if (itemPrefab != null) itemPrefab.gameObject.SetActive(false);
         }
 

@@ -1,5 +1,5 @@
 import { asset } from '../common/asset'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 
 // The Unity WebGL build of the scene StoryPlayer (template Assets/WebGLTemplates/FabulabPlayer).
 // By default it is served by this site from public/player
@@ -18,9 +18,11 @@ interface Props {
   // The story to show. null: the player is closed (it stays loaded, hidden and paused)
   storyId: string | null
   onClose: () => void
+  // Shown next to the player while it is open (ex: the name, likes and creators of the story)
+  info?: ReactNode
 }
 
-export function StoryPlayerOverlay({ storyId, onClose }: Props) {
+export function StoryPlayerOverlay({ storyId, onClose, info }: Props) {
   const iframe = useRef<HTMLIFrameElement>(null)
   const [src, setSrc] = useState<string | null>(null)
   const [status, setStatus] = useState<Status>('checking')
@@ -109,6 +111,8 @@ export function StoryPlayerOverlay({ storyId, onClose }: Props) {
           )}
         </div>
       )}
+
+      {open && info}
 
       <button ref={closeButton} type="button" className="player-close" onClick={onClose} aria-label="Cerrar">
         <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">

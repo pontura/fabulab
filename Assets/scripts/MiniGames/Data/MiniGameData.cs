@@ -4,12 +4,15 @@ using UnityEngine;
 
 namespace MiniGames
 {
-    // A character used as obstacle, doing an action
+    // An obstacle of the lanes: a character doing an action, or an object (objectId set)
     [Serializable]
     public class MiniGameObstacle
     {
         public string characterId;
         public CharacterAction action = CharacterAction.Stand;
+        public string objectId;
+
+        public bool IsObject => !string.IsNullOrEmpty(objectId);
     }
 
     // What a minigame shows, saved in minigames/{uid}/{id}. The mechanic (ex: runner) is the game that plays it
@@ -33,20 +36,22 @@ namespace MiniGames
         public IEnumerable<string> CharacterIds() {
             if (!string.IsNullOrEmpty(playerCharacterId)) yield return playerCharacterId;
             foreach (MiniGameObstacle o in obstacles)
-                if (!string.IsNullOrEmpty(o.characterId)) yield return o.characterId;
+                if (!o.IsObject && !string.IsNullOrEmpty(o.characterId)) yield return o.characterId;
         }
 
         public IEnumerable<string> ObjectIds() {
             if (!string.IsNullOrEmpty(backgroundId)) yield return backgroundId;
             foreach (string id in parallaxObjectIds)
                 if (!string.IsNullOrEmpty(id)) yield return id;
+            foreach (MiniGameObstacle o in obstacles)
+                if (o.IsObject) yield return o.objectId;
         }
 
         public MiniGameConfig Clone() {
             MiniGameConfig copy = (MiniGameConfig)MemberwiseClone();
             copy.obstacles = new List<MiniGameObstacle>();
             foreach (MiniGameObstacle o in obstacles ?? new List<MiniGameObstacle>())
-                copy.obstacles.Add(new MiniGameObstacle { characterId = o.characterId, action = o.action });
+                copy.obstacles.Add(new MiniGameObstacle { characterId = o.characterId, action = o.action, objectId = o.objectId });
             copy.parallaxObjectIds = new List<string>(parallaxObjectIds ?? new List<string>());
             return copy;
         }
@@ -76,6 +81,8 @@ namespace MiniGames
         // An original of Fabulab, uploaded from the Unity editor (MiniGame: "Subir como minijuego oficial"). The
         // users make their versions of it. Only an admin can set it (database.rules.json)
         public bool isOfficial;
+        // The users that made it, the one that modified it last at the end (BoardItems.BoardData.WorkCreators)
+        public List<string> creators;
         [NonSerialized] public Texture2D thumb;
     }
 }

@@ -1,11 +1,23 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { RemoteImage } from '../common/RemoteImage'
+import { UserAvatar, useUsername } from '../common/UserAvatar'
+import { lastCreator } from '../data/creators'
 import { imageUrl, type ImageFolder } from '../data/images'
+import type { EditorRequest } from '../editor/EditorOverlay'
+import { CreatorsDialog } from './CreatorsDialog'
+import { useHomeActions } from './HomeActions'
+import { isLikeKind, LikeButton } from './LikeButton'
 
 interface Props {
   id: string
   userID: string
   name: string
+  // The users that made it: the last one is shown on the card. Without them, its author
+  creators?: string[]
+  // When it was modified last (shown in the list of its creators)
+  timestamp?: string
+  // Objects only: SObjectData.types (1: background)
+  type?: number
   // Without it, no likes are shown (works that have none, like the minigames)
   likes?: number
   isPublic?: boolean
@@ -20,11 +32,15 @@ interface Props {
   onSecondary?: () => void
 }
 
-// Card of a story, a character, an object or a minigame: its picture, likes and name
+// Card of a story, a character, an object or a minigame: its picture and name. On the picture: top right, the one
+// that modified it last; bottom right, its likes; top left, "Privado"
 export function WorkCard({
   id,
   userID,
   name,
+  creators,
+  timestamp,
+  type,
   likes,
   isPublic,
   folder,
@@ -36,16 +52,16 @@ export function WorkCard({
 }: Props) {
   const loadThumb = useCallback(() => imageUrl(userID, folder, id), [userID, folder, id])
   const title = name.trim() || (folder === 'stories' ? 'Sin título' : 'Sin nombre')
+  const [showCreators, setShowCreators] = useState(false)
+  const { uid, openEditor } = useHomeActions()
+  // A work of another user can be modified: the editor saves it as a new one of the user
+  const modifyRequest = userID !== uid ? editorRequestFor(folder, id, type) : null
+  // Works saved before there were creators: their author
+  const allCreators = creators && creators.length > 0 ? creators : userID ? [userID] : []
 
   const content = (
     <>
       <RemoteImage load={loadThumb} alt={title} />
-      {likes !== undefined && (
-        <span className="story-likes" aria-label={`${likes} me gusta`}>
-          <HeartIcon />
-          {likes}
-        </span>
-      )}
       {showPrivacy && !isPublic && <span className="work-private">Privado</span>}
       {action && (
         <span className="story-play" aria-hidden="true">
@@ -57,6 +73,9 @@ export function WorkCard({
 
   return (
     <article className="story-card">
+      {/* The picture and, over it, the one that modified it last: a button of its own (not inside the one of the
+          picture), that shows everyone that took part */}
+      <div className="story-thumb-frame">
       {onOpen ? (
         <button
           type="button"
@@ -69,13 +88,66 @@ export function WorkCard({
       ) : (
         <div className="story-thumb">{content}</div>
       )}
+      {likes !== undefined && isLikeKind(folder) && <LikeButton kind={folder} workId={id} likes={likes} />}
+      {allCreators.length > 0 && (
+        <CreatorButton uid={lastCreator(allCreators, userID)} onClick={() => setShowCreators(true)} />
+      )}
+      </div>
       <h3 className="story-title">{title}</h3>
       {onSecondary && secondaryLabel && (
         <button type="button" className="card-secondary" onClick={onSecondary}>
           {secondaryLabel}
         </button>
       )}
+      {showCreators && (
+        <CreatorsDialog
+          title={title}
+          creators={allCreators}
+          timestamp={timestamp}
+          onModify={
+            modifyRequest
+              ? () => {
+                  setShowCreators(false)
+                  openEditor(modifyRequest)
+                }
+              : undefined
+          }
+          onClose={() => setShowCreators(false)}
+        />
+      )}
     </article>
+  )
+}
+
+// How the editor opens a work of this folder
+function editorRequestFor(folder: ImageFolder, id: string, type?: number): EditorRequest | null {
+  switch (folder) {
+    case 'stories':
+      return { type: 'story', id }
+    case 'characters':
+      return { type: 'character', id }
+    case 'so':
+      return { type: type === 1 ? 'background' : 'object', id }
+    case 'minigames':
+      return { type: 'minigame', id }
+    default:
+      return null
+  }
+}
+
+// The one that modified the work last, with its name on hover: shows everyone that took part
+function CreatorButton({ uid, onClick }: { uid: string; onClick: () => void }) {
+  const name = useUsername(uid)
+  return (
+    <button
+      type="button"
+      className="work-creator"
+      onClick={onClick}
+      title={name || undefined}
+      aria-label={name ? `Hecho por ${name}: ver quiénes participaron` : 'Ver quiénes participaron'}
+    >
+      <UserAvatar uid={uid} name={name} />
+    </button>
   )
 }
 
@@ -105,17 +177,6 @@ export function CreateCard({ label, onCreate, icon = 'plus' }: CreateCardProps) 
         <span className="create-label">{label}</span>
       </button>
     </article>
-  )
-}
-
-function HeartIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-      <path
-        fill="currentColor"
-        d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.1 5.3 3 1.7-1.9 3.2-3 5.3-3 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"
-      />
-    </svg>
   )
 }
 

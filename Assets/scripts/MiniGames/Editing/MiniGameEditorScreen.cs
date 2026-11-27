@@ -104,11 +104,28 @@ namespace MiniGames.Editing
                 outroSlot.OnPick += () => Pick(MiniGameOptionKind.Story, "Historia de game over", o => { config.outroStoryId = o.id; Changed(false); });
                 outroSlot.OnCreate += () => Create(MiniGameOptionKind.Story, id => { config.outroStoryId = id; return false; });
             }
-            if (obstaclesList != null)
+            // Edit: opens the work in its editor. An own one is edited as it is; one of another user is saved as a new
+            // one of the user. Either way it gets the tag "minigame" and the minigame uses the saved one
+            if (backgroundSlot != null)
+                backgroundSlot.OnEdit += () => Edit(MiniGameOptionKind.Background, config.backgroundId, id => { config.backgroundId = id; return true; });
+            if (playerSlot != null)
+                playerSlot.OnEdit += () => Edit(MiniGameOptionKind.Character, config.playerCharacterId, id => { config.playerCharacterId = id; return true; });
+            if (introSlot != null)
+                introSlot.OnEdit += () => Edit(MiniGameOptionKind.Story, config.introStoryId, id => { config.introStoryId = id; return false; });
+            if (outroSlot != null)
+                outroSlot.OnEdit += () => Edit(MiniGameOptionKind.Story, config.outroStoryId, id => { config.outroStoryId = id; return false; });
+
+            // The obstacles of the lanes: characters doing an action, or objects
+            if (obstaclesList != null) {
                 obstaclesList.OnAdd += () => Pick(MiniGameOptionKind.Character, "Obstáculo", o => {
                     config.obstacles.Add(new MiniGameObstacle { characterId = o.id });
                     Changed(true);
                 });
+                obstaclesList.OnAddObject += () => Pick(MiniGameOptionKind.Object, "Obstáculo", o => {
+                    config.obstacles.Add(new MiniGameObstacle { objectId = o.id });
+                    Changed(true);
+                });
+            }
             if (parallaxList != null)
                 parallaxList.OnAdd += () => Pick(MiniGameOptionKind.Object, "Objeto del fondo", o => {
                     config.parallaxObjectIds.Add(o.id);
@@ -152,7 +169,8 @@ namespace MiniGames.Editing
 
         protected override void ShowScreen(UIManager.screenType type) {
             // The editor of the work being created was left (saved or not): back here
-            if (type == UIManager.screenType.Home && creating != null) {
+            // (to the home, or straight back here with the back button)
+            if ((type == UIManager.screenType.Home || type == UIManager.screenType.MiniGameEditor) && creating != null) {
                 StartCoroutine(ReturnFromCreating());
                 return;
             }
@@ -226,6 +244,63 @@ namespace MiniGames.Editing
             });
         }
 
+        // --- Editing a work of the minigame ---
+
+        // Opens a work of the minigame in its editor, like Create: once saved (with the tag "minigame") and left, the
+        // minigame uses the saved one. An own work keeps its id; one of another user is saved as a new work of the
+        // user (CharacterEdition, ObjectsEdition and StoryEditorScreen save as new what is not of the user)
+        void Edit(MiniGameOptionKind kind, string id, Func<string, bool> assign) {
+            if (creating != null || string.IsNullOrEmpty(id)) return;
+            Events.OnLoading(true);
+            MiniGameCreation.GetTagId(tagId => {
+                Events.OnLoading(false);
+                if (string.IsNullOrEmpty(tagId)) {
+                    Events.OnPopupTopSignalText("No se pudo editar");
+                    return;
+                }
+                creating = savedId => {
+                    // The same id: an own work with new content. The minigame drops its copy of it, so it shows and
+                    // saves the new one (MiniGamesData.Save keeps the copies it has)
+                    if (savedId == id)
+                        ForgetCopy(kind, id);
+                    return assign(savedId);
+                };
+                changedBeforeCreating = UIManager.Instance.hasUnsavedChanges;
+                MiniGameCreation.Begin(kind, tagId);
+                if (!OpenInEditor(kind, id)) {
+                    creating = null;
+                    MiniGameCreation.End();
+                    Events.OnPopupTopSignalText("No se pudo abrir");
+                }
+            });
+        }
+
+        static bool OpenInEditor(MiniGameOptionKind kind, string id) {
+            switch (kind) {
+                case MiniGameOptionKind.Character:
+                    UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);
+                    return true;
+                case MiniGameOptionKind.Background:
+                    Data.Instance.sObjectsData.SetType(BoardItems.BoardData.SObjectData.types.background);
+                    UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
+                    return true;
+                case MiniGameOptionKind.Object:
+                    Data.Instance.sObjectsData.SetType(BoardItems.BoardData.SObjectData.types.generic);
+                    UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
+                    return true;
+                default:
+                    return UIManager.Instance.OpenStoryForEdition(id);
+            }
+        }
+
+        void ForgetCopy(MiniGameOptionKind kind, string id) {
+            if (config?.works == null) return;
+            if (kind == MiniGameOptionKind.Character)
+                config.works.characters.Remove(id);
+            else if (kind != MiniGameOptionKind.Story)
+                config.works.so.Remove(id);
+        }
+
         // The other listeners of the event are still showing the home
         IEnumerator ReturnFromCreating() {
             yield return null;
@@ -262,7 +337,13 @@ namespace MiniGames.Editing
             if (obstaclesList != null)
                 obstaclesList.Show(config.obstacles.Count, (item, i) => {
                     MiniGameObstacle obstacle = config.obstacles[i];
-                    item.Show(MiniGameEditorOptions.Find(MiniGameOptionKind.Character, obstacle.characterId), obstacle.action);
+                    if (obstacle.IsObject) {
+                        item.Show(MiniGameEditorOptions.Find(MiniGameOptionKind.Object, obstacle.objectId), null);
+                        item.OnEdit += () => Edit(MiniGameOptionKind.Object, obstacle.objectId, id => { obstacle.objectId = id; return true; });
+                    } else {
+                        item.Show(MiniGameEditorOptions.Find(MiniGameOptionKind.Character, obstacle.characterId), obstacle.action);
+                        item.OnEdit += () => Edit(MiniGameOptionKind.Character, obstacle.characterId, id => { obstacle.characterId = id; return true; });
+                    }
                     item.OnRemove += () => { config.obstacles.RemoveAt(i); Changed(true); };
                     item.OnActionChanged += action => { obstacle.action = action; MarkChanged(); SchedulePreview(); };
                 });
@@ -270,6 +351,10 @@ namespace MiniGames.Editing
                 parallaxList.Show(config.parallaxObjectIds.Count, (item, i) => {
                     item.Show(MiniGameEditorOptions.Find(MiniGameOptionKind.Object, config.parallaxObjectIds[i]), null);
                     item.OnRemove += () => { config.parallaxObjectIds.RemoveAt(i); Changed(true); };
+                    item.OnEdit += () => Edit(MiniGameOptionKind.Object, config.parallaxObjectIds[i], id => {
+                        if (i < config.parallaxObjectIds.Count) config.parallaxObjectIds[i] = id;
+                        return true;
+                    });
                     item.OnMoveUp += () => {
                         if (i == 0) return;
                         (config.parallaxObjectIds[i - 1], config.parallaxObjectIds[i]) = (config.parallaxObjectIds[i], config.parallaxObjectIds[i - 1]);

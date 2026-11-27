@@ -66,7 +66,7 @@ namespace UI.MainApp.Home.User
         public override void OpenWork(string id)
         {
             if(StoryMakerEvents.isEditing)
-                Events.DuplicateSO(id);
+                Events.UseOthersSO(id);
             else
             {
                 base.OpenWork(id);

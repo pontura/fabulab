@@ -86,6 +86,10 @@ namespace UI.MainApp
             FabulabAnalytics.LogEvent("object_save_clicked");
         }
         void SaveNew() {
+            // The work shown (of another user) is the one the new one comes from: it keeps its creators
+            string shown = Data.Instance.sObjectsData.GetCurrent();
+            if (!string.IsNullOrEmpty(shown))
+                Data.Instance.sObjectsData.CopySourceId = shown;
             Data.Instance.sObjectsData.SetCurrentID("");
             Invoke("SaveWork", 0.1f);
         }

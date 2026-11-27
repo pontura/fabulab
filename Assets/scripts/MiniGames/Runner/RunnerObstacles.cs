@@ -6,12 +6,13 @@ using UnityEngine.Rendering;
 
 namespace MiniGames.Runner
 {
-    // A character used as obstacle, doing an action
+    // An obstacle: a character doing an action, or an object (objectId set)
     [Serializable]
     public class ObstacleCharacter
     {
         public string characterId;
         public CharacterAction action = CharacterAction.Stand;
+        public string objectId;
     }
 
     // Spawns obstacles in waves on random lanes and moves them towards the character.
@@ -93,7 +94,10 @@ namespace MiniGames.Runner
 
             sources.Clear();
             foreach (ObstacleCharacter c in characters) {
-                if (c != null && !string.IsNullOrEmpty(c.characterId))
+                if (c == null) continue;
+                if (!string.IsNullOrEmpty(c.objectId))
+                    sources.Add(new Source { objectId = c.objectId });
+                else if (!string.IsNullOrEmpty(c.characterId))
                     sources.Add(new Source { characterId = c.characterId, animName = CharacterActions.GetAnimName(c.action) });
             }
             if (sources.Count == 0 && userObjectIds != null) {

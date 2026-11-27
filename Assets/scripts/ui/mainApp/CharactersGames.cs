@@ -35,9 +35,9 @@ namespace UI.MainApp
         {
             string id = Data.Instance.charactersData.GetCurrent();
             CharacterMetaData c = Data.Instance.charactersData.GetMeta(id);
-            if(c != null && c.creators.Count>0)
+            string creator = c != null ? WorkCreators.Last(c.creators, c.userID) : null;
+            if (!string.IsNullOrEmpty(creator))
             {
-                string creator = c.creators[0];
 
                   Data.Instance.cacheData.GetUser(creator, (userData, tex) => {
                     username.text = userData.username;

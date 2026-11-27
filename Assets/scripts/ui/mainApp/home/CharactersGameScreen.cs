@@ -53,7 +53,7 @@ namespace UI.MainApp.Home.User
         
         public void Duplicate(string soID)
         {
-            Events.DuplicateCharacter(soID);
+            Events.UseOthersCharacter(soID);
         }                
     }
 

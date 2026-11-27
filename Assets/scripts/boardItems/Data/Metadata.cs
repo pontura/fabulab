@@ -11,6 +11,32 @@ namespace BoardItems.BoardData
         stories
     }
 
+    // The users that made a work (metadata "creators"), in the order they last modified it: the last one is the one
+    // that modified it last (the face shown for the work). A work made from scratch has only its author; a work made
+    // from another one (a copy of a work of another user, a duplicate) has the creators of that one plus its author
+    public static class WorkCreators
+    {
+        // The creators once uid saved it: the ones it had (or the author, when it has none) with uid at the end
+        public static List<string> ModifiedBy(List<string> creators, string uid, string author = null) {
+            List<string> result = creators != null && creators.Count > 0
+                ? new List<string>(creators)
+                : new List<string>();
+            if (result.Count == 0 && !string.IsNullOrEmpty(author))
+                result.Add(author);
+            result.RemoveAll(c => string.IsNullOrEmpty(c) || c == uid);
+            if (!string.IsNullOrEmpty(uid))
+                result.Add(uid);
+            return result;
+        }
+
+        // The one that modified it last (fallback: its author, for works without creators)
+        public static string Last(List<string> creators, string fallback = null) {
+            return creators != null && creators.Count > 0 && !string.IsNullOrEmpty(creators[creators.Count - 1])
+                ? creators[creators.Count - 1]
+                : fallback;
+        }
+    }
+
     [Serializable]
     public class PropMetaData : CharacterMetaData
     {

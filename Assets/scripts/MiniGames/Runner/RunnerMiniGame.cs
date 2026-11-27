@@ -59,7 +59,7 @@ namespace MiniGames.Runner
             parallax.ObjectIds = config.parallaxObjectIds;
             List<ObstacleCharacter> list = new List<ObstacleCharacter>();
             foreach (MiniGameObstacle o in config.obstacles)
-                list.Add(new ObstacleCharacter { characterId = o.characterId, action = o.action });
+                list.Add(new ObstacleCharacter { characterId = o.characterId, action = o.action, objectId = o.objectId });
             obstacles.Characters = list;
         }
 
@@ -69,7 +69,7 @@ namespace MiniGames.Runner
             config.backgroundId = background.BackgroundId;
             config.parallaxObjectIds = new List<string>(parallax.ObjectIds);
             foreach (ObstacleCharacter o in obstacles.Characters)
-                config.obstacles.Add(new MiniGameObstacle { characterId = o.characterId, action = o.action });
+                config.obstacles.Add(new MiniGameObstacle { characterId = o.characterId, action = o.action, objectId = o.objectId });
             config.Normalize();
             return config;
         }

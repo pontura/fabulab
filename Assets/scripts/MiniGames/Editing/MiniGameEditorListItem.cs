@@ -16,13 +16,17 @@ namespace MiniGames.Editing
         [SerializeField] TMP_Dropdown actionDropdown;
         [Tooltip("Parallax only: moves it one place before")]
         [SerializeField] Button moveUpButton;
+        [Tooltip("Opens the work in its editor")]
+        [SerializeField] Button editButton;
 
         public event Action OnRemove;
         public event Action OnMoveUp;
+        public event Action OnEdit;
         public event Action<CharacterAction> OnActionChanged;
 
         void Awake() {
             if (removeButton != null) removeButton.onClick.AddListener(() => OnRemove?.Invoke());
+            if (editButton != null) editButton.onClick.AddListener(() => OnEdit?.Invoke());
             if (moveUpButton != null) moveUpButton.onClick.AddListener(() => OnMoveUp?.Invoke());
             if (actionDropdown != null) {
                 actionDropdown.ClearOptions();

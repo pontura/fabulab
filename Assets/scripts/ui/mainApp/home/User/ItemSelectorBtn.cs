@@ -50,13 +50,13 @@ namespace UI.MainApp.Home.User
             SetCreator(null);
         }
 
-        // Shows the first creator of the item, only when it is not the user's own
+        // Shows the one that modified the item last, only when it is not the user's own
         public void SetCreator(CharacterMetaData meta) {
             bool isOwn = meta == null || meta.userID == Data.Instance.userData.userDataInDatabase?.uid;
             creatorList.gameObject.SetActive(!isOwn);
             if (isOwn)
                 return;
-            string creator = meta.creators != null && meta.creators.Count > 0 ? meta.creators[0] : meta.userID;
+            string creator = WorkCreators.Last(meta.creators, meta.userID);
             creatorList.Init(creator);
         }
         protected void OnInfoClicked(bool isPublic)

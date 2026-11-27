@@ -90,6 +90,9 @@ namespace WebEditor
             // The home does not wait for the objects of the users: an object or background to edit needs them
             if (!string.IsNullOrEmpty(id) && (type == WorkType.@object || type == WorkType.background))
                 yield return new WaitUntil(() => Data.Instance.sObjectsData.MetadataLoaded);
+            // A character of another user is found in the metadata of all the characters
+            if (!string.IsNullOrEmpty(id) && type == WorkType.character && Data.Instance.charactersData.GetUserCharacter(id) == null)
+                yield return new WaitUntil(() => Data.Instance.charactersData.MetadataLoaded);
             if (string.IsNullOrEmpty(id))
                 Create();
             else if (!Edit())
@@ -107,28 +110,35 @@ namespace WebEditor
             }
         }
 
-        // Same as opening a work from the user screens of the app (UserStoriesScreen, UserCharactersScreen...)
+        // Same as opening a work from the user screens of the app (UserStoriesScreen, UserCharactersScreen...).
+        // A work of another user ("Modificar" in the web) opens in edition too: saving it makes a new work of the user,
+        // that keeps its creators (CharacterEdition / ObjectsEdition SaveNew, StoryEditorScreen.InitSaving)
         bool Edit() {
             switch (type) {
                 case WorkType.story:
-                    if (!Data.Instance.scenesData.userFilmsData.Exists(x => x.id == id))
-                        return Fail("The user has no story " + id);
-                    StartCoroutine(EditStory());
+                    bool ownStory = Data.Instance.scenesData.userFilmsData.Exists(x => x.id == id);
+                    if (!ownStory && !Data.Instance.scenesData.filmsData.Exists(x => x.id == id))
+                        return Fail("Story not found: " + id);
+                    StartCoroutine(EditStory(ownStory));
                     return true;
 
                 case WorkType.character:
-                    if (Data.Instance.charactersData.GetUserCharacter(id) == null)
-                        return Fail("The user has no character " + id);
+                    bool ownCharacter = Data.Instance.charactersData.GetUserCharacter(id) != null;
+                    if (!ownCharacter && Data.Instance.charactersData.GetMeta(id) == null)
+                        return Fail("Character not found: " + id);
                     Data.Instance.charactersData.Game = false;
+                    // One of another user opens ready to edit, not in preview
+                    UIManager.Instance.OpenOthersInEdition = !ownCharacter;
                     UIManager.Instance.LoadWork(BoardUI.editingTypes.CHARACTER, id);
                     return true;
 
                 default:
                     // From the metadata, as UserObjectsScreen: the content of the objects of the user (sObjectsData.data)
                     // is loaded later and may not be there yet. LoadWork loads it from the server when it is missing
-                    PropMetaData so = Data.Instance.sObjectsData.userMetaData.Find(x => x.id == id);
+                    PropMetaData so = Data.Instance.sObjectsData.userMetaData.Find(x => x.id == id)
+                        ?? Data.Instance.sObjectsData.GetMeta(id);
                     if (so == null)
-                        return Fail("The user has no object " + id);
+                        return Fail("Object not found: " + id);
                     Data.Instance.sObjectsData.SetType(so.type);
                     UIManager.Instance.LoadWork(BoardUI.editingTypes.OBJECT, id);
                     return true;
@@ -155,12 +165,15 @@ namespace WebEditor
             });
         }
 
-        IEnumerator EditStory() {
+        IEnumerator EditStory(bool own) {
             Events.OnLoading(true);
             UIManager.Instance.boardUI.SetEditingType(BoardUI.editingTypes.NONE);
             Events.ShowScreen(UIManager.screenType.StoryMaker);
             UIManager.Instance.AddBackTo(UIManager.screenType.StoryMaker, true);
-            Data.Instance.scenesData.LoadUserFilm(id);
+            if (own)
+                Data.Instance.scenesData.LoadUserFilm(id);
+            else
+                Data.Instance.scenesData.LoadFilm(id);
             yield return null;
             yield return null;
             StoryMakerEvents.EnableStoryEdition(true);

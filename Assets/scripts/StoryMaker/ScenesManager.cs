@@ -247,6 +247,15 @@ namespace Yaguar.StoryMaker.Editor
             }
         }
 
+        // Every keyframe with the background oldId gets newId (the same one when only its content changed)
+        public void ReplaceBackground(string oldId, string newId) {
+            foreach (SceneData scene in Scenes) {
+                if (scene.bgID == oldId)
+                    scene.bgID = newId;
+            }
+            MarkChanged();
+        }
+
         public void ReplaceItem(string oldId, string oldItemName, string newId, string newItemName) {
             foreach (SceneData scene in Scenes) {
                 foreach (SceneElement se in scene.GetScenesElements().Where(b => b.data.id == oldId && b.data.itemName == oldItemName)) {

@@ -17,9 +17,12 @@ import {
 } from '../data/minigames'
 import { useUrlParam } from '../common/useUrlParam'
 import { MiniGamesOverlay } from '../minigames/MiniGamesOverlay'
+import { WorkInfoPanel } from '../player/WorkInfoPanel'
 import { StoryPlayerOverlay } from '../player/StoryPlayerOverlay'
 import { useStoryUrl } from '../player/useStoryUrl'
 import { CardSection } from './CardSection'
+import { HomeActionsContext } from './HomeActions'
+import { LikesProvider } from './LikesContext'
 import type { ManagedKind } from '../data/workActions'
 import { CreateCard, WorkCard } from './WorkCard'
 import { WorkInfoDialog, type ManagedWork } from './WorkInfoDialog'
@@ -126,6 +129,11 @@ export function HomeScreen({ session }: Props) {
     setDataVersion((v) => v + 1)
   }, [])
 
+  const homeActions = useMemo(() => ({ uid, openEditor }), [uid, openEditor])
+
+  // A guest that tries to like something
+  const askSignInToLike = useCallback(() => setSignInPrompt({ reason: 'Ingresá o registrate para dar me gusta' }), [])
+
   const closeEditor = useCallback(() => {
     setEditorRequest(null)
     reloadData()
@@ -166,6 +174,8 @@ export function HomeScreen({ session }: Props) {
   )
 
   return (
+    <HomeActionsContext.Provider value={homeActions}>
+    <LikesProvider uid={uid} onSignInNeeded={askSignInToLike} dataVersion={dataVersion}>
     <div className="app">
       <header className="app-header">
         <img className="header-logo" src={asset('images/logo.png')} alt="Fabulab" />
@@ -224,6 +234,7 @@ export function HomeScreen({ session }: Props) {
           <>
             <CardSection
               title="Mis historias"
+              own
               load={userLoaders.stories}
               getKey={itemKey}
               firstCard={<CreateCard label="Crear historia" onCreate={() => openEditor({ type: 'story' })} />}
@@ -252,6 +263,7 @@ export function HomeScreen({ session }: Props) {
           <>
             <CardSection
               title="Mis personajes"
+              own
               load={userLoaders.characters}
               getKey={itemKey}
               firstCard={
@@ -282,6 +294,7 @@ export function HomeScreen({ session }: Props) {
           <>
             <CardSection
               title="Mis objetos"
+              own
               load={userLoaders.objects}
               getKey={itemKey}
               firstCard={<CreateCard label="Crear objeto" onCreate={() => openEditor({ type: 'object' })} />}
@@ -298,6 +311,7 @@ export function HomeScreen({ session }: Props) {
             />
             <CardSection
               title="Mis fondos"
+              own
               load={userLoaders.backgrounds}
               getKey={itemKey}
               firstCard={
@@ -335,6 +349,7 @@ export function HomeScreen({ session }: Props) {
           <>
             <CardSection
               title="Mis juegos"
+              own
               load={userLoaders.minigames}
               getKey={itemKey}
               renderCard={(game) => (
@@ -383,7 +398,11 @@ export function HomeScreen({ session }: Props) {
         />
       )}
 
-      <StoryPlayerOverlay storyId={openStoryId} onClose={closePlayer} />
+      <StoryPlayerOverlay
+        storyId={openStoryId}
+        onClose={closePlayer}
+        info={openStoryId && <WorkInfoPanel kind="story" workId={openStoryId} onCloseForEditor={closePlayer} />}
+      />
       <EditorOverlay request={editorRequest} onClose={closeEditor} />
       <MiniGamesOverlay gameId={isGuest ? null : miniGameId} onClose={closeMiniGames} />
 
@@ -395,6 +414,8 @@ export function HomeScreen({ session }: Props) {
         />
       )}
     </div>
+    </LikesProvider>
+    </HomeActionsContext.Provider>
   )
 }
 
