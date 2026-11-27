@@ -624,7 +624,37 @@ namespace BoardItems
             HashSet<string> characterIds = new HashSet<string>();
             HashSet<string> objectIds = new HashSet<string>();
             StoryAssets.CollectIds(scenes, characterIds, objectIds);
-            StoryAssets.LoadMissing(characterIds, objectIds, previous, () => SaveStoryAssets(filmId, scenes, previous));
+
+            // Saved once: when everything is loaded, or after StoryAssetsWaitSeconds with what could be loaded (a load
+            // that never answers must not leave the story with the copies of what it showed before)
+            bool saved = false;
+            Coroutine timeout = null;
+            // A pending write until it is sent: the web editor must not close meanwhile
+            FirebaseRestHttp.BeginWrite();
+            void Save(bool timedOut) {
+                if (saved) return;
+                saved = true;
+                if (timedOut)
+                    Debug.LogWarning("# SaveStoryAssets " + filmId + ": not everything loaded in " + StoryAssetsWaitSeconds + "s, saving what is loaded");
+                else if (timeout != null)
+                    StopCoroutine(timeout);
+                try {
+                    SaveStoryAssets(filmId, scenes, previous);
+                } catch (Exception e) {
+                    Debug.LogError("# SaveStoryAssets " + filmId + " failed: " + e);
+                } finally {
+                    FirebaseRestHttp.EndWrite();
+                }
+            }
+            timeout = StartCoroutine(SaveStoryAssetsAfterTimeout(() => Save(true)));
+            StoryAssets.LoadMissing(characterIds, objectIds, previous, () => Save(false));
+        }
+
+        const float StoryAssetsWaitSeconds = 10;
+
+        System.Collections.IEnumerator SaveStoryAssetsAfterTimeout(Action save) {
+            yield return new WaitForSeconds(StoryAssetsWaitSeconds);
+            save();
         }
 
         void SaveStoryAssets(string filmId, List<SceneData> scenes, StoryAssetsData previous) {

@@ -41,10 +41,21 @@ namespace Yaguar.FirebaseRest
     /// </summary>
     public static class FirebaseRestHttp
     {
+        // Writes not finished yet: every request but GET while it is answered, plus the work held with BeginWrite
+        // (ex: a write waiting for its token, data being prepared to be saved). A page that removes this player (the
+        // web editor, once left) waits for them, or they are lost
+        static int pendingWrites;
+        public static bool HasPendingWrites { get { return pendingWrites > 0; } }
+        public static void BeginWrite() { pendingWrites++; }
+        public static void EndWrite() { if (pendingWrites > 0) pendingWrites--; }
+
         public static Task<RestResponse> SendAsync(string method, string url, byte[] body = null, string contentType = null,
             Dictionary<string, string> headers = null, bool binaryResponse = false)
         {
             var tcs = new TaskCompletionSource<RestResponse>();
+            bool isWrite = method != "GET";
+            if (isWrite)
+                BeginWrite();
 
             var req = new UnityWebRequest(url, method);
             req.downloadHandler = new DownloadHandlerBuffer();
@@ -74,6 +85,8 @@ namespace Yaguar.FirebaseRest
                         res.Text = req.downloadHandler.text;
                 }
                 req.Dispose();
+                if (isWrite)
+                    EndWrite();
                 tcs.TrySetResult(res);
             };
 

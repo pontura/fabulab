@@ -57,6 +57,20 @@ namespace Firebase.Storage
 
         public async Task<StorageMetadata> PutBytesAsync(byte[] bytes)
         {
+            // Pending from now, also while the token is got (FirebaseRestHttp.HasPendingWrites)
+            FirebaseRestHttp.BeginWrite();
+            try
+            {
+                return await UploadAsync(bytes);
+            }
+            finally
+            {
+                FirebaseRestHttp.EndWrite();
+            }
+        }
+
+        async Task<StorageMetadata> UploadAsync(byte[] bytes)
+        {
             var headers = await AuthHeaders();
             string contentType = path.EndsWith(".jpg") || path.EndsWith(".jpeg") ? "image/jpeg"
                 : path.EndsWith(".png") ? "image/png" : "application/octet-stream";

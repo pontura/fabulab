@@ -337,6 +337,20 @@ namespace Firebase.Database
 
         async Task WriteAsync(string method, string json)
         {
+            // Pending from now, also while the token is got (FirebaseRestHttp.HasPendingWrites)
+            FirebaseRestHttp.BeginWrite();
+            try
+            {
+                await SendWriteAsync(method, json);
+            }
+            finally
+            {
+                FirebaseRestHttp.EndWrite();
+            }
+        }
+
+        async Task SendWriteAsync(string method, string json)
+        {
             string token = await FirebaseRestSession.GetIdTokenAsync();
             string httpMethod = method;
             string extra = "print=silent";

@@ -533,9 +533,10 @@ namespace BoardItems
             print("FlipX: " + itemSelected.data.flipX);
         }
                     
+        // The objects inside the background (soIDs, set by OpenWork) and its scale are applied once it is open: a
+        // background of another user is loaded from the server, so it opens later
         void LoadBgForStory(BoardItemManager itemManager, string id, Transform bgContainer, Transform container) {
-            LoadBoardItemForStory(itemManager, id);
-            LoadBgSos(itemManager, bgContainer, container);
+            LoadBoardItemForStory(itemManager, id, () => LoadBgSos(itemManager, bgContainer, container));
         }
 
         // Copies of works carried by what is being shown (a minigame, a story: StoryAssetsData), found by id before
@@ -547,13 +548,19 @@ namespace BoardItems
             return string.IsNullOrEmpty(id) ? null : WorksOverride?.Invoke(id);
         }
 
-        void LoadBoardItemForStory(BoardItemManager itemManager, string id)
+        void LoadBoardItemForStory(BoardItemManager itemManager, string id) {
+            LoadBoardItemForStory(itemManager, id, null);
+        }
+
+        // onOpened: called right after the work is open (at once, or once loaded when it is of another user)
+        void LoadBoardItemForStory(BoardItemManager itemManager, string id, System.Action onOpened)
         {
             SOPartData copy = FindOverride(id);
             if ((itemManager is CharacterManager && copy is CharacterData) || (itemManager is SceneObjectManager && copy is SObjectData)) {
                 if (copy is SObjectData copiedObject && copiedObject.type == SObjectData.types.background)
                     Events.ColorizeBG(copiedObject.bg);
                 OpenWork(itemManager, copy);
+                onOpened?.Invoke();
                 return;
             }
 
@@ -561,7 +568,10 @@ namespace BoardItems
             if (itemManager is CharacterManager) {
                 pd = Data.Instance.charactersData.GetUserCharacter(id);
                 if (pd == null) {
-                    Data.Instance.charactersData.LoadOthersCharacter(id, (partData) => OpenWork(itemManager,partData));
+                    Data.Instance.charactersData.LoadOthersCharacter(id, (partData) => {
+                        OpenWork(itemManager, partData);
+                        onOpened?.Invoke();
+                    });
                     return;
                 }
             } else if (itemManager is SceneObjectManager) {
@@ -573,7 +583,8 @@ namespace BoardItems
                                 Events.ColorizeBG(soData.bg);
                         }
                         OpenWork(itemManager, partData);
-                        });
+                        onOpened?.Invoke();
+                    });
                     return;
                 }
                 if (pd is SObjectData soData) {
@@ -583,6 +594,7 @@ namespace BoardItems
             }
 
             OpenWork(itemManager, pd);
+            onOpened?.Invoke();
         }
 
         ItemData CreateItem(SavedIData itemData, BoardItemManager target)

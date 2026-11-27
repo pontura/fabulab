@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using UI;
 using UnityEngine;
 using Yaguar.Auth;
+using Yaguar.FirebaseRest;
 using Yaguar.StoryMaker.Editor;
 
 namespace WebEditor
@@ -72,8 +73,29 @@ namespace WebEditor
                 StartCoroutine(OpenNextFrame());
             } else {
                 closed = true;
-                WebEditorBridge.Notify("closed", Payload());
+                StartCoroutine(NotifyClosedWhenSaved());
             }
+        }
+
+        // Seconds the saves still going are waited for, at most
+        const float MaxSaveWait = 30;
+
+        // The page removes this player once it is told "closed": the saves still going (the metadata, the copies and
+        // the picture of a story are written after it says it is saved) would be lost. They are waited for first
+        IEnumerator NotifyClosedWhenSaved() {
+            float waited = 0;
+            bool waiting = FirebaseRestHttp.HasPendingWrites;
+            if (waiting)
+                Events.OnLoading(true);
+            while (FirebaseRestHttp.HasPendingWrites && waited < MaxSaveWait) {
+                yield return null;
+                waited += Time.unscaledDeltaTime;
+            }
+            if (FirebaseRestHttp.HasPendingWrites)
+                Debug.LogWarning("[WebEditor] Closing with saves still going after " + MaxSaveWait + "s");
+            if (waiting)
+                Events.OnLoading(false);
+            WebEditorBridge.Notify("closed", Payload());
         }
 
         void OnSignedOut() {
